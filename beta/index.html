@@ -337,10 +337,14 @@ body.dashed .dedit2{display:none}
 .dw .wdots i.o{background:none;box-shadow:inset 0 0 0 1.5px var(--c)}
 .dw .wdots i.x{border-radius:1.5px}
 .dw .wday{justify-content:flex-start;padding-top:6px}
-.dw .wbars{display:flex;flex-direction:column;gap:3px;width:70%;flex:1;justify-content:flex-start;margin-top:4px}
-.dw .wbars i{height:8px;border-radius:99px;background:var(--c)}
+.dw .wbars{display:flex;flex-direction:column;gap:3px;width:72%;flex:1;justify-content:flex-start;margin-top:4px}
+.dw .wbars i{height:12px;border-radius:5px;background:var(--c)}
 .dw .wbars i.o{background:none;box-shadow:inset 0 0 0 1.5px var(--c)}
-.dw .wbars i.x{height:10px;border-radius:3px;background:repeating-linear-gradient(135deg,var(--c) 0 3px,color-mix(in srgb,var(--c) 45%,var(--card)) 3px 6px)}
+.dw .wbars i.m{box-sizing:border-box;background:color-mix(in srgb,var(--c) 30%,var(--card));border:1.5px dashed var(--c)}
+.dw .wbars i.m.o{background:none;box-shadow:none;opacity:.55}
+.dw .wday .wcnt7{margin-top:auto;padding-bottom:4px;font-weight:700;color:var(--muted)}
+.dw .wday.wtoday b{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--on-accent)}
+.dw .wbars i.x{height:12px;border-radius:5px;background:repeating-linear-gradient(135deg,var(--c) 0 3px,color-mix(in srgb,var(--c) 45%,var(--card)) 3px 6px)}
 .dw .wmonth{flex:1;display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:1fr;gap:1px;min-height:0;font-size:10.5px;font-variant-numeric:tabular-nums;text-align:center}
 .dw .wmonth span{display:flex;align-items:center;justify-content:center;border-radius:50%;position:relative;min-height:0;color:var(--muted)}
 .dw .wmonth span.wh1,.dw .wmonth span.wh2{color:var(--text);font-weight:700}
@@ -401,7 +405,7 @@ body.dashed .dedit2{display:none}
 #dash > .stats[data-cells="2x1"]{grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr)}
 #dash > .stats[data-cells="2x1"] > .tile:not(.late):not(.today){display:none}
 /* 7 days, one row high: the same columns, thinner bars */
-@container (max-height:150px){ .dw.wweek .wday{padding-top:3px;gap:1px} .dw .wbars{gap:2px;margin-top:2px} .dw .wbars i{height:5px} .dw .wbars i.x{height:6px} .dw .wday small{font-size:9.5px} }
+@container (max-height:150px){ .dw .wday.wtoday b{width:20px;height:20px;font-size:12px} .dw.wweek .wday{padding-top:3px;gap:1px} .dw .wbars{gap:2px;margin-top:2px} .dw .wbars i{height:5px} .dw .wbars i.x{height:6px} .dw .wday small{font-size:9.5px} }
 #dash > #weekCard[data-mode=full]:not(.dexp) .wd{background:var(--row)}
 /* lists in a widget: the rows share the height (to a point) instead of leaving it empty at the bottom */
 .dw .wlist > *{flex:1 0 auto;max-height:64px}
@@ -3996,7 +4000,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.12";
+const APP_VERSION = "1.8.0-beta.13";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -5588,11 +5592,15 @@ function widgetOf(id, w, h, d, now) {
       const n = open.filter(x => x.due >= now && x.due < now + 7 * DAY).length;
       if (K === "2x1") return { a: ' data-fg="next7"', h: wHead("calendar-days", t("weekTitle")) + '<div class="wrow wbase">' + wFit(String(n), "wbig", 28, 16) + wFit(t("miniDue7"), "wl1 wgrow", 12, 9) + "</div>" };
       const base = new Date(now * 1000); base.setHours(0, 0, 0, 0); let cols = "";
-      for (let i = 0; i < 7; i++) { const dd = new Date(base); dd.setDate(base.getDate() + i); const k = dayKey(dd), its = rl.filter(x => x.due && dueDay(x) === k), ex = examList().filter(e => dayKey(new Date(e.ts * 1000)) === k);
-        let dn = ""; try { dn = dd.toLocaleDateString(t("locale"), { weekday: "narrow" }); } catch (e) {}
-        const tall = true, few = h < 2, mk = (c, cls) => '<i' + (cls ? ' class="' + cls + '"' : "") + ' style="--c:' + c + '"></i>';
-        cols += '<button class="wday' + (i === 0 ? " wtoday" : "") + '" data-day="' + k + '"><small>' + wEsc(dn) + "</small><b>" + dd.getDate() + '</b><span class="' + (tall ? "wbars" : "wdots") + '">' + ex.map(e => mk(colorOf(e.cid), "x")).join("") +
-          its.slice(0, few ? 3 : 4).map(x => mk(colorOf(x.cid), isDone(x) ? "o" : "")).join("") + "</span>" + (its.length > (few ? 3 : 4) ? "<small>+" + (its.length - (few ? 3 : 4)) + "</small>" : "") + "</button>"; }
+      // the same days as the full card: same order (open first, then by time), same marks (exam striped, my own task dashed, done outlined), same "today" circle
+      const few = h < 2, cap = few ? 3 : 5;
+      for (let i = 0; i < 7; i++) { const dd = new Date(base); dd.setDate(base.getDate() + i); const k = dayKey(dd), ex = examList().filter(e => dayKey(new Date(e.ts * 1000)) === k);
+        const its = rl.filter(x => x.due && dueDay(x) === k).sort((a, b) => isDone(a) - isDone(b) || a.due - b.due), sh = its.slice(0, Math.max(0, cap - ex.length)), more = its.length - sh.length;
+        let dn = ""; try { dn = dd.toLocaleDateString(t("locale"), { weekday: few ? "narrow" : "short" }); } catch (e) {}
+        const mk = (c, cls) => '<i' + (cls ? ' class="' + cls + '"' : "") + ' style="--c:' + c + '"></i>';
+        cols += '<button class="wday' + (i === 0 ? " wtoday" : "") + '" data-day="' + k + '"><small>' + wEsc(dn) + "</small><b>" + dd.getDate() + '</b><span class="wbars">' + ex.map(e => mk(colorOf(e.cid), "x")).join("") +
+          sh.map(x => mk(colorOf(x.cid), (isDone(x) ? "o" : "") + (x.type === "mine" ? " m" : ""))).join("") + "</span>" + (more > 0 ? "<small>+" + more + "</small>" : "") +
+          (!few ? '<small class="wcnt7">' + (its.length || "") + "</small>" : "") + "</button>"; }
       return { a: "", cls: "wweek", h: cols };
     }
     case "monthCard": {
