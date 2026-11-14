@@ -4000,7 +4000,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.13";
+const APP_VERSION = "1.8.0-beta.14";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4988,6 +4988,7 @@ function icsBuild(items) {
     L.push("BEGIN:VEVENT", "UID:" + x.uid + "@moodle-tasks", "DTSTAMP:" + f(now));
     if (x.allDay) { const d = new Date(x.ts * 1000); const e = new Date(d); e.setDate(e.getDate() + 1); L.push("DTSTART;VALUE=DATE:" + loc(d), "DTEND;VALUE=DATE:" + loc(e)); }
     else if (x.local) L.push("DTSTART;TZID=" + TZ + ":" + x.local.s, "DTEND;TZID=" + TZ + ":" + x.local.e);      // a weekly class: wall-clock time in this zone
+    else if (x.start) L.push("DTSTART:" + f(x.ts), "DTEND:" + f(x.ts + (x.dur || 3600)));   // an exam or quiz: its time is when it STARTS (a task's time is when it is due, so it ends there)
     else L.push("DTSTART:" + f(x.ts - (x.dur || 1800)), "DTEND:" + f(x.ts));
     if (x.rrule) L.push("RRULE:" + x.rrule);
     L.push(fold("SUMMARY:" + tx(x.title)));
@@ -5026,7 +5027,7 @@ function remItems(fresh, cf) {
   if (c.exam.length) for (const x of examList()) {
     const key = x.cid + ":" + exMk(x) + ":" + x.ts;
     if (x.ts + DAY < now || (fresh && done.exams.includes(key))) continue;
-    out.exams.push({ uid: "exam-" + x.cid + "-" + exMk(x), key, cid: x.cid || 0, ts: x.ts, allDay: !!x.allDay, dur: x.m === "q" ? 2 * 3600 : 3 * 3600, title: (x.cid ? calDot(x.cid) : "") + "📝 " + exName(x) + " · " + exLbl(x),
+    out.exams.push({ uid: "exam-" + x.cid + "-" + exMk(x), key, cid: x.cid || 0, ts: x.ts, start: true, allDay: !!x.allDay, dur: x.m === "q" ? 2 * 3600 : 3 * 3600, title: (x.cid ? calDot(x.cid) : "") + "📝 " + exName(x) + " · " + exLbl(x),
       desc: x.lev ? t("exLev") : x.note || "", alarms: c.exam.map(k => x.allDay ? REM_DAYOFF[k] : REM_OFF[k]) });
   }
   if (c.cls !== "none") {
