@@ -1274,6 +1274,14 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
   .tour[hidden]{opacity:0}
 }
 @media (prefers-reduced-motion:no-preference) and (min-width:760px){ .sheet[hidden] > .box{transform:translateY(14px) scale(.97);opacity:0} }
+/* "send to my AI" and feedback: a full page on phones (David's iPhone: the window didn't respond as a sheet) */
+@media (max-width:759px){
+  .sheet.full{align-items:stretch;background:var(--card)}
+  .sheet.full > .box{max-width:none;max-height:none;height:100%;border-radius:0;padding-top:max(16px,env(safe-area-inset-top));box-sizing:border-box}
+  .sheet.full > .box > h3:first-child{position:sticky;top:calc(-1 * max(16px,env(safe-area-inset-top)));z-index:2;background:var(--card);margin-top:calc(-1 * max(16px,env(safe-area-inset-top)));padding-top:max(16px,env(safe-area-inset-top));padding-bottom:8px}
+}
+/* iPhone: the closing animation (new in beta.8) is off until it is checked on a real iPhone; windows close at once there, as in 1.7.0 */
+html.ios .sheet,html.ios .sheet > .box,html.ios .tour{transition:none!important}
 @keyframes shFade{from{background:#0000}}
 @keyframes shUp{from{transform:translateY(100%)}}
 @keyframes shPop{from{opacity:0;transform:translateY(14px) scale(.97)}}
@@ -1704,7 +1712,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <button class="primary" id="scAdd" style="width:100%;margin-top:12px" hidden></button>
   </div>
 </div>
-<div class="sheet" id="fbSheet" hidden>
+<div class="sheet full" id="fbSheet" hidden>
   <div class="box form">
     <h3><span data-i18n="fbTitle"></span> <button class="xbtn" id="fbClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div class="hint fbask" id="fbAskT" data-i18n="fbAskT" hidden></div>
@@ -1799,7 +1807,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <button class="link" id="daReset" style="width:100%;margin-top:8px" data-i18n="daReset"></button>
   </div>
 </div>
-<div class="sheet" id="aiSheet" hidden><div class="box">
+<div class="sheet full" id="aiSheet" hidden><div class="box">
   <h3><span data-i18n="aiTitle"></span><button class="xbtn" id="aiClose" data-i18n-aria="close"><svg class="i"><use href="#i-x"/></svg></button></h3>
   <p class="hint" data-i18n="aiIntro"></p>
   <div class="thgrp" data-i18n="aiAsk"></div>
@@ -3933,7 +3941,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.9";
+const APP_VERSION = "1.8.0-beta.10";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4026,7 +4034,7 @@ function openFb(ask) {
   useHit(ask === true ? "fbAsk" : "fb"); $("#fbAskT").hidden = $("#fbLater").hidden = ask !== true;
   $("#fbKind").innerHTML = FB_KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join("");
   FBSHOT.blob = null; $("#fbPrev").hidden = true; $("#fbShot").value = "";
-  $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; $("#fbMsg").focus();
+  $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; if (PLAT !== "ios") $("#fbMsg").focus();   // iPhone: no keyboard popping up by itself (it shifts the page under the window)
 }
 /* a screenshot from the gallery, made smaller on the phone (at most 1400 px, JPEG) before it is sent */
 const FBSHOT = { blob: null };
@@ -6492,6 +6500,7 @@ function detectPlat() {
   return /Android/i.test(ua) || (/Linux/i.test(ua) && touch) ? "android" : /iPhone|iPad|iPod/i.test(ua) || (/Mac/i.test(ua) && touch) ? "ios" : "pc";
 }
 let PLAT = detectPlat();
+document.documentElement.classList.toggle("ios", PLAT === "ios");
 /* the short video (a friend's iPhone): captions follow it, so it is clear what each moment shows */
 const VID_STEPS = [[0, "vs1"], [1.4, "vs2"], [5.3, "vs3"], [6.6, "vs4"], [10.6, "vs5"]];
 function renderVid() {
