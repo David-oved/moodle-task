@@ -194,7 +194,7 @@ async function overview(force) {
   if (ST.busy) return ST.busy;
   ST.at = Date.now();
   const old = oldIds();
-  ST.busy = api("overview", Object.assign({ courses: myCourses().map(c => ({ id: c.id, name: shortName(c.name) })), ns: LS.get("socNs", 0) }, old.length ? { old } : {}))
+  ST.busy = api("overview", Object.assign({ courses: myCourses().map(c => ({ id: c.id, name: shortName(c.name) })), ns: seenNs() }, old.length ? { old } : {}))
     .then(o => {
       if (Array.isArray(o.merged) && o.merged.length) {          // the server folded them into this id: never send them again
         LS.set("socMerged", (LS.get("socMerged", []) || []).concat(o.merged).slice(-40));
@@ -281,7 +281,7 @@ function timeQueue(delay) {
 /* ---------- when I open the app: someone starred my message ---------- */
 let noteTimer = 0;
 function notesCheck(L) {
-  const seen = LS.get("socNs", 0), fresh = (Array.isArray(L) ? L : []).filter(n => n && n.kind === "star" && n.at > seen);
+  const seen = seenNs(), fresh = (Array.isArray(L) ? L : []).filter(n => n && n.kind === "star" && n.at > seen);
   if (!fresh.length) return;
   clearTimeout(noteTimer);
   noteTimer = setTimeout(function tryShow() {             // when nothing else is open (the "how long did it take?" question goes first)
@@ -291,7 +291,7 @@ function notesCheck(L) {
   }, 1800);
 }
 function showNotes(L) {
-  LS.set("socNs", Math.max(LS.get("socNs", 0), ...L.map(n => n.at))); useHit("socNoteShown");
+  P.soc_ns = Math.max(seenNs(), ...L.map(n => n.at)); LS.set("socNs", P.soc_ns); savePrefs(); useHit("socNoteShown");
   const rows = L.slice(0, 6).map(n => {
     const where = chatTitle(Number(n.cid), n.tk) || n.ref;
     return '<div class="snote"><div>' + esc(t("noteStar", n.name || t("lgSomeone"), where || "")) + "</div>" + (n.body ? '<div class="sq"><bdi>' + esc(n.body) + "</bdi></div>" : "") +
@@ -424,8 +424,12 @@ function renderTop(now) {
 /* ---------- chat: a discussion for every task, and a chat for every course ---------- */
 const seenK = (cid, tk) => cid + "|" + tk;
 const thInfo = (cid, tk) => { const c = cdata(cid), v = c && c.th && c.th[tk]; return v ? { n: v[0], last: v[1], ref: v[2], lb: v[3] || "", lt: v[4] || "" } : { n: 0, last: 0, ref: "", lb: "", lt: "" }; };
-function unread(cid, tk) { const seen = LS.get("socSeen", {}), k = seenK(cid, tk), n = thInfo(cid, tk).n; return k in seen ? Math.max(0, n - seen[k]) : tk === "c" ? n : 0; }
-function markSeen(cid, tk, n) { const seen = LS.get("socSeen", {}); seen[seenK(cid, tk)] = n; const ks = Object.keys(seen); if (ks.length > 400) delete seen[ks[0]]; LS.set("socSeen", seen); }
+/* what was read lives in the synced settings (P.soc_seen), so a chat read on the phone is read on the iPad too. Older devices kept it only here (socSeen): folded in once */
+{ const old = LS.get("socSeen", null); if (old && typeof old === "object") { const m = Object.assign({}, P.soc_seen || {}); for (const [k, n] of Object.entries(old)) if (Number.isInteger(n)) m[k] = Math.max(n, m[k] || 0); P.soc_seen = m; LS.del("socSeen"); savePrefs(); }
+  const ns = LS.get("socNs", 0); if (ns > (P.soc_ns || 0)) { P.soc_ns = ns; savePrefs(); } }
+const seenNs = () => P.soc_ns || 0;
+function unread(cid, tk) { const seen = P.soc_seen || {}, k = seenK(cid, tk), n = thInfo(cid, tk).n; return k in seen ? Math.max(0, n - seen[k]) : tk === "c" ? n : 0; }
+function markSeen(cid, tk, n) { const seen = Object.assign({}, P.soc_seen || {}), k = seenK(cid, tk); if (seen[k] === n) return; seen[k] = n; const ks = Object.keys(seen); if (ks.length > 600) delete seen[ks[0]]; P.soc_seen = seen; savePrefs(); }
 const chattable = x => x && x.cid > 0 && !x.mine;
 function taskAct(x) {
   const tb = timeBtn(x);
