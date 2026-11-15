@@ -4002,7 +4002,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.16";
+const APP_VERSION = "1.8.0-beta.17";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4375,7 +4375,7 @@ function renderFresh() {
   const el = $("#fresh"); if (!el) return;
   const L = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false), nNew = L.filter(x => !x.seen).length;
   if (!L.length) { el.innerHTML = ""; return; }
-  const N = 5;
+  const N = V.freshAll ? L.length : 3;
   el.innerHTML = '<div class="frl"><div class="frh"><span>' + esc(t("frTitle")) + (nNew ? ' <i class="nb">' + nNew + "</i>" : "") + "</span>" + (nNew ? '<button class="link" data-frseen>' + esc(t("frSeen")) + "</button>" : "") + "</div>" +
     L.slice(0, N).map(x => {
       const c = courseName(x.cid), sub = esc(t(FR_LBL[x.k])) + " · <bdi>" + esc(c) + "</bdi> · " + esc(ago(x.at)), cls = "fri" + (x.seen ? "" : " new");
@@ -4383,7 +4383,7 @@ function renderFresh() {
       return x.key ? '<button class="' + cls + '" data-frgo="' + esc(x.key) + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
         : x.k === "grade" ? '<button class="' + cls + '" data-frcrs="' + x.cid + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
         : '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>";
-    }).join("") + (L.length > N ? '<div class="hint">' + esc(t("frMore", L.length - N)) + "</div>" : "") + "</div>";
+    }).join("") + (L.length > 3 ? '<button class="link frmore" data-frmore>' + esc(V.freshAll ? t("newsLess") : t("frMore", L.length - 3)) + "</button>" : "") + "</div>";
 }
 function renderNews(d) {
   renderFresh();
@@ -4392,7 +4392,7 @@ function renderNews(d) {
   const L = all.filter(n => !isOff(n.cid)), fresh = L.filter(isNewNews).length;
   $("#newsBadge").hidden = !fresh; $("#newsBadge").textContent = fresh; $("#bNewsRead").hidden = !fresh;
   if (!L.length) { el.innerHTML = '<div class="hint">' + esc(t("newsNone")) + "</div>"; return; }
-  const N = 4, shown = V.newsAll ? L : L.slice(0, N);
+  const N = 3, shown = V.newsAll ? L : L.slice(0, N);
   el.innerHTML = shown.map(n => {
     const c = d.courses.find(y => y.id === n.cid), own = (n.files || []).concat((n.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
     return '<details class="ni' + (isNewNews(n) ? " new" : "") + '" data-nid="' + n.id + '" style="--c:' + colorOf(n.cid) + '"' + (V.newsOpen.has(n.id) ? " open" : "") + '><summary><span class="nt"><b><bdi>' + esc(n.subj) + "</bdi></b><small><bdi>" +
@@ -5635,13 +5635,16 @@ function widgetOf(id, w, h, d, now) {
       return { a: "", h: '<div class="wh wacc"><span class="ft1">' + wEsc(mn) + '</span></div><div class="wmonth">' + g + "</div>" };
     }
     case "newsCard": {
-      const L = (d.news || []).filter(n => !isOff(n.cid)).sort((a, b) => b.at - a.at), f = L.filter(isNewNews);
-      if (K === "1x1") return { a: "", h: wHead("megaphone", "") + wFit(String(f.length), "wbig" + (f.length ? " wacc" : ""), 30, 16) + wFit(t("wNew"), "wl1", 12, 9) };
-      if (!L.length) return { a: "", h: wHead("megaphone", t("newsTitle")) + '<div class="wcen">' + wFit(t("newsNone"), "wt", 14, 10) + "</div>" };
-      if (K === "2x1") return { a: "", h: wHead("megaphone", t("newsTitle"), f.length ? '<b class="wcnt">' + f.length + "</b>" : "") + wFit(L[0].subj, "wt", 14, 10) };
+      // the same things as the full card, newest first: "new in your courses" (files, tasks, grades) and the lecturers' announcements (a tester: the small card showed only announcements – months old – and none of the new files)
+      const fr = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false).map(x => ({ t: x.n, sub: t(FR_LBL[x.k]) + " · " + shortName(courseName(x.cid)) + " · " + ago(x.at), cid: x.cid, at: x.at, nw: !x.seen }));
+      const nw = (d.news || []).filter(n => !isOff(n.cid)).map(x => ({ t: x.subj, sub: shortName(courseName(x.cid)) + " · " + ago(x.at), cid: x.cid, at: x.at, nw: isNewNews(x) }));
+      const L = fr.concat(nw).sort((a, b) => b.at - a.at), f = L.filter(x => x.nw).length, cnt = f ? '<b class="wcnt">' + f + "</b>" : "";
+      if (K === "1x1") return { a: "", h: wHead("megaphone", "") + wFit(String(f), "wbig" + (f ? " wacc" : ""), 30, 16) + wFit(t("wNew"), "wl1", 12, 9) };
+      if (!L.length) return { a: "", h: wHead("megaphone", t("newsTitle")) + '<div class="wcen">' + wFit(d.news ? t("newsNone") : t("newsLoading"), "wt", 14, 10) + "</div>" };
+      if (K === "2x1") return { a: "", h: wHead("megaphone", t("newsTitle"), cnt) + wFit(L[0].t, "wt", 14, 10) };
       const n = wRows(h, w >= 4 ? 46 : 40);
-      return { a: "", h: wHead("megaphone", t("newsTitle"), f.length ? '<b class="wcnt">' + f.length + "</b>" : "") + '<div class="wlist">' + L.slice(0, n).map(x => '<div class="wli' + (isNewNews(x) ? " wnew" : "") + '" style="--c:' + colorOf(x.cid) + '"><i class="wbarv"></i><span class="wcol wgrow">' +
-        wFit(x.subj, "wt1", 14, 10) + '<small class="ft1">' + wEsc(shortName(courseName(x.cid)) + " · " + ago(x.at)) + "</small></span></div>").join("") + "</div>" };
+      return { a: "", h: wHead("megaphone", t("newsTitle"), cnt) + '<div class="wlist">' + L.slice(0, n).map(x => '<div class="wli' + (x.nw ? " wnew" : "") + '" style="--c:' + colorOf(x.cid) + '"><i class="wbarv"></i><span class="wcol wgrow">' +
+        wFit(x.t, "wt1", 14, 10) + '<small class="ft1">' + wEsc(x.sub) + "</small></span></div>").join("") + "</div>" };
     }
     case "aiCard": return { a: " data-mini-ai", cls: "wcen wai", h: '<span class="waiic">' + ic("bot") + "</span>" + (K === "2x1" ? wFit(t("aiTitle"), "wt", 15, 10) : "") };
     case "coursesCard": {
@@ -5684,7 +5687,8 @@ function renderMini() {
     if (!el.querySelector(":scope > .dxx")) { const x = document.createElement("button"); x.className = "dxx"; x.dataset.dexpx = "1"; x.setAttribute("aria-label", t("close")); x.innerHTML = ic("x"); el.insertBefore(x, el.firstChild); }
     el.querySelectorAll(":scope > .dmini").forEach(x => x.remove());
     const cells = (el.dataset.cells || c.sz[card.id]).split("x").map(Number);
-    let m = null; if (d && el.dataset.mode === "w") try { m = widgetOf(card.id, cells[0], cells[1], d, now); } catch (e) { console.error(e); }
+    const mode = el.classList.contains("dexp") && DX.id === card.id ? DX.mode : el.dataset.mode;   // an opened card still keeps its small view ready for when it closes
+    let m = null; if (d && mode === "w") try { m = widgetOf(card.id, cells[0], cells[1], d, now); } catch (e) { console.error(e); }
     let box = el.querySelector(":scope > .dw");
     if (!m) { if (box) box.remove(); continue; }
     if (!box) { box = document.createElement("div"); el.appendChild(box); }
@@ -5822,7 +5826,7 @@ function dExp(id) {
 function dExpClose(fromPop) {
   const el = DX.id && document.getElementById(DX.id);
   if (!el) { DX.id = ""; document.body.classList.remove("dexpo"); $$("#dash > .dexp").forEach(x => { x.classList.remove("dexp"); x.style.background = ""; }); return; }
-  el.classList.remove("dexp"); el.dataset.mode = DX.mode; el.style.background = ""; document.body.classList.remove("dexpo"); DX.id = "";
+  el.classList.remove("dexp"); el.dataset.mode = DX.mode; el.style.background = ""; document.body.classList.remove("dexpo"); DX.id = ""; renderMini();
   if (!fromPop && history.state && history.state.dexp) { NAV.skip++; history.back(); }
   requestAnimationFrame(dashOvf);
 }
@@ -6848,6 +6852,7 @@ $("#calWhat").addEventListener("click", e => { const b = e.target.closest("[data
 $("#calCrs").addEventListener("change", e => { const id = Number(e.target.dataset.cwc); if (!id) return; const c = calCfg(), off = new Set(c.off || []); e.target.checked ? off.delete(id) : off.add(id); c.off = [...off]; useHit("calw_crs"); calWhatSave(c); });
 $("#fresh").addEventListener("click", e => {
   if (e.target.closest("[data-frseen]")) { freshSeen(null); renderFresh(); return; }
+  if (e.target.closest("[data-frmore]")) { V.freshAll = !V.freshAll; renderFresh(); return; }
   const it = e.target.closest("[data-frid]"); if (!it) return;
   freshSeen([it.dataset.frid]); useHit("freshOpen");
   if (it.dataset.frgo) { e.preventDefault(); openTask(it.dataset.frgo); } else if (it.dataset.frcrs) { e.preventDefault(); openGrades(Number(it.dataset.frcrs)); } else setTimeout(renderFresh, 300);
