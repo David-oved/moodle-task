@@ -448,7 +448,8 @@ const community = env => env.COMMUNITY.get(env.COMMUNITY.idFromName("main"));
 export default {
   async fetch(req, env) {
     const origin = req.headers.get("Origin") || "";
-    const allowed = ORIGINS.includes(origin) || (env.DEV_ORIGIN && origin === env.DEV_ORIGIN);
+    // DEV_ORIGIN is set only on the test copy of this server (moodle-task-push-dev, its own empty data): "*.github.io" lets a helper's fork use it
+    const allowed = ORIGINS.includes(origin) || (env.DEV_ORIGIN && (origin === env.DEV_ORIGIN || (env.DEV_ORIGIN === "*.github.io" && /^https:\/\/[a-z0-9-]+\.github\.io$/i.test(origin))));
     const H = { "Access-Control-Allow-Origin": allowed ? origin : ORIGINS[0], "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400", Vary: "Origin" };
     const out = (o, st) => new Response(JSON.stringify(o), { status: st || 200, headers: { ...H, "Content-Type": "application/json" } });
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: H });

@@ -31,3 +31,39 @@ new_sqlite_classes = ["Feed"]
 [[migrations]]
 tag = "v3"
 new_sqlite_classes = ["Community"]
+
+# ---------- the test copy (for helpers working on a fork): same code, its own empty data, its own address ----------
+# https://moodle-task-push-dev.aorizoro.workers.dev – the app uses it automatically when it is NOT served from aorizoro.github.io.
+# Nobody but the owner can deploy it (the Cloudflare token is a repository secret that pull requests never get).
+[env.dev]
+name = "moodle-task-push-dev"
+workers_dev = true
+vars = { DEV_ORIGIN = "*.github.io" }
+
+[[env.dev.durable_objects.bindings]]
+name = "DEVICES"
+class_name = "Device"
+
+[[env.dev.durable_objects.bindings]]
+name = "KEYS"
+class_name = "Keys"
+
+[[env.dev.durable_objects.bindings]]
+name = "FEEDS"
+class_name = "Feed"
+
+[[env.dev.durable_objects.bindings]]
+name = "COMMUNITY"
+class_name = "Community"
+
+[[env.dev.migrations]]
+tag = "v1"
+new_sqlite_classes = ["Device", "Keys"]
+
+[[env.dev.migrations]]
+tag = "v2"
+new_sqlite_classes = ["Feed"]
+
+[[env.dev.migrations]]
+tag = "v3"
+new_sqlite_classes = ["Community"]

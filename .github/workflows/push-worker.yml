@@ -55,3 +55,13 @@ jobs:
           root=$(curl -sS https://aorizoro.github.io/moodle-task/ | grep -o 'APP_VERSION = "[^"]*"' | head -1)
           echo "::notice title=Beta page::$beta"
           echo "::notice title=Main page::$root"
+      - name: Deploy the test copy (for helpers' forks)
+        if: always()
+        continue-on-error: true
+        working-directory: push
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLAUDEFLARE }}
+        run: |
+          set +e; npx --yes wrangler@4.158.0 deploy --env dev > dev.txt 2>&1; st=$?; cat dev.txt
+          url=$(grep -o 'https://moodle-task-push-dev\.[a-z0-9-]*\.workers\.dev' dev.txt | head -1)
+          [ $st -eq 0 ] && echo "::notice title=Test server URL::$url" || echo "::warning title=Test server not deployed::see the log"

@@ -1,0 +1,38 @@
+# בודק כל בקשת מיזוג (Pull Request) מ-fork: היא נוגעת רק ב-beta/, והקוד בה תקין תחבירית.
+# רץ בלי שום סוד (pull_request, לא pull_request_target), עם הרשאת קריאה בלבד – אי אפשר דרכו להגיע לשרת או לפרסם משהו.
+name: PR guard
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Only files in beta/
+        run: |
+          base=${{ github.event.pull_request.base.sha }}; head=${{ github.event.pull_request.head.sha }}
+          out=$(git diff --name-only "$base" "$head" | grep -v '^beta/' || true)
+          if [ -n "$out" ]; then
+            echo "::error title=Outside beta/::This pull request changes files outside beta/ (the app everyone uses, the server or the workflows). Only beta/ may change in a pull request:%0A$(echo "$out" | sed ':a;N;$!ba;s/\n/%0A/g')"
+            exit 1
+          fi
+          echo "::notice title=Files::$(git diff --name-only "$base" "$head" | tr '\n' ' ')"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: The scripts parse
+        run: |
+          python3 - <<'PY'
+          import re, pathlib
+          s = pathlib.Path("beta/index.html").read_text(encoding="utf-8")
+          blocks = re.findall(r"<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>", s, re.S)
+          pathlib.Path("/tmp/inline.js").write_text("\n;\n".join(blocks), encoding="utf-8")
+          PY
+          node --check /tmp/inline.js
+          for f in beta/social.js beta/sw.js; do [ -f "$f" ] && node --check "$f"; done
+          echo "::notice title=Syntax::beta/index.html, beta/social.js and beta/sw.js parse"
