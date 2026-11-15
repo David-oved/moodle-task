@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.7.0";
+const SOC_V = "1.8.0";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -158,7 +158,7 @@ Object.assign(I18N.fr, {
 });
 
 /* ---------- state and the server ---------- */
-const ST = { queue: LS.get("socTQ", []).filter(k => typeof k === "string").slice(-20), chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" }, queue: [] };
+const ST = { queue: LS.get("socTQ", []).filter(k => typeof k === "string").slice(-20), chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" } };   // (a second "queue: []" here used to wipe the saved "how long did it take?" questions on every start)
 const hex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(b => b.toString(16).padStart(2, "0")).join("");
 /* a community account is made only when someone presses "join" (create = true). Anywhere else, no id = wait for sync – never a silent new account
    (a second, empty account that sync then spreads to the other devices is how points got "lost") */
@@ -194,7 +194,7 @@ async function overview(force) {
   if (ST.busy) return ST.busy;
   ST.at = Date.now();
   const old = oldIds();
-  ST.busy = api("overview", Object.assign({ courses: myCourses().map(c => ({ id: c.id, name: shortName(c.name) })), ns: LS.get("socNs", 0) }, old.length ? { old } : {}))
+  ST.busy = api("overview", Object.assign({ courses: myCourses().map(c => ({ id: c.id, name: shortName(c.name) })), ns: seenNs() }, old.length ? { old } : {}))
     .then(o => {
       if (Array.isArray(o.merged) && o.merged.length) {          // the server folded them into this id: never send them again
         LS.set("socMerged", (LS.get("socMerged", []) || []).concat(o.merged).slice(-40));
@@ -264,7 +264,7 @@ async function sendTime(h) {
 }
 function afterFetch(d, prevSt) {
   overview();
-  if (!prevSt) return;
+  if (!prevSt) return timeQueue();         // the first load after opening: ask what was waiting from last time
   for (const x of d.tasks) if (timeable(x) && timeOpen(x) && x.status === "submitted" && prevSt[x.key] && prevSt[x.key] !== "submitted" && !asked(x.key) && myRep(x.key) === undefined && !ST.queue.includes(x.key)) ST.queue.push(x.key);
   LS.set("socTQ", ST.queue.slice(-20)); timeQueue();
 }
@@ -274,6 +274,7 @@ function timeQueue(delay) {
   clearTimeout(tqTimer); if (!ST.queue.length) return;
   tqTimer = setTimeout(() => {
     if ($$(".sheet").some(s => !s.hidden) || !$("#tour").hidden || !$("#setup").hidden || document.hidden) return timeQueue(3000);
+    if (window.popTake && !window.popTake("time")) return;          // another window already opened by itself this visit: the question waits (it's kept) for the next one
     while (ST.queue.length) { const k = ST.queue.shift(); LS.set("socTQ", ST.queue); if (askTime(k, "auto")) break; }
   }, delay || 1500);
 }
@@ -281,16 +282,17 @@ function timeQueue(delay) {
 /* ---------- when I open the app: someone starred my message ---------- */
 let noteTimer = 0;
 function notesCheck(L) {
-  const seen = LS.get("socNs", 0), fresh = (Array.isArray(L) ? L : []).filter(n => n && n.kind === "star" && n.at > seen);
+  const seen = seenNs(), fresh = (Array.isArray(L) ? L : []).filter(n => n && n.kind === "star" && n.at > seen);
   if (!fresh.length) return;
   clearTimeout(noteTimer);
   noteTimer = setTimeout(function tryShow() {             // when nothing else is open (the "how long did it take?" question goes first)
     if ($$(".sheet").some(s => !s.hidden) || !$("#tour").hidden || !$("#setup").hidden || document.hidden || ST.queue.length) { noteTimer = setTimeout(tryShow, 3000); return; }
+    if (window.popTake && !window.popTake("notes")) return;      // another window already opened by itself this visit: the note waits for next time
     showNotes(fresh);
   }, 1800);
 }
 function showNotes(L) {
-  LS.set("socNs", Math.max(LS.get("socNs", 0), ...L.map(n => n.at))); useHit("socNoteShown");
+  P.soc_ns = Math.max(seenNs(), ...L.map(n => n.at)); LS.set("socNs", P.soc_ns); savePrefs(); useHit("socNoteShown");
   const rows = L.slice(0, 6).map(n => {
     const where = chatTitle(Number(n.cid), n.tk) || n.ref;
     return '<div class="snote"><div>' + esc(t("noteStar", n.name || t("lgSomeone"), where || "")) + "</div>" + (n.body ? '<div class="sq"><bdi>' + esc(n.body) + "</bdi></div>" : "") +
@@ -423,8 +425,12 @@ function renderTop(now) {
 /* ---------- chat: a discussion for every task, and a chat for every course ---------- */
 const seenK = (cid, tk) => cid + "|" + tk;
 const thInfo = (cid, tk) => { const c = cdata(cid), v = c && c.th && c.th[tk]; return v ? { n: v[0], last: v[1], ref: v[2], lb: v[3] || "", lt: v[4] || "" } : { n: 0, last: 0, ref: "", lb: "", lt: "" }; };
-function unread(cid, tk) { const seen = LS.get("socSeen", {}), k = seenK(cid, tk), n = thInfo(cid, tk).n; return k in seen ? Math.max(0, n - seen[k]) : tk === "c" ? n : 0; }
-function markSeen(cid, tk, n) { const seen = LS.get("socSeen", {}); seen[seenK(cid, tk)] = n; const ks = Object.keys(seen); if (ks.length > 400) delete seen[ks[0]]; LS.set("socSeen", seen); }
+/* what was read lives in the synced settings (P.soc_seen), so a chat read on the phone is read on the iPad too. Older devices kept it only here (socSeen): folded in once */
+{ const old = LS.get("socSeen", null); if (old && typeof old === "object") { const m = Object.assign({}, P.soc_seen || {}); for (const [k, n] of Object.entries(old)) if (Number.isInteger(n)) m[k] = Math.max(n, m[k] || 0); P.soc_seen = m; LS.del("socSeen"); savePrefs(); }
+  const ns = LS.get("socNs", 0); if (ns > (P.soc_ns || 0)) { P.soc_ns = ns; savePrefs(); } }
+const seenNs = () => P.soc_ns || 0;
+function unread(cid, tk) { const seen = P.soc_seen || {}, k = seenK(cid, tk), n = thInfo(cid, tk).n; return k in seen ? Math.max(0, n - seen[k]) : tk === "c" ? n : 0; }
+function markSeen(cid, tk, n) { const seen = Object.assign({}, P.soc_seen || {}), k = seenK(cid, tk); if (seen[k] === n) return; seen[k] = n; const ks = Object.keys(seen); if (ks.length > 600) delete seen[ks[0]]; P.soc_seen = seen; savePrefs(); }
 const chattable = x => x && x.cid > 0 && !x.mine;
 function taskAct(x) {
   const tb = timeBtn(x);
@@ -537,11 +543,18 @@ function setReply(id) {
   if (m) $("#socTx").focus();
 }
 async function sendMsg() {
-  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch || !body) return;
+  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch) return; if (!body) { tx.focus(); return; }   // nothing written yet: the box, ready to type
   const btn = $("[data-socsend]"); btn.disabled = true;
   try { await api("post", { cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") });
     useHit(ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
   catch (e) { toast(t("socNet")); } finally { btn.disabled = false; }
+}
+/* a personal note from a task / course page, shared into that discussion (it earns points only if someone marks it ⭐, like any helpful answer) */
+async function postNote(cid, tk, txt) {
+  try {
+    await api("post", { cid, tk, body: (t("noteSharedPre") + "\n" + txt).slice(0, 2000), reply: 0, ref: tk === "c" ? "" : chatTitle(cid, tk), cname: courseOf(cid) ? shortName(courseOf(cid).name) : "" });
+    useHit("noteShare"); toast(t("noteShared")); openChat(cid, tk);
+  } catch (e) { toast(t("socNet")); }
 }
 async function chatAct(op, body) { try { await api(op, body); useHit(op === "star" ? "socStar" : op === "react" ? "socReact" : "socMsgDel"); if (op === "star") toast(t("chatStarred")); await loadChat(true); } catch (e) { toast(t("socNet")); } }
 function pickEmoji(id) {
@@ -618,7 +631,7 @@ async function openUser(uid) {
   $("#socUser .box").innerHTML = "<h3><span><bdi>" + esc(u.name) + "</bdi>" + (me ? " (" + esc(t("socYou")) + ")" : "") + "</span>" + xbtn() + "</h3>" +
     '<div class="sprofcard"><div class="sav">' + esc((u.name || "?").trim().charAt(0)) + '</div><div><div class="hint">' + esc(profLine(u.deg, u.yr)) + "</div>" + rankTag(u.all) +
     '<div class="spts"><b>' + esc(t("socPts", u.all)) + "</b>" + (u.pos ? " · " + esc(t("socPos", u.pos)) : "") + " · " + esc(t("socSem")) + ": " + esc(t("socPts", u.sem)) + "</div>" + progress(u.all) + "</div></div>" +
-    (r.by.length ? '<div class="stitle">' + esc(t("socByCourse")) + '</div><div class="sbyc">' + r.by.map(b => '<span class="chip on" style="--c:' + colorOf(Number(b.cid)) + '"><i></i><bdi>' + esc(b.name) + '</bdi> <span class="n">' + b.pts + "</span></span>").join("") + "</div>" : "") +
+    (r.by.length ? '<div class="stitle">' + esc(t("socByCourse")) + '</div><div class="sbyc">' + r.by.map(b => '<span class="chip on" role="button" tabindex="0" data-socboard="' + Number(b.cid) + '" style="--c:' + colorOf(Number(b.cid)) + '"><i></i><bdi>' + esc(b.name) + '</bdi> <span class="n">' + b.pts + "</span></span>").join("") + "</div>" : "") +
     '<div class="stitle">' + esc(t("socLogT")) + "</div>" +
     (r.log.length ? '<div class="slog">' + r.log.map(l => '<div class="sl"><b class="sp" dir="ltr">+' + l.pts + '</b><div><div><bdi>' + esc(desc(l)) + '</bdi></div><small class="hint">' + (l.cname ? "<bdi>" + esc(l.cname) + "</bdi> · " : "") + esc(day(l.at)) + "</small></div></div>").join("") + "</div>"
       : '<div class="hint">' + esc(t("socLogEmpty")) + "</div>") +
@@ -628,13 +641,13 @@ async function openUser(uid) {
 function meBar() {
   const pts = (ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0), sem = (ST.ov && ST.ov.me && ST.ov.me.sem) || 0, n = myName();
   return '<div class="chme"><div class="chme1"><span class="sav">' + esc((n || "?").charAt(0)) + '</span><div class="sw"><div>' + rankTag(pts) + ' <span class="spts">' + esc(t("socPts", pts)) + "</span>" +
-    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + "</div></div>" +
+    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + '<details class="ptsh"><summary>' + esc(t("ft_points")) + "?</summary><p>" + esc(t("fd_points")) + "</p></details></div></div>" +
     '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + "</span></button></div></div>";
 }
 function progress(pts) {
   const r = rankOf(pts); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
   const lo = RANKS[r.i][0], hi = r.next[0], p = Math.round((pts - lo) / (hi - lo) * 100);
-  return '<div class="sbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + t(r.next[2]))) + "</div>";
+  return '<div class="rkbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + t(r.next[2]))) + "</div>";
 }
 function toggleMute(uid, name) {
   if (muted(uid)) { P.soc_mute = P.soc_mute.filter(m => m.uid !== uid); toast(t("socUnmuted")); }
@@ -766,7 +779,7 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socwasave]"))) return saveWa(Number(b.dataset.socwasave), false);
   if ((b = g("[data-socwadel]"))) return saveWa(Number(b.dataset.socwadel), true);
   if ((b = g("[data-socmute]"))) return toggleMute(b.dataset.socmute, b.dataset.n);
-  if ((b = g("[data-socboard]"))) return openBoard(b.dataset.socboard ? Number(b.dataset.socboard) : undefined);
+  if ((b = g("[data-socboard]"))) { if (b.closest("#socUser")) close("socUser"); return openBoard(b.dataset.socboard ? Number(b.dataset.socboard) : undefined); }   // from "my points", a course goes to its leaderboard
   if ((b = g("[data-socme]"))) return P.soc_id && openUser(P.soc_id.uid);
   if ((b = g("[data-socjoin]"))) return intro(true);
   if ((b = g("[data-socjoinnow]"))) return join();
@@ -848,8 +861,11 @@ css.textContent = `
 .sav{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:800;color:#fff;background:linear-gradient(135deg,#5856d6,#af52de)}
 .spts{font-size:13px;color:var(--muted)}
 .spts b{color:var(--text)}
-.sbar{height:6px;border-radius:99px;background:var(--track);overflow:hidden;margin:8px 0 3px}
-.sbar i{display:block;height:100%;background:linear-gradient(90deg,#5856d6,#af52de);border-radius:99px}
+.ptsh{margin-top:4px;font-size:12.5px;color:var(--muted)}
+.ptsh summary{cursor:pointer;color:var(--accent-t);font-weight:600}
+.ptsh p{margin:4px 0 0;line-height:1.5}
+.rkbar{height:6px;border-radius:99px;background:var(--track);overflow:hidden;margin:8px 0 3px}
+.rkbar i{display:block;height:100%;background:linear-gradient(90deg,#5856d6,#af52de);border-radius:99px}
 .sbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .sbtns button{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;font-size:13px;font-weight:600}
 .sbtns .i{width:16px;height:16px}
@@ -900,6 +916,7 @@ body[data-density=clean] .task .sest span{display:none}
 .scnt{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;font-size:11px;font-weight:800;background:var(--track);color:var(--text);margin-inline-start:4px}
 .scnt.new{background:#ff3b30;color:#fff}
 .sheet.chat .box{height:min(88vh,760px);display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+@media (max-width:759px){.sheet.chat .box{height:100%;padding-bottom:env(safe-area-inset-bottom)}}   /* phones: a full page like every other window (it stopped at 88% and the tab bar showed under the message box) */
 .schsub{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;margin:-4px 0 6px}
 .schsub>i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
 .schl{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px 10px;overscroll-behavior:contain}
@@ -971,5 +988,5 @@ html[dir=ltr] .chhead{background:linear-gradient(to right,color-mix(in srgb,var(
 `;
 document.head.appendChild(css);
 
-window.SOC = { taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
+window.SOC = { postNote, taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
 })();
