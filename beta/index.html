@@ -4002,7 +4002,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.17";
+const APP_VERSION = "1.8.0-beta.18";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4371,11 +4371,12 @@ document.addEventListener("click", e => {
   if (v !== "all") toast(t("tipDone", shortName(courseName(Number(cid)))), 4500);
 });
 function freshSeen(ids) { const all = LS.get("fresh", []) || []; for (const x of all) if (!ids || ids.includes(x.id)) x.seen = 1; LS.set("fresh", all); }
+function openedCard() { try { return DX.id; } catch (e) { return ""; } }      // the overview card opened on top, if any (safe before DX exists)
 function renderFresh() {
   const el = $("#fresh"); if (!el) return;
   const L = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false), nNew = L.filter(x => !x.seen).length;
   if (!L.length) { el.innerHTML = ""; return; }
-  const N = V.freshAll ? L.length : 3;
+  const all = V.freshAll || openedCard() === "newsCard", N = all ? L.length : 3;
   el.innerHTML = '<div class="frl"><div class="frh"><span>' + esc(t("frTitle")) + (nNew ? ' <i class="nb">' + nNew + "</i>" : "") + "</span>" + (nNew ? '<button class="link" data-frseen>' + esc(t("frSeen")) + "</button>" : "") + "</div>" +
     L.slice(0, N).map(x => {
       const c = courseName(x.cid), sub = esc(t(FR_LBL[x.k])) + " · <bdi>" + esc(c) + "</bdi> · " + esc(ago(x.at)), cls = "fri" + (x.seen ? "" : " new");
@@ -4383,7 +4384,7 @@ function renderFresh() {
       return x.key ? '<button class="' + cls + '" data-frgo="' + esc(x.key) + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
         : x.k === "grade" ? '<button class="' + cls + '" data-frcrs="' + x.cid + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
         : '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>";
-    }).join("") + (L.length > 3 ? '<button class="link frmore" data-frmore>' + esc(V.freshAll ? t("newsLess") : t("frMore", L.length - 3)) + "</button>" : "") + "</div>";
+    }).join("") + (L.length > 3 && openedCard() !== "newsCard" ? '<button class="link frmore" data-frmore>' + esc(V.freshAll ? t("newsLess") : t("frMore", L.length - 3)) + "</button>" : "") + "</div>";
 }
 function renderNews(d) {
   renderFresh();
@@ -4392,13 +4393,13 @@ function renderNews(d) {
   const L = all.filter(n => !isOff(n.cid)), fresh = L.filter(isNewNews).length;
   $("#newsBadge").hidden = !fresh; $("#newsBadge").textContent = fresh; $("#bNewsRead").hidden = !fresh;
   if (!L.length) { el.innerHTML = '<div class="hint">' + esc(t("newsNone")) + "</div>"; return; }
-  const N = 3, shown = V.newsAll ? L : L.slice(0, N);
+  const opened = openedCard() === "newsCard", N = 3, shown = V.newsAll || opened ? L : L.slice(0, N);
   el.innerHTML = shown.map(n => {
     const c = d.courses.find(y => y.id === n.cid), own = (n.files || []).concat((n.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
     return '<details class="ni' + (isNewNews(n) ? " new" : "") + '" data-nid="' + n.id + '" style="--c:' + colorOf(n.cid) + '"' + (V.newsOpen.has(n.id) ? " open" : "") + '><summary><span class="nt"><b><bdi>' + esc(n.subj) + "</bdi></b><small><bdi>" +
       esc(shortName(c ? c.name : "")) + "</bdi>" + (n.by ? " · <bdi>" + esc(n.by) + "</bdi>" : "") + " · " + esc(ago(n.at)) + '</small></span></summary><div class="nm"><pre>' + esc(n.msg) + "</pre>" +
       (own.length ? '<div class="files">' + own.map(fileLink).join("") + "</div>" : "") + '<a class="op" href="' + esc(n.url) + '" target="_blank" rel="noopener noreferrer">' + esc(t("newsOpen")) + "</a></div></details>";
-  }).join("") + (L.length > N ? '<button class="link" id="bNewsMore">' + esc(V.newsAll ? t("newsLess") : t("newsMore", L.length - N)) + "</button>" : "");
+  }).join("") + (L.length > N && !opened ? '<button class="link" id="bNewsMore">' + esc(V.newsAll ? t("newsLess") : t("newsMore", L.length - N)) + "</button>" : "");
 }
 
 /* ---------- render: everything ---------- */
@@ -5201,7 +5202,7 @@ function renderSug() {
 function renderRemCard() {
   const el = $("#remCardBody"); if (!el) return;
   const on = P.rem && P.rem.on;
-  $("#icsCard").classList.toggle("sugmoved", !on);
+  if ($("#icsCard").classList.contains("sugmoved") !== !on) { $("#icsCard").classList.toggle("sugmoved", !on); try { layoutDash(); } catch (e) {} }
   if (feedOn()) feedSoon();
   const calLine = () => { if (feedOn()) return '<div class="hint">📅 ' + esc(t("calLive")) + "</div>"; if (!useCal()) return ""; const n = remPending();
     return n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button data-rem="add">' + esc(t("remUpdateBtn")) + "</button>" : '<div class="hint">📅 ' + esc(t("remCardOk")) + "</div>"; };
@@ -5688,7 +5689,7 @@ function renderMini() {
     el.querySelectorAll(":scope > .dmini").forEach(x => x.remove());
     const cells = (el.dataset.cells || c.sz[card.id]).split("x").map(Number);
     const mode = el.classList.contains("dexp") && DX.id === card.id ? DX.mode : el.dataset.mode;   // an opened card still keeps its small view ready for when it closes
-    let m = null; if (d && mode === "w") try { m = widgetOf(card.id, cells[0], cells[1], d, now); } catch (e) { console.error(e); }
+    let m = null; if (d && mode === "w") try { m = widgetOf(card.id, cells[0], cells[1], d, now); } catch (e) { console.error(e); continue; }   // a drawing error keeps what was shown, never a blank card
     let box = el.querySelector(":scope > .dw");
     if (!m) { if (box) box.remove(); continue; }
     if (!box) { box = document.createElement("div"); el.appendChild(box); }
@@ -5780,7 +5781,7 @@ function dashFill(out, C) {
   return out;
 }
 function dashAuto() {
-  const c = dashCfg(), C = DASH_COLS[devKind()], shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id));
+  const c = dashCfg(), C = DASH_COLS[devKind()], shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id) && !document.getElementById(id).classList.contains("sugmoved"));
   // first try the order that packs tightest: each next card is the one that fits highest up (keeping the student's order when it ties)
   const left = shown.slice(), order = [];
   while (left.length) {
@@ -5802,7 +5803,8 @@ function layoutDash() {
   const box = $("#dash"); if (!box) return;
   const c = dashCfg(), C = DASH_COLS[devKind()];
   for (const id of c.order) { const el = document.getElementById(id); if (el && el.parentNode === box) box.appendChild(el); }       // the reading order (screen readers, Tab)
-  const shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id));
+  // a card that has nothing to show right now (reminders while they are off) takes no cells: it used to leave an empty hole of its size
+  const shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id) && !document.getElementById(id).classList.contains("sugmoved"));
   for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (el) el.classList.toggle("dhide", c.off.includes(d.id)); }
   for (const r of dashPack(shown.map(id => { const [w, h] = szWH(c.sz[id]); return { id, w, h }; }), C)) {
     const el = document.getElementById(r.id);
@@ -5822,11 +5824,14 @@ function dExp(id) {
   DX.id = id; DX.mode = el.dataset.mode; el.dataset.mode = "full"; el.classList.add("dexp"); el.classList.remove("ovf"); document.body.classList.add("dexpo");
   useHit("dOpen_" + id); history.pushState({ v: V.view, dexp: id }, ""); el.scrollTop = 0;
   if (id === "stats" || id === "aiCard") el.style.background = "var(--bg)";
+  if (id === "newsCard" && V.data) renderNews(V.data);           // opened: all of it
 }
 function dExpClose(fromPop) {
   const el = DX.id && document.getElementById(DX.id);
   if (!el) { DX.id = ""; document.body.classList.remove("dexpo"); $$("#dash > .dexp").forEach(x => { x.classList.remove("dexp"); x.style.background = ""; }); return; }
-  el.classList.remove("dexp"); el.dataset.mode = DX.mode; el.style.background = ""; document.body.classList.remove("dexpo"); DX.id = ""; renderMini();
+  const was = DX.id; el.classList.remove("dexp"); el.dataset.mode = DX.mode; el.style.background = ""; document.body.classList.remove("dexpo"); DX.id = "";
+  if (was === "newsCard" && V.data) renderNews(V.data);          // back to the latest few
+  renderMini();
   if (!fromPop && history.state && history.state.dexp) { NAV.skip++; history.back(); }
   requestAnimationFrame(dashOvf);
 }
@@ -6257,13 +6262,16 @@ $("#bDashEdit").onclick = $("#bDashEdit2").onclick = () => { deOn(!document.body
 /* like a phone's home screen: a long press on a card starts editing */
 { let lp = null;
   $("#dash").addEventListener("pointerdown", e => {
-    if (document.body.classList.contains("dashed") || e.button > 0 || !e.target.closest("#dash > .dcard, #dash > .stats")) return;
+    // not inside a card opened on top (a tester: holding a finger to scroll it closed the card and started editing), and not on an editable field
+    if (document.body.classList.contains("dashed") || DX.id || e.button > 0 || !e.isPrimary || !e.target.closest("#dash > .dcard, #dash > .stats") || e.target.closest(".dexp, input, textarea, select, a, details")) return;
     const x0 = e.clientX, y0 = e.clientY; clearTimeout(lp && lp.t);
-    lp = { x0, y0, t: setTimeout(() => { lp = null; useHit("dashLongPress"); try { navigator.vibrate && navigator.vibrate(15); } catch (er) {} deOn(true); }, 550) };
+    lp = { x0, y0, t: setTimeout(() => { lp = null; if (DX.id || document.body.classList.contains("dashed") || document.hidden) return; useHit("dashLongPress"); try { navigator.vibrate && navigator.vibrate(15); } catch (er) {} deOn(true); }, 550) };
   });
   const stop = e => { if (lp && (e.type !== "pointermove" || Math.hypot(e.clientX - lp.x0, e.clientY - lp.y0) > 8)) { clearTimeout(lp.t); lp = null; } };
-  for (const k of ["pointerup", "pointercancel", "pointermove", "scroll"]) addEventListener(k, stop, { passive: true });
-  $("#dash").addEventListener("contextmenu", e => { if (e.target.closest("#dash > .dcard, #dash > .stats") && matchMedia("(pointer: coarse)").matches) e.preventDefault(); }); }
+  for (const k of ["pointerup", "pointercancel", "pointermove", "touchmove", "touchend"]) addEventListener(k, stop, { passive: true });
+  document.addEventListener("scroll", e => { if (lp) { clearTimeout(lp.t); lp = null; } }, { capture: true, passive: true });   // a scroll anywhere – the page or inside a card – is not a long press
+  for (const k of ["visibilitychange", "blur"]) addEventListener(k, () => { if (lp) { clearTimeout(lp.t); lp = null; } });
+  $("#dash").addEventListener("contextmenu", e => { if (e.target.closest("#dash > .dcard, #dash > .stats") && !e.target.closest(".dexp") && matchMedia("(pointer: coarse)").matches) e.preventDefault(); }); }   // an opened card: text can be selected and copied
 $("#bDashArr").onclick = openDashArr;
 $("#bCal").onclick = () => openCal();
 /* Google takes a calendar link only on its website on a computer (its phone app can't); so on a phone: send the link over */
