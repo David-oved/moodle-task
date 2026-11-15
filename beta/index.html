@@ -4002,7 +4002,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.15";
+const APP_VERSION = "1.8.0-beta.16";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4196,6 +4196,19 @@ const grItems = cid => { const g = grAll().c[cid]; return g && Array.isArray(g.i
 const grNum = n => String(Math.round(n * 100) / 100);
 const grTxt = it => /^-?[\d.,]+\s*%?$/.test(it.fmt || "") && it.raw != null && it.max ? grNum(it.raw) + "/" + grNum(it.max) : it.fmt || "";
 const grIsAtt = it => it.mod === "attendance";
+/* the course total as Moodle sends it – unless its number and its maximum don't belong together (seen 15.11: 100 "out of 10" = 1000).
+   Then: the graded items' own percentages, by their weights in the course (or their plain average), on a scale of 100 */
+function grTot(cg) {
+  const tt = cg && cg.total; if (!tt || tt.raw == null) return null;
+  const p = tt.max > 0 ? tt.raw / tt.max * 100 : NaN;
+  if (Number.isFinite(p) && p >= 0 && p <= 110) return { raw: tt.raw, max: tt.max, p };
+  const fp = /^\s*(-?[\d.]+)\s*%\s*$/.exec(tt.fmt || ""); if (fp) { const v = Number(fp[1]); if (v >= 0 && v <= 110) return { raw: v, max: 100, p: v }; }
+  const its = (cg.items || []).filter(i => i.raw != null && i.max > 0);
+  if (!its.length) return null;
+  const ws = its.every(i => i.w != null && i.w > 0), sw = ws ? its.reduce((a, i) => a + i.w, 0) : its.length;
+  const v = its.reduce((a, i) => a + (ws ? i.w : 1) * Math.min(110, i.raw / i.max * 100), 0) / sw;
+  return Number.isFinite(v) ? { raw: v, max: 100, p: v } : null;
+}
 function gradeOfTask(x) { if (!grOn() || !x || !(x.cid > 0) || !x.cmid) return null; return grItems(x.cid).find(i => i.cmid === x.cmid && i.raw != null) || null; }
 async function gradeScan(d, force, only) {
   if (!grOn() || GR.busy || !d || !M.token) return;
@@ -4246,7 +4259,7 @@ function renderGradesCard() {
   const rows = cs.map(c => {
     const cg = g.c[c.id] || {}, its = (cg.items || []).filter(i => i.raw != null), last = its.slice().sort((a, b) => b.at - a.at)[0];
     const sub = cg.err === "hidden" ? t("grHiddenShort") : cg.err && !its.length ? t("grFailShort") : last ? last.n + " · " + grTxt(last) + (last.at ? " · " + ago(last.at) : "") : t("grNoneYet");
-    const tot = cg.total ? '<b class="grt">' + esc(grNum(cg.total.raw / (cg.total.max || 100) * 100)) + "</b>" : '<b class="grt dim">—</b>';
+    const gt = grTot(cg), tot = gt ? '<b class="grt">' + esc(grNum(gt.p)) + "</b>" : '<b class="grt dim">—</b>';
     return '<button class="crsrow" data-grall="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small><bdi>" + esc(sub) + "</bdi></small></span>" + tot + "</button>";
   }).join("");
   el.innerHTML = (rows || '<p class="hint">' + esc(t("crsNone")) + "</p>") + '<p class="hint grfoot">' + esc(t("grAt", ago(Math.floor(g.at / 1000)))) + " · " + esc(t("grTotHint")) + "</p>";
@@ -4271,7 +4284,7 @@ function grCourseBody(cid, showLink) {
   if (cg.err && !(cg.items || []).length) return '<p class="hint">' + esc(t("grFail")) + "</p>" + (showLink ? gl : "");
   const its = cg.items || [], got = its.filter(i => i.raw != null).sort((a, b) => b.at - a.at), none = its.filter(i => i.raw == null);
   const tasks = got.filter(i => !grIsAtt(i)), att = got.filter(grIsAtt), wDone = got.reduce((n, i) => n + (i.w || 0), 0);
-  let h = cg.total ? '<div class="grtot"><span>' + esc(t("grTotal")) + (wDone ? "<small>" + esc(t("grCounted", grNum(wDone))) + "</small>" : "") + '</span><b class="' + grCls(cg.total.raw / (cg.total.max || 100) * 100).trim() + '">' + esc(grNum(cg.total.raw)) + "<small>/" + esc(grNum(cg.total.max)) + "</small></b></div>" : "";
+  const gt = grTot(cg); let h = gt ? '<div class="grtot"><span>' + esc(t("grTotal")) + (wDone ? "<small>" + esc(t("grCounted", grNum(wDone))) + "</small>" : "") + '</span><b class="' + grCls(gt.p).trim() + '">' + esc(grNum(gt.raw)) + "<small>/" + esc(grNum(gt.max)) + "</small></b></div>" : "";
   if (tasks.length) h += '<div class="grsub">' + esc(t("grTasksH", tasks.length)) + "</div>" + tasks.map(i => grRow(i, cid)).join("");
   if (att.length) h += '<div class="grsub">' + esc(t("grAttH")) + "</div>" + att.map(i => grRow(i, cid)).join("");
   if (!got.length) h += '<p class="hint">' + esc(t("grNoneYet")) + "</p>";
@@ -4305,10 +4318,10 @@ function renderGrades() {
   if (recent.length) h += '<div class="grsec">' + ic("sparkles") + "<span>" + esc(t("grRecent")) + "</span></div>" + recent.slice(0, 8).map(([it, cid]) => grRow(it, cid, true)).join("");
   h += '<div class="grsec">' + ic("book-open") + "<span>" + esc(t("grByCourse")) + "</span></div>";
   h += cs.map(c => {
-    const cg = g.c[c.id] || {}, got = (cg.items || []).filter(i => i.raw != null).length, tot = cg.total;
+    const cg = g.c[c.id] || {}, got = (cg.items || []).filter(i => i.raw != null).length, tot = grTot(cg);
     const sub = cg.err === "hidden" ? t("grHiddenShort") : !cg.at ? t("grNone") : cg.err && !(cg.items || []).length ? t("grFailShort") : t("grCnt", got, (cg.items || []).length);
     return '<details class="grc" data-grc="' + c.id + '" style="--c:' + colorOf(c.id) + '"' + (GP.open[c.id] ? " open" : "") + '><summary><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small>" + esc(sub) + "</small></span>" +
-      (tot ? '<b class="grt' + grCls(tot.raw / (tot.max || 100) * 100) + '">' + esc(grNum(tot.raw)) + "</b>" : '<b class="grt dim">—</b>') + "</summary>" +
+      (tot ? '<b class="grt' + grCls(tot.p) + '">' + esc(grNum(tot.raw)) + "</b>" : '<b class="grt dim">—</b>') + "</summary>" +
       '<div class="grcb">' + grCourseBody(c.id, true) + '<div class="crsbtns"><button class="btn" data-grcrs="' + c.id + '">' + ic("book-open") + " " + esc(t("tkCourse")) + "</button></div></div></details>";
   }).join("");
   h += '<p class="hint">' + esc(t("grTotHint")) + "</p>";
@@ -5338,7 +5351,7 @@ function renderCourse() {
   const dn = socOn() ? s.all.filter(x => (x.status === "submitted" || isDone(x)) && isAct(x)).sort((a, b) => (b.due || 0) - (a.due || 0)) : [];
   if (dn.length) h += sect("done", "check", t("crsSDone", dn.length), '<p class="hint">' + esc(t("crsDoneHint")) + "</p>" + dn.slice(0, 20).map(x => '<div class="crsdn"><button class="crsli" data-crsgo="' + esc(x.key) + '">' + ic("check") + '<span class="sw"><b><bdi>' + esc(x.name) + "</bdi></b><small>" + esc(x.due ? when(x.due) : "") + "</small></span></button>" + S("timeBtn", x) + "</div>").join(""), isOpenS("done", false));
   // grades
-  { const cg = grAll().c[cid], tot = cg && cg.total ? " · " + grNum(cg.total.raw) : "";
+  { const cg = grAll().c[cid], gt = grTot(cg), tot = gt ? " · " + grNum(gt.raw) : "";
     h += sect("grades", "graduation-cap", t("grTitleC") + tot, grSection(cid), isOpenS("grades", false)); }
   // exams and quizzes
   const ex = examList().filter(x => x.cid === cid && x.ts >= now - DAY);
@@ -5643,7 +5656,7 @@ function widgetOf(id, w, h, d, now) {
     case "gradesCard": {
       const g = grAll(); let best = null; const tot = [];
       for (const c of d.courses.filter(c => !isOff(c.id) && courseCurrent(c, now))) { const cg = g.c[c.id] || {}; for (const it of cg.items || []) if (it.raw != null && it.at && (!best || it.at > best.it.at)) best = { it, cid: c.id };
-        tot.push({ c, v: cg.total ? grNum(cg.total.raw / (cg.total.max || 100) * 100) : "—" }); }
+        tot.push({ c, v: grTot(cg) ? grNum(grTot(cg).p) : "—" }); }
       if (K === "1x1") return { a: "", h: wHead("award", "") + wFit(best ? grTxt(best.it) : "—", "wbig", 26, 12) + wFit(best ? shortName(courseName(best.cid)) : t("miniNoGr"), "wt1", 11, 9) };
       if (K === "2x1") return { a: "", h: wHead("award", t("wLastGr")) + (best ? '<div class="wrow wbase">' + wFit(grTxt(best.it), "wbig", 24, 13) + "</div>" + wFit(shortName(courseName(best.cid)) + " · " + best.it.n, "wt1", 12, 9) : wFit(t("miniNoGr"), "wt", 14, 10)) };
       const n = wRows(h, 38);
