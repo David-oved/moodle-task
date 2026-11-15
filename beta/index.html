@@ -807,8 +807,14 @@ html[dir=ltr] .sg.cur::before{transform:translateX(-50%)}
 .scl label i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
 .scl label span{flex:1;min-width:0}
 .scl small{color:var(--muted)}
-.ttfoot{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
-.ttfoot button{font-size:13px}
+/* the buttons under the timetable: icon + a clear word, in one row (two on a narrow phone) */
+.ttfoot{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.ttfoot .ttfb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;min-height:58px;border-radius:12px;background:var(--row);border:1px solid var(--line);color:var(--text);font-size:12.5px;font-weight:600;line-height:1.2;text-align:center}
+.ttfoot .ttfb .i{width:20px;height:20px;color:var(--accent-t)}
+.ttfoot .ttfb[aria-expanded="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.ttfoot .ttfb.del{color:var(--err)} .ttfoot .ttfb.del .i{color:var(--err)}
+@media (hover:hover){ .ttfoot .ttfb:hover{border-color:var(--accent)} .ttfoot .ttfb.del:hover{border-color:var(--err)} }
+@media (max-width:359px){ .ttfoot{grid-template-columns:repeat(2,1fr)} }
 .tte .lk{font-size:10px;margin-inline-start:3px}
 /* mandatory attendance: same colour, striped, with a darker rim */
 .tte.att{background:repeating-linear-gradient(135deg,var(--c) 0 7px,color-mix(in srgb,var(--c) 80%,#000) 7px 14px);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c) 55%,#000)}
@@ -1522,7 +1528,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtFile" data-i18n="ttImport"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
       <div id="ttVw" class="ttvw" hidden></div>
       <div id="tt"></div>
-      <div class="ttfoot" id="ttFoot"><span><button class="link" id="bTtView" data-i18n="ttView"></button><button class="link" id="bTtShare" data-i18n="ttShare"></button><button class="link" id="bTtScan" data-i18n="ttScan"></button></span><button class="link" id="bTtClear" style="color:var(--err)" data-i18n="ttClear"></button></div>
+      <div class="ttfoot" id="ttFoot"><button class="ttfb" id="bTtView" data-i18n="ttView" data-ic="sliders-horizontal" aria-expanded="false"></button><button class="ttfb" id="bTtShare" data-i18n="ttShare" data-ic="share-2"></button><button class="ttfb" id="bTtScan" data-i18n="ttScan" data-ic="download"></button><button class="ttfb del" id="bTtClear" data-i18n="ttClear" data-ic="trash-2"></button></div>
       <input type="file" id="ttFile" hidden>
     </div>
     <div id="acadCard" class="dcard acad">
@@ -2171,7 +2177,7 @@ const I18N = {
     icsAll: "📅 הוסף את כל המטלות ליומן", icsHint: "קובץ יומן עם תזכורת יום לפני ושעתיים לפני כל הגשה. נפתח ביומן של הטלפון או המחשב.", icsNone: "אין מטלות עם מועד להוספה", icsDone: n => n + " מטלות נוספו לקובץ היומן",
     toCal: "📅 ליומן", markDone: "✓ סמן כבוצע", unmarkDone: "↩ בטל סימון", related: n => "📚 חומרים מאותו נושא (" + n + ")",
     focusDay: x => "מסונן: " + x, focusCourse: x => "מסונן: " + x, focusGroup: x => "מסונן: " + x, clearFocus: "✕ נקה", dayEmpty: "אין משימות ביום הזה", calDue: "מועד הגשה",
-    viewTT: "לו״ז", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "🔗 שתף", ttOpen: "למערכת ←", edit: "עריכה",
+    viewTT: "לו״ז", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "שיתוף", ttOpen: "למערכת ←", edit: "עריכה",
     ttEmpty: "עדיין אין מערכת שעות. הכי פשוט: מורידים את קובץ המערכת מהלב נט הישן ומייבאים אותו כאן (הכפתור למטה מסביר איך). אפשר גם להוסיף שיעורים ידנית (״+ הוסף״).",
     ttNewTitle: "שיעור חדש", ttEditTitle: "עריכת שיעור", ttCourse: "קורס", ttOtherCourse: "אחר (לא מ-Moodle)", ttName: "שם להצגה", ttKind: "סוג", ttDay: "יום",
     ttFrom: "משעה", ttTo: "עד שעה", ttPlace: "מקום / חדר", save: "שמור", del: "מחק", delConfirm: "למחוק את השיעור הזה מהמערכת?",
@@ -2194,9 +2200,9 @@ const I18N = {
     exScan: "🔎 חפש מועדים ביומן של Moodle", exScanNone: "ביומן של Moodle לא נמצאו מועדי מבחנים. צריך להזין ידנית.", exFound: n => "נמצאו ב-Moodle " + n + " אירועים שנראים כמו מבחנים. אשר כל אחד שמתאים.",
     exUse: "אשר", exFromMoodle: "ב-Moodle:", scanning: "מחפש ביומן של Moodle…", noCourses: "אין עדיין קורסים (צריך להתחבר ולרענן)",
     semNeed: "כדי לראות כמה שבועות נשארו, הזן את תאריכי הסמסטר.", semSetBtn: "הזן תאריכי סמסטר", semSrcKnown: "מקור: לוח השנה של מכון לב, סמסטר א׳ תשפ״ז", semSrcUser: "מקור: תאריכים שהזנת", examsLblA: "📝 מועדי א׳",
-    ttScan: "⤓ מ-Moodle", ttScanTitle: "שיעורים מהיומן של Moodle", ttScanHint: "אלה אירועים שחוזרים כל שבוע ביומן של הקורסים שלך ב-Moodle. סמן מה להוסיף למערכת.",
+    ttScan: "ייבוא מהמודל", ttScanTitle: "שיעורים מהיומן של Moodle", ttScanHint: "אלה אירועים שחוזרים כל שבוע ביומן של הקורסים שלך ב-Moodle. סמן מה להוסיף למערכת.",
     ttScanNone: "ביומן של Moodle לא נמצאו שיעורים קבועים, כנראה שהמוסד לא מפרסם שם את המערכת. אפשר להוסיף שיעורים ידנית (״+ הוסף״).", ttScanAdd: n => "הוסף " + n + " שיעורים",
-    ttPriv: "🔒 פרטי (לא נכלל כשמשתפים את המערכת)", ttClear: "מחק את כל המערכת", ttView: "תצוגה", ttZ: "גודל", ttZ1: "רגיל", ttZ2: "גדול", ttZ3: "גדול מאוד", ttOrd: "סדר השורות בקוביה (מה שלמעלה נשאר גלוי גם בשיעור קצר)", ttL_nm: "שם השיעור", ttL_tm: "שעות", ttL_tk: "שיעור / תרגול", ttL_pl: "מקום", ttOrdReset: "סדר ברירת המחדל", moveUp: "למעלה", moveDown: "למטה", ttClearConfirm: n => "למחוק את כל " + n + " השיעורים מהמכשיר הזה?",
+    ttPriv: "🔒 פרטי (לא נכלל כשמשתפים את המערכת)", ttClear: "מחיקת המערכת", ttView: "תצוגה וסדר", ttZ: "גודל", ttZ1: "רגיל", ttZ2: "גדול", ttZ3: "גדול מאוד", ttOrd: "סדר השורות בקוביה (מה שלמעלה נשאר גלוי גם בשיעור קצר)", ttL_nm: "שם השיעור", ttL_tm: "שעות", ttL_tk: "שיעור / תרגול", ttL_pl: "מקום", ttOrdReset: "סדר ברירת המחדל", moveUp: "למעלה", moveDown: "למטה", ttClearConfirm: n => "למחוק את כל " + n + " השיעורים מהמכשיר הזה?",
     importAsk: parts => "הקישור הזה רוצה להוסיף למכשיר שלך:\n" + parts.join("\n") + "\n\nלהוסיף?", importTT: (n, ex) => "• מערכת שעות: " + n + " שיעורים (" + ex + ")" , importTTRep: n => "  (תחליף את המערכת הנוכחית, " + n + " שיעורים)", importCC: n => "• צבעים ל-" + n + " קורסים", importDone: "נוסף ✓",
     ttImport: "📄 מהלבנט", ttImportLong: "📄 ייבוא המערכת מקובץ הלבנט", ttScanLong: "⤓ חיפוש ביומן של Moodle", ttWho: "מרצה",
     ttFileBad: "לא הצלחתי לקרוא את הקובץ. צריך את הקובץ מהלב נט הישן: מערכת ← לו״ז ← תצוגה כרשימה ← הורד בפורמט Excel, כמו שהוא, בלי לפתוח ולשמור באקסל.",
@@ -2413,7 +2419,7 @@ const I18N = {
     icsAll: "📅 Add all tasks to my calendar", icsHint: "A calendar file with reminders 1 day and 2 hours before each deadline. Opens in your phone or PC calendar.", icsNone: "No dated tasks to add", icsDone: n => n + " tasks added to the calendar file",
     toCal: "📅 Calendar", markDone: "✓ Mark done", unmarkDone: "↩ Unmark", related: n => "📚 Materials from the same topic (" + n + ")",
     focusDay: x => "Filtered: " + x, focusCourse: x => "Filtered: " + x, focusGroup: x => "Filtered: " + x, clearFocus: "✕ Clear", dayEmpty: "No tasks on this day", calDue: "Due",
-    viewTT: "Schedule", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "🔗 Share", ttOpen: "Timetable →", edit: "Edit",
+    viewTT: "Schedule", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "Share", ttOpen: "Timetable →", edit: "Edit",
     ttEmpty: "No timetable yet. Easiest: download your timetable file from the old Levnet and import it here (the button below shows how). You can also add classes manually (“+ Add”).",
     ttNewTitle: "New class", ttEditTitle: "Edit class", ttCourse: "Course", ttOtherCourse: "Other (not on Moodle)", ttName: "Display name", ttKind: "Type", ttDay: "Day",
     ttFrom: "From", ttTo: "To", ttPlace: "Place / room", save: "Save", del: "Delete", delConfirm: "Delete this class from the timetable?",
@@ -2436,9 +2442,9 @@ const I18N = {
     exScan: "🔎 Look for dates in the Moodle calendar", exScanNone: "No exam dates found in the Moodle calendar. Enter them manually.", exFound: n => n + " events that look like exams were found on Moodle. Confirm each one that fits.",
     exUse: "Use", exFromMoodle: "On Moodle:", scanning: "Searching the Moodle calendar…", noCourses: "No courses yet (connect and refresh first)",
     semNeed: "Enter the semester dates to see how many weeks are left.", semSetBtn: "Enter semester dates", semSrcKnown: "Source: Machon Lev academic calendar, semester A 5787", semSrcUser: "Source: dates you entered", examsLblA: "📝 1st sittings",
-    ttScan: "⤓ From Moodle", ttScanTitle: "Classes from the Moodle calendar", ttScanHint: "These events repeat every week in your Moodle course calendars. Tick what to add.",
+    ttScan: "From Moodle", ttScanTitle: "Classes from the Moodle calendar", ttScanHint: "These events repeat every week in your Moodle course calendars. Tick what to add.",
     ttScanNone: "No weekly classes were found in the Moodle calendar; your institution probably doesn’t publish the timetable there. You can add classes manually (“+ Add”).", ttScanAdd: n => "Add " + n + " classes",
-    ttPriv: "🔒 Private (left out when sharing the timetable)", ttClear: "Delete the whole timetable", ttView: "Display", ttZ: "Size", ttZ1: "Normal", ttZ2: "Large", ttZ3: "Extra large", ttOrd: "Order of the lines in a block (the top ones stay visible even in a short class)", ttL_nm: "Class name", ttL_tm: "Times", ttL_tk: "Lecture / exercise", ttL_pl: "Place", ttOrdReset: "Default order", moveUp: "Move up", moveDown: "Move down", ttClearConfirm: n => "Delete all " + n + " classes from this device?",
+    ttPriv: "🔒 Private (left out when sharing the timetable)", ttClear: "Delete all", ttView: "Display", ttZ: "Size", ttZ1: "Normal", ttZ2: "Large", ttZ3: "Extra large", ttOrd: "Order of the lines in a block (the top ones stay visible even in a short class)", ttL_nm: "Class name", ttL_tm: "Times", ttL_tk: "Lecture / exercise", ttL_pl: "Place", ttOrdReset: "Default order", moveUp: "Move up", moveDown: "Move down", ttClearConfirm: n => "Delete all " + n + " classes from this device?",
     importAsk: parts => "This link wants to add to your device:\n" + parts.join("\n") + "\n\nAdd it?", importTT: (n, ex) => "• Timetable: " + n + " classes (" + ex + ")", importTTRep: n => "  (replaces your current timetable, " + n + " classes)", importCC: n => "• Colours for " + n + " courses", importDone: "Added ✓",
     ttImport: "📄 Levnet file", ttImportLong: "📄 Import from the Levnet file", ttScanLong: "⤓ Search the Moodle calendar", ttWho: "Lecturer",
     ttFileBad: "Couldn’t read that file. Use the file from the old Levnet: מערכת → לו״ז → list view → download as Excel, as is, without re-saving it in Excel.",
@@ -2655,7 +2661,7 @@ const I18N = {
     icsAll: "📅 Ajouter tous les devoirs à mon calendrier", icsHint: "Un fichier calendrier avec rappels 1 jour et 2 heures avant chaque échéance. S’ouvre dans le calendrier du téléphone ou du PC.", icsNone: "Aucun devoir daté à ajouter", icsDone: n => n + " devoirs ajoutés au fichier calendrier",
     toCal: "📅 Calendrier", markDone: "✓ Marquer fait", unmarkDone: "↩ Annuler", related: n => "📚 Supports du même thème (" + n + ")",
     focusDay: x => "Filtré : " + x, focusCourse: x => "Filtré : " + x, focusGroup: x => "Filtré : " + x, clearFocus: "✕ Effacer", dayEmpty: "Aucun devoir ce jour-là", calDue: "Échéance",
-    viewTT: "Agenda", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "🔗 Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
+    viewTT: "Agenda", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
     ttEmpty: "Pas encore d’emploi du temps. Le plus simple : téléchargez le fichier depuis l’ancien Levnet et importez-le ici (le bouton ci-dessous explique comment). Vous pouvez aussi ajouter des cours à la main (« + Ajouter »).",
     ttNewTitle: "Nouveau cours", ttEditTitle: "Modifier le cours", ttCourse: "Matière", ttOtherCourse: "Autre (hors Moodle)", ttName: "Nom affiché", ttKind: "Type", ttDay: "Jour",
     ttFrom: "De", ttTo: "À", ttPlace: "Lieu / salle", save: "Enregistrer", del: "Supprimer", delConfirm: "Supprimer ce cours de l’emploi du temps ?",
@@ -2678,9 +2684,9 @@ const I18N = {
     exScan: "🔎 Chercher les dates dans le calendrier Moodle", exScanNone: "Aucune date d’examen trouvée dans le calendrier Moodle. Saisissez-les à la main.", exFound: n => n + " événements ressemblant à des examens trouvés sur Moodle. Validez ceux qui conviennent.",
     exUse: "Valider", exFromMoodle: "Sur Moodle :", scanning: "Recherche dans le calendrier Moodle…", noCourses: "Pas encore de cours (connectez-vous et actualisez)",
     semNeed: "Saisissez les dates du semestre pour voir combien de semaines il reste.", semSetBtn: "Saisir les dates du semestre", semSrcKnown: "Source : calendrier de Machon Lev, semestre A 5787", semSrcUser: "Source : dates que vous avez saisies", examsLblA: "📝 1res sessions",
-    ttScan: "⤓ Depuis Moodle", ttScanTitle: "Cours du calendrier Moodle", ttScanHint: "Ces événements se répètent chaque semaine dans les calendriers de vos cours Moodle. Cochez ce qu’il faut ajouter.",
+    ttScan: "Depuis Moodle", ttScanTitle: "Cours du calendrier Moodle", ttScanHint: "Ces événements se répètent chaque semaine dans les calendriers de vos cours Moodle. Cochez ce qu’il faut ajouter.",
     ttScanNone: "Aucun cours hebdomadaire trouvé dans le calendrier Moodle ; votre établissement n’y publie sans doute pas l’emploi du temps. Ajoutez les cours à la main (« + Ajouter »).", ttScanAdd: n => "Ajouter " + n + " cours",
-    ttPriv: "🔒 Privé (exclu du partage de l’emploi du temps)", ttClear: "Supprimer tout l’emploi du temps", ttView: "Affichage", ttZ: "Taille", ttZ1: "Normale", ttZ2: "Grande", ttZ3: "Très grande", ttOrd: "Ordre des lignes dans un bloc (celles du haut restent visibles même pour un cours court)", ttL_nm: "Nom du cours", ttL_tm: "Horaires", ttL_tk: "Cours / TD", ttL_pl: "Lieu", ttOrdReset: "Ordre par défaut", moveUp: "Monter", moveDown: "Descendre", ttClearConfirm: n => "Supprimer les " + n + " cours de cet appareil ?",
+    ttPriv: "🔒 Privé (exclu du partage de l’emploi du temps)", ttClear: "Tout supprimer", ttView: "Affichage", ttZ: "Taille", ttZ1: "Normale", ttZ2: "Grande", ttZ3: "Très grande", ttOrd: "Ordre des lignes dans un bloc (celles du haut restent visibles même pour un cours court)", ttL_nm: "Nom du cours", ttL_tm: "Horaires", ttL_tk: "Cours / TD", ttL_pl: "Lieu", ttOrdReset: "Ordre par défaut", moveUp: "Monter", moveDown: "Descendre", ttClearConfirm: n => "Supprimer les " + n + " cours de cet appareil ?",
     importAsk: parts => "Ce lien veut ajouter à votre appareil :\n" + parts.join("\n") + "\n\nAjouter ?", importTT: (n, ex) => "• Emploi du temps : " + n + " cours (" + ex + ")", importTTRep: n => "  (remplace votre emploi du temps actuel, " + n + " cours)", importCC: n => "• Couleurs pour " + n + " cours", importDone: "Ajouté ✓",
     ttImport: "📄 Fichier Levnet", ttImportLong: "📄 Importer le fichier Levnet", ttScanLong: "⤓ Chercher dans le calendrier Moodle", ttWho: "Enseignant",
     ttFileBad: "Impossible de lire ce fichier. Utilisez le fichier de l’ancien Levnet : מערכת → לו״ז → liste → télécharger en Excel, tel quel, sans le réenregistrer dans Excel.",
@@ -4044,7 +4050,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.21";
+const APP_VERSION = "1.8.0-beta.22";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -7033,7 +7039,7 @@ $("#lvClose").onclick = () => { $("#lvSheet").hidden = true; };
 $("#lvSheet").addEventListener("click", e => { if (e.target.id === "lvSheet") $("#lvSheet").hidden = true; });
 $("#ttFile").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if (f) importLevnet(await f.arrayBuffer()); };
 $("#tt").addEventListener("click", e => { if (e.target.closest("[data-ttfile]")) openLevnet(); else if (e.target.closest("[data-ttscan]")) scanTT(); });
-$("#bTtView").onclick = () => { const el = $("#ttVw"); el.hidden = !el.hidden; useHit("ttView"); renderTtView(); };
+$("#bTtView").onclick = () => { const el = $("#ttVw"); el.hidden = !el.hidden; $("#bTtView").setAttribute("aria-expanded", String(!el.hidden)); useHit("ttView"); renderTtView(); };
 $("#ttVw").addEventListener("click", e => {
   const g = s => e.target.closest(s), v = ttvOk(P.ttv); let b;
   if ((b = g("[data-ttz]"))) v.z = Number(b.dataset.ttz);
