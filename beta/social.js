@@ -158,7 +158,7 @@ Object.assign(I18N.fr, {
 });
 
 /* ---------- state and the server ---------- */
-const ST = { queue: LS.get("socTQ", []).filter(k => typeof k === "string").slice(-20), chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" }, queue: [] };
+const ST = { queue: LS.get("socTQ", []).filter(k => typeof k === "string").slice(-20), chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" } };   // (a second "queue: []" here used to wipe the saved "how long did it take?" questions on every start)
 const hex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(b => b.toString(16).padStart(2, "0")).join("");
 /* a community account is made only when someone presses "join" (create = true). Anywhere else, no id = wait for sync – never a silent new account
    (a second, empty account that sync then spreads to the other devices is how points got "lost") */
@@ -264,7 +264,7 @@ async function sendTime(h) {
 }
 function afterFetch(d, prevSt) {
   overview();
-  if (!prevSt) return;
+  if (!prevSt) return timeQueue();         // the first load after opening: ask what was waiting from last time
   for (const x of d.tasks) if (timeable(x) && timeOpen(x) && x.status === "submitted" && prevSt[x.key] && prevSt[x.key] !== "submitted" && !asked(x.key) && myRep(x.key) === undefined && !ST.queue.includes(x.key)) ST.queue.push(x.key);
   LS.set("socTQ", ST.queue.slice(-20)); timeQueue();
 }
@@ -274,6 +274,7 @@ function timeQueue(delay) {
   clearTimeout(tqTimer); if (!ST.queue.length) return;
   tqTimer = setTimeout(() => {
     if ($$(".sheet").some(s => !s.hidden) || !$("#tour").hidden || !$("#setup").hidden || document.hidden) return timeQueue(3000);
+    if (window.popTake && !window.popTake("time")) return;          // another window already opened by itself this visit: the question waits (it's kept) for the next one
     while (ST.queue.length) { const k = ST.queue.shift(); LS.set("socTQ", ST.queue); if (askTime(k, "auto")) break; }
   }, delay || 1500);
 }
@@ -542,7 +543,7 @@ function setReply(id) {
   if (m) $("#socTx").focus();
 }
 async function sendMsg() {
-  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch || !body) return;
+  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch) return; if (!body) { tx.focus(); return; }   // nothing written yet: the box, ready to type
   const btn = $("[data-socsend]"); btn.disabled = true;
   try { await api("post", { cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") });
     useHit(ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
@@ -630,7 +631,7 @@ async function openUser(uid) {
   $("#socUser .box").innerHTML = "<h3><span><bdi>" + esc(u.name) + "</bdi>" + (me ? " (" + esc(t("socYou")) + ")" : "") + "</span>" + xbtn() + "</h3>" +
     '<div class="sprofcard"><div class="sav">' + esc((u.name || "?").trim().charAt(0)) + '</div><div><div class="hint">' + esc(profLine(u.deg, u.yr)) + "</div>" + rankTag(u.all) +
     '<div class="spts"><b>' + esc(t("socPts", u.all)) + "</b>" + (u.pos ? " · " + esc(t("socPos", u.pos)) : "") + " · " + esc(t("socSem")) + ": " + esc(t("socPts", u.sem)) + "</div>" + progress(u.all) + "</div></div>" +
-    (r.by.length ? '<div class="stitle">' + esc(t("socByCourse")) + '</div><div class="sbyc">' + r.by.map(b => '<span class="chip on" style="--c:' + colorOf(Number(b.cid)) + '"><i></i><bdi>' + esc(b.name) + '</bdi> <span class="n">' + b.pts + "</span></span>").join("") + "</div>" : "") +
+    (r.by.length ? '<div class="stitle">' + esc(t("socByCourse")) + '</div><div class="sbyc">' + r.by.map(b => '<span class="chip on" role="button" tabindex="0" data-socboard="' + Number(b.cid) + '" style="--c:' + colorOf(Number(b.cid)) + '"><i></i><bdi>' + esc(b.name) + '</bdi> <span class="n">' + b.pts + "</span></span>").join("") + "</div>" : "") +
     '<div class="stitle">' + esc(t("socLogT")) + "</div>" +
     (r.log.length ? '<div class="slog">' + r.log.map(l => '<div class="sl"><b class="sp" dir="ltr">+' + l.pts + '</b><div><div><bdi>' + esc(desc(l)) + '</bdi></div><small class="hint">' + (l.cname ? "<bdi>" + esc(l.cname) + "</bdi> · " : "") + esc(day(l.at)) + "</small></div></div>").join("") + "</div>"
       : '<div class="hint">' + esc(t("socLogEmpty")) + "</div>") +
@@ -778,7 +779,7 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socwasave]"))) return saveWa(Number(b.dataset.socwasave), false);
   if ((b = g("[data-socwadel]"))) return saveWa(Number(b.dataset.socwadel), true);
   if ((b = g("[data-socmute]"))) return toggleMute(b.dataset.socmute, b.dataset.n);
-  if ((b = g("[data-socboard]"))) return openBoard(b.dataset.socboard ? Number(b.dataset.socboard) : undefined);
+  if ((b = g("[data-socboard]"))) { if (b.closest("#socUser")) close("socUser"); return openBoard(b.dataset.socboard ? Number(b.dataset.socboard) : undefined); }   // from "my points", a course goes to its leaderboard
   if ((b = g("[data-socme]"))) return P.soc_id && openUser(P.soc_id.uid);
   if ((b = g("[data-socjoin]"))) return intro(true);
   if ((b = g("[data-socjoinnow]"))) return join();
@@ -915,6 +916,7 @@ body[data-density=clean] .task .sest span{display:none}
 .scnt{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;font-size:11px;font-weight:800;background:var(--track);color:var(--text);margin-inline-start:4px}
 .scnt.new{background:#ff3b30;color:#fff}
 .sheet.chat .box{height:min(88vh,760px);display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+@media (max-width:759px){.sheet.chat .box{height:100%;padding-bottom:env(safe-area-inset-bottom)}}   /* phones: a full page like every other window (it stopped at 88% and the tab bar showed under the message box) */
 .schsub{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;margin:-4px 0 6px}
 .schsub>i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
 .schl{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px 10px;overscroll-behavior:contain}
