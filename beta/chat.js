@@ -1402,17 +1402,28 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 #aiTour{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;touch-action:none;user-select:none;overflow:hidden;
   animation:atIn .6s ease-out both}
 #aiTour.atOut{animation:atOut .7s ease-in both}
-.atBg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,color-mix(in srgb,var(--accent) 38%,#05060d) 0%,#05060d 70%)}
+.atBg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--accent) 22%,#05060d99) 0%,#05060d8c 75%);-webkit-backdrop-filter:blur(4px) saturate(1.1);backdrop-filter:blur(4px) saturate(1.1)}
 .atStar{position:absolute;width:var(--sz);height:var(--sz);border-radius:50%;background:#fff;opacity:0;left:var(--x);top:var(--y);animation:atTw var(--d) var(--dl) ease-in-out infinite}
 .atFace{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;z-index:2;
   transform:translate(var(--fx),var(--fy)) scale(var(--fs)) rotate(var(--fr));transition:transform 1s cubic-bezier(.34,1.3,.5,1);
   filter:drop-shadow(0 0 28px color-mix(in srgb,var(--accent) 70%,transparent))}
+.atIn{position:absolute;inset:0}
+.atIn.w1{animation:atWander 5.2s ease-in-out infinite}
+.atIn.w2{animation:atSpin 1.3s cubic-bezier(.3,1.2,.4,1) both,atWander 5.2s 1.3s ease-in-out infinite}
+.atIn.w3{animation:atBob .9s ease-in-out infinite}
+.atIn.w4{animation:atFlip 1.5s cubic-bezier(.3,1.1,.4,1) both,atWander 4.6s 1.5s ease-in-out infinite}
+.atIn.w5{animation:atWander 3.4s ease-in-out infinite}
 .atFace svg{width:100%;height:100%;display:block;overflow:visible}
+.atOrb{position:absolute;inset:-26px;animation:atOrbit 5s linear infinite}
+.atOrb.o2{inset:-40px;animation-duration:7.5s;animation-direction:reverse}
+.atOrb i{position:absolute;left:50%;top:0;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:color-mix(in srgb,var(--accent) 50%,#fff);box-shadow:0 0 12px var(--accent)}
+.atOrb.o2 i{width:5px;height:5px;background:#fff}
+.atSp{position:absolute;z-index:2;width:7px;height:7px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff;box-shadow:0 0 10px var(--accent);pointer-events:none;opacity:0;animation:atSpark 1.15s ease-out forwards}
 .atFace.atBreathe svg{animation:aiBreathe 2.6s ease-in-out infinite}
 .atRing{position:absolute;inset:-14px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 80%,#fff);opacity:0;animation:atRing 2.4s ease-out infinite}
 .atRing.r2{animation-delay:1.2s}
 .atTx{position:absolute;left:0;right:0;top:calc(50% + 100px);z-index:3;padding:0 24px;text-align:center;color:#fff;pointer-events:none}
-.atTx b{display:block;font-size:clamp(22px,6.4vw,32px);line-height:1.25;font-weight:800;letter-spacing:.2px}
+.atTx b{display:block;text-shadow:0 2px 14px #000c;font-size:clamp(22px,6.4vw,32px);line-height:1.25;font-weight:800;letter-spacing:.2px}
 .atTx b span{display:inline-block;opacity:0;animation:atWord .7s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 .atTx small{display:block;margin-top:10px;font-size:clamp(14px,4vw,17px);color:#ffffffb8;opacity:0;animation:atSub .7s .55s ease-out both}
 .atTx.atGone{animation:atGone .45s ease-in both}
@@ -1426,6 +1437,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 .atArrow{position:absolute;z-index:3;width:34px;height:34px;color:#fff;animation:atBounce 1s ease-in-out infinite}
 .atArrow svg{width:100%;height:100%;display:block}
 @keyframes atIn{from{opacity:0}to{opacity:1}}
+@keyframes atWander{0%,100%{transform:translate(0,0) rotate(0)}20%{transform:translate(38px,-18px) rotate(7deg)}45%{transform:translate(-30px,-34px) rotate(-8deg)}70%{transform:translate(-42px,16px) rotate(5deg)}85%{transform:translate(22px,22px) rotate(-4deg)}}
+@keyframes atSpin{0%{transform:rotate(0) scale(1)}60%{transform:rotate(380deg) scale(1.25)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes atBob{0%,100%{transform:translateY(0) scale(1,1)}30%{transform:translateY(-26px) scale(.94,1.08)}55%{transform:translateY(0) scale(1.1,.9)}75%{transform:translateY(-9px) scale(.98,1.03)}}
+@keyframes atFlip{0%{transform:perspective(500px) rotateY(0)}100%{transform:perspective(500px) rotateY(360deg)}}
+@keyframes atOrbit{to{transform:rotate(360deg)}}
+@keyframes atSpark{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
 @keyframes atOut{to{opacity:0}}
 @keyframes atTw{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.85;transform:scale(1)}}
 @keyframes atRing{0%{opacity:.7;transform:scale(.8)}100%{opacity:0;transform:scale(1.9)}}
@@ -1455,12 +1472,26 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const root = document.createElement("div"); root.id = "aiTour"; root.setAttribute("role", "status"); root.setAttribute("aria-live", "polite");
     let stars = "";
     for (let i = 0; i < 26; i++) stars += '<span class="atStar" style="--x:' + (Math.random() * 100).toFixed(1) + '%;--y:' + (Math.random() * 100).toFixed(1) + '%;--sz:' + (1 + Math.random() * 2.4).toFixed(1) + 'px;--d:' + (2.4 + Math.random() * 3).toFixed(1) + 's;--dl:' + (Math.random() * 3).toFixed(1) + 's"></span>';
-    root.innerHTML = '<div class="atBg"></div>' + stars + '<div class="atFace" style="--fx:' + fabX + 'px;--fy:' + fabY + 'px;--fs:' + fabS + ';--fr:0deg">' + FACE + '<i class="atRing"></i><i class="atRing r2"></i></div><div class="atTx"></div><div class="atDots">' + scenes.map(() => "<i></i>").join("") + "</div>";
+    root.innerHTML = '<div class="atBg"></div>' + stars + '<div class="atFace" style="--fx:' + fabX + 'px;--fy:' + fabY + 'px;--fs:' + fabS + ';--fr:0deg"><div class="atIn w1">' + FACE + '<i class="atRing"></i><i class="atRing r2"></i><div class="atOrb"><i></i></div><div class="atOrb o2"><i></i></div></div></div><div class="atTx"></div><div class="atDots">' + scenes.map(() => "<i></i>").join("") + "</div>";
     document.body.appendChild(root);
-    const face = root.querySelector(".atFace"), txEl = root.querySelector(".atTx"), dots = root.querySelectorAll(".atDots i");
+    const face = root.querySelector(".atFace"), inner = root.querySelector(".atIn"), txEl = root.querySelector(".atTx"), dots = root.querySelectorAll(".atDots i");
     const setFace = (x, y, s, r) => { face.style.setProperty("--fx", x + "px"); face.style.setProperty("--fy", y + "px"); face.style.setProperty("--fs", s); face.style.setProperty("--fr", r + "deg"); };
     // where the face rests in each scene (a little drift and tilt, like it is alive); the last scene flies it onto the real button
-    const poses = [[0, -70, 1, 0], [-34, -84, .94, -8], [34, -76, .98, 7], [-22, -88, .94, -5]];
+    const hh = vh / 2, ww = vw / 2;
+    const lay = [
+      { f: [0, -hh * .26, 1, 0], top: "calc(50% + 100px)", dx: 0 },
+      { f: [-ww * .42, hh * .5, .8, -10], top: "max(56px, calc(50% - 250px))", dx: 0 },
+      { f: [ww * .4, -hh * .5, .84, 9], top: "calc(50% + 24px)", dx: -ww * .12 },
+      { f: [-ww * .3, -hh * .08, .9, -6], top: "calc(50% + 70px)", dx: ww * .1 },
+    ];
+    const burst = () => {
+      const r = face.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      for (let k = 0; k < 12; k++) {
+        const sp = document.createElement("i"); sp.className = "atSp"; const a = Math.PI * 2 * k / 12 + Math.random() * .4, d = 70 + Math.random() * 70;
+        sp.style.left = cx + "px"; sp.style.top = cy + "px"; sp.style.setProperty("--dx", Math.cos(a) * d + "px"); sp.style.setProperty("--dy", Math.sin(a) * d + "px");
+        root.appendChild(sp); setTimeout(() => sp.remove(), 1250);
+      }
+    };
     const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
     let timers = [], finished = false;
     const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
@@ -1479,10 +1510,14 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         const ar = document.createElement("div"); ar.className = "atArrow";
         ar.style.left = Math.max(8, Math.min(vw - 42, fr.left + fr.width / 2 - 17)) + "px"; ar.style.top = Math.max(8, fr.top - 46) + "px";
         ar.innerHTML = TOUR_ICONS.arrow; root.appendChild(ar);
-        txEl.style.top = "calc(50% - 70px)";
+        txEl.style.top = "calc(50% - 70px)"; txEl.style.left = "0px"; txEl.style.right = "0px";
+        inner.className = "atIn w5";
       } else {
-        const p = poses[Math.min(i, poses.length - 1)]; setFace(p[0], p[1], p[2], p[3]);
+        const L = lay[Math.min(i, lay.length - 1)]; setFace(L.f[0], L.f[1], L.f[2], L.f[3]);
+        txEl.style.top = L.top; txEl.style.left = L.dx + "px"; txEl.style.right = -L.dx + "px";
         face.classList.add("atBreathe");
+        inner.className = "atIn w" + (i + 1);
+        setTimeout(burst, 650);
       }
     }
     function finish() {
@@ -1496,7 +1531,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       }, 720);
     }
     // timeline: the face grows out of the circle into the middle of the screen, then the scenes follow one another
-    later(() => { setFace(0, -70, 1, 0); face.classList.add("atBreathe"); }, 350);
+    later(() => { setFace(0, -vh / 2 * .26, 1, 0); face.classList.add("atBreathe"); }, 350);
+    later(burst, 1000);
     const START = 1300, STEP = 2900;
     scenes.forEach((sc, i) => {
       later(() => scene(i), START + i * STEP);
