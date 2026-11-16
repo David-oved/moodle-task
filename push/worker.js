@@ -156,6 +156,36 @@ export class Feed extends DurableObject {
 }
 const feed = async (env, key) => env.FEEDS.get(env.FEEDS.idFromName(await sha256("feed:" + key)));
 
+/* ---------- summaries and solutions shared in the course chats ----------
+   The bytes live in one Durable Object per course (FILES, "files:<cid>"), split into 1.5 MB rows, so no single object grows big
+   (the free plan: 5 GB for the whole account). What a file is (name, size, who, which chat) is in the community database, with the quotas. */
+const F_MAX = 10 * 1024 * 1024;                          // one file
+const F_USER = 150 * 1024 * 1024, F_DAY = 15;            // one person: 150 MB in all, 15 uploads a day
+const F_COURSE = 700 * 1024 * 1024;                      // one course (one object)
+const F_ALL = 3 * 1024 * 1024 * 1024;                    // the whole server: 3 GB of files (the free plan has 5 GB for everything)
+const F_CHUNK = 1536 * 1024;
+const F_TYPES = { "application/pdf": "pdf", "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx", "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx", "application/vnd.ms-powerpoint": "ppt",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx", "application/vnd.ms-excel": "xls" };
+const F_KINDS = ["sum", "sol", "other"];
+const okFid = s => typeof s === "string" && /^[0-9a-f]{36}$/.test(s);
+export class Files extends DurableObject {
+  constructor(ctx, env) { super(ctx, env); this.sql = ctx.storage.sql; this.sql.exec("CREATE TABLE IF NOT EXISTS ch (fid TEXT, i INTEGER, data BLOB, PRIMARY KEY (fid, i))"); }
+  put(fid, buf) {
+    const u = new Uint8Array(buf);
+    this.ctx.storage.transactionSync(() => { for (let i = 0, k = 0; i < u.length; i += F_CHUNK, k++) this.sql.exec("INSERT OR REPLACE INTO ch (fid, i, data) VALUES (?, ?, ?)", fid, k, u.slice(i, i + F_CHUNK)); });
+    return true;
+  }
+  get(fid) {
+    const rows = this.sql.exec("SELECT data FROM ch WHERE fid = ? ORDER BY i", fid).toArray(); if (!rows.length) return null;
+    const parts = rows.map(r => new Uint8Array(r.data)), out = new Uint8Array(parts.reduce((n, x) => n + x.length, 0)); let o = 0;
+    for (const x of parts) { out.set(x, o); o += x.length; } return out.buffer;
+  }
+  del(fid) { this.sql.exec("DELETE FROM ch WHERE fid = ?", fid); return true; }
+}
+const filesOf = (env, cid) => env.FILES.get(env.FILES.idFromName("files:" + cid));
+
 /* ---------- the community (MoodlePro Community): one SQLite database for everyone ----------
    Trust-based: a user is a random id + a secret the app made (synced between the user's devices through Moodle).
    No Moodle token ever reaches this server. Name, degree and courses are what the app says.
@@ -200,6 +230,11 @@ export class Community extends DurableObject {
     // what happened to me that I'll want to hear about when I open the app (for now: someone starred my message)
     this.sql.exec("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT, kind TEXT, from_uid TEXT, cid TEXT, tk TEXT, mid INTEGER, body TEXT, at INTEGER)");
     this.sql.exec("CREATE INDEX IF NOT EXISTS notes_u ON notes (uid, at)");
+    this.sql.exec(`CREATE TABLE IF NOT EXISTS files (id TEXT PRIMARY KEY, cid TEXT, uid TEXT, name TEXT, type TEXT, size INTEGER, kind TEXT, at INTEGER, ok INTEGER DEFAULT 0, mid INTEGER DEFAULT 0, tk TEXT DEFAULT '', del INTEGER DEFAULT 0);
+      CREATE INDEX IF NOT EXISTS files_u ON files (uid, at);
+      CREATE INDEX IF NOT EXISTS files_c ON files (cid, del, at);
+      CREATE TABLE IF NOT EXISTS fsum (k TEXT PRIMARY KEY, v INTEGER);`);
+    try { this.sql.exec("ALTER TABLE msgs ADD COLUMN att TEXT"); } catch (e) {}   // a file attached to a message (JSON: id, name, size, type, kind)
     for (const col of ["lb TEXT", "lt TEXT"]) try { this.sql.exec("ALTER TABLE thr ADD COLUMN " + col); } catch (e) {}   // the last message of a thread (who, what) for the chats list
   }
   /* a screenshot attached to a feedback message: kept 120 days, at most 3000, behind a link nobody can guess */
@@ -209,6 +244,41 @@ export class Community extends DurableObject {
     this.sql.exec("DELETE FROM imgs WHERE at < ?", Date.now() - 120 * 864e5);
     this.sql.exec("DELETE FROM imgs WHERE id NOT IN (SELECT id FROM imgs ORDER BY at DESC LIMIT 3000)");
     return id;
+  }
+  fsz(k) { const r = this.one("SELECT v FROM fsum WHERE k = ?", k); return r ? r.v : 0; }
+  fadd(k, n) { this.sql.exec("INSERT INTO fsum (k, v) VALUES (?, ?) ON CONFLICT (k) DO UPDATE SET v = MAX(0, v + excluded.v)", k, n); }
+  /* before the bytes are stored: who, where, what, and whether it still fits (each person, each course, the whole server) */
+  async fileBegin(b, size) {
+    const me = await this.auth(b); if (!me) return [403, { error: "auth" }];
+    const cid = okCid(b.cid) ? String(b.cid) : "", type = String(b.type || ""), kind = F_KINDS.includes(b.kind) ? b.kind : "other";
+    const name = clip(String(b.fn || "").replace(/[\u0000-\u001f\/\\]/g, " ").trim(), 120) || "file." + (F_TYPES[type] || "bin");
+    if (!cid) return [400, { error: "bad" }];
+    if (!F_TYPES[type]) return [415, { error: "type" }];
+    if (!(size > 0) || size > F_MAX) return [413, { error: "size", max: F_MAX }];
+    const now = Date.now();
+    if (this.one("SELECT COUNT(*) AS n FROM files WHERE uid = ? AND at > ?", me.uid, now - 864e5).n >= F_DAY) return [429, { error: "day", max: F_DAY }];
+    if (this.fsz("u:" + me.uid) + size > F_USER) return [413, { error: "user", max: F_USER }];
+    if (this.fsz("c:" + cid) + size > F_COURSE) return [507, { error: "course" }];
+    if (this.fsz("all") + size > F_ALL) return [507, { error: "full" }];
+    this.sql.exec("DELETE FROM files WHERE ok = 0 AND at < ?", now - 3600e3);   // uploads that never finished
+    for (const r of this.q("SELECT id FROM files WHERE uid = ? AND ok = 1 AND mid = 0 AND del = 0 AND at < ?", me.uid, now - 6 * 3600e3)) await this.fileDrop(r.id);   // uploaded but never sent: the space comes back
+    const id = [...crypto.getRandomValues(new Uint8Array(18))].map(x => x.toString(16).padStart(2, "0")).join("");
+    this.sql.exec("INSERT INTO files (id, cid, uid, name, type, size, kind, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", id, cid, me.uid, name, type, size, kind, now);
+    this.course(cid, b.cname);
+    return [200, { id, cid, name, type, size, kind }];
+  }
+  fileDone(id) {
+    const f = this.one("SELECT uid, cid, size, ok FROM files WHERE id = ?", id); if (!f || f.ok) return;
+    this.ctx.storage.transactionSync(() => { this.sql.exec("UPDATE files SET ok = 1 WHERE id = ?", id); for (const k of ["u:" + f.uid, "c:" + f.cid, "all"]) this.fadd(k, f.size); });
+  }
+  fileAbort(id) { this.sql.exec("DELETE FROM files WHERE id = ? AND ok = 0", id); }
+  fileMeta(id) { const f = this.one("SELECT cid, name, type, size FROM files WHERE id = ? AND ok = 1 AND del = 0", id); return f || null; }
+  /* a file stops being shared (its message was deleted): the bytes go too, and the space comes back */
+  async fileDrop(id) {
+    const f = this.one("SELECT uid, cid, size, ok, del FROM files WHERE id = ?", id); if (!f || f.del) return;
+    this.sql.exec("UPDATE files SET del = 1 WHERE id = ?", id);
+    if (f.ok) for (const k of ["u:" + f.uid, "c:" + f.cid, "all"]) this.fadd(k, -f.size);
+    try { await filesOf(this.env, f.cid).del(id); } catch (e) {}
   }
   getImg(id) { const r = this.one("SELECT type, data FROM imgs WHERE id = ?", id); return r ? { type: r.type, data: r.data } : null; }
   q(sql, ...a) { return this.sql.exec(sql, ...a).toArray(); }
@@ -364,7 +434,7 @@ export class Community extends DurableObject {
       const tk = b.tk; if (!cid || !okTk(tk)) return [400, { error: "bad" }];
       const th = this.one("SELECT ver FROM thr WHERE cid = ? AND tk = ?", cid, tk), ver = th ? th.ver : 0;
       if (b.ver !== undefined && Number(b.ver) === ver) return [200, { same: true, ver }];
-      const ms = this.q(`SELECT m.id, m.uid, m.body, m.reply, m.at, m.del, m.stars, u.name, u.deg, u.yr, (SELECT pts FROM tot a WHERE a.uid = m.uid AND a.cid = '' AND a.per = 'all') AS total
+      const ms = this.q(`SELECT m.id, m.uid, m.body, m.reply, m.at, m.del, m.stars, m.att, u.name, u.deg, u.yr, (SELECT pts FROM tot a WHERE a.uid = m.uid AND a.cid = '' AND a.per = 'all') AS total
         FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? ORDER BY m.id DESC LIMIT 150`, cid, tk).reverse();
       const ids = ms.map(m => m.id), re = {}, mine = new Set(), sb = {};
       if (ids.length) {
@@ -380,24 +450,30 @@ export class Community extends DurableObject {
             if (here.has(r.mid) && ms.find(m => m.id === r.mid).uid === me.uid) (sb[r.mid] = sb[r.mid] || []).length < 20 && sb[r.mid].push(r.name || "");
       }
       return [200, { ver, msgs: ms.map(m => ({ id: m.id, uid: m.uid, name: m.name || "", deg: m.deg || "", yr: m.yr || "", total: m.total || 0, body: m.del ? "" : m.body, del: !!m.del,
-        reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), sb: sb[m.id] || [], re: re[m.id] || [] })) }];
+        reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), sb: sb[m.id] || [], re: re[m.id] || [], att: m.del || !m.att ? null : JSON.parse(m.att) })) }];
     }
     if (op === "post") {
       const tk = b.tk, body = String(b.body || "").trim().slice(0, 2000);
-      if (!cid || !okTk(tk) || !body) return [400, { error: "bad" }];
+      // a file uploaded just before (POST /sfile): mine, in this course, finished, and not attached to another message
+      const f = b.att ? this.one("SELECT id, name, size, type, kind FROM files WHERE id = ? AND uid = ? AND cid = ? AND ok = 1 AND del = 0 AND mid = 0", okFid(b.att) ? b.att : "", me.uid, cid) : null;
+      if (b.att && !f) return [400, { error: "file" }];
+      if (!cid || !okTk(tk) || (!body && !f)) return [400, { error: "bad" }];
       this.course(cid, b.cname);
       const reply = Number(b.reply) > 0 && this.one("SELECT id FROM msgs WHERE id = ? AND cid = ? AND tk = ?", Number(b.reply), cid, tk) ? Number(b.reply) : 0;
-      this.sql.exec("INSERT INTO msgs (cid, tk, uid, body, reply, at) VALUES (?, ?, ?, ?, ?, ?)", cid, tk, me.uid, body, reply, now);
+      const att = f ? JSON.stringify({ id: f.id, n: f.name, s: f.size, t: f.type, k: f.kind }) : null;
+      this.sql.exec("INSERT INTO msgs (cid, tk, uid, body, reply, at, att) VALUES (?, ?, ?, ?, ?, ?, ?)", cid, tk, me.uid, body, reply, now, att);
       const id = this.one("SELECT last_insert_rowid() AS id").id;
+      if (f) this.sql.exec("UPDATE files SET mid = ?, tk = ? WHERE id = ?", id, tk, f.id);
       this.sql.exec("INSERT INTO thr (cid, tk, n, last, ver, ref, lb, lt) VALUES (?, ?, 1, ?, 1, ?, ?, ?) ON CONFLICT (cid, tk) DO UPDATE SET n = n + 1, last = excluded.last, ver = ver + 1, ref = CASE WHEN excluded.ref != '' THEN excluded.ref ELSE ref END, lb = excluded.lb, lt = excluded.lt",
-        cid, tk, now, clip(b.ref, 120), me.name || "", body.replace(/\s+/g, " ").slice(0, 90));
+        cid, tk, now, clip(b.ref, 120), me.name || "", (body || "📎 " + f.name).replace(/\s+/g, " ").slice(0, 90));
       this.cc.delete(cid); return [200, { id }];
     }
     if (op === "msgdel" || op === "react" || op === "star") {
-      const m = this.one("SELECT id, cid, tk, uid, body FROM msgs WHERE id = ? AND del = 0", Number(b.id)); if (!m) return [404, { error: "gone" }];
+      const m = this.one("SELECT id, cid, tk, uid, body, att FROM msgs WHERE id = ? AND del = 0", Number(b.id)); if (!m) return [404, { error: "gone" }];
       if (op === "msgdel") {
         if (m.uid !== me.uid) return [403, { error: "not yours" }];
         this.sql.exec("UPDATE msgs SET del = 1, body = '' WHERE id = ?", m.id);
+        if (m.att) { try { await this.fileDrop(JSON.parse(m.att).id); } catch (e) {} }
         const lm = this.one("SELECT m.body, u.name FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? AND m.del = 0 ORDER BY m.id DESC LIMIT 1", m.cid, m.tk);
         this.sql.exec("UPDATE thr SET n = n - 1, ver = ver + 1, lb = ?, lt = ? WHERE cid = ? AND tk = ?", lm ? lm.name || "" : "", lm ? lm.body.replace(/\s+/g, " ").slice(0, 90) : "", m.cid, m.tk); this.cc.delete(m.cid);
       } else if (op === "react") {
@@ -419,6 +495,13 @@ export class Community extends DurableObject {
         if (Math.random() < 0.05) this.sql.exec("DELETE FROM notes WHERE at < ?", now - 60 * 86400e3);
       }
       return [200, { ok: true }];
+    }
+    if (op === "files") {                                   // every summary and solution shared in a course's chats (newest first)
+      if (!cid) return [400, { error: "bad" }];
+      const rows = this.q(`SELECT f.id, f.name, f.size, f.type, f.kind, f.at, f.mid, f.tk, f.uid, u.name AS who, t.ref, m.stars FROM files f LEFT JOIN users u ON u.uid = f.uid
+        LEFT JOIN thr t ON t.cid = f.cid AND t.tk = f.tk LEFT JOIN msgs m ON m.id = f.mid WHERE f.cid = ? AND f.del = 0 AND f.ok = 1 AND f.mid > 0 ORDER BY f.at DESC LIMIT 200`, cid);
+      return [200, { files: rows.map(r => ({ id: r.id, n: r.name, s: r.size, t: r.type, k: r.kind, at: r.at, mid: r.mid, tk: r.tk, uid: r.uid, who: r.who || "", ref: r.ref || "", stars: r.stars || 0 })),
+        mine: { used: this.fsz("u:" + me.uid), max: F_USER } }];
     }
     if (op === "board") {
       const per = b.per === "sem" ? semKey(now) : "all", deg = clip(b.deg, 60);
@@ -450,7 +533,7 @@ export default {
     const origin = req.headers.get("Origin") || "";
     // DEV_ORIGIN is set only on the test copy of this server (moodle-task-push-dev, its own empty data): "*.github.io" lets a helper's fork use it
     const allowed = ORIGINS.includes(origin) || (env.DEV_ORIGIN && (origin === env.DEV_ORIGIN || (env.DEV_ORIGIN === "*.github.io" && /^https:\/\/[a-z0-9-]+\.github\.io$/i.test(origin))));
-    const H = { "Access-Control-Allow-Origin": allowed ? origin : ORIGINS[0], "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400", Vary: "Origin" };
+    const H = { "Access-Control-Allow-Origin": allowed ? origin : ORIGINS[0], "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type, X-Soc", "Access-Control-Max-Age": "86400", Vary: "Origin" };
     const out = (o, st) => new Response(JSON.stringify(o), { status: st || 200, headers: { ...H, "Content-Type": "application/json" } });
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: H });
     const path = new URL(req.url).pathname;
@@ -467,8 +550,28 @@ export default {
         const im = await community(env).getImg(m[1]); if (!im) return new Response("not found", { status: 404 });
         return new Response(im.data, { headers: { "Content-Type": im.type, "Cache-Control": "private, max-age=86400", "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'" } });
       } }
+    { const m = /^\/sfile\/([0-9a-f]{36})(?:\/[^/]*)?$/.exec(path);       // a shared summary / solution: behind a link nobody can guess (only community members see it in a chat)
+      if (m && req.method === "GET") {
+        const f = await community(env).fileMeta(m[1]); if (!f) return new Response("not found", { status: 404 });
+        const data = await filesOf(env, f.cid).get(m[1]); if (!data) return new Response("not found", { status: 404 });
+        const inline = f.type === "application/pdf" || f.type.startsWith("image/"), dl = new URL(req.url).searchParams.has("dl");
+        return new Response(data, { headers: { "Content-Type": f.type, "Content-Length": String(data.byteLength), "Cache-Control": "private, max-age=604800",
+          "Content-Disposition": (inline && !dl ? "inline" : "attachment") + "; filename*=UTF-8''" + encodeURIComponent(f.name), "X-Content-Type-Options": "nosniff",
+          // a PDF opens in the browser's own viewer (a strict policy can block it there); everything else may not run anything
+          ...(f.type === "application/pdf" ? {} : { "Content-Security-Policy": "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox" }), "Referrer-Policy": "no-referrer" } });
+      } }
     if (req.method !== "POST") return out({ error: "not found" }, 404);
     if (!allowed) return out({ error: "origin" }, 403);
+    if (path === "/sfile") {            // upload: the bytes as the body, who and what in the X-Soc header (JSON, URI-encoded)
+      let b; try { b = JSON.parse(decodeURIComponent(req.headers.get("X-Soc") || "")); } catch (e) { return out({ error: "json" }, 400); }
+      const len = Number(req.headers.get("Content-Length") || 0); if (len > F_MAX + 1024) return out({ error: "size", max: F_MAX }, 413);
+      b.type = (req.headers.get("Content-Type") || "").split(";")[0].trim().toLowerCase();
+      const buf = await req.arrayBuffer(); if (buf.byteLength > F_MAX) return out({ error: "size", max: F_MAX }, 413);
+      const C = community(env), [st, o] = await C.fileBegin(b, buf.byteLength); if (st !== 200) return out(o, st);
+      try { await filesOf(env, o.cid).put(o.id, buf); } catch (e) { await C.fileAbort(o.id); return out({ error: "store" }, 500); }
+      await C.fileDone(o.id);
+      return out({ id: o.id, n: o.name, s: o.size, t: o.type, k: o.kind, url: new URL(req.url).origin + "/sfile/" + o.id });
+    }
     if (path === "/fbimg") {            // a screenshot for a feedback message: an image, up to 1.5 MB
       const type = (req.headers.get("Content-Type") || "").split(";")[0].trim();
       if (!["image/jpeg", "image/png", "image/webp"].includes(type)) return out({ error: "type" }, 415);

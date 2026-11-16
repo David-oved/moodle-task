@@ -20,6 +20,10 @@ class_name = "Feed"
 name = "COMMUNITY"
 class_name = "Community"
 
+[[durable_objects.bindings]]
+name = "FILES"
+class_name = "Files"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["Device", "Keys"]
@@ -31,6 +35,10 @@ new_sqlite_classes = ["Feed"]
 [[migrations]]
 tag = "v3"
 new_sqlite_classes = ["Community"]
+
+[[migrations]]
+tag = "v4"
+new_sqlite_classes = ["Files"]
 
 # ---------- the test copy (for helpers working on a fork): same code, its own empty data, its own address ----------
 # https://moodle-task-push-dev.aorizoro.workers.dev – the app uses it automatically when it is NOT served from aorizoro.github.io.
@@ -56,6 +64,10 @@ class_name = "Feed"
 name = "COMMUNITY"
 class_name = "Community"
 
+[[env.dev.durable_objects.bindings]]
+name = "FILES"
+class_name = "Files"
+
 [[env.dev.migrations]]
 tag = "v1"
 new_sqlite_classes = ["Device", "Keys"]
@@ -67,3 +79,7 @@ new_sqlite_classes = ["Feed"]
 [[env.dev.migrations]]
 tag = "v3"
 new_sqlite_classes = ["Community"]
+
+[[env.dev.migrations]]
+tag = "v4"
+new_sqlite_classes = ["Files"]

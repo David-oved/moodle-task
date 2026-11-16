@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.8.1";
+const SOC_V = "1.9.0-beta.1";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -155,6 +155,34 @@ Object.assign(I18N.fr, {
   chvTasks: n => "Discussions des devoirs" + (n ? " (" + n + ")" : ""), chvMore: n => n + " devoirs de plus", chvLess: "Moins", chvNoMsg: "Pas encore de messages · ouvrir", chvDue: d => "À rendre " + d, chvNone: "Aucun cours ni devoir trouvé",
   chvUnread: n => n + " nouveaux", chBread: "Chat général", chDisc: "Discussion du devoir",
   socNet: "Serveur de la communauté injoignable pour l’instant", socLoading: "Chargement…", socRanksT: "Rangs", socJoinBtn: "Rejoindre la communauté",
+});
+/* summaries and solutions in the chats */
+Object.assign(I18N.he, {
+  fAttach: "צירוף סיכום או פתרון", fKind_sum: "סיכום", fKind_sol: "פתרון", fKind_other: "קובץ", fKindQ: "מה זה?", fUp: "מעלה…",
+  fTooBig: mb => "הקובץ גדול מדי. אפשר עד " + mb + " MB (סריקה? אפשר לשמור אותה כ-PDF באיכות נמוכה יותר)", fBadType: "אפשר לצרף PDF, תמונה, Word, PowerPoint או Excel",
+  fErr_day: n => "הגעת ל-" + n + " קבצים היום. אפשר להמשיך מחר", fErr_user: "נגמר המקום שלך לקבצים (150 MB). מחיקה של הודעה עם קובץ ישן מפנה מקום",
+  fErr_full: "האחסון של הקהילה מלא כרגע. מאיר כבר יודע ומטפל בזה", fErr_course: "האחסון של הקורס הזה מלא כרגע", fErr_net: "הקובץ לא עלה. כדאי לבדוק את החיבור ולנסות שוב",
+  fList: "סיכומים ופתרונות", fListT: c => "📚 סיכומים ופתרונות · " + c, fListNone: "עוד אין כאן סיכומים או פתרונות. יש לך סיכום טוב? אפשר לצרף אותו בצ'אט עם 📎, וכולם ירוויחו",
+  fListAll: "הכל", fInChat: "בצ'אט הקורס", fInTask: r => "בדיון: " + r, fToChat: "להודעה ←", fMine: (u, m) => "השתמשת ב-" + u + " מתוך " + m + " MB", fHint: "📎 עד 10 MB לקובץ: PDF, תמונה, Word, PowerPoint, Excel",
+  fNote: "משתפים חומר שכתבת בעצמך, או שמותר לשתף. לא מבחנים שלא פורסמו",
+});
+Object.assign(I18N.en, {
+  fAttach: "Attach a summary or a solution", fKind_sum: "Summary", fKind_sol: "Solution", fKind_other: "File", fKindQ: "What is it?", fUp: "Uploading…",
+  fTooBig: mb => "That file is too big. Up to " + mb + " MB (a scan? try saving it as a lower-quality PDF)", fBadType: "You can attach a PDF, a picture, Word, PowerPoint or Excel",
+  fErr_day: n => "You’ve shared " + n + " files today. You can go on tomorrow", fErr_user: "Your file space is full (150 MB). Deleting a message with an old file frees it",
+  fErr_full: "The community storage is full right now. Meir knows and is on it", fErr_course: "This course’s storage is full right now", fErr_net: "The file didn’t upload. Check the connection and try again",
+  fList: "Summaries & solutions", fListT: c => "📚 Summaries & solutions · " + c, fListNone: "No summaries or solutions here yet. Got a good summary? Attach it in the chat with 📎 and everyone benefits",
+  fListAll: "All", fInChat: "In the course chat", fInTask: r => "In: " + r, fToChat: "To the message →", fMine: (u, m) => "You’ve used " + u + " of " + m + " MB", fHint: "📎 Up to 10 MB per file: PDF, picture, Word, PowerPoint, Excel",
+  fNote: "Share material you wrote yourself, or may share. No unpublished exams",
+});
+Object.assign(I18N.fr, {
+  fAttach: "Joindre un résumé ou une solution", fKind_sum: "Résumé", fKind_sol: "Solution", fKind_other: "Fichier", fKindQ: "C’est quoi ?", fUp: "Envoi…",
+  fTooBig: mb => "Fichier trop gros. Jusqu’à " + mb + " Mo (un scan ? essayez un PDF de qualité plus basse)", fBadType: "Vous pouvez joindre un PDF, une image, Word, PowerPoint ou Excel",
+  fErr_day: n => "Vous avez partagé " + n + " fichiers aujourd’hui. Vous pourrez continuer demain", fErr_user: "Votre espace fichiers est plein (150 Mo). Supprimer un message avec un ancien fichier libère de la place",
+  fErr_full: "Le stockage de la communauté est plein pour l’instant. Meir est au courant", fErr_course: "Le stockage de ce cours est plein pour l’instant", fErr_net: "Le fichier n’a pas été envoyé. Vérifiez la connexion et réessayez",
+  fList: "Résumés et solutions", fListT: c => "📚 Résumés et solutions · " + c, fListNone: "Pas encore de résumés ni de solutions. Vous avez un bon résumé ? Joignez-le dans le chat avec 📎",
+  fListAll: "Tout", fInChat: "Dans le chat du cours", fInTask: r => "Dans : " + r, fToChat: "Vers le message →", fMine: (u, m) => "Utilisé : " + u + " sur " + m + " Mo", fHint: "📎 Jusqu’à 10 Mo par fichier : PDF, image, Word, PowerPoint, Excel",
+  fNote: "Partagez ce que vous avez écrit, ou avez le droit de partager. Pas d’examens non publiés",
 });
 
 /* ---------- state and the server ---------- */
@@ -478,7 +506,7 @@ async function openTimes(key) {
 /* the community part of a course's page: its chat, its WhatsApp group and its leaderboard */
 function crsLinks(cid) {
   const n = thInfo(cid, "c").n, u = unread(cid, "c"), tn = Object.keys((cdata(cid) || {}).th || {}).filter(k => k !== "c").length;
-  return '<div class="crsoc">' + chatBtnCourse(cid) + '<button class="crsbtn" data-socboard="' + cid + '">' + ic("trophy") + "<span>" + esc(t("crsBoard")) + "</span></button>" + "</div>" +
+  return '<div class="crsoc">' + chatBtnCourse(cid) + '<button class="crsbtn" data-socfiles="' + cid + '">' + ic("book-open") + "<span>" + esc(t("fList")) + "</span></button>" + '<button class="crsbtn" data-socboard="' + cid + '">' + ic("trophy") + "<span>" + esc(t("crsBoard")) + "</span></button>" + "</div>" +
     '<p class="hint">' + esc(n || tn ? t("crsChatN", n, tn) : t("crsChatNone")) + (u ? " · " + esc(t("chvUnread", u)) : "") + "</p>" + waBar(cid);
 }
 function totalUnread() { let n = 0; for (const c of myCourses()) { const cd = cdata(c.id); if (!cd || !cd.th) continue; for (const tk in cd.th) n += unread(c.id, tk); } return n; }
@@ -489,13 +517,15 @@ function chatTitle(cid, tk) {
 function openChat(cid, tk) {
   const c = courseOf(cid), title = chatTitle(cid, tk);
   if (ST.chat && ST.chat.timer) clearInterval(ST.chat.timer);
-  ST.chat = { cid, tk, title, ver: null, msgs: [], reply: 0 };
+  ST.chat = { cid, tk, title, ver: null, msgs: [], reply: 0, file: null };
   const x = tk !== "c" && V.data ? V.data.tasks.find(y => y.key === tk) : null;
   const el = sheet("socChat", "<h3><span>" + esc(tk === "c" ? t("chatTC") : "💬 " + title) + "</span>" + xbtn() + '</h3><div class="schsub" style="--c:' + colorOf(cid) + '"><i></i>' + (c ? '<button class="bc" data-crs="' + cid + '"><bdi>' + esc(shortName(c.name)) + "</bdi></button>" : '<bdi class="bc"></bdi>') +
-    '<span class="sep">›</span>' + (tk === "c" ? "<span>" + esc(t("chBread")) + "</span>" : "<span>" + esc(x ? typeLabel(x) : t("chDisc")) + "</span>" + (x && x.due ? '<span class="sep">·</span><span>' + esc(t("chvDue", shortDate(x.due))) + "</span>" : "") + (x ? '<button class="link schtk" data-tkgo="' + esc(x.key) + '">' + esc(t("tkPageBtn")) + "</button>" : "")) + '</div><div class="schl" id="socChL"><div class="hint">' + esc(t("socLoading")) + "</div></div>" +
-    '<div class="schc"><div class="schrep" id="socRep" hidden></div><div class="schin"><textarea id="socTx" rows="1" maxlength="2000" placeholder="' + esc(t("chatPh")) + '"></textarea>' +
+    '<span class="sep">›</span>' + (tk === "c" ? "<span>" + esc(t("chBread")) + "</span>" : "<span>" + esc(x ? typeLabel(x) : t("chDisc")) + "</span>" + (x && x.due ? '<span class="sep">·</span><span>' + esc(t("chvDue", shortDate(x.due))) + "</span>" : "") + (x ? '<button class="link schtk" data-tkgo="' + esc(x.key) + '">' + esc(t("tkPageBtn")) + "</button>" : "")) + '<button class="link schfl" data-socfiles="' + cid + '">' + esc("📚 " + t("fList")) + "</button>" +
+    '</div><div class="schl" id="socChL"><div class="hint">' + esc(t("socLoading")) + "</div></div>" +
+    '<div class="schc"><div class="schrep" id="socRep" hidden></div><div class="satt-pend" id="socAtt" hidden></div><div class="schin"><button class="sic sattb" data-socfile aria-label="' + esc(t("fAttach")) + '" title="' + esc(t("fAttach")) + '">' + ic("file-up") + '</button><input type="file" id="socFile" hidden accept="' + F_ACCEPT + '"><textarea id="socTx" rows="1" maxlength="2000" placeholder="' + esc(t("chatPh")) + '"></textarea>' +
     '<button class="primary" data-socsend aria-label="send">' + ic("send") + "</button></div></div>");
   el.classList.add("chat");
+  $("#socFile").onchange = e => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) pickFile(f); };
   const tx = $("#socTx");
   tx.oninput = () => { tx.style.height = "auto"; tx.style.height = Math.min(tx.scrollHeight, 120) + "px"; };
   tx.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && matchMedia("(pointer: fine)").matches) { e.preventDefault(); sendMsg(); } };
@@ -525,8 +555,8 @@ function drawChat() {
   el.innerHTML = L.length ? L.map(m => {
     const mine = isMe(m.uid), rp = m.reply && byId[m.reply];
     return '<div class="sm' + (mine ? " me" : "") + '" id="sm' + m.id + '"><div class="smh">' + (mine ? "<b>" + esc(t("chatYou")) + "</b>" : nameBtn(m.uid, m.name)) + rankTag(m.total) + '<small>' + esc(msgTime(m.at)) + "</small></div>" +
-      (rp ? '<div class="sq"><b><bdi>' + esc(rp.name) + "</bdi></b> " + esc(rp.del ? t("chatDel") : rp.body.slice(0, 90)) + "</div>" : "") +
-      '<div class="smb' + (m.del ? " del" : "") + '">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body))) + "</div>" +
+      (rp ? '<div class="sq"><b><bdi>' + esc(rp.name) + "</bdi></b> " + esc(rp.del ? t("chatDel") : (rp.body || (rp.att ? "📎 " + rp.att.n : "")).slice(0, 90)) + "</div>" : "") +
+      (m.att && !m.del ? attHTML(m.att) : "") + (m.body || m.del ? '<div class="smb' + (m.del ? " del" : "") + '">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body))) + "</div>" : "") +
       (m.del ? "" : '<div class="smf">' + m.re.map(r => '<button class="sre' + (r[2] ? " on" : "") + '" data-socemo="' + m.id + "|" + r[0] + '">' + r[0] + " " + r[1] + "</button>").join("") +
         (mine || isMeName(m.name) ? (m.stars ? '<span class="sstar on">' + ic("star") + m.stars + "</span>" : "") : '<button class="sstar' + (m.starred ? " on" : "") + '" data-socstar="' + m.id + '" title="' + esc(t("chatStarT")) + '">' + ic("star") + "<span>" + esc(t("chatStar")) + "</span>" + (m.stars ? " " + m.stars : "") + "</button>") +
         '<button class="sic" data-socpick="' + m.id + '" aria-label="' + esc(t("chatReact")) + '">' + ic("smile-plus") + '</button><button class="sic" data-socrep="' + m.id + '" aria-label="' + esc(t("chatReply")) + '">' + ic("reply") + "</button>" +
@@ -539,15 +569,100 @@ function drawChat() {
 function setReply(id) {
   const ch = ST.chat, m = ch && ch.msgs.find(x => x.id === id), el = $("#socRep"); if (!el) return;
   ch.reply = m ? id : 0; el.hidden = !m;
-  el.innerHTML = m ? "<span>" + esc(t("chatReplyTo", m.name || t("lgSomeone"))) + ": <i>" + esc(m.body.slice(0, 60)) + '</i></span><button class="sic" data-socrepx aria-label="x">' + ic("x") + "</button>" : "";
+  el.innerHTML = m ? "<span>" + esc(t("chatReplyTo", m.name || t("lgSomeone"))) + ": <i>" + esc((m.body || (m.att ? "📎 " + m.att.n : "")).slice(0, 60)) + '</i></span><button class="sic" data-socrepx aria-label="x">' + ic("x") + "</button>" : "";
   if (m) $("#socTx").focus();
 }
 async function sendMsg() {
-  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch) return; if (!body) { tx.focus(); return; }   // nothing written yet: the box, ready to type
+  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch) return; if (!body && !ch.file) { tx.focus(); return; }   // nothing written yet: the box, ready to type
   const btn = $("[data-socsend]"); btn.disabled = true;
-  try { await api("post", { cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") });
-    useHit(ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
-  catch (e) { toast(t("socNet")); } finally { btn.disabled = false; }
+  let att = "";
+  if (ch.file) {                                              // the file goes up first, then the message carries it
+    if (!ch.file.id) { drawPend(true); try { ch.file.id = await uploadFile(ch, ch.file); } catch (e) { drawPend(false); btn.disabled = false; toast(e.msg || t("fErr_net"), 6000); return; } }
+    att = ch.file.id;
+  }
+  try { await api("post", Object.assign({ cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") }, att ? { att } : {}));
+    useHit(att ? "socFile_" + ch.file.kind : ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); setFile(null); $("#socChL").dataset.drawn = ""; await loadChat(true); }
+  catch (e) { toast(t("socNet")); drawPend(false); } finally { btn.disabled = false; }
+}
+/* ---------- summaries and solutions: a file attached to a chat message (kept on the community server, up to 10 MB) ---------- */
+const F_MAXB = 10 * 1024 * 1024, F_ACCEPT = ".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,image/*";
+const F_EXT = { pdf: "application/pdf", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", heic: "image/heic", heif: "image/heif",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", doc: "application/msword",
+  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation", ppt: "application/vnd.ms-powerpoint",
+  xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", xls: "application/vnd.ms-excel" };
+const fType = f => { const ext = (/\.([a-z0-9]+)$/i.exec(f.name || "") || [])[1]; return F_EXT[(ext || "").toLowerCase()] || (Object.values(F_EXT).includes(f.type) ? f.type : ""); };
+const fSize = n => "\u2066" + (n >= 1048576 ? (n / 1048576).toFixed(n >= 10485760 ? 0 : 1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB") + "\u2069";   // "781 KB" stays left-to-right in Hebrew
+const fIcon = ty => /^image\//.test(ty) ? "image" : /presentation|powerpoint/.test(ty) ? "presentation" : /sheet|excel/.test(ty) ? "sheet" : "file-text";
+const fUrl = a => pushUrl() + "/sfile/" + a.id + "/" + encodeURIComponent(a.n || "file");
+/* a picture from the phone (often 4–8 MB, or HEIC that other phones can't open): a JPEG of at most 2400 px */
+async function shrinkImg(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const im = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
+    const k = Math.min(1, 2400 / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement("canvas");
+    c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+    for (const q of [0.85, 0.7, 0.55]) { const b = await new Promise(ok => c.toBlob(ok, "image/jpeg", q)); if (b && b.size <= F_MAXB) return b; }
+    return null;
+  } finally { URL.revokeObjectURL(url); }
+}
+async function pickFile(f) {
+  const ch = ST.chat; if (!ch) return;
+  let ty = fType(f), blob = f, name = (f.name || "file").slice(0, 120);
+  if (!ty) return toast(t("fBadType"), 5000);
+  if (/^image\//.test(ty) && (ty === "image/heic" || ty === "image/heif" || f.size > 2 * 1024 * 1024)) {
+    try { const b = await shrinkImg(f); if (b) { blob = b; ty = "image/jpeg"; name = name.replace(/\.[a-z0-9]+$/i, "") + ".jpg"; } } catch (e) {}
+    if (!["image/jpeg", "image/png", "image/webp"].includes(ty)) return toast(t("fBadType"), 5000);
+  }
+  if (blob.size > F_MAXB) { useHit("socFileBig"); return toast(t("fTooBig", 10), 7000); }
+  const guess = /פתרון|פתרונות|תשובות|solution|answers/i.test(name) ? "sol" : /סיכום|summary|résumé/i.test(name) ? "sum" : ch.tk === "c" ? "sum" : "sol";
+  setFile({ blob, name, type: ty, size: blob.size, kind: guess, id: "" });
+}
+function setFile(f) { if (!ST.chat) return; ST.chat.file = f; drawPend(false); }
+function drawPend(busy) {
+  const el = $("#socAtt"), f = ST.chat && ST.chat.file; if (!el) return;
+  el.hidden = !f; if (!f) { el.innerHTML = ""; return; }
+  el.innerHTML = '<div class="sap">' + ic(fIcon(f.type)) + '<span class="sapn"><bdi>' + esc(f.name) + "</bdi><small>" + esc(fSize(f.size)) + (busy ? " · " + esc(t("fUp")) : "") + "</small></span>" +
+    (busy ? '<span class="sspin"></span>' : '<button class="sic" data-socfx aria-label="x">' + ic("x") + "</button>") + "</div>" +
+    '<div class="sak"><span>' + esc(t("fKindQ")) + "</span>" + ["sum", "sol", "other"].map(k => '<button class="chip' + (f.kind === k ? " on" : "") + '" data-socfk="' + k + '"' + (busy ? " disabled" : "") + ">" + esc(t("fKind_" + k)) + "</button>").join("") + "</div>" +
+    '<div class="sanote">' + esc(t("fNote")) + "</div>";
+}
+async function uploadFile(ch, f) {
+  const id = ensureId(); if (!id) throw { msg: t("socNet") };
+  const meta = { uid: id.uid, sec: id.sec, name: myName() || "?", cid: ch.cid, fn: f.name, kind: f.kind, cname: courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "" };
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 120000);
+  let r, j;
+  try { r = await fetch(pushUrl() + "/sfile", { method: "POST", signal: ctl.signal, headers: { "Content-Type": f.type, "X-Soc": encodeURIComponent(JSON.stringify(meta)) }, body: f.blob, credentials: "omit" }); j = await r.json().catch(() => ({})); }
+  catch (e) { throw { msg: t("fErr_net") }; } finally { clearTimeout(tm); }
+  if (!r.ok || !j.id) {
+    useHit("socFileErr_" + (j.error || r.status));
+    throw { msg: j.error === "size" ? t("fTooBig", 10) : j.error === "type" ? t("fBadType") : j.error === "day" ? t("fErr_day", j.max || 15) : j.error === "user" ? t("fErr_user") : j.error === "full" ? t("fErr_full") : j.error === "course" ? t("fErr_course") : t("fErr_net") };
+  }
+  return j.id;
+}
+function attHTML(a) {
+  const k = ["sum", "sol"].includes(a.k) ? a.k : "other";
+  return '<a class="satt" href="' + esc(fUrl(a)) + '" target="_blank" rel="noopener noreferrer"><span class="saic">' + ic(fIcon(a.t)) + '</span><span class="sapn"><bdi>' + esc(a.n) + "</bdi><small>" +
+    '<b class="sakt ' + k + '">' + esc(t("fKind_" + k)) + "</b> · " + esc(fSize(a.s)) + "</small></span>" + ic("external-link", "sago") + "</a>";
+}
+/* every summary and solution of a course, from all its chats, newest first */
+async function openFiles(cid) {
+  const c = courseOf(cid);
+  ST.fl = { cid, k: "", L: null, mine: null };
+  sheet("socFiles", "<h3><span>" + esc(t("fListT", c ? shortName(c.name) : "")) + "</span>" + xbtn() + '</h3><div id="socFL"><div class="hint">' + esc(t("socLoading")) + "</div></div>");
+  useHit("socFiles");
+  try { const r = await api("files", { cid }); if (!ST.fl || ST.fl.cid !== cid) return; ST.fl.L = r.files || []; ST.fl.mine = r.mine; }
+  catch (e) { const el = $("#socFL"); if (el) el.innerHTML = '<div class="hint">' + esc(t("socNet")) + "</div>"; return; }
+  drawFiles();
+}
+function drawFiles() {
+  const F = ST.fl, el = $("#socFL"); if (!F || !el || !F.L) return;
+  const L = F.L.filter(f => !F.k || f.k === F.k), n = k => F.L.filter(f => f.k === k).length;
+  el.innerHTML = (F.L.length ? '<div class="sflf">' + [["", t("fListAll") + " " + F.L.length], ["sum", t("fKind_sum") + " " + n("sum")], ["sol", t("fKind_sol") + " " + n("sol")], ["other", t("fKind_other") + " " + n("other")]]
+      .filter(([k]) => !k || n(k)).map(([k, l]) => '<button class="chip' + (F.k === k ? " on" : "") + '" data-socflk="' + k + '">' + esc(l) + "</button>").join("") + "</div>" : "") +
+    (L.length ? L.map(f => '<div class="sfr">' + attHTML({ id: f.id, n: f.n, s: f.s, t: f.t, k: f.k }) + '<div class="sfm"><span>' + (isMe(f.uid) ? esc(t("chatYou")) : nameBtn(f.uid, f.who)) + " · " + esc(msgTime(f.at)) +
+      (f.stars ? ' · <span class="sstar on">' + ic("star") + f.stars + "</span>" : "") + " · " + esc(f.tk === "c" ? t("fInChat") : t("fInTask", f.ref || t("chDisc"))) + '</span><button class="link" data-socchat="' + F.cid + "|" + esc(f.tk) + '">' + esc(t("fToChat")) + "</button></div></div>").join("")
+      : '<div class="hint">' + esc(t("fListNone")) + "</div>") +
+    '<div class="hint sfh">' + esc(t("fHint")) + (F.mine && F.mine.used ? "<br>" + esc(t("fMine", Math.round(F.mine.used / 1048576 * 10) / 10, Math.round(F.mine.max / 1048576))) : "") + "</div>";
 }
 /* a personal note from a task / course page, shared into that discussion (it earns points only if someone marks it ⭐, like any helpful answer) */
 async function postNote(cid, tk, txt) {
@@ -786,10 +901,16 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socsh]"))) { const [k, id] = b.dataset.socsh.split("|"); close("socShare"); return shareItem(k, id); }
   if ((b = g("[data-socunsh]"))) { const [k, id] = b.dataset.socunsh.split("|"); return stopSharing(k, id); }
   if ((b = g("[data-soctimes]"))) { e.preventDefault(); return openTimes(b.dataset.soctimes); }
-  if ((b = g("[data-socchat]"))) { e.preventDefault(); close("socNote"); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
+  if ((b = g("[data-socchat]"))) { e.preventDefault(); close("socNote"); close("socFiles"); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
   if ((b = g("[data-socchats]"))) { $$(".sheet").forEach(x => x.hidden = true); setView("chat"); render(); window.scrollTo(0, 0); return; }
   if ((b = g("[data-chf]"))) { ST.chf = b.dataset.chf; LS.set("socChF", ST.chf); return chatView(); }
   if ((b = g("[data-socsend]"))) return sendMsg();
+  if ((b = g("[data-socfile]"))) { useHit("socFileBtn"); return $("#socFile").click(); }
+  if ((b = g("[data-socfx]"))) return setFile(null);
+  if ((b = g("[data-socfk]"))) { if (ST.chat && ST.chat.file && !ST.chat.file.id) { ST.chat.file.kind = b.dataset.socfk; drawPend(false); } return; }
+  if ((b = g("[data-socfiles]"))) return openFiles(Number(b.dataset.socfiles));
+  if ((b = g("[data-socflk]"))) { if (ST.fl) { ST.fl.k = b.dataset.socflk; drawFiles(); } return; }
+  if ((b = g(".satt"))) { useHit("socFileOpen"); return; }
   if ((b = g("[data-socrep]"))) return setReply(Number(b.dataset.socrep));
   if ((b = g("[data-socrepx]"))) return setReply(0);
   if ((b = g("[data-socpick]"))) return pickEmoji(Number(b.dataset.socpick));
@@ -940,6 +1061,23 @@ html[dir=rtl] .sm{border-radius:16px 16px 4px 16px}html[dir=rtl] .sm.me{border-r
 .schin textarea{flex:1;resize:none;min-height:42px;max-height:120px;padding:10px 12px;border-radius:14px;font:inherit;font-size:15px}
 .schin .primary{width:44px;height:44px;border-radius:50%;padding:0;display:grid;place-items:center;flex:none}.schin .primary .i{width:20px;height:20px}
 html[dir=rtl] .schin .primary .i{transform:scaleX(-1)}
+.schin .sattb{width:40px;height:44px;flex:none;color:var(--accent-t);border-radius:12px}.schin .sattb .i{width:22px;height:22px}.schin .sattb:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.satt-pend{display:flex;flex-direction:column;gap:6px;padding:0 2px 8px}
+.sap{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 6%,var(--card))}.sap>.i{width:22px;height:22px;color:var(--accent-t);flex:none}
+.sapn{display:flex;flex-direction:column;min-width:0;flex:1}.sapn bdi{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sapn small{color:var(--muted);font-size:12px}
+.sak{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}.sak .chip{--c:var(--accent);padding:4px 11px;font-size:13px}.sak .chip.on{opacity:1}
+.sanote{font-size:11.5px;color:var(--muted)}
+.sspin{width:18px;height:18px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--accent) 25%,transparent);border-top-color:var(--accent);animation:s .8s linear infinite;flex:none}
+.satt{display:flex;align-items:center;gap:10px;margin:6px 0 2px;padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);text-decoration:none;max-width:340px}
+.sm.me .satt{background:color-mix(in srgb,var(--card) 70%,transparent)}
+.satt:hover{border-color:var(--accent)}.saic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--accent) 14%,var(--card));color:var(--accent-t)}.saic .i{width:20px;height:20px}
+.satt .sago{width:15px;height:15px;color:var(--muted);flex:none}
+.sakt{font-weight:700;color:var(--accent-t)}.sakt.sol{color:var(--ok,#16a34a)}.sakt.other{color:var(--muted)}
+.schsub .schfl{font-size:13px;padding:0;margin-inline-start:auto;font-weight:600}.schsub .schtk+.schfl{margin-inline-start:10px}
+.sflf{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}.sflf .chip{--c:var(--accent);padding:5px 12px;font-size:13px}
+.sfr{padding:4px 0 10px;border-bottom:1px solid var(--line);margin-bottom:6px}.sfr .satt{max-width:none;margin:0 0 4px}
+.sfm{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}.sfm .link{font-size:12.5px;padding:0}
+.sfh{margin-top:10px;font-size:12px}
 .schg{margin:10px 0}.schgh{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:4px}.schgh>i{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .schr{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:10px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none}
 .schr .sw{flex:1;min-width:0;display:flex;flex-direction:column}.schr small{color:var(--muted);font-size:12px}.schr .i{width:18px;height:18px;color:var(--accent-t)}

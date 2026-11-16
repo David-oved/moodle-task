@@ -4123,7 +4123,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.1";
+const APP_VERSION = "1.8.2";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4564,7 +4564,7 @@ function courseCurrent(c, now) {
   return ((V.data && V.data.tasks) || []).some(x => x.cid === c.id && x.due && x.due > now - 120 * DAY);
 }
 function render() {
-  withMine(); applyDash(); applyDensity(); renderSug();
+  withMine(); applyDensity(); applyDash(); renderSug();   // density first: the "clean" display hides some cards, and the layout must not keep room for them
   const d = V.data;
   $("#bRefresh").classList.toggle("spin", V.loading);
   $("#upd").textContent = (V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "") + syncBadge();
@@ -5905,7 +5905,7 @@ function dashFill(out, C) {
   return out;
 }
 function dashAuto() {
-  const c = dashCfg(), C = DASH_COLS[devKind()], shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id) && !document.getElementById(id).classList.contains("sugmoved"));
+  const c = dashCfg(), C = DASH_COLS[devKind()], shown = c.order.filter(id => !c.off.includes(id) && dashLive(id));
   // first try the order that packs tightest: each next card is the one that fits highest up (keeping the student's order when it ties)
   const left = shown.slice(), order = [];
   while (left.length) {
@@ -5918,6 +5918,9 @@ function dashAuto() {
   c.sz = Object.assign({}, c.sz); for (const r of res) c.sz[r.id] = r.w + "x" + r.h;
   deSave(c, "dashAuto"); toast(t("deAutoDone"));
 }
+/* a card that is on the overview but not drawn right now (reminders while they are off; the month, load and reminders cards in the "clean" display)
+   takes no cells: each one used to leave an empty hole of its size (Eitan, 1.8.1: a big gap between the exams and the course messages) */
+function dashLive(id) { const el = document.getElementById(id); if (!el || el.classList.contains("sugmoved")) return false; try { return getComputedStyle(el).display !== "none"; } catch (e) { return true; } }
 function dashCell() {
   const box = $("#dash"), C = DASH_COLS[devKind()], gap = C === 4 ? 8 : 10; if (!box || !box.clientWidth) return;
   box.style.setProperty("--cols", C); box.style.setProperty("--gap", gap + "px");
@@ -5928,8 +5931,8 @@ function layoutDash() {
   const c = dashCfg(), C = DASH_COLS[devKind()];
   for (const id of c.order) { const el = document.getElementById(id); if (el && el.parentNode === box) box.appendChild(el); }       // the reading order (screen readers, Tab)
   // a card that has nothing to show right now (reminders while they are off) takes no cells: it used to leave an empty hole of its size
-  const shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id) && !document.getElementById(id).classList.contains("sugmoved"));
   for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (el) el.classList.toggle("dhide", c.off.includes(d.id)); }
+  const shown = c.order.filter(id => !c.off.includes(id) && dashLive(id));
   for (const r of dashPack(shown.map(id => { const [w, h] = szWH(c.sz[id]); return { id, w, h }; }), C)) {
     const el = document.getElementById(r.id);
     el.style.gridColumn = r.x + 1 + " / span " + r.w; el.style.gridRow = r.y + 1 + " / span " + r.h;

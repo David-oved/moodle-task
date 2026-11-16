@@ -99,7 +99,7 @@ button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--lin
 button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
 button.link{border:0;background:none;color:var(--accent-t);padding:6px 4px}
 button:disabled{opacity:.5}
-input[type=text],input[type=search],input[type=password],select{font:inherit;font-size:16px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+input[type=text],input[type=search],input[type=password],input[type=tel],input[type=email],select{font:inherit;font-size:16px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
 select{width:auto}
 .hint{color:var(--muted);font-size:13px}
 .err{color:var(--err)}
@@ -1009,6 +1009,9 @@ body.calm *,body.calm *::before,body.calm *::after{animation:none!important;tran
 .crsatt{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:9px 12px;border-radius:12px;background:var(--row);font-size:13.5px;font-weight:600}.crsatt .i{width:17px;height:17px;color:#8e5bd8}
 .bdghint{grid-column:1/-1;order:9;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);padding:2px 4px}.bdghint .i{width:14px;height:14px;flex:none}
 .wnth{margin-top:8px;padding:9px 12px;border-radius:12px;background:color-mix(in srgb,var(--accent) 9%,var(--card));font-size:13.5px;font-weight:600}
+.fbphask{display:flex;flex-direction:column;gap:4px;margin:-2px 0 10px;padding:10px 12px;border-radius:12px;font-size:13.5px;line-height:1.4;background:color-mix(in srgb,var(--warn,#f59e0b) 14%,var(--card));border:1px solid color-mix(in srgb,var(--warn,#f59e0b) 45%,var(--line))}
+.fbphask b{font-size:14.5px}.fbphask .link{align-self:flex-start;padding:2px 0;font-size:13px}
+#fbPhL.need input{border-color:var(--warn,#f59e0b);box-shadow:0 0 0 3px color-mix(in srgb,var(--warn,#f59e0b) 30%,transparent)}
 .fbcredit{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-size:13px;margin:6px 0 10px}.fbcredit input{width:auto}.fbask{font-size:14.5px;font-weight:700;color:var(--text)}.fbmore{color:var(--accent-t);font-weight:600}
 .tkgone{font-size:13px;color:var(--muted);margin:-4px 0 10px;padding:8px 12px;border-radius:12px;background:var(--row)}
 .tkacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.tkacts>*{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 10px;border-radius:12px;font-weight:650;font-size:14px;text-decoration:none}
@@ -1809,10 +1812,11 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
     <div id="fbSug" class="fbsug" hidden></div>
+    <label id="fbPhL"><span data-i18n="fbPhone"></span><input type="tel" id="fbContact" maxlength="30" inputmode="tel" autocomplete="tel" dir="ltr"></label>
+    <div class="fbphask" id="fbPhAsk" hidden><b data-i18n="fbPhAskT"></b><span data-i18n="fbPhAskP"></span><button type="button" class="link" id="fbNoPh" data-i18n="fbNoPh"></button></div>
     <div class="fbshot"><button type="button" class="btn" id="fbShotBtn"><svg class="i"><use href="#i-image"/></svg> <span data-i18n="fbShot"></span></button><input type="file" id="fbShot" accept="image/*" hidden>
       <span class="fbprev" id="fbPrev" hidden><img id="fbPrevImg" alt=""><button class="xbtn" id="fbShotX" data-i18n-aria="fbShotDel"><svg class="i"><use href="#i-x"/></svg></button></span></div>
     <div class="hint" data-i18n="fbShotHint"></div>
-    <label><span data-i18n="fbPhone"></span><input type="tel" id="fbContact" maxlength="30" inputmode="tel" autocomplete="tel" dir="ltr"></label>
     <div class="hint" id="fbAuto" data-i18n="fbAuto"></div>
     <div class="err" id="fbErr"></div>
     <label class="fbcredit"><input type="checkbox" id="fbCredit" checked> <span data-i18n="fbCredit"></span></label>
@@ -2234,7 +2238,7 @@ const I18N = {
     syncOtherUser: "המכשיר מחובר עכשיו למשתמש אחר, הסנכרון כובה", syncBlocked: "Moodle באתר הזה לא מאפשר לשמור את נתוני הסנכרון",
     fbTitle: "💬 פידבק", fbOpen: "💬 יש לך רעיון, בקשה או באג? ספר לנו", fbHint: "ההודעה מגיעה ישירות למפתח האפליקציה.",
     fbKind: "סוג", fbIdea: "💡 הצעה לשיפור", fbBug: "🐞 משהו לא עובד", fbQuestion: "❓ שאלה", fbPraise: "❤️ מחמאה", fbMsg: "מה תרצה לספר?",
-    fbContact: "", fbPhone: "📞 טלפון, אם תרצה שיחזרו אליך (לא חובה)",  fbBadPhone: "מספר הטלפון לא נראה תקין", fbAuto: "📎 השם, רשימת הקורסים ופרטי המכשיר (גרסה, סוג מכשיר, שפה) מצורפים אוטומטית, כדי שיהיה קל לעזור לך", fbSend: "שלח",
+    fbContact: "", fbPhone: "📞 טלפון, כדי שנוכל לחזור אליך", fbPhAskT: "📞 איך נחזור אליך?", fbPhAskP: "בלי מספר טלפון אין לנו דרך לענות לך, לשאול שאלה או לספר שתיקנו. אפשר לכתוב אותו למעלה ואז ללחוץ ״שלח״. הוא נשמר רק במכשיר הזה, לפעם הבאה.", fbNoPh: "לשלוח בלי טלפון",  fbBadPhone: "מספר הטלפון לא נראה תקין", fbAuto: "📎 השם, רשימת הקורסים ופרטי המכשיר (גרסה, סוג מכשיר, שפה) מצורפים אוטומטית, כדי שיהיה קל לעזור לך", fbSend: "שלח",
     fbEmpty: "כתוב כמה מילים לפני השליחה", fbThanks: "תודה! ההודעה נשלחה 🙏", fbQueued: "אין חיבור עכשיו. ההודעה תישלח אוטומטית כשיחזור החיבור.", syncViaCal: "נשמר כאירוע פרטי ביומן שלך ב-Moodle (בתאריך 1.1.2001, כדי שלא יפריע)", syncViaFiles: "נשמר ב״הקבצים הפרטיים שלי״ ב-Moodle", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
@@ -2476,7 +2480,7 @@ const I18N = {
     syncOtherUser: "This device is now signed in as another user; sync was turned off", syncBlocked: "Moodle on this site doesn’t allow saving the sync data",
     fbTitle: "💬 Feedback", fbOpen: "💬 Got an idea, a request or a bug? Tell us", fbHint: "Your message goes straight to the app’s developer.",
     fbKind: "Type", fbIdea: "💡 Idea", fbBug: "🐞 Something doesn’t work", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "What would you like to say?",
-    fbContact: "", fbPhone: "📞 Phone, if you’d like a call back (optional)",  fbBadPhone: "That phone number doesn’t look right", fbAuto: "📎 Your name, course list and device details (version, device type, language) are attached automatically, so it’s easier to help you", fbSend: "Send",
+    fbContact: "", fbPhone: "📞 Phone, so we can get back to you", fbPhAskT: "📞 How do we get back to you?", fbPhAskP: "Without a phone number we can’t answer you, ask a question or tell you it’s fixed. Type it above and press Send. It’s kept only on this device, for next time.", fbNoPh: "Send without a phone",  fbBadPhone: "That phone number doesn’t look right", fbAuto: "📎 Your name, course list and device details (version, device type, language) are attached automatically, so it’s easier to help you", fbSend: "Send",
     fbEmpty: "Write a few words before sending", fbThanks: "Thanks! Your message was sent 🙏", fbQueued: "No connection right now. It will be sent automatically when you’re back online.", syncViaCal: "Kept as a private event in your Moodle calendar (dated 1.1.2001, out of the way)", syncViaFiles: "Kept in your Moodle “Private files”", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
@@ -2718,7 +2722,7 @@ const I18N = {
     syncOtherUser: "Cet appareil est connecté à un autre utilisateur ; synchronisation désactivée", syncBlocked: "Moodle sur ce site ne permet pas d’enregistrer les données de synchronisation",
     fbTitle: "💬 Avis", fbOpen: "💬 Une idée, une demande ou un bug ? Dites-le-nous", fbHint: "Votre message va directement au développeur de l’application.",
     fbKind: "Type", fbIdea: "💡 Idée", fbBug: "🐞 Quelque chose ne marche pas", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "Que voulez-vous nous dire ?",
-    fbContact: "", fbPhone: "📞 Téléphone, si vous voulez être rappelé (facultatif)",  fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbAuto: "📎 Votre nom, votre liste de cours et les détails de l’appareil (version, type, langue) sont joints automatiquement, pour mieux vous aider", fbSend: "Envoyer",
+    fbContact: "", fbPhone: "📞 Téléphone, pour qu’on puisse vous répondre", fbPhAskT: "📞 Comment vous répondre ?", fbPhAskP: "Sans numéro de téléphone, on ne peut pas vous répondre, vous poser une question ni vous dire que c’est corrigé. Écrivez-le ci-dessus puis appuyez sur Envoyer. Il reste seulement sur cet appareil, pour la prochaine fois.", fbNoPh: "Envoyer sans téléphone",  fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbAuto: "📎 Votre nom, votre liste de cours et les détails de l’appareil (version, type, langue) sont joints automatiquement, pour mieux vous aider", fbSend: "Envoyer",
     fbEmpty: "Écrivez quelques mots avant d’envoyer", fbThanks: "Merci ! Votre message a été envoyé 🙏", fbQueued: "Pas de connexion. Il sera envoyé automatiquement au retour du réseau.", syncViaCal: "Gardé comme événement privé dans votre calendrier Moodle (daté du 1.1.2001, hors de vue)", syncViaFiles: "Gardé dans vos « Fichiers personnels » Moodle", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
     syncFirst: "Synchronisation activée. Sur le premier appareil, ses données sont enregistrées sur Moodle ; les appareils suivants les chargent depuis là.", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
   },
@@ -2980,7 +2984,7 @@ P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "ttv", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades", "soc_old", "dash_w", "dash_t", "lang_keep", "grp", "prog", "notes", "soc_seen", "soc_ns"];
+const SYNC_KEYS = ["tt", "ttv", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades", "soc_old", "dash_w", "dash_t", "lang_keep", "grp", "prog", "notes", "soc_seen", "soc_ns", "rd"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -3958,6 +3962,7 @@ function cleanKey(k, v) {
     case "away": return AWAY_OPTS.includes(v) ? v : 5;
     case "soc_seen": return obj(v) ? Object.fromEntries(Object.entries(v).filter(([k, n]) => /^\d+\|[^\u0000-\u001f]{1,140}$/.test(k) && Number.isInteger(n) && n >= 0).slice(-600)) : {};
     case "soc_ns": return Number.isFinite(v) && v > 0 ? Math.round(v) : 0;
+    case "rd": return Array.isArray(v) ? [...new Set(v.filter(x => typeof x === "string" && x.length > 1 && x.length <= 160 && !/[\u0000-\u001f]/.test(x)))].slice(-500) : [];
     case "kw": return Array.isArray(v) ? [...new Set(v.filter(x => typeof x === "string").map(x => x.trim().slice(0, 40)).filter(Boolean))].slice(0, 40) : [];
     case "campus": return ["lev", "tal"].includes(v) ? v : "";
     case "zl": return ["zoom", "show", "hide"].includes(v) ? v : "zoom";
@@ -4065,6 +4070,12 @@ async function syncRound() {
       if (j !== syncSnap[k]) { P.soc_old = all; syncSnap[k] = j; pulled = true; }
       P._ts[k] = Math.max(lt, rt); continue;
     }
+    if (k === "rd") {                          // what was read in "messages from the courses" (announcements and new in your courses): read on any device = read everywhere (Roni)
+      const mine = cleanKey(k, P.rd || []), theirs = has ? cleanKey(k, rd[k]) : [], all = cleanKey(k, theirs.concat(mine.filter(x => !theirs.includes(x))));
+      const j = JSON.stringify(all); if (j !== JSON.stringify(theirs)) push = true;
+      if (j !== syncSnap[k]) { P.rd = all; syncSnap[k] = j; pulled = true; }
+      P._ts[k] = Math.max(lt, rt); continue;
+    }
     if (k === "soc_seen" || k === "soc_ns") {   // what was read in the chats: the most read on any device wins, per chat (David: read on the phone = read on the iPad)
       const mine = cleanKey(k, P[k]), theirs = has ? cleanKey(k, rd[k]) : (k === "soc_ns" ? 0 : {});
       let all; if (k === "soc_ns") all = Math.max(mine, theirs); else { all = Object.assign({}, theirs); for (const [x, n] of Object.entries(mine)) all[x] = Math.max(n, all[x] || 0); all = cleanKey(k, all); }
@@ -4123,7 +4134,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.1";
+const APP_VERSION = "1.9.0-beta.1";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4217,7 +4228,8 @@ function openFb(ask) {
   useHit(ask === true ? "fbAsk" : "fb"); $("#fbAskT").hidden = $("#fbLater").hidden = ask !== true;
   $("#fbKind").innerHTML = FB_KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join("");
   FBSHOT.blob = null; $("#fbPrev").hidden = true; $("#fbShot").value = "";
-  $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; if (PLAT !== "ios") $("#fbMsg").focus();   // iPhone: no keyboard popping up by itself (it shifts the page under the window)
+  $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; FB_PH.asked = false; $("#fbPhAsk").hidden = true; $("#fbPhL").classList.remove("need");
+  if (!$("#fbContact").value) $("#fbContact").value = LS.get("fbPhone", "") || ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; if (PLAT !== "ios") $("#fbMsg").focus();   // iPhone: no keyboard popping up by itself (it shifts the page under the window)
 }
 /* a screenshot from the gallery, made smaller on the phone (at most 1400 px, JPEG) before it is sent */
 const FBSHOT = { blob: null };
@@ -4241,11 +4253,20 @@ $("#fbShot").onchange = async e => {
 };
 $("#fbShotBtn").onclick = () => { useHit("fbShotBtn"); $("#fbShot").click(); };   // a real button that opens the picker, like the Levnet file (a label around a hidden input did nothing on some iPhones)
 $("#fbShotX").onclick = e => { e.preventDefault(); FBSHOT.blob = null; $("#fbPrev").hidden = true; $("#fbShot").value = ""; };
-async function sendFb() {
+/* most feedback came with no phone, so there was no way to answer: an empty phone gets one clear question before sending ("send without" is right there) */
+const FB_PH = { asked: false };
+async function sendFb(noPhone) {
   const msg = $("#fbMsg").value.trim();
   if (msg.length < 3) return $("#fbErr").textContent = t("fbEmpty");
   const phone = $("#fbContact").value.trim();
   if (phone && !/^[+\d][\d\s\-()]{6,20}$/.test(phone)) return $("#fbErr").textContent = t("fbBadPhone");
+  if (!phone && noPhone !== true) {
+    $("#fbErr").textContent = ""; $("#fbPhAsk").hidden = false; $("#fbPhL").classList.add("need");
+    $("#fbPhL").scrollIntoView({ block: "center", behavior: "smooth" }); if (!FB_PH.asked) { FB_PH.asked = true; useHit("fbPhAsk"); setTimeout(() => $("#fbContact").focus(), 250); }
+    return;
+  }
+  if (phone) { LS.set("fbPhone", phone); if (FB_PH.asked) useHit("fbPhAdded"); } else useHit("fbNoPh");
+  $("#fbPhAsk").hidden = true; $("#fbPhL").classList.remove("need");
   const x = { kind: $("#fbKind").value, msg, contact: phone, meta: techMeta({ credit: $("#fbCredit").checked ? 1 : 0 }),
     who: senderInfo() };
   $("#fbSend").disabled = true;
@@ -4263,12 +4284,15 @@ async function sendFb() {
 /* ---------- announcements ---------- */
 const newsBase = () => { let b = LS.get("newsBase", 0); if (!b) { b = nowS() - 3 * DAY; LS.set("newsBase", b); } return b; };
 const newsRead = () => LS.get("newsRead", []);
-const isNewNews = n => n.at > newsBase() && !newsRead().includes(n.id);
-function markRead(ids) { const r = newsRead(); for (const i of ids) if (!r.includes(i)) r.push(i); LS.set("newsRead", r.slice(-300)); }
+/* what was read is kept in the synced settings too (P.rd: "n<id>" for an announcement, "f|<id>" for new in your courses), so read on the phone = read on the computer */
+const rdHas = k => Array.isArray(P.rd) && P.rd.includes(k);
+function rdAdd(ks) { const r = Array.isArray(P.rd) ? P.rd.slice() : []; let ch = false; for (const k of ks) if (!r.includes(k)) { r.push(k); ch = true; } if (ch) { P.rd = r.slice(-500); savePrefs(); } }
+const isNewNews = n => n.at > newsBase() && !newsRead().includes(n.id) && !rdHas("n" + n.id);
+function markRead(ids) { const r = newsRead(); for (const i of ids) if (!r.includes(i)) r.push(i); LS.set("newsRead", r.slice(-300)); rdAdd(ids.map(i => "n" + i)); }
 /* ---------- new in a course: a new assignment or quiz, a new file or link (found when the app refreshes) ---------- */
 const FR_LBL = { task: "frTask", quiz: "frQuiz", file: "frFile", link: "frLink", grade: "frGrade" };
 const FR_IC = { task: "file-up", quiz: "circle-check", file: "file-text", link: "link", grade: "award" };   // "new in your courses": an icon in the course colour, so a new file never looks like an announcement
-const freshAll = () => (LS.get("fresh", []) || []).filter(x => x && !isOff(x.cid) && nowS() - x.at < 7 * DAY);
+const freshAll = () => (LS.get("fresh", []) || []).filter(x => x && !isOff(x.cid) && nowS() - x.at < 7 * DAY).map(x => x.seen || !rdHas("f|" + x.id) ? x : Object.assign({}, x, { seen: 1 }));
 async function freshScan(d) {
   const now = nowS(), add = [], acts = d.tasks.filter(isAct);           // assignments, quizzes and other Moodle activities with a deadline (the automatic checker…)
   let known = LS.get("knownT", null);
@@ -4493,7 +4517,7 @@ document.addEventListener("click", e => {
   P[k] = Object.assign({}, P[k] || {}, { [cid]: v }); savePrefs(); useHit("tip_" + k + "_" + (v === "all" ? "all" : "pick")); render(); if (!$("#crsSheet").hidden) renderCourse();
   if (v !== "all") toast(t("tipDone", shortName(courseName(Number(cid)))), 4500);
 });
-function freshSeen(ids) { const all = LS.get("fresh", []) || []; for (const x of all) if (!ids || ids.includes(x.id)) x.seen = 1; LS.set("fresh", all); }
+function freshSeen(ids) { const all = LS.get("fresh", []) || [], ks = []; for (const x of all) if (!ids || ids.includes(x.id)) { x.seen = 1; ks.push("f|" + x.id); } LS.set("fresh", all); rdAdd(ks); }
 function openedCard() { try { return DX.id; } catch (e) { return ""; } }      // the overview card opened on top, if any (safe before DX exists)
 function renderFresh() {
   const el = $("#fresh"); if (!el) return;
@@ -4564,7 +4588,7 @@ function courseCurrent(c, now) {
   return ((V.data && V.data.tasks) || []).some(x => x.cid === c.id && x.due && x.due > now - 120 * DAY);
 }
 function render() {
-  withMine(); applyDash(); applyDensity(); renderSug();
+  withMine(); applyDensity(); applyDash(); renderSug();   // density first: the "clean" display hides some cards, and the layout must not keep room for them
   const d = V.data;
   $("#bRefresh").classList.toggle("spin", V.loading);
   $("#upd").textContent = (V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "") + syncBadge();
@@ -5007,6 +5031,10 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
+  { v: "1.9.0", at: "2026-11-16 12:00", th: ["מיכאל", "יואל", "רוני", "איתן"],
+    he: ["📚 סיכומים ופתרונות בצ׳אטים של הקהילה: ב-📎 ליד תיבת ההודעה מצרפים PDF, תמונה, Word, PowerPoint או Excel עד 10 MB, ומסמנים אם זה סיכום או פתרון. כל הקבצים של קורס נמצאים במקום אחד: ״📚 סיכומים ופתרונות״ בצ׳אט ובדף הקורס", "✓ מה שקראת ב״הודעות מהקורסים״ נחשב נקרא בכל המכשירים שלך", "📞 בפידבק: אם לא השארת טלפון, נשאל פעם אחת איך לחזור אליך (ואפשר לשלוח גם בלי)", "🕳 בתצוגה ״נקייה״ נשאר בסקירה חור גדול במקום כרטיסים שהיא מסתירה. עכשיו אין חור"],
+    en: ["📚 Summaries and solutions in the community chats: the 📎 next to the message box attaches a PDF, picture, Word, PowerPoint or Excel file up to 10 MB, marked as a summary or a solution. All of a course’s files are in one place: “📚 Summaries & solutions” in the chat and on the course page", "✓ What you read in “Messages from your courses” counts as read on all your devices", "📞 Feedback: if you left no phone number, we ask once how to get back to you (sending without one still works)", "🕳 In the “clean” display the overview left a big hole where the cards it hides would be. Not any more"],
+    fr: ["📚 Résumés et solutions dans les chats de la communauté : le 📎 à côté de la zone de message joint un PDF, une image, un Word, un PowerPoint ou un Excel jusqu’à 10 Mo, marqué résumé ou solution. Tous les fichiers d’un cours sont au même endroit : « 📚 Résumés et solutions » dans le chat et sur la page du cours", "✓ Ce que vous avez lu dans « Messages des cours » est lu sur tous vos appareils", "📞 Commentaires : sans numéro de téléphone, on vous demande une fois comment vous répondre (on peut envoyer sans)", "🕳 En affichage « épuré », l’aperçu laissait un grand trou à la place des cartes masquées. C’est corrigé"] },
   { v: "1.8.0", at: "2026-11-16 02:00", th: ["מנדי", "נועם", "פנינה", "יעל", "אבינועם", "יהושע", "אלעזר", "דוד"],
     he: ["🧩 סקירה בסגנון מסך הבית: כל אריח בגודל שתבחר (1×1 עד 4×4), ובכל גודל הוא נראה כמו וידג׳ט – קטן ותמציתי או גדול ומפורט. ״עריכה״ למעלה או לחיצה ארוכה כדי לסדר, ״🪄 סידור בלי רווחים״ ממלא חורים, ולטלפון, לטאבלט ולמחשב יש סידור נפרד", "🗓 מערכת שעות ברורה: בכל קוביה שם השיעור ואז השעות, שיעור/תרגול ומקום, בלי טקסט חתוך. ב״תצוגה וסדר״ בוחרים גודל וסדר שורות, במחשב העכבר על שיעור מראה את כל הפרטים, ואפשר להוסיף כמה שיעורים בבת אחת", "📅 לחיצה על יום: בלוח החודש או בשבוע רואים מה יש בו – מבחנים ובחנים, הגשות והלוח האקדמי", "📈 התקדמות והערות: ״כמה כבר עשיתי״ (25%–75%) בדף המטלה עם פס דק על הכרטיס, והערות לעצמך בדף כל מטלה וכל קורס (אפשר גם לשתף עם הקורס)", "🔎 חיפוש בהגדרות: כותבים ״להסתיר קורס״, ״לוגו״ או ״ציונים״ ומגיעים ישר למקום. ובטופס הפידבק – ״אולי זה כבר קיים?״", "📱 נוח יותר בטלפון: כל חלון במסך מלא, הכותרת מתכווצת בגלילה, פחות חלונות קופצים (אחד לכל כניסה), חזרה לסקירה אחרי היעדרות, ומה שקראת בצ׳אטים מסונכרן בין המכשירים", "💻 במחשב: פריסה רחבה, צ׳אטים בפיצול מסך וגרירה לסידור הסקירה", "🎨 מראה: ״מראה, צבעים ולוגו״ במקום אחד, ארבעה לוגואים חדשים, ⋯ ליד כל קורס להסתרה מהירה, ומה שהוגש נראה שקט יותר", "🌐 שפות: מטלה שיש לה כמה העתקים מוצגת בשפה שלך, ופס הסמסטר נקי עם ״אתה כאן״", "🔒 פרטיות ושקיפות: עמוד חדש בהגדרות – מה האפליקציה רואה, מה נשאר במכשיר ומה נשלח", "🛠 יציבות: בדיקה מעמיקה על נתונים אמיתיים ותיקון של הרבה באגים – בין היתר ״הבנתי״ שלא תמיד נקלט ובזבז סוללה, ״לא הצלחתי לעדכן״ שלא הופיע בסקירה, טקסט שנמחק כשחוזרים לאפליקציה וכפתורים באייפון שלא הגיבו"],
     en: ["🧩 An overview like your home screen: each card gets the size you choose (1×1 to 4×4) and looks like a widget at every size – small and to the point, or big and detailed. “Edit” at the top or a long press to arrange, “🪄 Fill the gaps” closes holes, and phone, tablet and computer each keep their own layout", "🗓 A clearer timetable: each block shows the class name, then its times, lecture/exercise and place, with no text cut off. “Display” lets you pick the size and the order of the lines, on a computer the mouse on a class shows all its details, and you can add several classes at once", "📅 Tap a day: in the month or week view you see what’s on – exams and quizzes, deadlines and the academic calendar", "📈 Progress and notes: “how far I got” (25%–75%) on a task page with a thin bar on the card, and notes to yourself on every task and course page (you can share them with the course too)", "🔎 Search in settings: type “hide course”, “logo” or “grades” and go straight there. And in the feedback form – “maybe it’s already there?”", "📱 Easier on phones: every window full screen, a top bar that shrinks as you scroll, fewer pop-ups (one per visit), back to the overview after a while away, and what you’ve read in chats syncs between devices", "💻 On a computer: a wide layout, chats side by side and drag to arrange the overview", "🎨 Look: “Look, colours & logo” in one place, four new logos, ⋯ next to each course to hide it fast, and submitted tasks look calmer", "🌐 Languages: a task with copies in several languages shows the one in yours, and the semester bar is clean with “You are here”", "🔒 Privacy & transparency: a new page in settings – what the app sees, what stays on the device and what is sent", "🛠 Stability: a deep check on real data and many bugs fixed – among them “Got it” not always registering and draining the battery, “Couldn’t update” missing from the overview, text lost when coming back to the app, and iPhone buttons that didn’t respond"],
@@ -5905,7 +5933,7 @@ function dashFill(out, C) {
   return out;
 }
 function dashAuto() {
-  const c = dashCfg(), C = DASH_COLS[devKind()], shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id) && !document.getElementById(id).classList.contains("sugmoved"));
+  const c = dashCfg(), C = DASH_COLS[devKind()], shown = c.order.filter(id => !c.off.includes(id) && dashLive(id));
   // first try the order that packs tightest: each next card is the one that fits highest up (keeping the student's order when it ties)
   const left = shown.slice(), order = [];
   while (left.length) {
@@ -5918,6 +5946,9 @@ function dashAuto() {
   c.sz = Object.assign({}, c.sz); for (const r of res) c.sz[r.id] = r.w + "x" + r.h;
   deSave(c, "dashAuto"); toast(t("deAutoDone"));
 }
+/* a card that is on the overview but not drawn right now (reminders while they are off; the month, load and reminders cards in the "clean" display)
+   takes no cells: each one used to leave an empty hole of its size (Eitan, 1.8.1: a big gap between the exams and the course messages) */
+function dashLive(id) { const el = document.getElementById(id); if (!el || el.classList.contains("sugmoved")) return false; try { return getComputedStyle(el).display !== "none"; } catch (e) { return true; } }
 function dashCell() {
   const box = $("#dash"), C = DASH_COLS[devKind()], gap = C === 4 ? 8 : 10; if (!box || !box.clientWidth) return;
   box.style.setProperty("--cols", C); box.style.setProperty("--gap", gap + "px");
@@ -5928,8 +5959,8 @@ function layoutDash() {
   const c = dashCfg(), C = DASH_COLS[devKind()];
   for (const id of c.order) { const el = document.getElementById(id); if (el && el.parentNode === box) box.appendChild(el); }       // the reading order (screen readers, Tab)
   // a card that has nothing to show right now (reminders while they are off) takes no cells: it used to leave an empty hole of its size
-  const shown = c.order.filter(id => !c.off.includes(id) && document.getElementById(id) && !document.getElementById(id).classList.contains("sugmoved"));
   for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (el) el.classList.toggle("dhide", c.off.includes(d.id)); }
+  const shown = c.order.filter(id => !c.off.includes(id) && dashLive(id));
   for (const r of dashPack(shown.map(id => { const [w, h] = szWH(c.sz[id]); return { id, w, h }; }), C)) {
     const el = document.getElementById(r.id);
     el.style.gridColumn = r.x + 1 + " / span " + r.w; el.style.gridRow = r.y + 1 + " / span " + r.h;
@@ -7176,7 +7207,8 @@ $("#bFb").onclick = openFb; $("#bFb2").onclick = openFb;
 $("#fbClose").onclick = () => $("#fbSheet").hidden = true;
 $("#fbSheet").addEventListener("click", e => { if (e.target.id === "fbSheet") $("#fbSheet").hidden = true; });
 $("#fbMsg").addEventListener("input", e => LS.set("fbDraft", e.target.value));
-$("#fbSend").onclick = sendFb;
+$("#fbSend").onclick = () => sendFb(); $("#fbNoPh").onclick = () => sendFb(true);
+$("#fbContact").addEventListener("input", () => { if ($("#fbContact").value.trim()) $("#fbPhL").classList.remove("need"); });
 $("#bSemAuto").onclick = () => { P.sem = {}; savePrefs(); render(); renderSheet(); };
 snapAll();
 window.addEventListener("hashchange", () => { if (!location.hash) return; if (importFromHash()) showMain(); else render(); });
