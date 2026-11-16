@@ -531,6 +531,14 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   class AiErr extends Error { constructor(kind) { super(kind); this.kind = kind; } }
 
   const api = () => String(LS.get("aiApi", API_DEFAULT) || API_DEFAULT).replace(/\/+$/, "");
+  // השרת בחינם נרדם אחרי חוסר פעילות; פינג שקט כשהאפליקציה נפתחת מעיר אותו לפני שהסטודנט מקליד את השאלה הראשונה
+  let warmed = 0;
+  function warmUp() {
+    const now = Date.now();
+    if (now - warmed < 240000) return;
+    warmed = now;
+    try { fetch(api() + "/api/health", { mode: "no-cors", cache: "no-store" }).catch(() => {}); } catch (e) {}
+  }
   // the token only ever goes to https (or to a local test server) - never to any other address
   const okApi = b => { try { const u = new URL(b); return u.protocol === "https:" || (u.protocol === "http:" && /^(localhost|127\.0\.0\.1)$/.test(u.hostname)); } catch (e) { return false; } };
   const firstWord = s => String(s || "").trim().split(/\s+/)[0] || "";
@@ -1363,7 +1371,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   window.AIChat = {
-    show() { build(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; },
+    show() { build(); warmUp(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; },
     hide() { if (fab) fab.hidden = true; if (panel && !panel.hidden) close(false, true); },
     open,
     // for tests only: pretend the visible area is something else (a keyboard of a given size), then re-measure
