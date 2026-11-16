@@ -1370,8 +1370,144 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (fab && !fab.hidden) try { fab.focus({ preventScroll: true }); } catch (e) {}
   }
 
+  // ---------------------------------------------------------------------------------------------
+  // Welcome tour: a short animated "film" that introduces the AI helper. Plays on every app start for now
+  // (TOUR_ONCE = true later makes it play only on the very first start). No skipping, by design: it blocks the screen for ~15 s.
+  // ---------------------------------------------------------------------------------------------
+  const TOUR_ONCE = false;
+  const TOUR = {
+    he: [
+      { t: "היי! אני העוזר החדש שלך", s: "חדש באפליקציה" },
+      { t: "שואלים אותי הכול על הלימודים", s: "מטלות, ציונים, מועדים וקורסים", chips: ["מטלות", "ציונים", "מועדים"] },
+      { t: "אני גם שולח לך קבצים", s: "תרגילים והרצאות מהקורסים, ישר לצ'אט", icon: "file" },
+      { t: "זוכר מה שחשוב לך", s: "והשיחות שלך נשארות רק שלך", icon: "shield" },
+      { t: "לפתיחה, לוחצים על העיגול הזה", s: "תמיד כאן בשבילך", last: true },
+    ],
+    en: [
+      { t: "Hi! I'm your new assistant", s: "New in the app" },
+      { t: "Ask me anything about your studies", s: "Tasks, grades, deadlines and courses", chips: ["Tasks", "Grades", "Deadlines"] },
+      { t: "I can send you files too", s: "Exercises and lectures from your courses, right in the chat", icon: "file" },
+      { t: "I remember what matters to you", s: "And your chats stay yours alone", icon: "shield" },
+      { t: "To open me, tap this circle", s: "Always here for you", last: true },
+    ],
+    fr: [
+      { t: "Salut ! Je suis ton nouvel assistant", s: "Nouveau dans l'appli" },
+      { t: "Demande-moi tout sur tes études", s: "Devoirs, notes, échéances et cours", chips: ["Devoirs", "Notes", "Échéances"] },
+      { t: "Je t'envoie aussi des fichiers", s: "Exercices et cours, directement dans le chat", icon: "file" },
+      { t: "Je retiens ce qui compte pour toi", s: "Et tes conversations restent privées", icon: "shield" },
+      { t: "Pour m'ouvrir, touche ce cercle", s: "Toujours là pour toi", last: true },
+    ],
+  };
+  const TOUR_CSS = `
+#aiTour{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;touch-action:none;user-select:none;overflow:hidden;
+  animation:atIn .6s ease-out both}
+#aiTour.atOut{animation:atOut .7s ease-in both}
+.atBg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,color-mix(in srgb,var(--accent) 38%,#05060d) 0%,#05060d 70%)}
+.atStar{position:absolute;width:var(--sz);height:var(--sz);border-radius:50%;background:#fff;opacity:0;left:var(--x);top:var(--y);animation:atTw var(--d) var(--dl) ease-in-out infinite}
+.atFace{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;z-index:2;
+  transform:translate(var(--fx),var(--fy)) scale(var(--fs)) rotate(var(--fr));transition:transform 1s cubic-bezier(.34,1.3,.5,1);
+  filter:drop-shadow(0 0 28px color-mix(in srgb,var(--accent) 70%,transparent))}
+.atFace svg{width:100%;height:100%;display:block;overflow:visible}
+.atFace.atBreathe svg{animation:aiBreathe 2.6s ease-in-out infinite}
+.atRing{position:absolute;inset:-14px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 80%,#fff);opacity:0;animation:atRing 2.4s ease-out infinite}
+.atRing.r2{animation-delay:1.2s}
+.atTx{position:absolute;left:0;right:0;top:calc(50% + 100px);z-index:3;padding:0 24px;text-align:center;color:#fff;pointer-events:none}
+.atTx b{display:block;font-size:clamp(22px,6.4vw,32px);line-height:1.25;font-weight:800;letter-spacing:.2px}
+.atTx b span{display:inline-block;opacity:0;animation:atWord .7s var(--wd) cubic-bezier(.2,.9,.3,1) both}
+.atTx small{display:block;margin-top:10px;font-size:clamp(14px,4vw,17px);color:#ffffffb8;opacity:0;animation:atSub .7s .55s ease-out both}
+.atTx.atGone{animation:atGone .45s ease-in both}
+.atChips{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.atChips i{font-style:normal;padding:6px 14px;border-radius:99px;background:#ffffff1f;border:1px solid #ffffff3d;color:#fff;font-size:14px;opacity:0;animation:atChip .6s var(--cd) cubic-bezier(.2,.9,.3,1.4) both}
+.atIcon{margin:16px auto 0;width:44px;height:44px;color:color-mix(in srgb,var(--accent) 55%,#fff);opacity:0;animation:atChip .7s .45s cubic-bezier(.2,.9,.3,1.4) both}
+.atIcon svg{width:100%;height:100%;display:block}
+.atDots{position:absolute;bottom:calc(34px + env(safe-area-inset-bottom));left:0;right:0;display:flex;gap:7px;justify-content:center;z-index:3}
+.atDots i{width:7px;height:7px;border-radius:99px;background:#ffffff40;transition:width .4s,background .4s}
+.atDots i.on{width:22px;background:#fff}
+.atArrow{position:absolute;z-index:3;width:34px;height:34px;color:#fff;animation:atBounce 1s ease-in-out infinite}
+.atArrow svg{width:100%;height:100%;display:block}
+@keyframes atIn{from{opacity:0}to{opacity:1}}
+@keyframes atOut{to{opacity:0}}
+@keyframes atTw{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.85;transform:scale(1)}}
+@keyframes atRing{0%{opacity:.7;transform:scale(.8)}100%{opacity:0;transform:scale(1.9)}}
+@keyframes atWord{from{opacity:0;transform:translateY(18px) scale(.9);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes atSub{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes atGone{to{opacity:0;transform:translateY(-16px);filter:blur(6px)}}
+@keyframes atChip{from{opacity:0;transform:translateY(14px) scale(.7)}to{opacity:1;transform:none}}
+@keyframes atBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+`;
+  const TOUR_ICONS = {
+    file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+    arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg>',
+  };
+  let tourState = 0;                                            // 0 = not yet, 1 = running, 2 = done (this page load)
+  function runTour() {
+    if (tourState || !fab || !panel || !panel.hidden) return;
+    if (TOUR_ONCE) { try { if (LS.get("aiTourSeen", "")) return; LS.set("aiTourSeen", "1"); } catch (e) {} }
+    tourState = 1;
+    const scenes = TOUR[lang()] || TOUR.he;
+    const st = document.createElement("style"); st.textContent = TOUR_CSS; document.head.appendChild(st);
+    fab.style.visibility = "hidden"; fab.hidden = false;
+    const fr = fab.getBoundingClientRect();
+    const vw = innerWidth, vh = innerHeight;
+    const fabX = fr.left + fr.width / 2 - vw / 2, fabY = fr.top + fr.height / 2 - vh / 2;
+    const fabS = fr.width / 132;
+    const root = document.createElement("div"); root.id = "aiTour"; root.setAttribute("role", "status"); root.setAttribute("aria-live", "polite");
+    let stars = "";
+    for (let i = 0; i < 26; i++) stars += '<span class="atStar" style="--x:' + (Math.random() * 100).toFixed(1) + '%;--y:' + (Math.random() * 100).toFixed(1) + '%;--sz:' + (1 + Math.random() * 2.4).toFixed(1) + 'px;--d:' + (2.4 + Math.random() * 3).toFixed(1) + 's;--dl:' + (Math.random() * 3).toFixed(1) + 's"></span>';
+    root.innerHTML = '<div class="atBg"></div>' + stars + '<div class="atFace" style="--fx:' + fabX + 'px;--fy:' + fabY + 'px;--fs:' + fabS + ';--fr:0deg">' + FACE + '<i class="atRing"></i><i class="atRing r2"></i></div><div class="atTx"></div><div class="atDots">' + scenes.map(() => "<i></i>").join("") + "</div>";
+    document.body.appendChild(root);
+    const face = root.querySelector(".atFace"), txEl = root.querySelector(".atTx"), dots = root.querySelectorAll(".atDots i");
+    const setFace = (x, y, s, r) => { face.style.setProperty("--fx", x + "px"); face.style.setProperty("--fy", y + "px"); face.style.setProperty("--fs", s); face.style.setProperty("--fr", r + "deg"); };
+    // where the face rests in each scene (a little drift and tilt, like it is alive); the last scene flies it onto the real button
+    const poses = [[0, -70, 1, 0], [-34, -84, .94, -8], [34, -76, .98, 7], [-22, -88, .94, -5]];
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    let timers = [], finished = false;
+    const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+    function scene(i) {
+      const sc = scenes[i]; if (!sc) return;
+      dots.forEach((d, k) => d.classList.toggle("on", k === i));
+      const words = sc.t.split(" ").map((w, k) => '<span style="--wd:' + (0.08 + k * 0.11).toFixed(2) + 's">' + esc(w) + "</span>").join(" ");
+      let extra = "";
+      if (sc.chips) extra += '<div class="atChips">' + sc.chips.map((c, k) => '<i style="--cd:' + (0.5 + k * 0.16).toFixed(2) + 's">' + esc(c) + "</i>").join("") + "</div>";
+      if (sc.icon) extra += '<div class="atIcon">' + TOUR_ICONS[sc.icon] + "</div>";
+      txEl.classList.remove("atGone"); void txEl.offsetWidth;
+      txEl.innerHTML = "<b>" + words + "</b><small>" + esc(sc.s) + "</small>" + extra;
+      if (sc.last) {
+        face.classList.remove("atBreathe");
+        setFace(fabX, fabY, fabS, 0);
+        const ar = document.createElement("div"); ar.className = "atArrow";
+        ar.style.left = Math.max(8, Math.min(vw - 42, fr.left + fr.width / 2 - 17)) + "px"; ar.style.top = Math.max(8, fr.top - 46) + "px";
+        ar.innerHTML = TOUR_ICONS.arrow; root.appendChild(ar);
+        txEl.style.top = "calc(50% - 70px)";
+      } else {
+        const p = poses[Math.min(i, poses.length - 1)]; setFace(p[0], p[1], p[2], p[3]);
+        face.classList.add("atBreathe");
+      }
+    }
+    function finish() {
+      if (finished) return; finished = true;
+      timers.forEach(clearTimeout);
+      root.classList.add("atOut");
+      setTimeout(() => {
+        root.remove(); st.remove();
+        fab.style.visibility = ""; fab.classList.remove("aiPop"); void fab.offsetWidth; fab.classList.add("aiPop"); setTimeout(() => fab.classList.remove("aiPop"), 800);
+        tourState = 2;
+      }, 720);
+    }
+    // timeline: the face grows out of the circle into the middle of the screen, then the scenes follow one another
+    later(() => { setFace(0, -70, 1, 0); face.classList.add("atBreathe"); }, 350);
+    const START = 1300, STEP = 2900;
+    scenes.forEach((sc, i) => {
+      later(() => scene(i), START + i * STEP);
+      if (i < scenes.length - 1) later(() => txEl.classList.add("atGone"), START + (i + 1) * STEP - 420);
+    });
+    later(finish, START + (scenes.length - 1) * STEP + 3300);
+    later(finish, 30000);                                      // safety net: whatever happens, the screen is never locked for good
+  }
+
   window.AIChat = {
-    show() { build(); warmUp(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; },
+    show() { build(); warmUp(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; try { runTour(); } catch (e) { tourState = 2; const t = document.getElementById("aiTour"); if (t) t.remove(); fab.style.visibility = ""; } },
     hide() { if (fab) fab.hidden = true; if (panel && !panel.hidden) close(false, true); },
     open,
     // for tests only: pretend the visible area is something else (a keyboard of a given size), then re-measure
