@@ -524,6 +524,9 @@ body.dashed main{padding-bottom:150px}
 .frl .fri .nt small{color:var(--muted);font-size:12.5px}
 .frl .fri.new .nt b{font-weight:800}
 .frl .fri.new::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.fric{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
+.fric .i{width:20px;height:20px}
+.wli .fric{width:24px;height:24px;border-radius:7px}.wli .fric .i{width:14px;height:14px}
 .rchip{border-radius:99px;padding:7px 13px;font-size:14px}
 .rchip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-t);font-weight:700}
 .rchip.on::before{content:"✓ "}
@@ -4120,7 +4123,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0";
+const APP_VERSION = "1.8.1";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4264,6 +4267,7 @@ const isNewNews = n => n.at > newsBase() && !newsRead().includes(n.id);
 function markRead(ids) { const r = newsRead(); for (const i of ids) if (!r.includes(i)) r.push(i); LS.set("newsRead", r.slice(-300)); }
 /* ---------- new in a course: a new assignment or quiz, a new file or link (found when the app refreshes) ---------- */
 const FR_LBL = { task: "frTask", quiz: "frQuiz", file: "frFile", link: "frLink", grade: "frGrade" };
+const FR_IC = { task: "file-up", quiz: "circle-check", file: "file-text", link: "link", grade: "award" };   // "new in your courses": an icon in the course colour, so a new file never looks like an announcement
 const freshAll = () => (LS.get("fresh", []) || []).filter(x => x && !isOff(x.cid) && nowS() - x.at < 7 * DAY);
 async function freshScan(d) {
   const now = nowS(), add = [], acts = d.tasks.filter(isAct);           // assignments, quizzes and other Moodle activities with a deadline (the automatic checker…)
@@ -4499,7 +4503,7 @@ function renderFresh() {
   el.innerHTML = '<div class="frl"><div class="frh"><span>' + esc(t("frTitle")) + (nNew ? ' <i class="nb">' + nNew + "</i>" : "") + "</span>" + (nNew ? '<button class="link" data-frseen>' + esc(t("frSeen")) + "</button>" : "") + "</div>" +
     L.slice(0, N).map(x => {
       const c = courseName(x.cid), sub = esc(t(FR_LBL[x.k])) + " · <bdi>" + esc(c) + "</bdi> · " + esc(ago(x.at)), cls = "fri" + (x.seen ? "" : " new");
-      const inner = '<span class="nt"><b><bdi>' + esc(x.n) + "</bdi></b><small>" + sub + "</small></span>";
+      const inner = '<span class="fric">' + ic(FR_IC[x.k] || "file-text") + '</span><span class="nt"><b><bdi>' + esc(x.n) + "</bdi></b><small>" + sub + "</small></span>";
       return x.key ? '<button class="' + cls + '" data-frgo="' + esc(x.key) + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
         : x.k === "grade" ? '<button class="' + cls + '" data-frcrs="' + x.cid + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
         : '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>";
@@ -5757,14 +5761,14 @@ function widgetOf(id, w, h, d, now) {
     }
     case "newsCard": {
       // the same things as the full card, newest first: "new in your courses" (files, tasks, grades) and the lecturers' announcements (a tester: the small card showed only announcements – months old – and none of the new files)
-      const fr = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false).map(x => ({ t: x.n, sub: t(FR_LBL[x.k]) + " · " + shortName(courseName(x.cid)) + " · " + ago(x.at), cid: x.cid, at: x.at, nw: !x.seen }));
+      const fr = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false).map(x => ({ t: x.n, sub: t(FR_LBL[x.k]) + " · " + shortName(courseName(x.cid)) + " · " + ago(x.at), cid: x.cid, at: x.at, nw: !x.seen, ic: FR_IC[x.k] || "file-text" }));
       const nw = (d.news || []).filter(n => !isOff(n.cid)).map(x => ({ t: x.subj, sub: shortName(courseName(x.cid)) + " · " + ago(x.at), cid: x.cid, at: x.at, nw: isNewNews(x) }));
       const L = fr.concat(nw).sort((a, b) => b.at - a.at), f = L.filter(x => x.nw).length, cnt = f ? '<b class="wcnt">' + f + "</b>" : "";
       if (K === "1x1") return { a: "", h: wHead("megaphone", "") + wFit(String(f), "wbig" + (f ? " wacc" : ""), 30, 16) + wFit(t("wNew"), "wl1", 12, 9) };
       if (!L.length) return { a: "", h: wHead("megaphone", t("newsTitle")) + '<div class="wcen">' + wFit(d.news ? t("newsNone") : t("newsLoading"), "wt", 14, 10) + "</div>" };
       if (K === "2x1") return { a: "", h: wHead("megaphone", t("newsTitle"), cnt) + wFit(L[0].t, "wt", 14, 10) };
       const n = wRows(h, w >= 4 ? 46 : 40);
-      return { a: "", h: wHead("megaphone", t("newsTitle"), cnt) + '<div class="wlist">' + L.slice(0, n).map(x => '<div class="wli' + (x.nw ? " wnew" : "") + '" style="--c:' + colorOf(x.cid) + '"><i class="wbarv"></i><span class="wcol wgrow">' +
+      return { a: "", h: wHead("megaphone", t("newsTitle"), cnt) + '<div class="wlist">' + L.slice(0, n).map(x => '<div class="wli' + (x.nw ? " wnew" : "") + '" style="--c:' + colorOf(x.cid) + '">' + (x.ic ? '<span class="fric">' + ic(x.ic) + "</span>" : '<i class="wbarv"></i>') + '<span class="wcol wgrow">' +
         wFit(x.t, "wt1", 14, 10) + '<small class="ft1">' + wEsc(x.sub) + "</small></span></div>").join("") + "</div>" };
     }
     case "aiCard": return { a: " data-mini-ai", cls: "wcen wai", h: '<span class="waiic">' + ic("bot") + "</span>" + (K === "2x1" ? wFit(t("aiTitle"), "wt", 15, 10) : "") };
