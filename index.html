@@ -769,8 +769,10 @@ html[dir=ltr] .sg.cur::before{transform:translateX(-50%)}
 .ttempty .eb2{display:flex;flex-direction:column;gap:8px;max-width:340px;margin:12px auto 0}
 @media (min-width:760px){ .tt{--pph:54px} .tt.z2{--pph:68px} .tt.z3{--pph:86px} .tte{font-size:12px;padding:5px 7px} .tte b{font-size:13.5px} .tte .tm,.tte .tk{font-size:12px} }
 /* the timetable display panel: size + the order of the 4 lines */
-.ttvw{background:var(--row);border-radius:12px;padding:10px 12px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+.ttvw{background:var(--row);border-radius:12px;padding:10px 12px;margin:10px 0 0;scroll-margin-bottom:90px;border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));display:flex;flex-direction:column;gap:8px;font-size:13.5px}
 .ttvw .seg{align-self:flex-start}
+.ttvw.ttvnew{animation:ttvin .35s ease-out}@keyframes ttvin{from{opacity:0;transform:translateY(-6px)}}
+.ttfoot .ttfb.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--row));color:var(--accent-t)}
 .ttvw ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
 .ttvw li{display:flex;align-items:center;gap:6px;background:var(--card);border-radius:9px;padding:4px 6px 4px 10px}
 .ttvw li span{flex:1}
@@ -1542,9 +1544,9 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <div class="seg lzseg" id="lzSeg"><button data-lz="tt" data-i18n="lzTT" data-ic="clock"></button><button data-lz="acad" data-i18n="lzAcad" data-ic="calendar-days"></button></div>
     <div id="ttCard" class="dcard tt">
       <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtFile" data-i18n="ttImport"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
-      <div id="ttVw" class="ttvw" hidden></div>
       <div id="tt"></div>
       <div class="ttfoot" id="ttFoot"><button class="ttfb" id="bTtView" data-i18n="ttView" data-ic="sliders-horizontal" aria-expanded="false"></button><button class="ttfb" id="bTtShare" data-i18n="ttShare" data-ic="share-2"></button><button class="ttfb" id="bTtScan" data-i18n="ttScan" data-ic="download"></button><button class="ttfb del" id="bTtClear" data-i18n="ttClear" data-ic="trash-2"></button></div>
+      <div id="ttVw" class="ttvw" hidden></div>
       <input type="file" id="ttFile" hidden>
     </div>
     <div id="acadCard" class="dcard acad">
@@ -4123,7 +4125,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.2";
+const APP_VERSION = "1.8.3";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -7116,7 +7118,11 @@ $("#lvClose").onclick = () => { $("#lvSheet").hidden = true; };
 $("#lvSheet").addEventListener("click", e => { if (e.target.id === "lvSheet") $("#lvSheet").hidden = true; });
 $("#ttFile").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if (f) importLevnet(await f.arrayBuffer()); };
 $("#tt").addEventListener("click", e => { if (e.target.closest("[data-ttfile]")) openLevnet(); else if (e.target.closest("[data-ttscan]")) scanTT(); });
-$("#bTtView").onclick = () => { const el = $("#ttVw"); el.hidden = !el.hidden; $("#bTtView").setAttribute("aria-expanded", String(!el.hidden)); useHit("ttView"); renderTtView(); };
+/* "Display & order" opens right under its button (it used to open above the timetable, out of sight: "you don't even notice it opened"), and comes into view */
+$("#bTtView").onclick = () => {
+  const el = $("#ttVw"); el.hidden = !el.hidden; $("#bTtView").setAttribute("aria-expanded", String(!el.hidden)); $("#bTtView").classList.toggle("on", !el.hidden); useHit("ttView"); renderTtView();
+  if (!el.hidden) { el.classList.remove("ttvnew"); void el.offsetWidth; el.classList.add("ttvnew"); requestAnimationFrame(() => el.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })); }
+};
 $("#ttVw").addEventListener("click", e => {
   const g = s => e.target.closest(s), v = ttvOk(P.ttv); let b;
   if ((b = g("[data-ttz]"))) v.z = Number(b.dataset.ttz);
