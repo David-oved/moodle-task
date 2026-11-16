@@ -147,16 +147,17 @@ body.calm .aiP{transition:none}
 .aiAv{flex:none;width:38px;height:38px;border-radius:50%;background:#ffffff33;display:grid;place-items:center;position:relative}
 .aiAv svg{width:27px;height:27px;display:block;overflow:visible}
 .aiAv .aiTag{position:absolute;inset-block-end:-3px;inset-inline-end:-5px;padding:0 5px;border-radius:99px;background:var(--card);color:var(--accent-t,var(--accent));font-size:9px;font-weight:800;line-height:13px;border:1px solid var(--line)}
-.aiMs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 12px 8px;display:flex;flex-direction:column;gap:10px}
+.aiMs{overflow-anchor:none;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 12px 8px;display:flex;flex-direction:column;gap:12px}
 .aiM{display:flex;gap:8px;align-items:flex-end;max-width:100%}
 .aiM.me{align-self:flex-end}.aiM.ai{align-self:flex-start}
 html[dir=rtl] .aiM.me{align-self:flex-start}
 html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
-.aiM .aiAv{width:30px;height:30px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff))}
+.aiM .aiAv{width:30px;height:30px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));box-shadow:0 3px 10px -2px color-mix(in srgb,var(--accent) 55%,transparent)}
 .aiM .aiAv svg{width:21px;height:21px}.aiM .aiAv .aiTag{display:none}
-.aiB{max-width:min(88%,560px);padding:9px 13px;border-radius:16px;line-height:1.5;font-size:15px;overflow-wrap:anywhere}
-.aiM.ai .aiB{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
-.aiM.me .aiB{background:var(--accent);color:var(--on-accent,#fff);border-bottom-right-radius:4px;white-space:pre-wrap}
+.aiB{max-width:min(88%,560px);padding:10px 14px;border-radius:19px;line-height:1.55;font-size:15px;overflow-wrap:anywhere;text-wrap:pretty;box-shadow:0 1px 2px #0000001a,0 6px 16px -8px #0000004d}
+.aiM.ai .aiB{background:linear-gradient(180deg,color-mix(in srgb,var(--card) 94%,#fff),var(--card));border:1px solid var(--line);border-bottom-left-radius:5px}
+.aiM.me .aiB{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 74%,#7b5cff));color:var(--on-accent,#fff);border-bottom-right-radius:5px;white-space:pre-wrap}
+.aiB strong{font-weight:750}
 .aiB p{margin:0 0 .55em}.aiB p:last-child,.aiB ul:last-child,.aiB ol:last-child,.aiB pre:last-child{margin-bottom:0}
 .aiB ul,.aiB ol{margin:0 0 .55em;padding-inline-start:1.3em}.aiB li{margin:.12em 0}
 .aiB code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;padding:1px 5px;border-radius:6px;background:color-mix(in srgb,var(--text) 9%,transparent)}
@@ -347,13 +348,15 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 .aiP.aiBusy .aiHd .aiAv{animation:aiThink 1s ease-in-out infinite}
 @keyframes aiThink{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-3px) rotate(-6deg)}65%{transform:translateY(0) rotate(5deg)}}
 .aiB.aiFill{animation:aiFill .3s ease-out}
-@keyframes aiFill{from{opacity:.35;transform:scale(.95)}to{opacity:1;transform:none}}
+/* the answer is re-drawn many times while it streams: cards inside it must not replay their entrance each time (that was the rattling) */
+.aiB.aiStream .aiFile,.aiB.aiStream .aiPoll,.aiB.aiStream .aiQuick,.aiB.aiStream .aiMemChip{animation:none}
+@keyframes aiFill{from{opacity:.4}to{opacity:1}}
 .aiCaret{display:inline-block;width:7px;height:7px;margin-inline-start:5px;border-radius:50%;background:var(--accent);vertical-align:middle;animation:aiPulse .9s ease-in-out infinite}
 @keyframes aiPulse{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
 .aiM.aiDone .aiAv{animation:aiHappy .7s ease-out}
 .aiM.aiDone .aiB{animation:aiGlowRing 1s ease-out}
 @keyframes aiHappy{0%{transform:scale(1)}30%{transform:scale(1.3) rotate(-10deg)}60%{transform:scale(.94) rotate(6deg)}100%{transform:none}}
-@keyframes aiGlowRing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 50%,transparent)}100%{box-shadow:0 0 0 14px transparent}}
+@keyframes aiGlowRing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 32%,transparent)}100%{box-shadow:0 0 0 8px transparent}}
 .aiM.aiBad .aiAv{background:linear-gradient(145deg,#ff6b6b,#c92a2a);animation:aiDeadIn .6s ease-out both}
 .aiM.aiBad .aiB{border-color:var(--err);background:color-mix(in srgb,var(--err) 9%,var(--card));animation:aiShake .55s}
 @keyframes aiShake{0%,100%{translate:0}18%{translate:-7px}36%{translate:6px}54%{translate:-4px}72%{translate:3px}}
@@ -1100,7 +1103,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         if (!ai.content) return;                   // only events so far: the steps stay
         const first = ai.pending; ai.pending = false; ai.status = ""; clearTimeout(ai.swapT); ai.swapT = 0;
         if (curBub) {
-          curBub.innerHTML = (withCaret(md(ai.content)) + chipsHTML(ai.mem)) || curBub.innerHTML;
+          const h = (withCaret(md(ai.content)) + chipsHTML(ai.mem)) || curBub.innerHTML;
+          curBub.classList.add("aiStream");
+          if (h !== ai.lastHtml) { ai.lastHtml = h; curBub.innerHTML = h; }                  // not re-drawn when nothing changed
           if (first) { const r = curBub.closest(".aiM"); if (r) r.classList.remove("aiPend"); curBub.classList.remove("aiFill"); void curBub.offsetWidth; curBub.classList.add("aiFill"); }   // the dots turn into the answer
           scrollEnd(false);
         }
@@ -1116,6 +1121,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         feed(dec.decode()); if (raf) cancelAnimationFrame(raf); upd();
       }
       if (!ai.content.trim()) throw new AiErr("gen");
+      if (curBub) curBub.classList.remove("aiStream");
     } catch (e) {
       clearTimeout(wake); setStatus("");
       ai.pending = false;
