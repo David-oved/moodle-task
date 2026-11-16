@@ -239,6 +239,10 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiSt{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px}
 .aiSt>div{text-align:center;padding:10px 4px;border-radius:14px;background:color-mix(in srgb,var(--accent) 9%,var(--card));border:1px solid var(--line)}
 .aiSt b{display:block;font-size:24px;font-weight:900;color:var(--accent-t,var(--accent));line-height:1.1}.aiSt small{font-size:11.5px;color:var(--muted)}
+.aiPr{display:flex;flex-direction:column;gap:10px}
+.aiPrT{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;margin-bottom:4px}.aiPrT b{font-weight:800}
+.aiPr i{display:block;height:8px;border-radius:99px;background:color-mix(in srgb,var(--text) 10%,transparent);overflow:hidden}
+.aiPr u{display:block;height:100%;border-radius:inherit;text-decoration:none;transition:width .6s}
 .aiSp{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:7px}
 .aiSp li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4}
 .aiSp li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--accent);color:var(--on-accent,#fff)}
@@ -675,6 +679,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (b.k === "callout") return '<div class="aiCo ' + esc2(b.tone || "info") + '">' + (UI_ICONS[b.tone] || UI_ICONS.info) + "<div>" + (b.ti ? "<b>" + esc2(b.ti) + "</b>" : "") + "<span>" + esc2(b.tx) + "</span></div></div>";
     if (b.k === "stats" && b.it) return head + '<div class="aiSt">' + b.it.map(it => "<div><b>" + esc2(it.v) + "</b><small>" + esc2(it.l) + "</small></div>").join("") + "</div>";
     if (b.k === "steps" && b.it) return head + '<ol class="aiSp">' + b.it.map(it => "<li>" + esc2(it.l) + "</li>").join("") + "</ol>";
+    if (b.k === "progress" && b.it) return head + '<div class="aiPr">' + b.it.map(it => { const v = Math.max(0, Math.min(100, parseFloat(it.v) || 0)); return '<div><div class="aiPrT"><span>' + esc2(it.l) + "</span><b>" + Math.round(v) + '%</b></div><i><u style="width:' + v + '%;background:' + gaugeCol(v) + '"></u></i></div>'; }).join("") + "</div>";
+    if (b.k === "buttons" && b.it) return '<div class="aiQuick">' + b.it.map(it => '<button type="button" data-qk="' + esc2(it.v || it.l) + '">' + esc2(it.l) + "</button>").join("") + "</div>";
     return "";
   }
   const uiHTML = blocks => blocks.length ? '<div class="aiUi">' + blocks.map(uiBlock).join("") + "</div>" : "";
