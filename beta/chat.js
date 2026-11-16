@@ -196,38 +196,52 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiQuick button{padding:8px 16px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
 .aiQuick button:active{transform:scale(.94)}
 .aiQuick button.on{background:var(--accent);color:var(--on-accent,#fff)}
-.aiDl{margin:2px 0 0;min-width:min(78vw,330px)}
-.aiDlHead{font-weight:800;font-size:17px;margin:0 2px 10px}
-.aiDlWeek{display:flex;gap:5px;margin-bottom:12px}
-.aiDlDay{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0 5px;border-radius:12px;border:1px solid transparent;background:color-mix(in srgb,var(--text) 5%,transparent);color:var(--muted);font:inherit;cursor:pointer;position:relative;transition:background .2s,border-color .2s,transform .15s}
-.aiDlDay small{font-size:11px;font-weight:700}
-.aiDlDay i{width:calc(7px + var(--s,0) * 9px);height:calc(7px + var(--s,0) * 9px);border-radius:50%;background:color-mix(in srgb,var(--muted) 35%,transparent)}
-.aiDlDay.has{color:var(--text)}.aiDlDay.has i{background:var(--accent);box-shadow:0 0 10px -1px var(--accent)}
-.aiDlDay b{position:absolute;top:-6px;inset-inline-end:-2px;min-width:16px;height:16px;border-radius:99px;background:var(--accent);color:var(--on-accent,#fff);font-size:10px;line-height:16px;text-align:center}
-.aiDlDay:disabled{cursor:default;opacity:.5}
-.aiDlDay.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
-.aiDlDay:not(:disabled):active{transform:scale(.92)}
-.aiDlHero{display:flex;align-items:center;gap:14px;padding:13px;border-radius:18px;margin-bottom:12px;color:var(--text);
-  background:linear-gradient(135deg,color-mix(in srgb,var(--dc) 20%,var(--card)),color-mix(in srgb,var(--dc) 7%,var(--card)));border:1px solid color-mix(in srgb,var(--dc) 45%,var(--line))}
-.aiDlHero.hot{box-shadow:0 0 0 0 color-mix(in srgb,var(--dc) 50%,transparent);animation:aiDlHot 2.4s ease-out infinite}
-.aiDlRing{flex:none;width:58px;height:58px;transform:rotate(-90deg)}
-.aiDlRing circle{fill:none;stroke-width:6;stroke-linecap:round}
-.aiDlRing .bg{stroke:color-mix(in srgb,var(--dc) 22%,transparent)}.aiDlRing .fg{stroke:var(--dc);transition:stroke-dasharray .6s}
-.aiDlHx{min-width:0;display:flex;flex-direction:column;gap:2px}
-.aiDlHx small{font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.02em}
-.aiDlHx b{font-size:16px;line-height:1.3;overflow-wrap:anywhere}
-.aiDlHx span{font-size:19px;font-weight:800;color:var(--dc);margin-top:2px}
-.aiDlSec{margin-top:10px}
-.aiDlSh{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 2px 6px;display:flex;align-items:center;gap:6px}
-.aiDlSh em{font-style:normal;font-size:10.5px;padding:0 6px;border-radius:99px;background:color-mix(in srgb,var(--text) 9%,transparent)}
-.aiDlRow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;margin-bottom:5px;background:color-mix(in srgb,var(--text) 4%,transparent);border-inline-start:4px solid var(--dc);transition:opacity .25s,background .25s,transform .25s}
-.aiDlRow i{display:none}
-.aiDlRx{flex:1;min-width:0;display:flex;flex-direction:column}
-.aiDlRx b{font-size:14px;line-height:1.3;font-weight:650;overflow-wrap:anywhere}.aiDlRx small{font-size:11.5px;color:var(--muted)}
-.aiDlRow>span{flex:none;font-size:12.5px;font-weight:750;color:var(--dc);text-align:end;max-width:42%}
-.aiDlFocus .aiDlRow{opacity:.28}.aiDlFocus .aiDlRow.hit{opacity:1;background:color-mix(in srgb,var(--dc) 16%,transparent);transform:scale(1.015)}
-@keyframes aiDlHot{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--dc) 45%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
-@media (prefers-reduced-motion:reduce){.aiDlHero.hot{animation:none}}
+.aiUi{display:flex;flex-direction:column;gap:9px;min-width:min(76vw,320px)}
+.aiUiT{font-weight:800;font-size:15px;margin:2px 2px -2px}
+.aiTk{display:flex;align-items:stretch;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--line);position:relative}
+.aiTkS{flex:none;width:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0;color:var(--dc);background:color-mix(in srgb,var(--dc) 13%,transparent);
+  border-inline-end:2px dashed color-mix(in srgb,var(--dc) 40%,transparent);position:relative}
+.aiTkS b{font-size:25px;line-height:1;font-weight:850}.aiTkS small{font-size:11px;font-weight:700;opacity:.85}
+.aiTkS::before,.aiTkS::after{content:"";position:absolute;inset-inline-end:-7px;width:12px;height:12px;border-radius:50%;background:var(--card);border:1px solid var(--line)}
+.aiTkS::before{top:-7px}.aiTkS::after{bottom:-7px}
+.aiTkB{flex:1;min-width:0;padding:9px 12px;display:flex;flex-direction:column;gap:2px}
+.aiTkB b{font-size:14.5px;line-height:1.3;font-weight:700;overflow-wrap:anywhere}.aiTkB em{font-style:normal;font-size:12px;color:var(--muted)}
+.aiTkT{display:flex;align-items:center;gap:10px;margin-top:5px}
+.aiTkT span{flex:none;font-size:12.5px;font-weight:800;color:var(--dc)}
+.aiTkBar{flex:1;height:5px;border-radius:99px;background:color-mix(in srgb,var(--dc) 16%,transparent);overflow:hidden;display:block}
+.aiTkBar u{display:block;height:100%;width:calc(var(--u) * 100%);border-radius:inherit;background:var(--dc);text-decoration:none}
+.aiTk.hot{border-color:color-mix(in srgb,var(--dc) 55%,var(--line))}
+.aiTk.hot .aiTkS{background:var(--dc);color:#fff;border-inline-end-color:#fff8}
+.aiTl{position:relative;padding-inline-start:20px}
+.aiTl::before{content:"";position:absolute;inset-inline-start:5px;top:8px;bottom:8px;width:2px;border-radius:2px;background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 15%,transparent))}
+.aiTlD{margin-bottom:10px}
+.aiTlH{position:relative;font-size:12.5px;font-weight:800;color:var(--accent-t,var(--accent));margin-bottom:5px}
+.aiTlH i{position:absolute;inset-inline-start:-20px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--card);border:3px solid var(--accent)}
+.aiTlR{display:grid;grid-template-columns:1fr auto;gap:0 10px;align-items:baseline;padding:7px 10px;margin-bottom:5px;border-radius:12px;background:color-mix(in srgb,var(--dc) 9%,var(--card));border-inline-start:3px solid var(--dc)}
+.aiTlR b{font-size:14px;line-height:1.3;font-weight:650;overflow-wrap:anywhere}.aiTlR small{grid-column:1;font-size:11.5px;color:var(--muted)}
+.aiTlR span{grid-row:1/3;grid-column:2;font-size:13px;font-weight:800;color:var(--dc)}
+.aiFc{display:flex;align-items:center;gap:14px;padding:14px;border-radius:20px;color:var(--text);background:linear-gradient(135deg,color-mix(in srgb,var(--dc) 24%,var(--card)),var(--card));border:1px solid color-mix(in srgb,var(--dc) 50%,var(--line))}
+.aiFcN{flex:none;min-width:64px;text-align:center;color:var(--dc)}.aiFcN b{display:block;font-size:44px;line-height:.95;font-weight:900;letter-spacing:-.02em}.aiFcN small{font-size:12px;font-weight:800}
+.aiFcX{min-width:0;display:flex;flex-direction:column;gap:2px}.aiFcX b{font-size:16px;line-height:1.3;overflow-wrap:anywhere}.aiFcX em{font-style:normal;font-size:12px;color:var(--muted)}.aiFcX span{font-size:13px;font-weight:800;color:var(--dc)}
+.aiGgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.aiGg{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px}
+.aiGg svg{width:68px;height:68px;transform:rotate(-90deg)}.aiGg circle{fill:none;stroke-width:6;stroke-linecap:round}
+.aiGg .bg{stroke:color-mix(in srgb,var(--gc) 18%,transparent)}.aiGg .fg{stroke:var(--gc)}
+.aiGg b{position:absolute;top:calc(8px + 34px);left:50%;transform:translate(-50%,-50%);font-size:15px;font-weight:850;color:var(--gc)}
+.aiGg small{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.25;overflow-wrap:anywhere}
+.aiCh{display:flex;flex-wrap:wrap;gap:7px}.aiCh span{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:99px;font-size:13.5px;font-weight:600;background:color-mix(in srgb,var(--dc) 12%,var(--card));border:1px solid color-mix(in srgb,var(--dc) 35%,var(--line))}
+.aiCh i{width:9px;height:9px;border-radius:50%;background:var(--dc)}
+.aiLs>div{display:flex;justify-content:space-between;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:14px}.aiLs>div:last-child{border-bottom:0}.aiLs b{color:var(--accent-t,var(--accent))}
+.aiCo{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:14px;font-size:14px;line-height:1.45;background:color-mix(in srgb,var(--cc) 11%,var(--card));border:1px solid color-mix(in srgb,var(--cc) 40%,var(--line))}
+.aiCo{--cc:var(--accent)}.aiCo.warn{--cc:#e8590c}.aiCo.success{--cc:#22a55e}.aiCo.tip{--cc:#a855f7}
+.aiCo svg{flex:none;width:21px;height:21px;fill:none;stroke:var(--cc);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+.aiCo b{display:block;margin-bottom:1px}
+.aiSt{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px}
+.aiSt>div{text-align:center;padding:10px 4px;border-radius:14px;background:color-mix(in srgb,var(--accent) 9%,var(--card));border:1px solid var(--line)}
+.aiSt b{display:block;font-size:24px;font-weight:900;color:var(--accent-t,var(--accent));line-height:1.1}.aiSt small{font-size:11.5px;color:var(--muted)}
+.aiSp{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:7px}
+.aiSp li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4}
+.aiSp li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--accent);color:var(--on-accent,#fff)}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -567,7 +581,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // Deadline card: the server sends [[deadlines:BASE64]] (a list of [name, course, time]) and the app draws it: one headline, the most urgent item as a hero with a live
   // countdown ring, the rest grouped by urgency (today / this week / later), and a week strip. Much faster to read than a list of dates.
   // ---------------------------------------------------------------------------------------------
-  const DL_RE = /\[\[deadlines:([A-Za-z0-9_-]{4,9000})\]\]/g;
+  const UI_RE = /\[\[ui:([A-Za-z0-9_-]{4,24000})\]\]/g;
   const DLT = {
     he: { n: (k) => k === 1 ? "מטלה אחת ממתינה" : k + " מטלות ממתינות", urgent: "הדחופה", today: "היום", week: "השבוע", later: "אחר כך", over: "עבר המועד", in: "בעוד ", min: " דק'", hr: " שעות", day: " ימים",
       tm: "מחר ", td: "היום ", days: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"], all: "הכול", loc: "he-IL" },
@@ -600,36 +614,77 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (dd < 7) return T.days[new Date(t * 1000).getDay()] + " " + dlTime(t);
     return new Date(t * 1000).toLocaleDateString(dlt().loc, { day: "2-digit", month: "2-digit" });
   }
-  function dlHero(it) {
-    const left = Math.max(0, it.t * 1000 - Date.now()), frac = Math.max(0.04, Math.min(1, 1 - left / (7 * 86400000))), C = 2 * Math.PI * 26;
-    const col = "hsl(" + dlHue(it.c) + " 75% 62%)", urgent = left < 86400000;
-    return '<div class="aiDlHero' + (urgent ? " hot" : "") + '" style="--dc:' + col + '"><svg viewBox="0 0 64 64" class="aiDlRing"><circle cx="32" cy="32" r="26" class="bg"/><circle cx="32" cy="32" r="26" class="fg" stroke-dasharray="' + (C * frac).toFixed(1) + " " + C.toFixed(1) + '"/></svg>' +
-      '<div class="aiDlHx"><small>' + esc2(dlt().urgent) + " · " + esc2(it.c) + "</small><b>" + esc2(it.n) + '</b><span data-due="' + it.t + '" data-long="1">' + esc2(dlRel(it.t, true)) + "</span></div></div>";
+  // ---------------------------------------------------------------------------------------------
+  // The AI decides what to show and how: it calls the server's show_ui tool, the server validates it and sends [[ui:BASE64]] with ready blocks
+  // (deadlines as tickets / timeline / focus, grades as gauges, courses as chips, callouts, big numbers, steps). The app only draws them.
+  // ---------------------------------------------------------------------------------------------
+  function uiDecode(b64) {
+    try {
+      let b = b64.replace(/-/g, "+").replace(/_/g, "/"); b += "=".repeat((4 - b.length % 4) % 4);
+      const bin = atob(b), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const o = JSON.parse(new TextDecoder("utf-8").decode(bytes));
+      return o && Array.isArray(o.b) ? o.b.slice(0, 6) : [];
+    } catch (e) { return []; }
   }
-  function dlRow(it) {
-    return '<div class="aiDlRow" data-day="' + dayStart(it.t * 1000) + '" style="--dc:hsl(' + dlHue(it.c) + ' 75% 62%)"><i></i><div class="aiDlRx"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small></div><span data-due="' + it.t + '">' + esc2(dlRel(it.t, false)) + "</span></div>";
+  const UI_ICONS = {
+    info: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg>',
+    warn: '<svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.01"/></svg>',
+    success: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>',
+    tip: '<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
+  };
+  const ordDay = (t) => { const d = new Date(t * 1000); return { wd: dlt().days[d.getDay()], day: d.getDate(), mon: d.toLocaleDateString(dlt().loc, { month: "short" }) }; };
+  // how full the "time left" bar is: empty far away, full when it is due
+  const uiUrgency = t => Math.max(0.05, Math.min(1, 1 - (t * 1000 - Date.now()) / (5 * 86400000)));
+  function uiTicket(it) {
+    const o = ordDay(it.t), left = it.t * 1000 - Date.now(), hot = left < 86400000, col = "hsl(" + dlHue(it.c) + " 72% 58%)";
+    return '<div class="aiTk' + (hot ? " hot" : "") + '" style="--dc:' + col + ';--u:' + uiUrgency(it.t).toFixed(2) + '"><div class="aiTkS"><small>' + esc2(o.wd) + "</small><b>" + o.day + "</b><small>" + esc2(o.mon) + '</small></div>' +
+      '<div class="aiTkB"><b>' + esc2(it.n) + "</b><em>" + esc2(it.c) + '</em><div class="aiTkT"><span data-due="' + it.t + '">' + esc2(dlRel(it.t, false)) + '</span><i class="aiTkBar"><u></u></i></div></div></div>';
   }
-  function deadlinesHTML(items) {
-    if (!items.length) return "";
-    const T = dlt(), now = Date.now(), today = dayStart(now);
-    const [first, ...rest] = items;
-    const grp = { today: [], week: [], later: [] };
-    rest.forEach(it => { const d = Math.round((dayStart(it.t * 1000) - today) / 86400000); (d <= 0 ? grp.today : d < 7 ? grp.week : grp.later).push(it); });
-    const sec = (k, label) => grp[k].length ? '<div class="aiDlSec"><div class="aiDlSh">' + esc2(label) + " <em>" + grp[k].length + "</em></div>" + grp[k].map(dlRow).join("") + "</div>" : "";
-    let strip = "";
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(today + i * 86400000 + 43200000), ds = dayStart(d), c = items.filter(x => dayStart(x.t * 1000) === ds).length;
-      strip += '<button type="button" class="aiDlDay' + (c ? " has" : "") + '" data-dlday="' + ds + '"' + (c ? "" : " disabled") + "><small>" + T.days[d.getDay()] + "</small><i style=\"--s:" + Math.min(1, c / 3).toFixed(2) + '"></i>' + (c ? "<b>" + c + "</b>" : "") + "</button>";
+  function uiTimeline(items) {
+    const days = []; items.forEach(it => { const k = dayStart(it.t * 1000); let g = days.find(x => x.k === k); if (!g) days.push(g = { k, t: it.t, list: [] }); g.list.push(it); });
+    const T = dlt(), today = dayStart(Date.now());
+    return '<div class="aiTl">' + days.map(g => {
+      const dd = Math.round((g.k - today) / 86400000), o = ordDay(g.t);
+      const label = dd <= 0 ? T.today : dd === 1 ? T.tm.trim() : o.wd + " " + o.day + " " + o.mon;
+      return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR" style="--dc:hsl(' + dlHue(it.c) + ' 72% 58%)"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(dlTime(it.t)) + "</span></div>").join("") + "</div>";
+    }).join("") + "</div>";
+  }
+  function uiFocus(items) {
+    const f = items[0], hrs = Math.max(0, Math.round((f.t * 1000 - Date.now()) / 3600000)), big = hrs < 48 ? hrs : Math.round(hrs / 24), unit = hrs < 48 ? dlt().hr.trim() : dlt().day.trim();
+    const col = "hsl(" + dlHue(f.c) + " 72% 58%)";
+    return '<div class="aiFc" style="--dc:' + col + '"><div class="aiFcN"><b data-focus="' + f.t + '">' + big + "</b><small>" + esc2(unit) + '</small></div><div class="aiFcX"><b>' + esc2(f.n) + "</b><em>" + esc2(f.c) + "</em><span data-due=\"" + f.t + "\">" + esc2(dlRel(f.t, false)) + "</span></div></div>" +
+      items.slice(1).map(it => uiTicket(it)).join("");
+  }
+  const gaugeCol = v => v >= 85 ? "#22a55e" : v >= 65 ? "#e8a000" : "#e5484d";
+  function uiGauge(it) {
+    const num = parseFloat(String(it.v).replace(/[^0-9.]/g, "")), ok = isFinite(num), C = 2 * Math.PI * 22, col = ok ? gaugeCol(num) : "var(--muted)";
+    return '<div class="aiGg" style="--gc:' + col + '"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" class="bg"/><circle cx="28" cy="28" r="22" class="fg" stroke-dasharray="' + (ok ? (C * Math.min(1, num / 100)).toFixed(1) : 0) + " " + C.toFixed(1) + '"/></svg><b>' + esc2(it.v) + "</b><small>" + esc2(it.n) + "</small></div>";
+  }
+  function uiBlock(b) {
+    const head = b.ti ? '<div class="aiUiT">' + esc2(b.ti) + "</div>" : "";
+    if (b.k === "deadlines" && b.it && b.it.length) {
+      const body = b.s === "timeline" ? uiTimeline(b.it) : b.s === "focus" ? uiFocus(b.it) : b.it.map(uiTicket).join("");
+      return head + body;
     }
-    return '<div class="aiDl"><div class="aiDlHead">' + esc2(T.n(items.length)) + '</div><div class="aiDlWeek">' + strip + "</div>" + dlHero(first) +
-      sec("today", T.today) + sec("week", T.week) + sec("later", T.later) + "</div>";
+    if (b.k === "grades" && b.it && b.it.length) return head + (b.s === "list"
+      ? '<div class="aiLs">' + b.it.map(it => "<div><span>" + esc2(it.n) + "</span><b>" + esc2(it.v) + "</b></div>").join("") + "</div>"
+      : '<div class="aiGgs">' + b.it.map(uiGauge).join("") + "</div>");
+    if (b.k === "courses" && b.it && b.it.length) return head + (b.s === "list"
+      ? '<div class="aiLs">' + b.it.map(it => "<div><span>" + esc2(it.n) + "</span></div>").join("") + "</div>"
+      : '<div class="aiCh">' + b.it.map(it => '<span style="--dc:hsl(' + dlHue(it.n) + ' 72% 58%)"><i></i>' + esc2(it.n) + "</span>").join("") + "</div>");
+    if (b.k === "callout") return '<div class="aiCo ' + esc2(b.tone || "info") + '">' + (UI_ICONS[b.tone] || UI_ICONS.info) + "<div>" + (b.ti ? "<b>" + esc2(b.ti) + "</b>" : "") + "<span>" + esc2(b.tx) + "</span></div></div>";
+    if (b.k === "stats" && b.it) return head + '<div class="aiSt">' + b.it.map(it => "<div><b>" + esc2(it.v) + "</b><small>" + esc2(it.l) + "</small></div>").join("") + "</div>";
+    if (b.k === "steps" && b.it) return head + '<ol class="aiSp">' + b.it.map(it => "<li>" + esc2(it.l) + "</li>").join("") + "</ol>";
+    return "";
   }
+  const uiHTML = blocks => blocks.length ? '<div class="aiUi">' + blocks.map(uiBlock).join("") + "</div>" : "";
+  const uiPlain = blocks => blocks.map(b => (b.ti ? b.ti + ":\n" : "") + (b.tx || "") + (b.it || []).map(it => "- " + (it.n || it.l || "") + (it.c ? " (" + it.c + ")" : "") + (it.t ? " " + new Date(it.t * 1000).toLocaleString(dlt().loc) : "") + (it.v ? ": " + it.v : "")).join("\n")).join("\n\n");
   // the countdowns tick by themselves
   setInterval(() => {
-    try { document.querySelectorAll(".aiDl [data-due]").forEach(el => { const v = dlRel(+el.dataset.due, el.dataset.long === "1"); if (el.textContent !== v) el.textContent = v; }); } catch (e) {}
+    try { document.querySelectorAll(".aiUi [data-due]").forEach(el => { const v = dlRel(+el.dataset.due, el.dataset.long === "1"); if (el.textContent !== v) el.textContent = v; }); } catch (e) {}
   }, 30000);
   const noEmoji = s => String(s).replace(EMOJI_RE, " ");
-  const plain = s => noEmoji(String(s).replace(FILE_RE, (m, r, n) => n).replace(POLL_RE, (m, k, b) => b.split("|").map(x => x.trim()).filter(Boolean).join(" / ")).replace(DL_RE, (m, b) => dlDecode(b).map(x => x.n + " - " + x.c + " - " + new Date(x.t * 1000).toLocaleString(dlt().loc)).join("\n")));                       // for copy and share
+  const plain = s => noEmoji(String(s).replace(FILE_RE, (m, r, n) => n).replace(POLL_RE, (m, k, b) => b.split("|").map(x => x.trim()).filter(Boolean).join(" / ")).replace(UI_RE, (m, b) => uiPlain(uiDecode(b))));                       // for copy and share
   // a waving hand, drawn here (not an emoji of the system)
   const WAVE = '<svg class="aiWave" viewBox="0 0 32 32" aria-hidden="true"><g class="aiWaveHand" fill="#ffc83d"><rect x="7.5" y="13" width="15" height="14" rx="6.5"/><rect x="8" y="5" width="3.8" height="14" rx="1.9"/>' +
     '<rect x="12.1" y="3" width="3.8" height="15" rx="1.9"/><rect x="16.2" y="4" width="3.8" height="14.5" rx="1.9"/><rect x="20.3" y="7" width="3.6" height="12" rx="1.8"/>' +
@@ -640,7 +695,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     src = noEmoji(src).replace(/\[\[[^\]]*$/, "")                                                // a marker still being typed by the stream: not shown yet
       .replace(FILE_RE, (m, ref, name, size) => { files.push([ref, name, size]); return "\u0001" + (files.length - 1) + "\u0001"; })
       .replace(POLL_RE, (m, kind, body) => { files.push(["\u0000", pollHTML(kind, body)]); return "\u0001" + (files.length - 1) + "\u0001"; })
-      .replace(DL_RE, (m, b) => { files.push(["\u0000", deadlinesHTML(dlDecode(b))]); return "\u0001" + (files.length - 1) + "\u0001"; });
+      .replace(UI_RE, (m, b) => { files.push(["\u0000", uiHTML(uiDecode(b))]); return "\u0001" + (files.length - 1) + "\u0001"; });
     const html = md1(src);
     return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => files[i][0] === "\u0000" ? files[i][1] : fileCard(files[i][0], files[i][1], files[i][2])) : html;
   }
@@ -1356,14 +1411,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         const card = pb.closest(".aiPoll"); if (!pollLive(pb)) return;
         if (card.dataset.multi === "1") { pb.classList.toggle("on"); const go = card.querySelector("[data-pgo]"); if (go) go.disabled = !card.querySelector(".aiPb.on"); }
         else { lockPoll(card, [pb]); send((PICKED[lang()] || PICKED.he) + pb.dataset.po); }
-        return;
-      }
-      const dd = e.target.closest("[data-dlday]");
-      if (dd) {
-        const card = dd.closest(".aiDl"), on = !dd.classList.contains("sel");
-        card.querySelectorAll(".aiDlDay").forEach(x => x.classList.remove("sel"));
-        card.classList.toggle("aiDlFocus", on); if (on) dd.classList.add("sel");
-        card.querySelectorAll(".aiDlRow").forEach(r => r.classList.toggle("hit", on && r.dataset.day === dd.dataset.dlday));
         return;
       }
       const pg = e.target.closest("[data-pgo]");
