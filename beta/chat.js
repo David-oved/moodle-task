@@ -26,6 +26,18 @@
       delAll: "מחק את כל השיחות", delOne: "מחק שיחה", delOk: "מחק", cancel: "ביטול", deleted: "נמחק", histCount: n => n === 1 ? "שיחה אחת" : n + " שיחות",
       delAllQ: "למחוק את כל השיחות הקודמות? אי אפשר לשחזר אותן.", delOneQ: "למחוק את השיחה הזו? אי אפשר לשחזר אותה.",
       dl: "הורד", dling: "מוריד…", fileGone: "הקובץ כבר לא זמין ב-Moodle.", fileBig: "הקובץ גדול מדי להורדה כאן (מעל 25MB). אפשר להוריד אותו ישירות ב-Moodle.", fileErr: "לא הצלחתי להוריד את הקובץ. נסה שוב.", errTitle: "משהו לא תקין",
+      stSend: "שולח את הבקשה", stWait: "ממתין לתשובה מהשרת", stKb: "מחפש במאגר הידע של המכללה", stThink: "חושב מה צריך לעשות", stWrite: "כותב את התשובה",
+      stMemAdd: "שומר בזיכרון", stMemDel: "מוחק מהזיכרון", tlGeneric: "פונה ל-Moodle",
+      tl_get_my_courses: () => "מושך את רשימת הקורסים שלך מ-Moodle", tl_get_course_assignments: a => a ? "בודק מטלות ומועדי הגשה בקורס " + a : "בודק מטלות ומועדי הגשה",
+      tl_get_course_grades: a => a ? "בודק את הציונים שלך בקורס " + a : "בודק את הציונים שלך", tl_get_calendar_events: () => "קורא את היומן שלך ב-Moodle",
+      tl_get_course_content: a => a ? "קורא את התוכן של הקורס " + a : "קורא את תוכן הקורס", tl_get_course_files: (a, d) => (a ? "מחפש קבצים בקורס " + a : "מחפש קבצים") + (d ? " (" + d + ")" : ""),
+      tl_get_assignment_submission_status: a => a ? "בודק סטטוס הגשה בקורס " + a : "בודק סטטוס הגשה", tl_get_upcoming_deadlines: () => "בודק מה דחוף בכל הקורסים",
+      tl_get_overall_grades: () => "מושך סקירת ציונים כללית", tl_get_quiz_attempts: a => a ? "בודק ניסיונות במבחן מקוון בקורס " + a : "בודק ניסיונות במבחן מקוון",
+      tl_get_completion_status: a => a ? "בודק מה כבר השלמת בקורס " + a : "בודק מה כבר השלמת", tl_remember_about_student: () => "שומר בזיכרון", tl_forget_about_student: () => "מוחק מהזיכרון",
+      memBtn: "זיכרון", memTitle: "מה אני זוכר עליך", memIntro: "אלה דברים שסיפרת לי, כדי שאוכל לעזור לך יותר טוב. הם נשמרים רק אצלך ואפשר למחוק כל אחד.",
+      memEmpty: "עדיין לא זכרתי שום דבר עליך. אפשר לספר לי, למשל ״עזבתי את הקורס אלגברה״.", memSaved: "נשמר בזיכרון", memGone: "נמחק מהזיכרון", memUndo: "בטל", memUndone: "בוטל",
+      memDelAll: "מחק את כל הזיכרון", memDelAllQ: "למחוק את כל מה שאני זוכר עליך? אי אפשר לשחזר.", memLeft: "עזבת", memDelOne: "מחק", memCount: n => n === 1 ? "דבר אחד" : n + " דברים",
+      fileHint: "הקש להורדה", dlDone: "הורד", dlProg: (p, a, b) => p + "% · " + a + " מתוך " + b,
     },
     en: {
       title: "AI assistant", sub: "Powered by artificial intelligence", hello: n => "Hello " + n + " 👋", helloNo: "Hello 👋",
@@ -40,6 +52,18 @@
       delAll: "Delete all chats", delOne: "Delete chat", delOk: "Delete", cancel: "Cancel", deleted: "Deleted", histCount: n => n + (n === 1 ? " chat" : " chats"),
       delAllQ: "Delete all earlier chats? This can’t be undone.", delOneQ: "Delete this chat? This can’t be undone.",
       dl: "Download", dling: "Downloading…", fileGone: "The file is no longer available in Moodle.", fileBig: "The file is too big to download here (over 25MB). You can download it directly in Moodle.", fileErr: "Couldn’t download the file. Try again.", errTitle: "Something’s not right",
+      stSend: "Sending your request", stWait: "Waiting for the server", stKb: "Searching the college’s knowledge base", stThink: "Working out what to do", stWrite: "Writing the answer",
+      stMemAdd: "Saving to memory", stMemDel: "Removing from memory", tlGeneric: "Asking Moodle",
+      tl_get_my_courses: () => "Fetching your course list from Moodle", tl_get_course_assignments: a => a ? "Checking assignments and deadlines in " + a : "Checking assignments and deadlines",
+      tl_get_course_grades: a => a ? "Checking your grades in " + a : "Checking your grades", tl_get_calendar_events: () => "Reading your Moodle calendar",
+      tl_get_course_content: a => a ? "Reading the content of " + a : "Reading the course content", tl_get_course_files: (a, d) => (a ? "Searching files in " + a : "Searching files") + (d ? " (" + d + ")" : ""),
+      tl_get_assignment_submission_status: a => a ? "Checking submission status in " + a : "Checking submission status", tl_get_upcoming_deadlines: () => "Checking what is urgent in all courses",
+      tl_get_overall_grades: () => "Fetching an overall grades summary", tl_get_quiz_attempts: a => a ? "Checking quiz attempts in " + a : "Checking quiz attempts",
+      tl_get_completion_status: a => a ? "Checking what you completed in " + a : "Checking what you completed", tl_remember_about_student: () => "Saving to memory", tl_forget_about_student: () => "Removing from memory",
+      memBtn: "Memory", memTitle: "What I remember about you", memIntro: "These are things you told me, so I can help you better. They are kept only for you and you can delete any of them.",
+      memEmpty: "I haven’t remembered anything about you yet. You can tell me, for example “I left the Algebra course”.", memSaved: "Saved to memory", memGone: "Removed from memory", memUndo: "Undo", memUndone: "Undone",
+      memDelAll: "Delete all memory", memDelAllQ: "Delete everything I remember about you? This can’t be undone.", memLeft: "Left", memDelOne: "Delete", memCount: n => n === 1 ? "1 item" : n + " items",
+      fileHint: "Tap to download", dlDone: "Downloaded", dlProg: (p, a, b) => p + "% · " + a + " of " + b,
     },
     fr: {
       title: "Assistant IA", sub: "Propulsé par l’intelligence artificielle", hello: n => "Bonjour " + n + " 👋", helloNo: "Bonjour 👋",
@@ -54,6 +78,18 @@
       delAll: "Supprimer toutes les conversations", delOne: "Supprimer la conversation", delOk: "Supprimer", cancel: "Annuler", deleted: "Supprimé", histCount: n => n + (n === 1 ? " conversation" : " conversations"),
       delAllQ: "Supprimer toutes les conversations précédentes ? Cette action est irréversible.", delOneQ: "Supprimer cette conversation ? Cette action est irréversible.",
       dl: "Télécharger", dling: "Téléchargement…", fileGone: "Le fichier n’est plus disponible dans Moodle.", fileBig: "Le fichier est trop volumineux pour être téléchargé ici (plus de 25 Mo). Vous pouvez le télécharger directement dans Moodle.", fileErr: "Impossible de télécharger le fichier. Réessayez.", errTitle: "Quelque chose ne va pas",
+      stSend: "Envoi de la demande", stWait: "Attente du serveur", stKb: "Recherche dans la base de connaissances du collège", stThink: "Je réfléchis à ce qu’il faut faire", stWrite: "Rédaction de la réponse",
+      stMemAdd: "Enregistrement en mémoire", stMemDel: "Suppression de la mémoire", tlGeneric: "Question à Moodle",
+      tl_get_my_courses: () => "Récupération de vos cours sur Moodle", tl_get_course_assignments: a => a ? "Vérification des devoirs et échéances de " + a : "Vérification des devoirs et échéances",
+      tl_get_course_grades: a => a ? "Vérification de vos notes en " + a : "Vérification de vos notes", tl_get_calendar_events: () => "Lecture de votre calendrier Moodle",
+      tl_get_course_content: a => a ? "Lecture du contenu de " + a : "Lecture du contenu du cours", tl_get_course_files: (a, d) => (a ? "Recherche de fichiers dans " + a : "Recherche de fichiers") + (d ? " (" + d + ")" : ""),
+      tl_get_assignment_submission_status: a => a ? "Vérification du statut de remise dans " + a : "Vérification du statut de remise", tl_get_upcoming_deadlines: () => "Vérification de ce qui est urgent dans tous les cours",
+      tl_get_overall_grades: () => "Récupération d’un résumé général des notes", tl_get_quiz_attempts: a => a ? "Vérification des tentatives de quiz dans " + a : "Vérification des tentatives de quiz",
+      tl_get_completion_status: a => a ? "Vérification de ce que vous avez terminé dans " + a : "Vérification de ce que vous avez terminé", tl_remember_about_student: () => "Enregistrement en mémoire", tl_forget_about_student: () => "Suppression de la mémoire",
+      memBtn: "Mémoire", memTitle: "Ce dont je me souviens", memIntro: "Ce sont des choses que vous m’avez dites, pour mieux vous aider. Elles ne sont gardées que pour vous et vous pouvez en supprimer.",
+      memEmpty: "Je ne me souviens encore de rien à votre sujet. Vous pouvez me dire, par exemple « j’ai quitté le cours d’algèbre ».", memSaved: "Enregistré en mémoire", memGone: "Supprimé de la mémoire", memUndo: "Annuler", memUndone: "Annulé",
+      memDelAll: "Supprimer toute la mémoire", memDelAllQ: "Supprimer tout ce dont je me souviens ? Cette action est irréversible.", memLeft: "Quitté", memDelOne: "Supprimer", memCount: n => n === 1 ? "1 élément" : n + " éléments",
+      fileHint: "Touchez pour télécharger", dlDone: "Téléchargé", dlProg: (p, a, b) => p + " % · " + a + " sur " + b,
     },
   };
   const lang = () => (typeof LANG === "string" && TX[LANG] ? LANG : "he");
@@ -114,11 +150,13 @@ body.calm .aiP{transition:none}
 .aiMs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 12px 8px;display:flex;flex-direction:column;gap:10px}
 .aiM{display:flex;gap:8px;align-items:flex-end;max-width:100%}
 .aiM.me{align-self:flex-end}.aiM.ai{align-self:flex-start}
+html[dir=rtl] .aiM.me{align-self:flex-start}
+html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiM .aiAv{width:30px;height:30px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff))}
 .aiM .aiAv svg{width:21px;height:21px}.aiM .aiAv .aiTag{display:none}
 .aiB{max-width:min(88%,560px);padding:9px 13px;border-radius:16px;line-height:1.5;font-size:15px;overflow-wrap:anywhere}
-.aiM.ai .aiB{background:var(--card);border:1px solid var(--line);border-end-start-radius:4px}
-.aiM.me .aiB{background:var(--accent);color:var(--on-accent,#fff);border-end-end-radius:4px;white-space:pre-wrap}
+.aiM.ai .aiB{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
+.aiM.me .aiB{background:var(--accent);color:var(--on-accent,#fff);border-bottom-right-radius:4px;white-space:pre-wrap}
 .aiB p{margin:0 0 .55em}.aiB p:last-child,.aiB ul:last-child,.aiB ol:last-child,.aiB pre:last-child{margin-bottom:0}
 .aiB ul,.aiB ol{margin:0 0 .55em;padding-inline-start:1.3em}.aiB li{margin:.12em 0}
 .aiB code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;padding:1px 5px;border-radius:6px;background:color-mix(in srgb,var(--text) 9%,transparent)}
@@ -186,15 +224,6 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiHdel:hover,.aiHdel:focus-visible{color:var(--err);background:color-mix(in srgb,var(--err) 10%,transparent)}
 .aiHdel svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* a file the AI sends: a card with a download button */
-.aiFile{display:flex;align-items:center;gap:10px;width:100%;max-width:340px;margin:6px 0 2px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);
-  background:color-mix(in srgb,var(--accent) 8%,var(--card));color:var(--text);font:inherit;text-align:start;cursor:pointer}
-.aiFile:hover,.aiFile:focus-visible{border-color:var(--accent)}
-.aiFile .aiFi{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--accent);color:var(--on-accent,#fff)}
-.aiFile .aiFi svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.aiFile .aiFn{flex:1;min-width:0;font-weight:650;font-size:14.5px;overflow-wrap:anywhere}
-.aiFile .aiFd{flex:none;font-size:12.5px;font-weight:800;color:var(--accent-t,var(--accent))}
-.aiFile.busy{opacity:.7;cursor:progress}.aiFile.err .aiFd{color:var(--err)}
 
 /* little room left (a phone with the keyboard open, a phone on its side): the chrome gets smaller so the conversation keeps the space */
 .aiP.aiKb .aiNt,.aiP.aiCompact .aiNt{display:none}
@@ -342,9 +371,67 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 @keyframes aiFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 /* files */
 .aiFile{animation:aiUp .4s ease-out backwards}
-.aiFile.busy .aiFi svg{animation:aiSpin .9s linear infinite}
-.aiFile.ok .aiFi{background:var(--ok,#2b8a3e);animation:aiIconPop .4s cubic-bezier(.34,1.56,.64,1)}
 @keyframes aiSpin{to{transform:rotate(360deg)}}
+
+/* ---- what the bot is doing: a small list of steps in the waiting bubble ---- */
+.aiSteps{display:flex;flex-direction:column;gap:7px;padding:2px 0;min-width:190px}
+.aiStep{display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.35;color:var(--muted);animation:aiUp .3s ease-out backwards}
+.aiStep.now{color:var(--text);font-weight:600}
+.aiStep .aiSi{flex:none;width:16px;height:16px;border-radius:50%;position:relative;display:grid;place-items:center}
+.aiStep.now .aiSi{border:2.5px solid color-mix(in srgb,var(--accent) 22%,transparent);border-top-color:var(--accent);animation:aiSpin .8s linear infinite}
+.aiStep.done .aiSi{background:color-mix(in srgb,var(--ok,#2b8a3e) 18%,transparent);color:var(--ok,#2b8a3e);font-size:11px;font-weight:900}
+.aiStep.done .aiSi::after{content:"✓"}
+.aiStep span{min-width:0;overflow-wrap:anywhere}
+/* what the bot remembered, under the answer */
+.aiMemChip{display:flex;align-items:center;gap:8px;margin-top:9px;padding:7px 10px;border-radius:12px;font-size:13px;line-height:1.35;cursor:pointer;
+  background:color-mix(in srgb,var(--accent) 10%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));animation:aiUp .4s ease-out backwards}
+.aiMemChip.del{background:color-mix(in srgb,var(--warn,#e8590c) 10%,var(--card));border-color:color-mix(in srgb,var(--warn,#e8590c) 35%,var(--line))}
+.aiMemChip.undone{opacity:.55;text-decoration:line-through;cursor:default}
+.aiMemChip .aiMemI{flex:none;width:20px;height:20px;display:grid;place-items:center}
+.aiMemChip .aiMemI svg{width:18px;height:18px;fill:none;stroke:var(--accent-t,var(--accent));stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.aiMemChip .aiMemT{flex:1;min-width:0;overflow-wrap:anywhere}
+.aiMemChip button{flex:none;border:0;background:none;color:var(--accent-t,var(--accent));font:inherit;font-weight:700;cursor:pointer;padding:2px 4px}
+/* the memory screen */
+.aiMemIntro{margin:6px 2px 10px;color:var(--muted);font-size:14px;line-height:1.5}
+.aiMemRow{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--line);max-height:120px;overflow:hidden}
+.aiMemRow .aiMemB{flex:none;padding:2px 8px;border-radius:99px;font-size:11.5px;font-weight:800;background:color-mix(in srgb,var(--warn,#e8590c) 16%,transparent);color:var(--warn,#e8590c)}
+.aiMemRow .aiMemX{flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.45}
+.aiP:not(.aiIntro) .aiMemRow{animation:aiUp .35s ease-out backwards;animation-delay:calc(var(--i,0) * 35ms)}
+.aiP .aiMemRow.aiGone{animation:aiRowOut .3s ease-in forwards}
+
+/* ---- a file the AI sends: a real file card with a progress bar ---- */
+.aiFile{display:flex;align-items:center;gap:12px;width:100%;max-width:370px;margin:9px 0 2px;padding:10px 12px;border-radius:16px;border:1px solid var(--line);
+  background:color-mix(in srgb,var(--text) 4%,var(--card));color:var(--text);font:inherit;text-align:start;cursor:pointer;position:relative;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s,background-color .2s,transform .12s}
+.aiFile[data-t=pdf]{--ft:#e5484d}.aiFile[data-t=doc]{--ft:#3b82f6}.aiFile[data-t=ppt]{--ft:#f97316}.aiFile[data-t=xls]{--ft:#22a55e}
+.aiFile[data-t=zip]{--ft:#64748b}.aiFile[data-t=img]{--ft:#a855f7}.aiFile[data-t=code]{--ft:#14b8a6}
+.aiFile:hover,.aiFile:focus-visible{border-color:color-mix(in srgb,var(--ft,var(--accent)) 65%,var(--line));box-shadow:0 5px 18px color-mix(in srgb,var(--ft,var(--accent)) 20%,transparent);outline:none}
+.aiFile .aiFi{flex:none;width:44px;height:52px;border-radius:9px 16px 9px 9px;position:relative;display:grid;place-items:end center;padding-bottom:7px;color:#fff;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--ft,var(--accent)) 78%,#fff),var(--ft,var(--accent)));box-shadow:0 3px 9px color-mix(in srgb,var(--ft,var(--accent)) 38%,transparent)}
+.aiFile .aiFi::before{content:"";position:absolute;top:0;right:0;width:14px;height:14px;border-radius:0 16px 0 7px;background:linear-gradient(225deg,var(--card) 50%,#ffffff66 50%)}
+.aiFile .aiFi b{font-size:11.5px;letter-spacing:.04em;font-weight:800}
+.aiFile .aiFx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.aiFile .aiFn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;font-weight:650;font-size:14.5px;line-height:1.3}
+.aiFile .aiFm{font-size:12.5px;color:var(--muted);line-height:1.3}
+.aiFile .aiFp{height:4px;border-radius:99px;overflow:hidden;max-height:0;opacity:0;background:color-mix(in srgb,var(--ft,var(--accent)) 16%,transparent);transition:opacity .2s,max-height .2s,margin .2s}
+.aiFile .aiFp i{display:block;height:100%;width:0;border-radius:inherit;background:var(--ft,var(--accent));transition:width .18s ease-out}
+.aiFile.busy .aiFp{max-height:4px;opacity:1;margin-top:4px}
+.aiFile.busy .aiFp.ind i{width:38%;animation:aiIndet 1.1s ease-in-out infinite}
+@keyframes aiIndet{0%{margin-inline-start:-40%}100%{margin-inline-start:105%}}
+.aiFile .aiFd{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;position:relative;color:var(--ft,var(--accent));
+  background:color-mix(in srgb,var(--ft,var(--accent)) 14%,transparent);transition:background .2s,color .2s}
+.aiFile .aiFd svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.aiFile:hover .aiFd{background:var(--ft,var(--accent));color:#fff}
+.aiFile.busy{cursor:progress}
+.aiFile.busy .aiFd::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:3px solid transparent;border-top-color:var(--ft,var(--accent));animation:aiSpin .8s linear infinite}
+.aiFile.ok{border-color:#22a55e;background:color-mix(in srgb,#22a55e 8%,var(--card))}
+.aiFile.ok .aiFd{background:#22a55e;color:#fff;animation:aiIconPop .4s cubic-bezier(.34,1.56,.64,1)}
+.aiFile.ok .aiFd svg path{stroke-dasharray:30;stroke-dashoffset:30;animation:aiDraw .45s .1s ease-out forwards}
+.aiFile.ok .aiFm{color:#22a55e;font-weight:650}
+.aiFile.err{border-color:var(--err);background:color-mix(in srgb,var(--err) 7%,var(--card));animation:aiShake .5s}
+.aiFile.err .aiFd{background:var(--err);color:#fff}.aiFile.err .aiFm{color:var(--err)}
+@keyframes aiDraw{to{stroke-dashoffset:0}}
+.aiLink.acc{color:var(--accent-t,var(--accent))}
 @media (prefers-reduced-motion:reduce){ .aiP *,#aiFab{animation:none!important;transition:none!important} }
 `;
 
@@ -383,17 +470,29 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       .replace(/https?:\/\/[^\s<]*[^\s<.,;:!?)\]]/g, u => '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + u + "</a>");
   }
   // [[file:REF|name]] is how the server's file tool lets the AI hand a file over; it becomes a download card. The REF is only a path inside Moodle - no token.
-  const FILE_RE = /\[\[file:([A-Za-z0-9_-]{4,1700})\|([^\]\n]{1,120})\]\]/g;
-  const fileCard = (ref, name) => '<button type="button" class="aiFile" data-ref="' + esc2(ref) + '" data-name="' + esc2(name) + '" aria-label="' + esc2(tx("dl") + " " + name) + '">' +
-    '<span class="aiFi">' + I_FILE + '</span><span class="aiFn" dir="auto">' + esc2(name) + '</span><span class="aiFd">' + esc2(tx("dl")) + "</span></button>";
+  const FILE_RE = /\[\[file:([A-Za-z0-9_-]{4,1700})\|([^\]\n|]{1,120})(?:\|(\d{1,10}))?\]\]/g;
+  const FTYPES = { pdf: ["PDF", "pdf"], doc: ["DOC", "doc"], docx: ["DOCX", "doc"], txt: ["TXT", "doc"], ppt: ["PPT", "ppt"], pptx: ["PPTX", "ppt"], xls: ["XLS", "xls"], xlsx: ["XLSX", "xls"], csv: ["CSV", "xls"],
+    zip: ["ZIP", "zip"], rar: ["RAR", "zip"], "7z": ["7Z", "zip"], png: ["PNG", "img"], jpg: ["JPG", "img"], jpeg: ["JPG", "img"], gif: ["GIF", "img"], py: ["PY", "code"], java: ["JAVA", "code"], c: ["C", "code"], cpp: ["C++", "code"] };
+  const ftype = name => { const p = String(name).split("."); const e = p.length > 1 ? p.pop().toLowerCase() : ""; return FTYPES[e] || [e ? e.slice(0, 4).toUpperCase() : "FILE", "other"]; };
+  const fmtSize = n => { n = +n || 0; return n < 1024 ? n + " B" : n < 1048576 ? Math.round(n / 1024) + " KB" : (n / 1048576).toFixed(n < 10485760 ? 1 : 0) + " MB"; };
+  const I_DL = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 11.5L12 16l4.5-4.5M5 20h14"/></svg>';
+  const I_CHK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const I_RETRY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.6"/><path d="M20 4v7h-7"/></svg>';
+  const I_BRAIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4A3 3 0 0 0 6.5 7a3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3 2.5 2.5 0 0 0 2.5-2.5v-11A2.5 2.5 0 0 0 9.5 4z"/><path d="M14.5 4A3 3 0 0 1 17.5 7a3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3 2.5 2.5 0 0 1-2.5-2.5"/></svg>';
+  const fileCard = (ref, name, size) => {
+    const [lab, t] = ftype(name), idle = lab + (size ? " · " + fmtSize(size) : "") + " · " + tx("fileHint");
+    return '<button type="button" class="aiFile" data-t="' + t + '" data-ref="' + esc2(ref) + '" data-name="' + esc2(name) + '" data-size="' + (size || "") + '" data-idle="' + esc2(idle) + '" aria-label="' + esc2(tx("dl") + " " + name) + '">' +
+      '<span class="aiFi"><b>' + esc2(lab) + '</b></span><span class="aiFx"><span class="aiFn" dir="auto">' + esc2(name) + '</span><span class="aiFm">' + esc2(idle) + '</span><span class="aiFp"><i></i></span></span>' +
+      '<span class="aiFd">' + I_DL + "</span></button>";
+  };
   const plain = s => String(s).replace(FILE_RE, (m, r, n) => "📎 " + n);                       // for copy and share
 
   function md(src) {
     const files = [];
     src = String(src).replace(/\[\[[^\]]*$/, "")                                                // a marker still being typed by the stream: not shown yet
-      .replace(FILE_RE, (m, ref, name) => { files.push([ref, name]); return "\u0001" + (files.length - 1) + "\u0001"; });
+      .replace(FILE_RE, (m, ref, name, size) => { files.push([ref, name, size]); return "\u0001" + (files.length - 1) + "\u0001"; });
     const html = md1(src);
-    return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => fileCard(files[i][0], files[i][1])) : html;
+    return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => fileCard(files[i][0], files[i][1], files[i][2])) : html;
   }
   function md1(src) {
     const lines = String(src).replace(/\r/g, "").split("\n");
@@ -404,6 +503,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (code !== null) { if (/^\s*```/.test(ln)) { out.push("<pre><code>" + esc2(code.join("\n")) + "</code></pre>"); code = null; } else code.push(ln); continue; }
       if (/^\s*```/.test(ln)) { flushP(); flushL(); code = []; continue; }
       let m;
+      if (/^\s*\u0001\d+\u0001\s*$/.test(ln)) { flushP(); flushL(); out.push(ln.trim()); continue; }
       if ((m = /^#{1,4}\s+(.*)$/.exec(ln))) { flushP(); flushL(); out.push('<p class="aiH">' + inline(m[1]) + "</p>"); continue; }
       if ((m = /^\s*[-*•]\s+(.*)$/.exec(ln))) { flushP(); if (list !== "ul") { flushL(); out.push("<ul>"); list = "ul"; } out.push("<li>" + inline(m[1]) + "</li>"); continue; }
       if ((m = /^\s*\d+[.)]\s+(.*)$/.exec(ln))) { flushP(); if (list !== "ol") { flushL(); out.push("<ol>"); list = "ol"; } out.push("<li>" + inline(m[1]) + "</li>"); continue; }
@@ -477,7 +577,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const errText = e => tx(e && e.kind === "moodle" ? "errMoodle" : e && e.kind === "rate" ? "errRate" : e && e.kind === "net" ? "errNet" : "errGen");
 
   /* ------------------------------------------------------------ state */
-  let fab = null, panel = null, splash = null, intro = null, ms = null, input = null, sendBtn = null, statusEl = null, titleEl = null, histBtn = null, histMode = false;
+  let fab = null, panel = null, splash = null, intro = null, ms = null, input = null, sendBtn = null, statusEl = null, titleEl = null, histBtn = null, histMode = false, memMode = false;
   let animFrom = Infinity, loadAnimN = 0, closing = false, loadFail = null;
   let msgs = [], conv = null, busy = false, ctl = null, gen = 0, curBub = null, pushed = false, skipPop = 0, lastPending = "";
 
@@ -485,6 +585,25 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const sessName = () => { const s = LS.get("aiSess", null); return s && s.name ? s.name : ""; };
 
   /* ------------------------------------------------------------ rendering */
+  // what the bot is doing, as a list of steps (the last one spins, the earlier ones are ticked)
+  const stepsHTML = steps => { const list = steps && steps.length ? steps : [tx("stSend")];
+    return '<div class="aiSteps" role="status">' + list.map((t, i) => '<div class="aiStep ' + (i === list.length - 1 ? "now" : "done") + '"><i class="aiSi"></i><span>' + esc2(t) + (i === list.length - 1 ? "…" : "") + "</span></div>").join("") + "</div>"; };
+  // what the bot remembered or forgot in this answer
+  const chipsHTML = mem => (mem || []).map((e, i) => '<div class="aiMemChip' + (e.op === "del" ? " del" : "") + (e.undone ? " undone" : "") + '"><span class="aiMemI">' + I_BRAIN + '</span><span class="aiMemT">' +
+    esc2((e.op === "del" ? tx("memGone") : tx("memSaved")) + ": " + (e.text || "")) + "</span>" + (e.op === "add" && !e.undone ? '<button type="button" data-undo="' + esc2(e.id || "") + '">' + esc2(tx("memUndo")) + "</button>" : e.undone ? "<span>" + esc2(tx("memUndone")) + "</span>" : "") + "</div>").join("");
+  const toolLabel = e => { const k = "tl_" + e.name; return (TX[lang()][k] || TX.he[k]) ? tx(k, e.arg, e.detail) : tx("tlGeneric"); };
+  function addStep(ai, label) {
+    ai.steps = ai.steps || [];
+    if (!label || ai.steps[ai.steps.length - 1] === label) return;
+    ai.steps.push(label); if (ai.steps.length > 5) ai.steps.shift();
+    if (curBub && !ai.content) { curBub.innerHTML = stepsHTML(ai.steps); scrollEnd(false); }
+  }
+  function onStreamEvent(ai, e) {
+    if (!e) return;
+    if (e.s === "mem") { (ai.mem = ai.mem || []).push(e); addStep(ai, tx(e.op === "add" ? "stMemAdd" : "stMemDel")); return; }
+    addStep(ai, e.s === "kb" ? tx("stKb") : e.s === "think" ? tx("stThink") : e.s === "write" ? tx("stWrite") : e.s === "tool" ? toolLabel(e) : "");
+  }
+
   function bubble(role, content, opts) {
     const row = document.createElement("div"); row.className = "aiM " + (role === "user" ? "me" : "ai");
     if (opts && opts.bad) row.classList.add("aiBad");
@@ -492,8 +611,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (role !== "user") { const av = document.createElement("div"); av.className = "aiAv"; av.innerHTML = opts && opts.bad ? FACE_DEAD : FACE; row.appendChild(av); }
     const b = document.createElement("div"); b.className = "aiB"; b.dir = "auto";
     if (role === "user") b.textContent = content;
-    else if (opts && opts.pending && !content) b.innerHTML = '<span class="aiDots" aria-label="…"><i></i><i></i><i></i></span>';
-    else b.innerHTML = md(content);
+    else if (opts && opts.pending && !content) b.innerHTML = stepsHTML(opts.steps);
+    else b.innerHTML = md(content) + chipsHTML(opts && opts.mem);
     if (!(opts && opts.pending && !content)) { b.tabIndex = 0; b.setAttribute("aria-haspopup", "menu"); }   // reachable from the keyboard (the Menu key opens the same menu)
     row.appendChild(b);
     return { row, b };
@@ -510,14 +629,14 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function swapAnim() { ms.classList.remove("aiSwap"); void ms.offsetWidth; ms.classList.add("aiSwap"); }   // a soft change of what the list shows
 
   function renderMsgs() {
-    const fromHist = histMode;
-    histMode = false; setMode();
+    const fromHist = histMode || memMode;
+    histMode = false; memMode = false; setMode();
     ms.innerHTML = ""; curBub = null;
     if (!msgs.length) { ms.innerHTML = greeting(); animFrom = Infinity; loadAnimN = 0; return; }
     const sent = animFrom !== Infinity;                                   // just sent: the new messages rise in
     const from = sent ? animFrom : (loadAnimN ? Math.max(0, msgs.length - loadAnimN) : Infinity);   // just opened: the last few come in one by one
     msgs.forEach((m, i) => {
-      const { row, b } = bubble(m.role, m.content, { pending: m.pending, bad: !!m.err });
+      const { row, b } = bubble(m.role, m.content, { pending: m.pending, bad: !!m.err, steps: m.steps, mem: m.mem });
       row.dataset.i = i;
       if (i >= from && !(sent && m.role === "user")) {                    // (the sent message is started by send(), from the input bar)
         row.classList.add("aiIn"); row.style.setProperty("--ad", ((i - from) * (sent ? 170 : 45)) + "ms"); if (!sent) row.style.setProperty("--fy", "12px");
@@ -544,10 +663,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function scrollEnd(force) { if (force || atEnd()) ms.scrollTop = ms.scrollHeight; }
 
   function setMode() {
-    titleEl.querySelector("b").textContent = histMode ? tx("hist") : tx("title");
-    titleEl.querySelector("small").textContent = histMode ? "" : tx("sub");
-    histBtn.innerHTML = histMode ? I_BACK : I_HIST; histBtn.setAttribute("aria-label", histMode ? tx("back") : tx("hist")); histBtn.title = histMode ? tx("back") : tx("hist");
-    panel.querySelector(".aiFt").hidden = histMode;
+    const sub = histMode || memMode;
+    titleEl.querySelector("b").textContent = memMode ? tx("memTitle") : histMode ? tx("hist") : tx("title");
+    titleEl.querySelector("small").textContent = sub ? "" : tx("sub");
+    histBtn.innerHTML = sub ? I_BACK : I_HIST; histBtn.setAttribute("aria-label", sub ? tx("back") : tx("hist")); histBtn.title = sub ? tx("back") : tx("hist");
+    panel.querySelector(".aiFt").hidden = sub;
   }
 
   function setBusy(b) {
@@ -562,7 +682,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   /* ------------------------------------------------------------ conversations */
   async function loadConv(id) {
     const my = ++gen;
-    ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>"; histMode = false; setMode();
+    ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>"; histMode = false; memMode = false; setMode();
     const wake = setTimeout(() => { if (my === gen) ms.innerHTML = '<div class="aiHe">' + esc2(tx("wake")) + "</div>"; }, 6000);
     try {
       const res = await call("/api/conversations/" + encodeURIComponent(id) + "/messages");
@@ -590,7 +710,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   async function openHistory() {
-    const my = ++gen; histMode = true; setMode(); closeMenu();
+    const my = ++gen; histMode = true; memMode = false; setMode(); closeMenu();
     ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>";
     try {
       const res = await call("/api/conversations");
@@ -598,12 +718,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (!res.ok) throw new AiErr(errKind(res));
       const list = ((await res.json()).conversations || []).filter(c => c && c.id);
       ms.innerHTML = "";
-      if (!list.length) { ms.innerHTML = '<div class="aiHe">' + esc2(tx("histEmpty")) + "</div>"; return; }
+      if (!list.length) {
+        ms.innerHTML = '<div class="aiHe">' + esc2(tx("histEmpty")) + '</div><div style="text-align:center"><button type="button" class="aiLink acc" data-mem>' + esc2("🧠 " + tx("memBtn")) + "</button></div>";
+        ms.querySelector("[data-mem]").onclick = () => openMemory(); return;
+      }
       const wrap = document.createElement("div"); wrap.className = "aiHs"; wrap.style.cssText = "padding-top:0;padding-bottom:0;flex:none";
       const bar = document.createElement("div"); bar.className = "aiHt";
       const cnt = document.createElement("span"); cnt.textContent = tx("histCount", list.length);
       const all = document.createElement("button"); all.type = "button"; all.className = "aiLink"; all.textContent = tx("delAll"); all.onclick = () => deleteAll();
-      bar.append(cnt, all); wrap.appendChild(bar);
+      const mb = document.createElement("button"); mb.type = "button"; mb.className = "aiLink acc"; mb.textContent = "🧠 " + tx("memBtn"); mb.onclick = () => openMemory();
+      bar.append(cnt, mb, all); wrap.appendChild(bar);
       const loc = lang() === "he" ? "he-IL" : lang() === "fr" ? "fr-FR" : "en-GB";
       for (const c of list) {
         const row = document.createElement("div"); row.className = "aiHrow"; row.dataset.id = c.id; row.style.setProperty("--i", Math.min(list.indexOf(c), 9));
@@ -622,6 +746,63 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (my !== gen) return;
       ms.innerHTML = '<div class="aiHe">' + esc2(errText(e)) + "</div>";
     }
+  }
+
+  /* ------------------------------------------------------------ what the bot remembers about the student */
+  async function openMemory() {
+    const my = ++gen; histMode = false; memMode = true; setMode(); closeMenu();
+    ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>";
+    try {
+      const res = await call("/api/memory");
+      if (my !== gen) return;
+      if (!res.ok) throw new AiErr(errKind(res));
+      const list = (await res.json()).memories || [];
+      ms.innerHTML = "";
+      const wrap = document.createElement("div"); wrap.className = "aiHs"; wrap.style.cssText = "padding-top:0;padding-bottom:0;flex:none";
+      const intro = document.createElement("p"); intro.className = "aiMemIntro"; intro.textContent = tx("memIntro"); wrap.appendChild(intro);
+      if (!list.length) { const e = document.createElement("div"); e.className = "aiHe"; e.textContent = tx("memEmpty"); wrap.appendChild(e); }
+      else {
+        const bar = document.createElement("div"); bar.className = "aiHt";
+        const cnt = document.createElement("span"); cnt.textContent = tx("memCount", list.length);
+        const delAll = document.createElement("button"); delAll.type = "button"; delAll.className = "aiLink"; delAll.textContent = tx("memDelAll"); delAll.onclick = () => deleteAllMem();
+        bar.append(cnt, delAll); wrap.appendChild(bar);
+        list.forEach((m, i) => {
+          const row = document.createElement("div"); row.className = "aiMemRow"; row.dataset.id = m.id; row.style.setProperty("--i", Math.min(i, 9));
+          if (m.kind === "left_course") { const b = document.createElement("span"); b.className = "aiMemB"; b.textContent = tx("memLeft"); row.appendChild(b); }
+          const t = document.createElement("span"); t.className = "aiMemX"; t.textContent = m.content; t.dir = "auto"; row.appendChild(t);
+          const d = document.createElement("button"); d.type = "button"; d.className = "aiHdel"; d.innerHTML = I_TRASH; d.setAttribute("aria-label", tx("memDelOne") + ": " + m.content); d.title = tx("memDelOne"); d.onclick = () => deleteMem(m.id, row);
+          row.appendChild(d); wrap.appendChild(row);
+        });
+      }
+      ms.appendChild(wrap); swapAnim();
+    } catch (e) {
+      if (my !== gen) return;
+      ms.innerHTML = '<div class="aiHe">' + esc2(e instanceof AiErr ? errText(e) : tx("errLoad")) + "</div>";
+    }
+  }
+
+  async function deleteMem(id, row) {
+    try { const res = await call("/api/memory/" + encodeURIComponent(id), { method: "DELETE" }); if (!res.ok && res.status !== 404) throw new AiErr(errKind(res)); }
+    catch (e) { toast(errText(e), 3500); return; }
+    msgs.forEach(m => (m.mem || []).forEach(x => { if (x.id === id) x.undone = true; }));
+    if (row && memMode) { row.classList.add("aiGone"); await wait(320); row.remove(); const n = ms.querySelectorAll(".aiMemRow").length; const c = ms.querySelector(".aiHt span");
+      if (!n) openMemory(); else if (c) c.textContent = tx("memCount", n); }
+    toast(tx("deleted"), 1500);
+  }
+
+  async function deleteAllMem() {
+    if (!(await confirmDlg(tx("memDelAllQ"), tx("delOk")))) return;
+    try { const res = await call("/api/memory", { method: "DELETE" }); if (!res.ok) throw new AiErr(errKind(res)); }
+    catch (e) { toast(errText(e), 3500); return; }
+    msgs.forEach(m => (m.mem || []).forEach(x => { x.undone = true; }));
+    toast(tx("deleted"), 1500); openMemory();
+  }
+
+  async function undoMem(id) {                // "undo" on the chip under an answer
+    try { const res = await call("/api/memory/" + encodeURIComponent(id), { method: "DELETE" }); if (!res.ok && res.status !== 404) throw new AiErr(errKind(res)); }
+    catch (e) { toast(errText(e), 3500); return; }
+    msgs.forEach(m => (m.mem || []).forEach(x => { if (x.id === id) x.undone = true; }));
+    if (!histMode && !memMode) renderMsgs();
   }
 
   /* ------------------------------------------------------------ deleting history */
@@ -741,16 +922,39 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   /* ------------------------------------------------------------ files the AI sends */
   const fileErrText = e => tx(e && e.kind === "moodle" ? "errMoodle" : e && e.kind === "rate" ? "errRate" : e && e.kind === "nofile" ? "fileGone" : e && e.kind === "big" ? "fileBig" : e && e.kind === "net" ? "errNet" : "fileErr");
 
+  function fileState(btn, state, meta) {         // idle | busy | ok | err
+    btn.classList.remove("busy", "ok", "err"); if (state !== "idle") btn.classList.add(state);
+    const m = btn.querySelector(".aiFm"); if (m && meta != null) m.textContent = meta;
+    btn.querySelector(".aiFd").innerHTML = state === "ok" ? I_CHK : state === "err" ? I_RETRY : I_DL;
+    if (state === "idle") btn.querySelector(".aiFp i").style.width = "";
+  }
+
   async function downloadFile(btn) {
     if (btn.classList.contains("busy")) return;
-    const ref = btn.dataset.ref, name = (btn.dataset.name || "file").replace(/[\\/:*?"<>|\r\n]+/g, "_");
-    const lab = btn.querySelector(".aiFd");
-    btn.classList.add("busy"); btn.classList.remove("err"); lab.textContent = tx("dling");
+    const ref = btn.dataset.ref, name = (btn.dataset.name || "file").replace(/[\\/:*?"<>|\r\n]+/g, "_"), size = +btn.dataset.size || 0, idle = btn.dataset.idle || "";
+    const bar = btn.querySelector(".aiFp"), fill = bar.querySelector("i"), meta = btn.querySelector(".aiFm");
+    fileState(btn, "busy", tx("dling")); bar.classList.add("ind"); fill.style.width = "";
     try {
       if (!M.token) throw new AiErr("moodle");
       const res = await call("/api/moodle/file", { method: "POST", timeout: 120000, body: { ref, moodle_token: M.token } });   // the token goes in the body, never in an address
       if (!res.ok) throw new AiErr(res.status === 403 ? "moodle" : res.status === 429 ? "rate" : res.status === 404 ? "nofile" : res.status === 413 ? "big" : res.status >= 500 ? "net" : "gen");
-      const blob = await res.blob();
+      const total = +res.headers.get("Content-Length") || size || 0;
+      let blob;
+      if (res.body && res.body.getReader) {                          // read it piece by piece, so the bar can show how far it is
+        const rd = res.body.getReader(), parts = []; let got = 0, last = 0;
+        for (;;) {
+          const { done, value } = await rd.read(); if (done) break;
+          parts.push(value); got += value.length;
+          const now = performance.now();
+          if (now - last > 80) {
+            last = now;
+            if (total) { bar.classList.remove("ind"); const p = Math.min(99, Math.round(got / total * 100)); fill.style.width = p + "%"; meta.textContent = tx("dlProg", p, fmtSize(got), fmtSize(total)); }
+            else meta.textContent = tx("dling") + " " + fmtSize(got);
+          }
+        }
+        blob = new Blob(parts, { type: res.headers.get("Content-Type") || "" });
+      } else blob = await res.blob();
+      bar.classList.remove("ind"); fill.style.width = "100%";
       const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
       let shared = false;
       if (ios && navigator.canShare && typeof File === "function") {            // iPhone/iPad: the share sheet is where "Save to Files" lives
@@ -762,9 +966,13 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         a.href = url; a.download = name; a.rel = "noopener"; panel.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 60000);
       }
-      btn.classList.add("ok"); lab.textContent = "✓"; setTimeout(() => { btn.classList.remove("ok"); lab.textContent = tx("dl"); }, 1800);
-    } catch (e) { btn.classList.add("err"); lab.textContent = tx("retry"); if (typeof toast === "function") toast(fileErrText(e), 4000); }
-    finally { btn.classList.remove("busy"); }
+      await wait(250);
+      fileState(btn, "ok", tx("dlDone") + " · " + fmtSize(blob.size));
+      setTimeout(() => { if (btn.classList.contains("ok")) fileState(btn, "idle", idle); }, 3600);
+    } catch (e) {
+      fileState(btn, "err", fileErrText(e));
+      setTimeout(() => { if (btn.classList.contains("err")) fileState(btn, "idle", idle); }, 6000);
+    }
   }
 
   /* ------------------------------------------------------------ sending */
@@ -772,7 +980,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     text = String(text || "").trim().slice(0, 2000);
     if (!text || busy) return;
     gen++;                                    // a pending history/load result must not overwrite the chat now
-    histMode = false; setMode();
+    histMode = false; memMode = false; setMode();
     lastPending = text;
     const from = input.getBoundingClientRect();            // where the message starts its way up
     input.value = ""; input.style.height = "auto";
@@ -792,33 +1000,48 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         if (!r.ok) throw new AiErr(errKind(r));
         conv = (await r.json()).id; LS.set("aiConv", conv);
       }
-      let res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null } });
+      let res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true } });
       if (res.status === 404) {                // the conversation is gone on the server: start a new one and send again
         const r = await call("/api/conversations", { method: "POST" });
         if (!r.ok) throw new AiErr(errKind(r));
         conv = (await r.json()).id; LS.set("aiConv", conv);
-        res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null } });
+        res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true } });
       }
       if (!res.ok) throw new AiErr(errKind(res));
-      clearTimeout(wake); setStatus("");
+      clearTimeout(wake); setStatus(); addStep(ai, tx("stWait"));
       const withCaret = h => /(<\/(?:p|li)>)((?:<\/(?:ul|ol)>)?)$/.test(h) ? h.replace(/(<\/(?:p|li)>)((?:<\/(?:ul|ol)>)?)$/, '<span class="aiCaret"></span>$1$2') : h + '<span class="aiCaret"></span>';
+      let buf = "";                                // the stream carries small events (\u0001{json}\u0002) between the answer's text: steps, memory
+      const feed = chunk => {
+        buf += chunk;
+        for (;;) {
+          const i = buf.indexOf("\u0001");
+          if (i < 0) { ai.content += buf; buf = ""; break; }
+          ai.content += buf.slice(0, i);
+          const j = buf.indexOf("\u0002", i);
+          if (j < 0) { buf = buf.slice(i); break; }          // an event cut in the middle: wait for the rest
+          let ev = null; try { ev = JSON.parse(buf.slice(i + 1, j)); } catch (e) {}
+          buf = buf.slice(j + 1);
+          onStreamEvent(ai, ev);
+        }
+      };
       const upd = () => {
-        const first = ai.pending; ai.pending = false;
+        if (!ai.content) return;                   // only events so far: the steps stay
+        const first = ai.pending; ai.pending = false; ai.steps = [];
         if (curBub) {
-          curBub.innerHTML = withCaret(md(ai.content)) || curBub.innerHTML;
+          curBub.innerHTML = (withCaret(md(ai.content)) + chipsHTML(ai.mem)) || curBub.innerHTML;
           if (first) { const r = curBub.closest(".aiM"); if (r) r.classList.remove("aiPend"); curBub.classList.remove("aiFill"); void curBub.offsetWidth; curBub.classList.add("aiFill"); }   // the dots turn into the answer
           scrollEnd(false);
         }
       };
-      if (!res.body || !res.body.getReader) { ai.content = await res.text(); upd(); }
+      if (!res.body || !res.body.getReader) { feed(await res.text()); upd(); }
       else {
         const rd = res.body.getReader(), dec = new TextDecoder("utf-8"); let raf = 0;
         for (;;) {
           const { done, value } = await rd.read(); if (done) break;
-          ai.content += dec.decode(value, { stream: true });
+          feed(dec.decode(value, { stream: true }));
           if (!raf) raf = requestAnimationFrame(() => { raf = 0; upd(); });
         }
-        ai.content += dec.decode(); if (raf) cancelAnimationFrame(raf); upd();
+        feed(dec.decode()); if (raf) cancelAnimationFrame(raf); upd();
       }
       if (!ai.content.trim()) throw new AiErr("gen");
     } catch (e) {
@@ -834,7 +1057,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       clearTimeout(wake); if (ctl === myCtl) ctl = null;
       setBusy(false); left();
       if (!ai.err && ai.content && ai.content.trim()) ai.justDone = true;
-      if (panel && !panel.hidden && !histMode && msgs.includes(ai)) renderMsgs();
+      if (panel && !panel.hidden && !histMode && !memMode && msgs.includes(ai)) renderMsgs();
     }
   }
 
@@ -930,7 +1153,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]');
 
     panel.querySelector('[data-a="close"]').onclick = () => close();
-    histBtn.onclick = () => (histMode ? renderMsgs() : openHistory());
+    histBtn.onclick = () => (histMode || memMode ? renderMsgs() : openHistory());
     panel.querySelector('[data-a="new"]').onclick = () => { startNew(); if (matchMedia("(hover:hover)").matches) input.focus(); };
     // sending must not close the keyboard: remember if it was up, keep the focus where it is, and put it back after the send
     sendBtn.addEventListener("pointerdown", () => { kbIntent = document.activeElement === input; });
@@ -946,6 +1169,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.addEventListener("touchmove", e => { if (!e.target.closest(".aiMs,.aiHs,textarea,pre")) e.preventDefault(); }, { passive: false });
     input.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing && matchMedia("(hover:hover)").matches) { e.preventDefault(); if (!busy) send(input.value); } };
     ms.addEventListener("click", e => {
+      const u = e.target.closest("[data-undo]"); if (u) { undoMem(u.dataset.undo); return; }
+      const mc = e.target.closest(".aiMemChip"); if (mc && !mc.classList.contains("undone")) { openMemory(); return; }
       const f = e.target.closest(".aiFile"); if (f) { downloadFile(f); return; }
       const q = e.target.closest("[data-q]"); if (q) send(q.dataset.q);
     });
@@ -1075,6 +1300,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>";
     try { await ensureSession(false); }
     catch (e) { ms.innerHTML = '<div class="aiHe">' + esc2(errText(e)) + "</div>"; return e; }
+    if (busy || msgs.length) { renderMsgs(); return null; }       // (typed and sent while it was connecting)
     if (recent) { loadFail = null; await loadConv(sid); if (loadFail) return loadFail; } else startNew();   // an hour or more away: a new conversation
     return null;
   }
