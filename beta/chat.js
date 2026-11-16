@@ -1435,7 +1435,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   // ---------------------------------------------------------------------------------------------
   // Welcome tour: a short animated "film" that introduces the AI helper. Plays on every app start for now
-  // (TOUR_ONCE = true later makes it play only on the very first start). No skipping, by design: it blocks the screen for ~15 s.
+  // (TOUR_ONCE = true later makes it play only on the very first start). It can be skipped with the X button.
   // ---------------------------------------------------------------------------------------------
   const TOUR_ONCE = false;
   const TOUR = {
@@ -1494,6 +1494,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 .atChips i{font-style:normal;padding:6px 14px;border-radius:99px;background:#ffffff1f;border:1px solid #ffffff3d;color:#fff;font-size:14px;opacity:0;animation:atChip .6s var(--cd) cubic-bezier(.2,.9,.3,1.4) both}
 .atIcon{margin:16px auto 0;width:44px;height:44px;color:color-mix(in srgb,var(--accent) 55%,#fff);opacity:0;animation:atChip .7s .45s cubic-bezier(.2,.9,.3,1.4) both}
 .atIcon svg{width:100%;height:100%;display:block}
+.atSkip{position:absolute;z-index:5;top:calc(14px + env(safe-area-inset-top));inset-inline-end:14px;width:40px;height:40px;padding:0;border-radius:50%;border:1.5px solid #ffffff59;background:#ffffff1f;color:#fff;
+  display:grid;place-items:center;cursor:pointer;pointer-events:auto;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;animation:atChip .6s .8s cubic-bezier(.2,.9,.3,1.3) both;transition:background .2s,transform .15s}
+.atSkip:hover{background:#ffffff40}
+.atSkip:active{transform:scale(.9)}
+.atSkip:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.atSkip svg{width:18px;height:18px;display:block}
 .atDots{position:absolute;bottom:calc(34px + env(safe-area-inset-bottom));left:0;right:0;display:flex;gap:7px;justify-content:center;z-index:3}
 .atDots i{width:7px;height:7px;border-radius:99px;background:#ffffff40;transition:width .4s,background .4s}
 .atDots i.on{width:22px;background:#fff}
@@ -1520,6 +1526,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg>',
   };
+  const SKIP_LABEL = { he: "דלג על ההסבר", en: "Skip the intro", fr: "Passer l'introduction" };
   let tourState = 0;                                            // 0 = not yet, 1 = running, 2 = done (this page load)
   function runTour() {
     if (tourState || !fab || !panel || !panel.hidden) return;
@@ -1535,7 +1542,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const root = document.createElement("div"); root.id = "aiTour"; root.setAttribute("role", "status"); root.setAttribute("aria-live", "polite");
     let stars = "";
     for (let i = 0; i < 26; i++) stars += '<span class="atStar" style="--x:' + (Math.random() * 100).toFixed(1) + '%;--y:' + (Math.random() * 100).toFixed(1) + '%;--sz:' + (1 + Math.random() * 2.4).toFixed(1) + 'px;--d:' + (2.4 + Math.random() * 3).toFixed(1) + 's;--dl:' + (Math.random() * 3).toFixed(1) + 's"></span>';
-    root.innerHTML = '<div class="atBg"></div>' + stars + '<div class="atFace" style="--fx:' + fabX + 'px;--fy:' + fabY + 'px;--fs:' + fabS + ';--fr:0deg"><div class="atIn w1">' + FACE + '<i class="atRing"></i><i class="atRing r2"></i><div class="atOrb"><i></i></div><div class="atOrb o2"><i></i></div></div></div><div class="atTx"></div><div class="atDots">' + scenes.map(() => "<i></i>").join("") + "</div>";
+    root.innerHTML = '<div class="atBg"></div>' + stars + '<div class="atFace" style="--fx:' + fabX + 'px;--fy:' + fabY + 'px;--fs:' + fabS + ';--fr:0deg"><div class="atIn w1">' + FACE + '<i class="atRing"></i><i class="atRing r2"></i><div class="atOrb"><i></i></div><div class="atOrb o2"><i></i></div></div></div><div class="atTx"></div><div class="atDots">' + scenes.map(() => "<i></i>").join("") + '</div><button type="button" class="atSkip" aria-label="' + (SKIP_LABEL[lang()] || SKIP_LABEL.he) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
     document.body.appendChild(root);
     const face = root.querySelector(".atFace"), inner = root.querySelector(".atIn"), txEl = root.querySelector(".atTx"), dots = root.querySelectorAll(".atDots i");
     const setFace = (x, y, s, r) => { face.style.setProperty("--fx", x + "px"); face.style.setProperty("--fy", y + "px"); face.style.setProperty("--fs", s); face.style.setProperty("--fr", r + "deg"); };
@@ -1593,6 +1600,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         tourState = 2;
       }, 720);
     }
+    root.querySelector(".atSkip").addEventListener("click", e => { e.stopPropagation(); finish(); });
     // timeline: the face grows out of the circle into the middle of the screen, then the scenes follow one another
     later(() => { setFace(0, -vh / 2 * .26, 1, 0); face.classList.add("atBreathe"); }, 350);
     later(burst, 1000);
