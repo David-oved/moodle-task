@@ -14,7 +14,7 @@
   /* ------------------------------------------------------------ texts (he / en / fr) */
   const TX = {
     he: {
-      title: "עוזר AI", sub: "מבוסס בינה מלאכותית", hello: n => "שלום " + n + " 👋", helloNo: "שלום 👋",
+      title: "עוזר AI", sub: "מבוסס בינה מלאכותית", hello: n => "שלום " + n, helloNo: "שלום",
       intro: "אני עוזר AI. אפשר לשאול אותי על המטלות, הציונים, המועדים והקורסים שלך.",
       s1: "מה המטלות הפתוחות שלי?", s2: "מה המועדים הקרובים שלי?", s3: "איך הציונים שלי בקורסים?",
       ph: "כתוב שאלה…", send: "שלח", stop: "עצור", close: "סגור", hist: "שיחות קודמות", newc: "שיחה חדשה", back: "חזרה לשיחה",
@@ -40,7 +40,7 @@
       fileHint: "הקש להורדה", dlDone: "הורד", dlProg: (p, a, b) => p + "% · " + a + " מתוך " + b,
     },
     en: {
-      title: "AI assistant", sub: "Powered by artificial intelligence", hello: n => "Hello " + n + " 👋", helloNo: "Hello 👋",
+      title: "AI assistant", sub: "Powered by artificial intelligence", hello: n => "Hello " + n, helloNo: "Hello",
       intro: "I’m an AI assistant. Ask me about your assignments, grades, deadlines and courses.",
       s1: "What are my open assignments?", s2: "What are my upcoming deadlines?", s3: "How are my grades in my courses?",
       ph: "Type a question…", send: "Send", stop: "Stop", close: "Close", hist: "Earlier chats", newc: "New chat", back: "Back to the chat",
@@ -66,7 +66,7 @@
       fileHint: "Tap to download", dlDone: "Downloaded", dlProg: (p, a, b) => p + "% · " + a + " of " + b,
     },
     fr: {
-      title: "Assistant IA", sub: "Propulsé par l’intelligence artificielle", hello: n => "Bonjour " + n + " 👋", helloNo: "Bonjour 👋",
+      title: "Assistant IA", sub: "Propulsé par l’intelligence artificielle", hello: n => "Bonjour " + n, helloNo: "Bonjour",
       intro: "Je suis un assistant IA. Posez-moi des questions sur vos devoirs, notes, échéances et cours.",
       s1: "Quels sont mes devoirs en cours ?", s2: "Quelles sont mes prochaines échéances ?", s3: "Comment sont mes notes dans mes cours ?",
       ph: "Écrivez une question…", send: "Envoyer", stop: "Arrêter", close: "Fermer", hist: "Conversations précédentes", newc: "Nouvelle conversation", back: "Retour à la conversation",
@@ -374,14 +374,19 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 @keyframes aiSpin{to{transform:rotate(360deg)}}
 
 /* ---- what the bot is doing: a small list of steps in the waiting bubble ---- */
-.aiSteps{display:flex;flex-direction:column;gap:7px;padding:2px 0;min-width:190px}
-.aiStep{display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.35;color:var(--muted);animation:aiUp .3s ease-out backwards}
-.aiStep.now{color:var(--text);font-weight:600}
-.aiStep .aiSi{flex:none;width:16px;height:16px;border-radius:50%;position:relative;display:grid;place-items:center}
-.aiStep.now .aiSi{border:2.5px solid color-mix(in srgb,var(--accent) 22%,transparent);border-top-color:var(--accent);animation:aiSpin .8s linear infinite}
-.aiStep.done .aiSi{background:color-mix(in srgb,var(--ok,#2b8a3e) 18%,transparent);color:var(--ok,#2b8a3e);font-size:11px;font-weight:900}
-.aiStep.done .aiSi::after{content:"✓"}
-.aiStep span{min-width:0;overflow-wrap:anywhere}
+.aiAct{display:flex;align-items:center;gap:10px;min-width:170px;font-size:14px;line-height:1.35;animation:aiActIn .28s ease-out}
+.aiAct.out{animation:aiActOut .17s ease-in forwards}
+.aiAct .aiSi{flex:none;width:16px;height:16px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--accent) 22%,transparent);border-top-color:var(--accent);animation:aiSpin .8s linear infinite}
+.aiAct span{min-width:0;overflow-wrap:anywhere}
+@keyframes aiActIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes aiActOut{to{opacity:0;transform:translateY(-8px)}}
+/* the greeting's waving hand (drawn here) */
+.aiHand{display:inline-block}
+.aiHand .aiWave{width:1.05em;height:1.05em;vertical-align:-.17em;overflow:visible}
+.aiHand .aiWaveHand{transform-origin:16px 28px}
+.aiP:not(.aiIntro) .aiHand .aiWaveHand{animation:aiWaveHand 1.7s ease-in-out .7s 2}
+@keyframes aiWaveHand{0%,80%,100%{transform:rotate(0)}12%{transform:rotate(18deg)}26%{transform:rotate(-10deg)}40%{transform:rotate(16deg)}54%{transform:rotate(-6deg)}68%{transform:rotate(8deg)}}
+.aiHb.on{background:#ffffff38}
 /* what the bot remembered, under the answer */
 .aiMemChip{display:flex;align-items:center;gap:8px;margin-top:9px;padding:7px 10px;border-radius:12px;font-size:13px;line-height:1.35;cursor:pointer;
   background:color-mix(in srgb,var(--accent) 10%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));animation:aiUp .4s ease-out backwards}
@@ -485,11 +490,18 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       '<span class="aiFi"><b>' + esc2(lab) + '</b></span><span class="aiFx"><span class="aiFn" dir="auto">' + esc2(name) + '</span><span class="aiFm">' + esc2(idle) + '</span><span class="aiFp"><i></i></span></span>' +
       '<span class="aiFd">' + I_DL + "</span></button>";
   };
-  const plain = s => String(s).replace(FILE_RE, (m, r, n) => "📎 " + n);                       // for copy and share
+  // the bot is asked not to use emojis; if one slips through it is removed here (the chat has its own drawn icons)
+  const EMOJI_RE = /[ \t]*[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\uFE0F\u200D\u20E3]+[ \t]*/gu;     // (with the spaces around it, so no double space is left)
+  const noEmoji = s => String(s).replace(EMOJI_RE, " ");
+  const plain = s => noEmoji(String(s).replace(FILE_RE, (m, r, n) => n));                       // for copy and share
+  // a waving hand, drawn here (not an emoji of the system)
+  const WAVE = '<svg class="aiWave" viewBox="0 0 32 32" aria-hidden="true"><g class="aiWaveHand" fill="#ffc83d"><rect x="7.5" y="13" width="15" height="14" rx="6.5"/><rect x="8" y="5" width="3.8" height="14" rx="1.9"/>' +
+    '<rect x="12.1" y="3" width="3.8" height="15" rx="1.9"/><rect x="16.2" y="4" width="3.8" height="14.5" rx="1.9"/><rect x="20.3" y="7" width="3.6" height="12" rx="1.8"/>' +
+    '<rect x="2.6" y="15.5" width="3.8" height="10" rx="1.9" transform="rotate(-32 4.5 20.5)"/><path d="M11 22q4.5 3 9 0" fill="none" stroke="#e8a000" stroke-width="1.4" stroke-linecap="round"/></g></svg>';
 
   function md(src) {
     const files = [];
-    src = String(src).replace(/\[\[[^\]]*$/, "")                                                // a marker still being typed by the stream: not shown yet
+    src = noEmoji(src).replace(/\[\[[^\]]*$/, "")                                                // a marker still being typed by the stream: not shown yet
       .replace(FILE_RE, (m, ref, name, size) => { files.push([ref, name, size]); return "\u0001" + (files.length - 1) + "\u0001"; });
     const html = md1(src);
     return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => fileCard(files[i][0], files[i][1], files[i][2])) : html;
@@ -577,7 +589,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const errText = e => tx(e && e.kind === "moodle" ? "errMoodle" : e && e.kind === "rate" ? "errRate" : e && e.kind === "net" ? "errNet" : "errGen");
 
   /* ------------------------------------------------------------ state */
-  let fab = null, panel = null, splash = null, intro = null, ms = null, input = null, sendBtn = null, statusEl = null, titleEl = null, histBtn = null, histMode = false, memMode = false;
+  let fab = null, panel = null, splash = null, intro = null, ms = null, input = null, sendBtn = null, statusEl = null, titleEl = null, histBtn = null, memBtn = null, histMode = false, memMode = false;
   let animFrom = Infinity, loadAnimN = 0, closing = false, loadFail = null;
   let msgs = [], conv = null, busy = false, ctl = null, gen = 0, curBub = null, pushed = false, skipPop = 0, lastPending = "";
 
@@ -585,23 +597,26 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const sessName = () => { const s = LS.get("aiSess", null); return s && s.name ? s.name : ""; };
 
   /* ------------------------------------------------------------ rendering */
-  // what the bot is doing, as a list of steps (the last one spins, the earlier ones are ticked)
-  const stepsHTML = steps => { const list = steps && steps.length ? steps : [tx("stSend")];
-    return '<div class="aiSteps" role="status">' + list.map((t, i) => '<div class="aiStep ' + (i === list.length - 1 ? "now" : "done") + '"><i class="aiSi"></i><span>' + esc2(t) + (i === list.length - 1 ? "…" : "") + "</span></div>").join("") + "</div>"; };
+  // what the bot is doing: only the real actions (Moodle, memory), as one line that spins; when it is done the line goes and the next one comes
+  const DOTS = '<span class="aiDots" aria-label="…"><i></i><i></i><i></i></span>';
+  const activityHTML = status => status ? '<div class="aiAct" role="status"><i class="aiSi"></i><span>' + esc2(status) + "…</span></div>" : DOTS;
   // what the bot remembered or forgot in this answer
   const chipsHTML = mem => (mem || []).map((e, i) => '<div class="aiMemChip' + (e.op === "del" ? " del" : "") + (e.undone ? " undone" : "") + '"><span class="aiMemI">' + I_BRAIN + '</span><span class="aiMemT">' +
     esc2((e.op === "del" ? tx("memGone") : tx("memSaved")) + ": " + (e.text || "")) + "</span>" + (e.op === "add" && !e.undone ? '<button type="button" data-undo="' + esc2(e.id || "") + '">' + esc2(tx("memUndo")) + "</button>" : e.undone ? "<span>" + esc2(tx("memUndone")) + "</span>" : "") + "</div>").join("");
-  const toolLabel = e => { const k = "tl_" + e.name; return (TX[lang()][k] || TX.he[k]) ? tx(k, e.arg, e.detail) : tx("tlGeneric"); };
-  function addStep(ai, label) {
-    ai.steps = ai.steps || [];
-    if (!label || ai.steps[ai.steps.length - 1] === label) return;
-    ai.steps.push(label); if (ai.steps.length > 5) ai.steps.shift();
-    if (curBub && !ai.content) { curBub.innerHTML = stepsHTML(ai.steps); scrollEnd(false); }
+  const toolLabel = e => { const k = "tl_" + e.name; return (TX[lang()][k] || TX.he[k]) ? tx(k, e.arg) : tx("tlGeneric"); };
+  function setActivity(ai, label) {
+    ai.status = label || "";
+    if (!curBub || ai.content) return;
+    const old = curBub.querySelector(".aiAct");
+    const paint = () => { ai.swapT = 0; if (curBub && !ai.content) { curBub.innerHTML = activityHTML(ai.status); scrollEnd(false); } };
+    if (old) { old.classList.add("out"); if (!ai.swapT) ai.swapT = setTimeout(paint, 170); }     // the old line fades away, then the next comes (the latest wins)
+    else paint();
   }
   function onStreamEvent(ai, e) {
     if (!e) return;
-    if (e.s === "mem") { (ai.mem = ai.mem || []).push(e); addStep(ai, tx(e.op === "add" ? "stMemAdd" : "stMemDel")); return; }
-    addStep(ai, e.s === "kb" ? tx("stKb") : e.s === "think" ? tx("stThink") : e.s === "write" ? tx("stWrite") : e.s === "tool" ? toolLabel(e) : "");
+    if (e.s === "mem") { (ai.mem = ai.mem || []).push(e); return; }                              // the note under the answer says it
+    if (e.s === "tool") { if (!ai.status) setActivity(ai, toolLabel(e)); return; }                // the first real action of a round
+    if (e.s === "write" && ai.status) setActivity(ai, "");                                       // done: the line goes, the dots come back
   }
 
   function bubble(role, content, opts) {
@@ -611,7 +626,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (role !== "user") { const av = document.createElement("div"); av.className = "aiAv"; av.innerHTML = opts && opts.bad ? FACE_DEAD : FACE; row.appendChild(av); }
     const b = document.createElement("div"); b.className = "aiB"; b.dir = "auto";
     if (role === "user") b.textContent = content;
-    else if (opts && opts.pending && !content) b.innerHTML = stepsHTML(opts.steps);
+    else if (opts && opts.pending && !content) b.innerHTML = activityHTML(opts.status);
     else b.innerHTML = md(content) + chipsHTML(opts && opts.mem);
     if (!(opts && opts.pending && !content)) { b.tabIndex = 0; b.setAttribute("aria-haspopup", "menu"); }   // reachable from the keyboard (the Menu key opens the same menu)
     row.appendChild(b);
@@ -621,7 +636,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function greeting() {
     const n = sessName();
     const sug = ["s1", "s2", "s3"].map(k => '<button type="button" data-q="' + esc2(tx(k)) + '">' + esc2(tx(k)) + "</button>").join("");
-    return '<div class="aiHi"><div class="aiBig">' + FACE + "</div><h2>" + esc2(n ? tx("hello", n) : tx("helloNo")) + "</h2><p>" + esc2(tx("intro")) +
+    return '<div class="aiHi"><div class="aiBig">' + FACE + "</div><h2>" + esc2(n ? tx("hello", n) : tx("helloNo")) + ' <span class="aiHand">' + WAVE + "</span></h2><p>" + esc2(tx("intro")) +
       '</p><div class="aiSug">' + sug + "</div></div>";
   }
 
@@ -636,7 +651,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const sent = animFrom !== Infinity;                                   // just sent: the new messages rise in
     const from = sent ? animFrom : (loadAnimN ? Math.max(0, msgs.length - loadAnimN) : Infinity);   // just opened: the last few come in one by one
     msgs.forEach((m, i) => {
-      const { row, b } = bubble(m.role, m.content, { pending: m.pending, bad: !!m.err, steps: m.steps, mem: m.mem });
+      const { row, b } = bubble(m.role, m.content, { pending: m.pending, bad: !!m.err, status: m.status, mem: m.mem });
       row.dataset.i = i;
       if (i >= from && !(sent && m.role === "user")) {                    // (the sent message is started by send(), from the input bar)
         row.classList.add("aiIn"); row.style.setProperty("--ad", ((i - from) * (sent ? 170 : 45)) + "ms"); if (!sent) row.style.setProperty("--fy", "12px");
@@ -668,6 +683,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     titleEl.querySelector("small").textContent = sub ? "" : tx("sub");
     histBtn.innerHTML = sub ? I_BACK : I_HIST; histBtn.setAttribute("aria-label", sub ? tx("back") : tx("hist")); histBtn.title = sub ? tx("back") : tx("hist");
     panel.querySelector(".aiFt").hidden = sub;
+    if (memBtn) { memBtn.classList.toggle("on", memMode); memBtn.setAttribute("aria-pressed", memMode ? "true" : "false"); }
   }
 
   function setBusy(b) {
@@ -719,15 +735,13 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const list = ((await res.json()).conversations || []).filter(c => c && c.id);
       ms.innerHTML = "";
       if (!list.length) {
-        ms.innerHTML = '<div class="aiHe">' + esc2(tx("histEmpty")) + '</div><div style="text-align:center"><button type="button" class="aiLink acc" data-mem>' + esc2("🧠 " + tx("memBtn")) + "</button></div>";
-        ms.querySelector("[data-mem]").onclick = () => openMemory(); return;
+        ms.innerHTML = '<div class="aiHe">' + esc2(tx("histEmpty")) + "</div>"; return;
       }
       const wrap = document.createElement("div"); wrap.className = "aiHs"; wrap.style.cssText = "padding-top:0;padding-bottom:0;flex:none";
       const bar = document.createElement("div"); bar.className = "aiHt";
       const cnt = document.createElement("span"); cnt.textContent = tx("histCount", list.length);
       const all = document.createElement("button"); all.type = "button"; all.className = "aiLink"; all.textContent = tx("delAll"); all.onclick = () => deleteAll();
-      const mb = document.createElement("button"); mb.type = "button"; mb.className = "aiLink acc"; mb.textContent = "🧠 " + tx("memBtn"); mb.onclick = () => openMemory();
-      bar.append(cnt, mb, all); wrap.appendChild(bar);
+      bar.append(cnt, all); wrap.appendChild(bar);
       const loc = lang() === "he" ? "he-IL" : lang() === "fr" ? "fr-FR" : "en-GB";
       for (const c of list) {
         const row = document.createElement("div"); row.className = "aiHrow"; row.dataset.id = c.id; row.style.setProperty("--i", Math.min(list.indexOf(c), 9));
@@ -1008,7 +1022,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true } });
       }
       if (!res.ok) throw new AiErr(errKind(res));
-      clearTimeout(wake); setStatus(); addStep(ai, tx("stWait"));
+      clearTimeout(wake); setStatus();
       const withCaret = h => /(<\/(?:p|li)>)((?:<\/(?:ul|ol)>)?)$/.test(h) ? h.replace(/(<\/(?:p|li)>)((?:<\/(?:ul|ol)>)?)$/, '<span class="aiCaret"></span>$1$2') : h + '<span class="aiCaret"></span>';
       let buf = "";                                // the stream carries small events (\u0001{json}\u0002) between the answer's text: steps, memory
       const feed = chunk => {
@@ -1026,7 +1040,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       };
       const upd = () => {
         if (!ai.content) return;                   // only events so far: the steps stay
-        const first = ai.pending; ai.pending = false; ai.steps = [];
+        const first = ai.pending; ai.pending = false; ai.status = ""; clearTimeout(ai.swapT); ai.swapT = 0;
         if (curBub) {
           curBub.innerHTML = (withCaret(md(ai.content)) + chipsHTML(ai.mem)) || curBub.innerHTML;
           if (first) { const r = curBub.closest(".aiM"); if (r) r.classList.remove("aiPend"); curBub.classList.remove("aiFill"); void curBub.offsetWidth; curBub.classList.add("aiFill"); }   // the dots turn into the answer
@@ -1142,7 +1156,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.innerHTML =
       '<div class="aiHd"><button type="button" class="aiHb" data-a="close"></button>' +
       '<div class="aiTt"><div class="aiAv">' + FACE + '<span class="aiTag">AI</span></div><div class="aiTl"><b></b><small></small></div></div>' +
-      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="new"></button></div>' +
+      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="mem"></button><button type="button" class="aiHb" data-a="new"></button></div>' +
       '<div class="aiMs" role="log" aria-live="polite"></div>' +
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
       '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
@@ -1150,10 +1164,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       '<div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + FACE_DEAD + '</div><div class="aiSplTx"></div></div></div>';
     document.body.appendChild(panel);
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
-    splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]');
+    splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]'); memBtn = panel.querySelector('[data-a="mem"]');
 
     panel.querySelector('[data-a="close"]').onclick = () => close();
     histBtn.onclick = () => (histMode || memMode ? renderMsgs() : openHistory());
+    memBtn.onclick = () => (memMode ? renderMsgs() : openMemory());
     panel.querySelector('[data-a="new"]').onclick = () => { startNew(); if (matchMedia("(hover:hover)").matches) input.focus(); };
     // sending must not close the keyboard: remember if it was up, keep the focus where it is, and put it back after the send
     sendBtn.addEventListener("pointerdown", () => { kbIntent = document.activeElement === input; });
@@ -1208,6 +1223,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   function applyTexts() {
     panel.querySelector('[data-a="close"]').innerHTML = I_X; panel.querySelector('[data-a="close"]').setAttribute("aria-label", tx("close")); panel.querySelector('[data-a="close"]').title = tx("close");
+    memBtn.innerHTML = I_BRAIN; memBtn.setAttribute("aria-label", tx("memTitle")); memBtn.title = tx("memTitle");
     const nb = panel.querySelector('[data-a="new"]'); nb.innerHTML = I_NEW; nb.setAttribute("aria-label", tx("newc")); nb.title = tx("newc");
     input.placeholder = tx("ph"); input.setAttribute("aria-label", tx("ph"));
     panel.querySelector(".aiNt").textContent = tx("note");
