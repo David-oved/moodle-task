@@ -23,9 +23,9 @@
       errNet: "אין חיבור לשרת כרגע. נסה שוב בעוד רגע.", errMoodle: "החיבור ל-Moodle פג. התחבר מחדש בהגדרות ונסה שוב.",
       errRate: "יותר מדי הודעות בזמן קצר. נסה שוב בעוד רגע.", errGen: "משהו השתבש. נסה שוב.", errLoad: "לא הצלחתי לטעון את השיחה.",
       copy: "העתק", copied: "הועתק", share: "שתף", selectTxt: "בחר טקסט", reuse: "ערוך ושלח שוב", msgMenu: "אפשרויות להודעה",
-      delAll: "מחק את כל השיחות", delOne: "מחק שיחה", delOk: "מחק", cancel: "ביטול", deleted: "נמחק", histCount: n => n + " שיחות",
+      delAll: "מחק את כל השיחות", delOne: "מחק שיחה", delOk: "מחק", cancel: "ביטול", deleted: "נמחק", histCount: n => n === 1 ? "שיחה אחת" : n + " שיחות",
       delAllQ: "למחוק את כל השיחות הקודמות? אי אפשר לשחזר אותן.", delOneQ: "למחוק את השיחה הזו? אי אפשר לשחזר אותה.",
-      dl: "הורד", dling: "מוריד…", fileGone: "הקובץ כבר לא זמין ב-Moodle.", fileBig: "הקובץ גדול מדי להורדה כאן (מעל 25MB). אפשר להוריד אותו ישירות ב-Moodle.", fileErr: "לא הצלחתי להוריד את הקובץ. נסה שוב.",
+      dl: "הורד", dling: "מוריד…", fileGone: "הקובץ כבר לא זמין ב-Moodle.", fileBig: "הקובץ גדול מדי להורדה כאן (מעל 25MB). אפשר להוריד אותו ישירות ב-Moodle.", fileErr: "לא הצלחתי להוריד את הקובץ. נסה שוב.", errTitle: "משהו לא תקין",
     },
     en: {
       title: "AI assistant", sub: "Powered by artificial intelligence", hello: n => "Hello " + n + " 👋", helloNo: "Hello 👋",
@@ -39,7 +39,7 @@
       copy: "Copy", copied: "Copied", share: "Share", selectTxt: "Select text", reuse: "Edit and resend", msgMenu: "Message options",
       delAll: "Delete all chats", delOne: "Delete chat", delOk: "Delete", cancel: "Cancel", deleted: "Deleted", histCount: n => n + (n === 1 ? " chat" : " chats"),
       delAllQ: "Delete all earlier chats? This can’t be undone.", delOneQ: "Delete this chat? This can’t be undone.",
-      dl: "Download", dling: "Downloading…", fileGone: "The file is no longer available in Moodle.", fileBig: "The file is too big to download here (over 25MB). You can download it directly in Moodle.", fileErr: "Couldn’t download the file. Try again.",
+      dl: "Download", dling: "Downloading…", fileGone: "The file is no longer available in Moodle.", fileBig: "The file is too big to download here (over 25MB). You can download it directly in Moodle.", fileErr: "Couldn’t download the file. Try again.", errTitle: "Something’s not right",
     },
     fr: {
       title: "Assistant IA", sub: "Propulsé par l’intelligence artificielle", hello: n => "Bonjour " + n + " 👋", helloNo: "Bonjour 👋",
@@ -53,7 +53,7 @@
       copy: "Copier", copied: "Copié", share: "Partager", selectTxt: "Sélectionner le texte", reuse: "Modifier et renvoyer", msgMenu: "Options du message",
       delAll: "Supprimer toutes les conversations", delOne: "Supprimer la conversation", delOk: "Supprimer", cancel: "Annuler", deleted: "Supprimé", histCount: n => n + (n === 1 ? " conversation" : " conversations"),
       delAllQ: "Supprimer toutes les conversations précédentes ? Cette action est irréversible.", delOneQ: "Supprimer cette conversation ? Cette action est irréversible.",
-      dl: "Télécharger", dling: "Téléchargement…", fileGone: "Le fichier n’est plus disponible dans Moodle.", fileBig: "Le fichier est trop volumineux pour être téléchargé ici (plus de 25 Mo). Vous pouvez le télécharger directement dans Moodle.", fileErr: "Impossible de télécharger le fichier. Réessayez.",
+      dl: "Télécharger", dling: "Téléchargement…", fileGone: "Le fichier n’est plus disponible dans Moodle.", fileBig: "Le fichier est trop volumineux pour être téléchargé ici (plus de 25 Mo). Vous pouvez le télécharger directement dans Moodle.", fileErr: "Impossible de télécharger le fichier. Réessayez.", errTitle: "Quelque chose ne va pas",
     },
   };
   const lang = () => (typeof LANG === "string" && TX[LANG] ? LANG : "he");
@@ -256,6 +256,96 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
 @keyframes aiSplOut{to{opacity:0}}
 @keyframes aiSplZoom{to{transform:scale(1.14)}}
 @media (prefers-reduced-motion:reduce){ .aiSplash *{animation:none!important} }
+
+/* ---- the dead face: when something is wrong ---- */
+.aiDeadFace .aiBub{fill:#ffe4e4}
+.aiDeadFace .aiX,.aiDeadFace .aiMouth{fill:none;stroke:#e03131;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.aiDeadFace .aiTongue{fill:#ff8787}
+.aiFaceBig .aiDeadFace{position:absolute;inset:0;opacity:0;transition:opacity .2s}
+.aiSpl::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,#4d0f15 0%,transparent 68%);opacity:0;transition:opacity .4s}
+.aiSplash.aiBad .aiSpl::before{opacity:1}
+.aiSplash.aiBad .aiFaceBig > svg:first-child{opacity:0;transition:opacity .15s}
+.aiSplash.aiBad .aiFaceBig .aiDeadFace{opacity:1}
+.aiSplash.aiBad .aiFaceBig{opacity:1;animation:aiDeadShake .75s both;filter:drop-shadow(0 0 28px #ff4d4d99)}
+.aiSplash.aiBad .aiGlow{background:radial-gradient(circle,#ff4d4d66 0%,transparent 66%);animation:none;opacity:1}
+.aiSplash.aiBad .aiSplTx{color:#ffffffb3}
+.aiSplTx b{display:block;margin-bottom:4px;font-size:19px;color:#fff}
+@keyframes aiDeadShake{0%{transform:scale(1) rotate(0)}15%{transform:translateX(-10px) rotate(-6deg)}30%{transform:translateX(9px) rotate(5deg)}45%{transform:translateX(-6px) rotate(-3deg)}60%{transform:translateX(4px)}100%{transform:scale(.96) rotate(7deg) translateY(4px)}}
+
+/* ---- closing: the black circle shrinks back into the button, and the app comes back around it ---- */
+.aiSplash.aiClosing{background:transparent}
+.aiSplash.aiClosing .aiSpl{animation:aiFadeOutQ .16s ease-out forwards}
+.aiSplash.aiClosing .aiGrow{transform:scale(var(--ais,20));animation:aiShrink .66s cubic-bezier(.5,0,.2,1) both}
+.aiSplash.aiClosing .aiGrow::after{animation:aiLighten .66s ease-out both}
+.aiSplash.aiClosing .aiGrow > svg{animation:aiFaceBack .66s ease-out both}
+.aiSplash.aiClosing.aiFromBlack .aiGrow{animation-name:aiShrinkB}
+@keyframes aiShrink{0%{transform:scale(var(--ais,20));opacity:0}20%{transform:scale(var(--ais,20));opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes aiShrinkB{0%,10%{transform:scale(var(--ais,20));opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes aiLighten{0%,35%{opacity:1}100%{opacity:0}}
+@keyframes aiFaceBack{0%,55%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}
+@keyframes aiFadeOutQ{to{opacity:0}}
+body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1) both,aiFloat 3.8s .55s ease-in-out infinite}
+@keyframes aiFabPop{from{scale:.2;opacity:0}to{scale:1;opacity:1}}
+
+/* ---- life: nearly everything in the chat moves a little ---- */
+/* messages rise into place (the one you send rises out of the input bar), the answer fills in and settles with a little glow */
+.aiP:not(.aiIntro) .aiM.aiIn{animation:aiMsgIn .45s cubic-bezier(.2,.9,.25,1.12) both;animation-delay:var(--ad,0ms)}
+.aiP:not(.aiIntro) .aiM.aiIn .aiAv{animation:aiAvPop .5s calc(var(--ad,0ms) + 120ms) cubic-bezier(.34,1.56,.64,1) both}
+.aiP:not(.aiIntro) .aiM.aiIn.aiPend .aiAv{animation:aiAvPop .5s calc(var(--ad,0ms) + 120ms) cubic-bezier(.34,1.56,.64,1) both,aiThink 1.1s calc(var(--ad,0ms) + 700ms) ease-in-out infinite}
+@keyframes aiMsgIn{from{opacity:0;transform:translateY(var(--fy,18px)) scale(.72)}50%{opacity:1}to{opacity:1;transform:none}}
+@keyframes aiAvPop{from{opacity:0;transform:scale(.2) rotate(-25deg)}to{opacity:1;transform:none}}
+.aiM.aiPend .aiAv{animation:aiThink 1.1s ease-in-out infinite}
+.aiP.aiBusy .aiHd .aiAv{animation:aiThink 1s ease-in-out infinite}
+@keyframes aiThink{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-3px) rotate(-6deg)}65%{transform:translateY(0) rotate(5deg)}}
+.aiB.aiFill{animation:aiFill .3s ease-out}
+@keyframes aiFill{from{opacity:.35;transform:scale(.95)}to{opacity:1;transform:none}}
+.aiCaret{display:inline-block;width:7px;height:7px;margin-inline-start:5px;border-radius:50%;background:var(--accent);vertical-align:middle;animation:aiPulse .9s ease-in-out infinite}
+@keyframes aiPulse{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+.aiM.aiDone .aiAv{animation:aiHappy .7s ease-out}
+.aiM.aiDone .aiB{animation:aiGlowRing 1s ease-out}
+@keyframes aiHappy{0%{transform:scale(1)}30%{transform:scale(1.3) rotate(-10deg)}60%{transform:scale(.94) rotate(6deg)}100%{transform:none}}
+@keyframes aiGlowRing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 50%,transparent)}100%{box-shadow:0 0 0 14px transparent}}
+.aiM.aiBad .aiAv{background:linear-gradient(145deg,#ff6b6b,#c92a2a);animation:aiDeadIn .6s ease-out both}
+.aiM.aiBad .aiB{border-color:var(--err);background:color-mix(in srgb,var(--err) 9%,var(--card));animation:aiShake .55s}
+@keyframes aiShake{0%,100%{translate:0}18%{translate:-7px}36%{translate:6px}54%{translate:-4px}72%{translate:3px}}
+@keyframes aiDeadIn{0%{transform:scale(.6) rotate(-20deg)}50%{transform:scale(1.2) rotate(10deg)}100%{transform:none}}
+/* the greeting comes in piece by piece; the faces blink now and then */
+.aiP:not(.aiIntro) .aiHi .aiBig{animation:aiPopIn .65s cubic-bezier(.34,1.56,.64,1) both}
+.aiP:not(.aiIntro) .aiHi h2{animation:aiUp .5s .12s ease-out both}
+.aiP:not(.aiIntro) .aiHi p{animation:aiUp .5s .2s ease-out both}
+.aiP:not(.aiIntro) .aiSug button{animation:aiUp .5s ease-out backwards}
+.aiP:not(.aiIntro) .aiSug button:nth-child(1){animation-delay:.28s}
+.aiP:not(.aiIntro) .aiSug button:nth-child(2){animation-delay:.35s}
+.aiP:not(.aiIntro) .aiSug button:nth-child(3){animation-delay:.42s}
+@keyframes aiUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes aiPopIn{from{opacity:0;transform:scale(.4) rotate(-12deg)}to{opacity:1;transform:none}}
+.aiHi .aiEye,.aiHd .aiEye{transform-box:fill-box;transform-origin:center;animation:aiBlink 4.4s 2s infinite}
+/* buttons answer your finger */
+.aiSug button,.aiHb,.aiSd,.aiMi,.aiFile,.aiHdel,.aiLink,.aiDlgBtns button,.aiErr button{transition:transform .12s ease,background-color .15s,border-color .15s,opacity .2s}
+.aiSug button:active,.aiHb:active,.aiSd:active,.aiMi:active,.aiFile:active,.aiHdel:active,.aiDlgBtns button:active{transform:scale(.94)}
+.aiSd.aiSwap svg{animation:aiIconPop .32s cubic-bezier(.34,1.56,.64,1)}
+@keyframes aiIconPop{from{opacity:0;transform:scale(.3) rotate(-90deg)}to{opacity:1;transform:none}}
+.aiIn textarea{transition:border-color .15s,box-shadow .15s}
+/* menu, dialog */
+.aiMnBg,.aiDlg{animation:aiFadeIn .17s ease-out}
+.aiMn{animation:aiPop2 .2s cubic-bezier(.34,1.3,.64,1);transform-origin:var(--mo,50% 0)}
+.aiDlgBox{animation:aiPop2 .24s cubic-bezier(.34,1.3,.64,1)}
+@keyframes aiFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes aiPop2{from{opacity:0;transform:scale(.9) translateY(8px)}to{opacity:1;transform:none}}
+/* history: rows come in one after the other and fold away when deleted */
+.aiHrow{max-height:96px;overflow:hidden}
+.aiP:not(.aiIntro) .aiHrow{animation:aiUp .35s ease-out backwards;animation-delay:calc(var(--i,0) * 40ms)}
+.aiP .aiHrow.aiGone{animation:aiRowOut .3s ease-in forwards;animation-delay:calc(var(--i,0) * 40ms)}
+@keyframes aiRowOut{to{opacity:0;transform:translateX(24px);max-height:0;border-bottom-width:0}}
+.aiHe{animation:aiFadeUp .3s ease-out}
+.aiP:not(.aiIntro) .aiMs.aiSwap{animation:aiFadeUp .24s ease-out}
+@keyframes aiFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* files */
+.aiFile{animation:aiUp .4s ease-out backwards}
+.aiFile.busy .aiFi svg{animation:aiSpin .9s linear infinite}
+.aiFile.ok .aiFi{background:var(--ok,#2b8a3e);animation:aiIconPop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes aiSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .aiP *,#aiFab{animation:none!important;transition:none!important} }
 `;
 
   /* ------------------------------------------------------------ small pieces */
@@ -264,6 +354,11 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
     '<ellipse class="aiEye aiEyeL" cx="14.8" cy="19" rx="2.1" ry="2.7"/><ellipse class="aiEye aiEyeR" cx="25.2" cy="19" rx="2.1" ry="2.7"/>' +
     '<path class="aiSmile" d="M15.3 24.4q4.7 3.8 9.4 0"/>' +
     '<path class="aiSpark" d="M33.5 1.5l1.5 3.9 3.9 1.5-3.9 1.5-1.5 3.9-1.5-3.9-3.9-1.5 3.9-1.5z"/></svg>';
+  // the "dead" face (X eyes, a wobbly mouth, the tongue out): shown when something is wrong
+  const FACE_DEAD = '<svg class="aiFace aiDeadFace" viewBox="0 0 40 40" aria-hidden="true" focusable="false">' +
+    '<path class="aiBub" d="M10 9h20a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H21l-6.2 5.1a.8.8 0 0 1-1.3-.6V31H10a6 6 0 0 1-6-6V15a6 6 0 0 1 6-6z"/>' +
+    '<path class="aiX" d="M12.4 16.4l4.8 4.8M17.2 16.4l-4.8 4.8M22.8 16.4l4.8 4.8M27.6 16.4l-4.8 4.8"/>' +
+    '<path class="aiMouth" d="M14.6 26.2q1.6-2.4 3.2 0t3.2 0 3.2 0"/><path class="aiTongue" d="M22.2 26.4v2.2a1.5 1.5 0 0 0 3 0v-2.2z"/></svg>';
   const I_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const I_HIST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>';
   const I_NEW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
@@ -383,6 +478,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
 
   /* ------------------------------------------------------------ state */
   let fab = null, panel = null, splash = null, intro = null, ms = null, input = null, sendBtn = null, statusEl = null, titleEl = null, histBtn = null, histMode = false;
+  let animFrom = Infinity, loadAnimN = 0, closing = false, loadFail = null;
   let msgs = [], conv = null, busy = false, ctl = null, gen = 0, curBub = null, pushed = false, skipPop = 0, lastPending = "";
 
   const left = () => LS.set("aiLeft", Date.now());
@@ -391,7 +487,9 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
   /* ------------------------------------------------------------ rendering */
   function bubble(role, content, opts) {
     const row = document.createElement("div"); row.className = "aiM " + (role === "user" ? "me" : "ai");
-    if (role !== "user") { const av = document.createElement("div"); av.className = "aiAv"; av.innerHTML = FACE; row.appendChild(av); }
+    if (opts && opts.bad) row.classList.add("aiBad");
+    if (opts && opts.pending && !content) row.classList.add("aiPend");
+    if (role !== "user") { const av = document.createElement("div"); av.className = "aiAv"; av.innerHTML = opts && opts.bad ? FACE_DEAD : FACE; row.appendChild(av); }
     const b = document.createElement("div"); b.className = "aiB"; b.dir = "auto";
     if (role === "user") b.textContent = content;
     else if (opts && opts.pending && !content) b.innerHTML = '<span class="aiDots" aria-label="…"><i></i><i></i><i></i></span>';
@@ -408,17 +506,29 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
       '</p><div class="aiSug">' + sug + "</div></div>";
   }
 
+  const wait = d => new Promise(r => setTimeout(r, d));
+  function swapAnim() { ms.classList.remove("aiSwap"); void ms.offsetWidth; ms.classList.add("aiSwap"); }   // a soft change of what the list shows
+
   function renderMsgs() {
+    const fromHist = histMode;
     histMode = false; setMode();
     ms.innerHTML = ""; curBub = null;
-    if (!msgs.length) { ms.innerHTML = greeting(); return; }
+    if (!msgs.length) { ms.innerHTML = greeting(); animFrom = Infinity; loadAnimN = 0; return; }
+    const sent = animFrom !== Infinity;                                   // just sent: the new messages rise in
+    const from = sent ? animFrom : (loadAnimN ? Math.max(0, msgs.length - loadAnimN) : Infinity);   // just opened: the last few come in one by one
     msgs.forEach((m, i) => {
-      const { row, b } = bubble(m.role, m.content, { pending: m.pending });
+      const { row, b } = bubble(m.role, m.content, { pending: m.pending, bad: !!m.err });
       row.dataset.i = i;
+      if (i >= from && !(sent && m.role === "user")) {                    // (the sent message is started by send(), from the input bar)
+        row.classList.add("aiIn"); row.style.setProperty("--ad", ((i - from) * (sent ? 170 : 45)) + "ms"); if (!sent) row.style.setProperty("--fy", "12px");
+      }
+      if (m.justDone) { row.classList.add("aiDone"); m.justDone = false; }  // the answer has just arrived
       if (m.err) addErr(b, m, i === msgs.length - 1);
       if (busy && i === msgs.length - 1 && m.role !== "user") curBub = b;
       ms.appendChild(row);
     });
+    animFrom = Infinity; loadAnimN = 0;
+    if (fromHist) swapAnim();
     scrollEnd(true);
   }
 
@@ -441,7 +551,9 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
   }
 
   function setBusy(b) {
-    busy = b;
+    const was = busy; busy = b;
+    if (panel) panel.classList.toggle("aiBusy", b);
+    if (sendBtn && was !== b) { sendBtn.classList.remove("aiSwap"); void sendBtn.offsetWidth; sendBtn.classList.add("aiSwap"); setTimeout(() => sendBtn.classList.remove("aiSwap"), 360); }
     sendBtn.innerHTML = b ? I_STOP : I_SEND; sendBtn.setAttribute("aria-label", b ? tx("stop") : tx("send")); sendBtn.title = b ? tx("stop") : tx("send");
     sendBtn.disabled = !b && !input.value.trim();
   }
@@ -460,9 +572,10 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
       const j = await res.json();
       msgs = (j.messages || []).map(m => ({ role: m.role === "user" ? "user" : "assistant", content: String(m.content || "") }));
       conv = id; LS.set("aiConv", id);
-      renderMsgs();
+      loadAnimN = 8; renderMsgs();
     } catch (e) {
       if (my !== gen) return;
+      loadFail = e instanceof AiErr ? e : new AiErr("net");
       ms.innerHTML = ""; const d = document.createElement("div"); d.className = "aiHe";
       d.append(document.createTextNode((e instanceof AiErr ? errText(e) : tx("errLoad")) + " "));
       const r = document.createElement("button"); r.type = "button"; r.className = "aiHr"; r.style.width = "auto"; r.textContent = tx("retry"); r.onclick = () => loadConv(id); d.appendChild(r);
@@ -493,7 +606,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
       bar.append(cnt, all); wrap.appendChild(bar);
       const loc = lang() === "he" ? "he-IL" : lang() === "fr" ? "fr-FR" : "en-GB";
       for (const c of list) {
-        const row = document.createElement("div"); row.className = "aiHrow";
+        const row = document.createElement("div"); row.className = "aiHrow"; row.dataset.id = c.id; row.style.setProperty("--i", Math.min(list.indexOf(c), 9));
         const r = document.createElement("button"); r.type = "button"; r.className = "aiHr" + (c.id === conv ? " on" : "");
         const title = c.title && c.title !== "שיחה חדשה" ? c.title : tx("histNone");
         const when = new Date(c.updated_at || c.created_at);
@@ -504,7 +617,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
         del.setAttribute("aria-label", tx("delOne") + ": " + title); del.title = tx("delOne"); del.onclick = () => deleteOne(c.id);
         row.append(r, del); wrap.appendChild(row);
       }
-      ms.appendChild(wrap);
+      ms.appendChild(wrap); swapAnim();
     } catch (e) {
       if (my !== gen) return;
       ms.innerHTML = '<div class="aiHe">' + esc2(errText(e)) + "</div>";
@@ -536,7 +649,16 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
       if (!res.ok && res.status !== 404) throw new AiErr(errKind(res));
     } catch (e) { toast(errText(e), 3500); return; }
     if (id === conv) dropCurrent();
-    toast(tx("deleted"), 1800); openHistory();
+    toast(tx("deleted"), 1800);
+    const row = histMode ? ms.querySelector('.aiHrow[data-id="' + id + '"]') : null;
+    if (!row) { openHistory(); return; }
+    row.classList.add("aiGone"); await wait(340); row.remove(); afterHistChange();      // the row folds away, the count follows
+  }
+
+  function afterHistChange() {
+    const n = ms.querySelectorAll(".aiHrow").length;
+    if (!n) { ms.innerHTML = '<div class="aiHe">' + esc2(tx("histEmpty")) + "</div>"; return; }
+    const c = ms.querySelector(".aiHt span"); if (c) c.textContent = tx("histCount", n);
   }
 
   async function deleteAll() {
@@ -546,7 +668,11 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
       if (!res.ok) throw new AiErr(errKind(res));
     } catch (e) { toast(errText(e), 3500); return; }
     dropCurrent(); LS.del("aiLeft");
-    toast(tx("deleted"), 1800); openHistory();
+    toast(tx("deleted"), 1800);
+    const rows = histMode ? [...ms.querySelectorAll(".aiHrow")] : [];
+    if (!rows.length) { openHistory(); return; }
+    rows.forEach((r, i) => { r.style.setProperty("--i", Math.min(i, 8)); r.classList.add("aiGone"); });
+    await wait(340 + Math.min(rows.length, 9) * 40); ms.innerHTML = '<div class="aiHe">' + esc2(tx("histEmpty")) + "</div>";
   }
 
   /* ------------------------------------------------------------ long-press menu on a message (copy, share, select, edit and resend) */
@@ -608,7 +734,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
     if (B.bottom + gap + mh <= P.bottom - gap) top = B.bottom + gap - P.top;
     else if (B.top - gap - mh >= P.top + gap) top = B.top - gap - mh - P.top;
     else top = Math.max(gap, (P.height - mh) / 2);
-    menuEl.style.left = Math.round(left) + "px"; menuEl.style.top = Math.round(top) + "px";
+    menuEl.style.left = Math.round(left) + "px"; menuEl.style.top = Math.round(top) + "px"; menuEl.style.setProperty("--mo", top < B.top - P.top ? "50% 100%" : "50% 0");
     try { menuEl.querySelector(".aiMi").focus({ preventScroll: true }); } catch (e) {}
   }
 
@@ -636,7 +762,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
         a.href = url; a.download = name; a.rel = "noopener"; panel.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 60000);
       }
-      lab.textContent = tx("dl");
+      btn.classList.add("ok"); lab.textContent = "✓"; setTimeout(() => { btn.classList.remove("ok"); lab.textContent = tx("dl"); }, 1800);
     } catch (e) { btn.classList.add("err"); lab.textContent = tx("retry"); if (typeof toast === "function") toast(fileErrText(e), 4000); }
     finally { btn.classList.remove("busy"); }
   }
@@ -648,10 +774,15 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
     gen++;                                    // a pending history/load result must not overwrite the chat now
     histMode = false; setMode();
     lastPending = text;
+    const from = input.getBoundingClientRect();            // where the message starts its way up
     input.value = ""; input.style.height = "auto";
+    animFrom = msgs.length;
     msgs.push({ role: "user", content: text });
     const ai = { role: "assistant", content: "", pending: true }; msgs.push(ai);
     setBusy(true); renderMsgs(); busy = true; curBub = ms.lastElementChild.querySelector(".aiB");
+    const ur = ms.children[msgs.length - 2];
+    // the rise starts at the input bar, but never more than 280px below the message (a short chat must not make it fly across the screen)
+    if (ur) { ur.style.setProperty("--fy", Math.min(280, Math.max(0, Math.round(from.top - ur.getBoundingClientRect().top))) + "px"); void ur.offsetWidth; ur.classList.add("aiIn"); }
     const wake = setTimeout(() => setStatus(tx("wake")), 6000);
     ctl = new AbortController(); const myCtl = ctl;
     try {
@@ -670,7 +801,15 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
       }
       if (!res.ok) throw new AiErr(errKind(res));
       clearTimeout(wake); setStatus("");
-      const upd = () => { ai.pending = false; if (curBub) { curBub.innerHTML = md(ai.content) || curBub.innerHTML; scrollEnd(false); } };
+      const withCaret = h => /(<\/(?:p|li)>)((?:<\/(?:ul|ol)>)?)$/.test(h) ? h.replace(/(<\/(?:p|li)>)((?:<\/(?:ul|ol)>)?)$/, '<span class="aiCaret"></span>$1$2') : h + '<span class="aiCaret"></span>';
+      const upd = () => {
+        const first = ai.pending; ai.pending = false;
+        if (curBub) {
+          curBub.innerHTML = withCaret(md(ai.content)) || curBub.innerHTML;
+          if (first) { const r = curBub.closest(".aiM"); if (r) r.classList.remove("aiPend"); curBub.classList.remove("aiFill"); void curBub.offsetWidth; curBub.classList.add("aiFill"); }   // the dots turn into the answer
+          scrollEnd(false);
+        }
+      };
       if (!res.body || !res.body.getReader) { ai.content = await res.text(); upd(); }
       else {
         const rd = res.body.getReader(), dec = new TextDecoder("utf-8"); let raf = 0;
@@ -694,6 +833,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
     } finally {
       clearTimeout(wake); if (ctl === myCtl) ctl = null;
       setBusy(false); left();
+      if (!ai.err && ai.content && ai.content.trim()) ai.justDone = true;
       if (panel && !panel.hidden && !histMode && msgs.includes(ai)) renderMsgs();
     }
   }
@@ -784,7 +924,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
       '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
       '<div class="aiDlg" hidden role="alertdialog" aria-modal="true"><div class="aiDlgBox"><p></p><div class="aiDlgBtns"><button type="button" data-no></button><button type="button" class="danger" data-ok></button></div></div></div>' +
-      '<div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + '</div><div class="aiSplTx"></div></div></div>';
+      '<div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + FACE_DEAD + '</div><div class="aiSplTx"></div></div></div>';
     document.body.appendChild(panel);
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
     splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]');
@@ -858,6 +998,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
   const INTRO_MIN = 1350;
   const introAllowed = () => !document.body.classList.contains("calm") && !matchMedia("(prefers-reduced-motion: reduce)").matches;
   const setSplText = t => { const e = splash && splash.querySelector(".aiSplTx"); if (e) { e.textContent = t || ""; e.classList.toggle("on", !!t); } };
+  const setSplErr = (title, why) => { const e = splash && splash.querySelector(".aiSplTx"); if (e) { e.innerHTML = "<b>" + esc2(title) + "</b><span>" + esc2(why) + "</span>"; e.classList.add("on"); } };
 
   function startIntro(fr) {
     if (!introAllowed() || !splash) return null;
@@ -883,6 +1024,18 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
     if (panel) panel.classList.remove("aiIntro");
   }
 
+  function failIntro(it, e) {                // no internet / a server error: a red dead face, "something is not right", then the screen shrinks away
+    return new Promise(res => {
+      setTimeout(() => {
+        if (intro !== it) return res();       // closed in the meantime
+        it.failed = true; it.timers.forEach(clearTimeout);
+        document.documentElement.classList.add("aiOn"); splash.classList.add("aiCovered", "aiBad");
+        const why = errText(e); setSplErr(tx("errTitle"), why);
+        it.timers = [setTimeout(() => { if (intro === it) { close(false, false); setTimeout(() => { if (typeof toast === "function") toast(why, 4200); }, 700); } res(); }, 2600)];
+      }, Math.max(0, 1000 - (performance.now() - it.t0)));     // the face is seen first, then it falls ill
+    });
+  }
+
   function finishIntro(it) {                  // resolves when the chat is on screen
     return new Promise(res => {
       if (!it) return res();
@@ -897,7 +1050,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
   }
 
   async function open() {
-    build();
+    build(); if (closing) return;
     if (!M.token) { if (typeof toast === "function") toast(tx("errMoodle"), 3500); return; }
     applyTexts();
     const fr = fab.getBoundingClientRect();                     // where the circle is, before it is hidden
@@ -908,40 +1061,68 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
     intro = startIntro(fr);
     if (!intro) { document.documentElement.classList.add("aiOn"); void panel.offsetWidth; panel.classList.add("on"); }   // no animation: just there (not requestAnimationFrame, which is paused in some background states)
     const my = intro;
-    try { await openLoad(); } finally { await finishIntro(my); }
+    let fail = null;
+    try { fail = await openLoad(); } catch (e) { fail = e; }
+    if (fail && my) { await failIntro(my, fail); return; }
+    await finishIntro(my);
     if (matchMedia("(hover:hover)").matches) input.focus();
   }
 
-  async function openLoad() {                 // what the chat needs before it can be shown
-
+  async function openLoad() {                 // what the chat needs before it can be shown; returns what went wrong, or null
     const sid = LS.get("aiConv", null), lf = LS.get("aiLeft", 0);
     const recent = sid && lf && Date.now() - lf <= HOUR;
-    if (busy || (recent && conv === sid && msgs.length)) { renderMsgs(); }                 // still in memory: no waiting
-    else {
-      ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>";
-      try { await ensureSession(false); }
-      catch (e) { ms.innerHTML = '<div class="aiHe">' + esc2(errText(e)) + "</div>"; return; }
-      if (recent) await loadConv(sid); else startNew();                                   // an hour or more away: a new conversation
-    }
+    if (busy || (recent && conv === sid && msgs.length)) { renderMsgs(); return null; }    // still in memory: no waiting
+    ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>";
+    try { await ensureSession(false); }
+    catch (e) { ms.innerHTML = '<div class="aiHe">' + esc2(errText(e)) + "</div>"; return e; }
+    if (recent) { loadFail = null; await loadConv(sid); if (loadFail) return loadFail; } else startNew();   // an hour or more away: a new conversation
+    return null;
   }
 
-  function close(fromPop) {
-    if (!panel || panel.hidden) return;
+  function teardown() {                       // the visual part of closing, all at once
+    clearIntro(); panel.classList.remove("on", "aiIntro"); panel.hidden = true;
+    document.documentElement.classList.remove("aiOn");        // the app is turned back on
+    unlockPage();
+    if (fab) { fab.style.visibility = ""; fab.hidden = false; }
+  }
+
+  // closing, with the animation: a black circle covers the chat (0.14s), the chat is turned off and the app comes back around it, and the circle shrinks into the button, which pops up
+  function shrinkClose(fromBlack) {
+    closing = true;
+    if (intro) { intro.timers.forEach(clearTimeout); intro = null; }
+    fab.style.visibility = "hidden"; fab.hidden = false;      // (to measure where it is)
+    const fr = fab.getBoundingClientRect(), P = panel.getBoundingClientRect();
+    const cx = fr.width ? fr.left + fr.width / 2 - P.left : P.width - 44, cy = fr.height ? fr.top + fr.height / 2 - P.top : P.height - 110, gr = Math.max(20, fr.width ? fr.width / 2 : 29);
+    const R = Math.hypot(Math.max(cx, P.width - cx), Math.max(cy, P.height - cy)) + 8, st = panel.style;
+    st.setProperty("--aicx", Math.round(cx) + "px"); st.setProperty("--aicy", Math.round(cy) + "px"); st.setProperty("--aigr", gr + "px"); st.setProperty("--ais", (R / gr).toFixed(2));
+    splash.hidden = false; splash.className = "aiSplash aiClosing" + (fromBlack ? " aiFromBlack" : "");
+    const cover = fromBlack ? 60 : 140;
+    setTimeout(() => { panel.classList.add("aiIntro"); document.documentElement.classList.remove("aiOn"); unlockPage(); }, cover);
+    setTimeout(() => {
+      panel.classList.remove("on", "aiIntro"); panel.hidden = true; splash.hidden = true; splash.className = "aiSplash";
+      fab.style.visibility = ""; fab.classList.remove("aiPop"); void fab.offsetWidth; fab.classList.add("aiPop"); setTimeout(() => fab.classList.remove("aiPop"), 800);
+      try { fab.focus({ preventScroll: true }); } catch (e) {}
+      closing = false;
+    }, cover + 560);
+  }
+
+  function close(fromPop, instant) {
+    if (!panel || panel.hidden || closing) return;
     left();
     try { if (document.activeElement === input) input.blur(); } catch (e) {}
     closeMenu(); const dlg = panel.querySelector(".aiDlg"); if (dlg) dlg.hidden = true;
-    clearIntro(); panel.classList.remove("on"); panel.hidden = true;
-    document.documentElement.classList.remove("aiOn");        // ...and turned back on
-    unlockPage();
-    if (fab) { fab.hidden = false; }
+    const failed = !!(intro && intro.failed), midIntro = !!(intro && !intro.failed);      // closed while the opening animation still plays: no fuss, just close
+    const animate = !instant && !midIntro && introAllowed() && !!fab && !!splash;
     if (pushed && !fromPop) { pushed = false; skipPop++; try { history.back(); } catch (e) { skipPop = 0; } }
     pushed = false;
+    if (animate) { shrinkClose(failed); return; }
+    teardown();
     if (fab && !fab.hidden) try { fab.focus({ preventScroll: true }); } catch (e) {}
   }
 
   window.AIChat = {
     show() { build(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; },
-    hide() { if (fab) fab.hidden = true; if (panel && !panel.hidden) close(); },
+    hide() { if (fab) fab.hidden = true; if (panel && !panel.hidden) close(false, true); },
     open,
     // for tests only: pretend the visible area is something else (a keyboard of a given size), then re-measure
     _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
