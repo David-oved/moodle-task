@@ -6,7 +6,7 @@
    Rules of the chat: it opens on the last conversation if the student left it up to an hour ago, otherwise on a new one;
    earlier conversations are under the history button. */
 (function () {
-  if (window.AI) return;
+  if (window.AIChat) return;
 
   const API_DEFAULT = "https://college-chat-lwdu.onrender.com";
   const HOUR = 3600 * 1000;
@@ -77,16 +77,19 @@
 @keyframes aiDot{0%,80%,100%{opacity:.25;translate:0 0}40%{opacity:1;translate:0 -3px}}
 
 /* the chat window: a full screen on a phone (sized to the visible area, so the keyboard never covers the input), a floating window on a computer */
-.aiP{position:fixed;z-index:35;left:0;right:0;top:var(--aivt,0px);height:var(--aivh,100dvh);display:flex;flex-direction:column;background:var(--bg);color:var(--text);
+/* --aivh / --aivt / --aikb are set by the script from the visual viewport (the part of the screen the keyboard leaves free): its height, how far it was
+   scrolled down, and how much of the bottom the keyboard covers. The window is moved with transform (cheap, no layout) and never follows the document scroll. */
+.aiP{position:fixed;z-index:35;left:0;right:0;top:0;height:var(--aivh,100dvh);transform:translate3d(0,var(--aivt,0px),0);display:flex;flex-direction:column;
+  background:var(--bg);color:var(--text);overscroll-behavior:none;contain:layout paint;
   opacity:0;translate:0 14px;transition:opacity .2s ease,translate .22s ease}
 .aiP[hidden]{display:none}
 .aiP.on{opacity:1;translate:0 0}
 body.calm .aiP{transition:none}
-@media (min-width:760px){
-  .aiP{left:auto;right:auto;inset-inline-end:24px;top:auto;bottom:24px;width:min(430px,calc(100vw - 48px));height:min(700px,calc(100dvh - 48px));
-    border-radius:22px;border:1px solid var(--line);box-shadow:0 24px 60px #0006,0 2px 10px #0003;overflow:hidden}
+@media (min-width:760px) and (min-height:520px){      /* tablets and computers: a floating window that stays above the keyboard */
+  .aiP{left:auto;right:auto;inset-inline-end:24px;top:auto;bottom:calc(24px + var(--aikb,0px));transform:none;width:min(430px,calc(100vw - 48px));
+    height:min(700px,calc(var(--aivh,100dvh) - 48px));border-radius:22px;border:1px solid var(--line);box-shadow:0 24px 60px #0006,0 2px 10px #0003;overflow:hidden}
 }
-.aiHd{flex:none;display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) 10px 10px;color:var(--on-accent,#fff);
+.aiHd{flex:none;display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 10px max(10px,env(safe-area-inset-left));color:var(--on-accent,#fff);
   background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 50%,#7b5cff))}
 .aiHb{flex:none;width:40px;height:40px;padding:0;border:0;border-radius:12px;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer}
 .aiHb:hover{background:#ffffff29}.aiHb:focus-visible{outline:2px solid #fff;outline-offset:1px}
@@ -130,7 +133,8 @@ body.calm .aiP{transition:none}
 .aiHr b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.aiHr small{color:var(--muted);font-size:12.5px}
 .aiHr.on{background:var(--accent-soft)}
 .aiHe{margin:auto;color:var(--muted);text-align:center;padding:24px}
-.aiFt{flex:none;padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 92%,var(--bg))}
+.aiFt{flex:none;padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 92%,var(--bg))}
+.aiP.aiKb .aiFt{padding-bottom:8px}                      /* the keyboard covers the home-indicator area: no gap between the input and the keyboard */
 .aiSt{font-size:12.5px;color:var(--muted);text-align:center;padding:0 0 6px}
 .aiIn{display:flex;gap:8px;align-items:flex-end}
 .aiIn textarea{flex:1;min-width:0;resize:none;min-height:44px;max-height:132px;padding:11px 14px;border-radius:22px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:16px;line-height:1.35}
@@ -141,6 +145,25 @@ body.calm .aiP{transition:none}
 .aiSd .aiStopI{fill:currentColor;stroke:none}
 html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiNt{font-size:11.5px;color:var(--muted);text-align:center;padding-top:6px;line-height:1.4}
+.aiMs{padding-inline:max(12px,env(safe-area-inset-left),env(safe-area-inset-right))}
+
+/* little room left (a phone with the keyboard open, a phone on its side): the chrome gets smaller so the conversation keeps the space */
+.aiP.aiKb .aiNt,.aiP.aiCompact .aiNt{display:none}
+.aiP.aiCompact .aiHd{padding-top:max(6px,env(safe-area-inset-top));padding-bottom:6px}
+.aiP.aiCompact .aiHb{width:36px;height:36px}.aiP.aiCompact .aiTt small{display:none}
+.aiP.aiCompact .aiAv{width:32px;height:32px}.aiP.aiCompact .aiAv svg{width:23px;height:23px}
+.aiP.aiCompact .aiMs{padding-top:8px;gap:8px}
+.aiP.aiCompact .aiHi{padding:6px 10px;gap:6px}.aiP.aiCompact .aiHi .aiBig,.aiP.aiCompact .aiHi p{display:none}
+.aiP.aiCompact .aiHi h2{font-size:19px;margin:0}.aiP.aiCompact .aiSug{margin-top:2px;gap:6px}.aiP.aiCompact .aiSug button{padding:8px 12px}
+.aiP.aiCompact .aiFt{padding-top:6px}.aiP.aiCompact .aiIn textarea{min-height:40px;max-height:96px;padding:9px 13px}
+.aiP.aiCompact .aiSd{width:40px;height:40px}
+.aiP.aiTiny .aiTt .aiTl,.aiP.aiTiny .aiHi .aiSug,.aiP.aiTiny .aiSt{display:none}.aiP.aiTiny .aiHd{padding-top:max(4px,env(safe-area-inset-top));padding-bottom:4px}
+.aiP.aiTiny .aiHi h2{font-size:17px}
+@media (max-width:359px){                                  /* the narrowest phones (320, a folded foldable) */
+  .aiHb{width:36px;height:36px}.aiHd{gap:2px}.aiTt{gap:6px}.aiTt b{font-size:15px}.aiB{max-width:92%;padding:8px 11px;font-size:14.5px}
+  .aiM{gap:6px}.aiM .aiAv{width:26px;height:26px}.aiM .aiAv svg{width:18px;height:18px}.aiSug button{font-size:14px}
+}
+@media (pointer:coarse){ .aiHb{width:44px;height:44px} .aiP.aiCompact .aiHb{width:40px;height:40px} }
 `;
 
   /* ------------------------------------------------------------ small pieces */
@@ -432,13 +455,64 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
   }
 
   /* ------------------------------------------------------------ the window */
-  function fit() {
-    if (!panel) return;
-    const vv = window.visualViewport;
-    if (!vv || matchMedia("(min-width:760px)").matches) { panel.style.removeProperty("--aivh"); panel.style.removeProperty("--aivt"); return; }
-    const was = atEnd();
-    panel.style.setProperty("--aivh", Math.round(vv.height) + "px"); panel.style.setProperty("--aivt", Math.round(vv.offsetTop) + "px");
-    if (was) scrollEnd(true);
+  /* The keyboard. What the browsers do (researched): iOS Safari and Chrome on Android (since 108) leave the page's own size alone and shrink only the
+     "visual viewport" (the part of the screen still visible), and iOS may also pan it; Firefox and some others resize the page itself. So the one
+     reliable source is the visual viewport: the window takes its height and follows its offset (and, for a floating window, sits above the covered
+     bottom). The page behind is locked so the browser never scrolls it to "reveal" the input, and the message list keeps the same messages next to
+     the input while it shrinks, so the bubbles stay right above the keyboard and nothing jumps. */
+  let baseH = 0, baseW = 0, lastKey = "", kbWas = false, vvOverride = null, fitRaf = 0, kbIntent = false, locked = false, lockY = 0, restoreY = null, bodyStyle = null;
+  const vvp = () => vvOverride || window.visualViewport;
+  const scheduleFit = () => { if (!fitRaf) fitRaf = requestAnimationFrame(() => { fitRaf = 0; fit(); }); };
+  // browsers report the keyboard in several steps (and iOS late): look again a few times after it moves
+  const fitSoon = () => { scheduleFit(); [120, 350, 800].forEach(d => setTimeout(scheduleFit, d)); };
+
+  function keepBottom(fn) {              // run fn (which changes sizes) and keep the same messages next to the input
+    const dist = ms.scrollHeight - ms.scrollTop - ms.clientHeight;
+    fn();
+    ms.scrollTop = Math.max(0, ms.scrollHeight - ms.clientHeight - dist);
+  }
+
+  function fit(force) {
+    if (!panel || panel.hidden) return;
+    const vv = vvp(), ih = innerHeight;
+    const ok = vv && (vv.scale || 1) < 1.05;                   // pinch-zoomed in: that is not the keyboard, ignore it
+    const vh = Math.round(ok ? vv.height : ih), off = Math.round(ok ? vv.offsetTop : 0), vw = Math.round(vv ? vv.width : innerWidth);
+    const focused = document.activeElement === input;
+    if (!baseH || Math.abs(vw - baseW) > 40) { baseH = Math.max(vh, ih); baseW = vw; }          // first time, or the phone was turned
+    else if (vh > baseH || (!focused && !kbWas)) baseH = vh;                                      // the tallest the area was without the keyboard
+    const inset = Math.max(0, Math.round(ih - (off + vh)));                                        // how much of the bottom is covered
+    const kb = focused && (baseH - vh > 120 || inset > 120);
+    kbWas = kb;
+    const key = vh + "|" + off + "|" + inset + "|" + kb;
+    if (key === lastKey && !force) return;
+    lastKey = key;
+    keepBottom(() => {
+      const s = panel.style;
+      s.setProperty("--aivh", vh + "px"); s.setProperty("--aivt", off + "px"); s.setProperty("--aikb", inset + "px");
+      panel.classList.toggle("aiKb", kb); panel.classList.toggle("aiCompact", vh < 470); panel.classList.toggle("aiTiny", vh < 300);
+    });
+  }
+
+  const needLock = () => matchMedia("(pointer:coarse)").matches || !matchMedia("(min-width:760px) and (min-height:520px)").matches;
+  function lockPage() {
+    if (locked || !needLock()) return;
+    locked = true; lockY = window.scrollY || 0;
+    const b = document.body; bodyStyle = b.getAttribute("style");
+    b.style.position = "fixed"; b.style.top = -lockY + "px"; b.style.left = "0"; b.style.right = "0"; b.style.width = "100%";
+    document.documentElement.style.overflow = "hidden";
+  }
+  function unlockPage() {
+    if (!locked) return;
+    locked = false; const b = document.body;
+    if (bodyStyle === null) b.removeAttribute("style"); else b.setAttribute("style", bodyStyle);
+    document.documentElement.style.overflow = "";
+    restoreY = lockY; restoreScroll();
+  }
+  // the browser can put the page back to a scroll position it saved at the wrong moment (during "back"): say it again, after it is done
+  function restoreScroll() {
+    if (restoreY === null) return;
+    const y = restoreY, go = () => { if (!locked) window.scrollTo({ top: y, left: 0, behavior: "instant" }); };
+    go(); setTimeout(go, 60); setTimeout(() => { go(); if (!panel || panel.hidden) restoreY = null; }, 350);
   }
 
   function build() {
@@ -465,20 +539,31 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     panel.querySelector('[data-a="close"]').onclick = () => close();
     histBtn.onclick = () => (histMode ? renderMsgs() : openHistory());
     panel.querySelector('[data-a="new"]').onclick = () => { startNew(); if (matchMedia("(hover:hover)").matches) input.focus(); };
-    sendBtn.onclick = () => (busy ? ctl && ctl.abort() : send(input.value));
-    input.oninput = () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 132) + "px"; if (!busy) sendBtn.disabled = !input.value.trim(); };
+    // sending must not close the keyboard: remember if it was up, keep the focus where it is, and put it back after the send
+    sendBtn.addEventListener("pointerdown", () => { kbIntent = document.activeElement === input; });
+    sendBtn.addEventListener("mousedown", e => e.preventDefault());
+    sendBtn.onclick = () => { const had = kbIntent; kbIntent = false; if (busy) { ctl && ctl.abort(); } else send(input.value); if (had) try { input.focus({ preventScroll: true }); } catch (e) {} };
+    input.oninput = () => {
+      keepBottom(() => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, panel.classList.contains("aiCompact") ? 96 : 132) + "px"; });
+      if (!busy) sendBtn.disabled = !input.value.trim();
+    };
+    input.addEventListener("focus", fitSoon); input.addEventListener("blur", fitSoon);
+    input.setAttribute("autocomplete", "off"); input.setAttribute("autocapitalize", "sentences");
+    // dragging on the header or the input bar must not pan the page behind; the message list and the text box keep their own scrolling
+    panel.addEventListener("touchmove", e => { if (!e.target.closest(".aiMs,.aiHs,textarea,pre")) e.preventDefault(); }, { passive: false });
     input.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing && matchMedia("(hover:hover)").matches) { e.preventDefault(); if (!busy) send(input.value); } };
     ms.addEventListener("click", e => { const q = e.target.closest("[data-q]"); if (q) send(q.dataset.q); });
     panel.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); close(); } });
-    if (window.visualViewport) { visualViewport.addEventListener("resize", fit); visualViewport.addEventListener("scroll", fit); }
-    addEventListener("resize", fit);
+    if (window.visualViewport) { visualViewport.addEventListener("resize", scheduleFit); visualViewport.addEventListener("scroll", scheduleFit); }
+    addEventListener("resize", scheduleFit); addEventListener("orientationchange", fitSoon);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) fitSoon(); });
     // leaving the page counts as leaving the chat: the one-hour rule runs from the last time the student was in it
     document.addEventListener("visibilitychange", () => { if (document.hidden && panel && !panel.hidden) left(); });
     addEventListener("pagehide", () => { if (panel && !panel.hidden) left(); });
     // the phone's back button closes the chat instead of leaving the app
     addEventListener("popstate", e => {
-      if (skipPop > 0) { skipPop--; e.stopImmediatePropagation(); return; }
-      if (pushed && panel && !panel.hidden) { pushed = false; e.stopImmediatePropagation(); close(true); }
+      if (skipPop > 0) { skipPop--; e.stopImmediatePropagation(); restoreScroll(); return; }
+      if (pushed && panel && !panel.hidden) { pushed = false; e.stopImmediatePropagation(); close(true); restoreScroll(); }
     }, true);
     applyTexts();
   }
@@ -497,10 +582,10 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     if (!M.token) { if (typeof toast === "function") toast(tx("errMoodle"), 3500); return; }
     applyTexts();
     panel.hidden = false; fab.hidden = true;
-    fit();
-    document.documentElement.style.overflow = "hidden";
-    requestAnimationFrame(() => panel.classList.add("on"));
+    // the history entry first (the browser saves the page's scroll position for the old entry now), only then lock the page
     if (!pushed) { try { history.pushState({ v: typeof V !== "undefined" ? V.view : "", ai: 1 }, ""); pushed = true; } catch (e) {} }
+    lockPage(); baseH = 0; lastKey = ""; kbWas = false; fit(true); fitSoon();
+    void panel.offsetWidth; panel.classList.add("on");        // (not requestAnimationFrame: it is paused in some background states and the window would stay invisible)
 
     const sid = LS.get("aiConv", null), lf = LS.get("aiLeft", 0);
     const recent = sid && lf && Date.now() - lf <= HOUR;
@@ -517,17 +602,21 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
   function close(fromPop) {
     if (!panel || panel.hidden) return;
     left();
+    try { if (document.activeElement === input) input.blur(); } catch (e) {}
     panel.classList.remove("on"); panel.hidden = true;
-    document.documentElement.style.overflow = "";
+    unlockPage();
     if (fab) { fab.hidden = false; }
     if (pushed && !fromPop) { pushed = false; skipPop++; try { history.back(); } catch (e) { skipPop = 0; } }
     pushed = false;
     if (fab && !fab.hidden) try { fab.focus({ preventScroll: true }); } catch (e) {}
   }
 
-  window.AI = {
+  window.AIChat = {
     show() { build(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; },
     hide() { if (fab) fab.hidden = true; if (panel && !panel.hidden) close(); },
     open,
+    // for tests only: pretend the visible area is something else (a keyboard of a given size), then re-measure
+    _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
+    _fit() { fit(true); },
   };
 })();
