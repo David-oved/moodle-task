@@ -177,6 +177,26 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiSug{display:flex;flex-direction:column;gap:8px;width:100%;max-width:330px;margin-top:8px}
 .aiSug button{padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);text-align:start;font:inherit;font-size:14.5px;cursor:pointer}
 .aiSug button:hover{border-color:var(--accent)}
+.aiPoll{margin-top:12px;padding:12px;border-radius:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 7%,var(--card))}
+.aiPq{font-weight:700;font-size:14.5px;margin-bottom:10px}
+.aiPo{display:flex;flex-direction:column;gap:7px}
+.aiPb{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:14.5px;text-align:start;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .15s}
+.aiPb:active{transform:scale(.97)}
+.aiPb i{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;transition:all .2s}
+.aiPoll[data-multi="1"] .aiPb i{border-radius:6px}
+.aiPb.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--card))}
+.aiPb.on i{background:var(--accent);border-color:var(--accent)}
+.aiPb.on i::after{content:"";width:5px;height:9px;border:solid var(--on-accent,#fff);border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.aiPgo{margin-top:10px;padding:9px 18px;border-radius:99px;border:0;background:var(--accent);color:var(--on-accent,#fff);font:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s,transform .15s}
+.aiPgo:disabled{opacity:.35;cursor:default}
+.aiPgo:not(:disabled):active{transform:scale(.95)}
+.aiQuick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.aiQuick button{padding:8px 16px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
+.aiQuick button:active{transform:scale(.94)}
+.aiQuick button.on{background:var(--accent);color:var(--on-accent,#fff)}
+.aiLocked{opacity:.6}
+.aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
 .aiHr{display:flex;flex-direction:column;gap:2px;width:100%;text-align:start;padding:11px 12px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none;color:var(--text);font:inherit;cursor:pointer}
 .aiHr b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.aiHr small{color:var(--muted);font-size:12.5px}
@@ -492,8 +512,24 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   };
   // the bot is asked not to use emojis; if one slips through it is removed here (the chat has its own drawn icons)
   const EMOJI_RE = /[ \t]*[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\uFE0F\u200D\u20E3]+[ \t]*/gu;     // (with the spaces around it, so no double space is left)
+  // [[poll:multi|question|a|b|c]] / [[poll:single|...]] become a tappable poll, [[quick|a|b]] becomes quick-reply buttons. The answer goes back as a normal message.
+  const POLL_RE = /\[\[(poll:(?:single|multi)|quick)\|([^\]\n]{1,700})\]\]/g;
+  const PICKED = { he: "בחרתי: ", en: "I chose: ", fr: "J'ai choisi : " };
+  const PSEND = { he: "שלח", en: "Send", fr: "Envoyer" };
+  function pollHTML(kind, body) {
+    const parts = body.split("|").map(x => x.trim()).filter(Boolean);
+    if (kind === "quick") {
+      const o = parts.slice(0, 4); if (o.length < 1) return "";
+      return '<div class="aiQuick">' + o.map(t => '<button type="button" data-qk="' + esc2(t) + '">' + esc2(t) + "</button>").join("") + "</div>";
+    }
+    const q = parts[0], o = parts.slice(1, 9); if (!q || o.length < 2) return "";
+    const multi = kind === "poll:multi";
+    return '<div class="aiPoll" data-multi="' + (multi ? 1 : 0) + '"><div class="aiPq">' + esc2(q) + '</div><div class="aiPo">' +
+      o.map((t, i) => '<button type="button" class="aiPb" data-po="' + esc2(t) + '"><i></i><span>' + esc2(t) + "</span></button>").join("") + "</div>" +
+      (multi ? '<button type="button" class="aiPgo" data-pgo disabled>' + esc2(PSEND[lang()] || PSEND.he) + "</button>" : "") + "</div>";
+  }
   const noEmoji = s => String(s).replace(EMOJI_RE, " ");
-  const plain = s => noEmoji(String(s).replace(FILE_RE, (m, r, n) => n));                       // for copy and share
+  const plain = s => noEmoji(String(s).replace(FILE_RE, (m, r, n) => n).replace(POLL_RE, (m, k, b) => b.split("|").map(x => x.trim()).filter(Boolean).join(" / ")));                       // for copy and share
   // a waving hand, drawn here (not an emoji of the system)
   const WAVE = '<svg class="aiWave" viewBox="0 0 32 32" aria-hidden="true"><g class="aiWaveHand" fill="#ffc83d"><rect x="7.5" y="13" width="15" height="14" rx="6.5"/><rect x="8" y="5" width="3.8" height="14" rx="1.9"/>' +
     '<rect x="12.1" y="3" width="3.8" height="15" rx="1.9"/><rect x="16.2" y="4" width="3.8" height="14.5" rx="1.9"/><rect x="20.3" y="7" width="3.6" height="12" rx="1.8"/>' +
@@ -502,9 +538,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function md(src) {
     const files = [];
     src = noEmoji(src).replace(/\[\[[^\]]*$/, "")                                                // a marker still being typed by the stream: not shown yet
-      .replace(FILE_RE, (m, ref, name, size) => { files.push([ref, name, size]); return "\u0001" + (files.length - 1) + "\u0001"; });
+      .replace(FILE_RE, (m, ref, name, size) => { files.push([ref, name, size]); return "\u0001" + (files.length - 1) + "\u0001"; })
+      .replace(POLL_RE, (m, kind, body) => { files.push(["\u0000", pollHTML(kind, body)]); return "\u0001" + (files.length - 1) + "\u0001"; });
     const html = md1(src);
-    return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => fileCard(files[i][0], files[i][1], files[i][2])) : html;
+    return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => files[i][0] === "\u0000" ? files[i][1] : fileCard(files[i][0], files[i][1], files[i][2])) : html;
   }
   function md1(src) {
     const lines = String(src).replace(/\r/g, "").split("\n");
@@ -651,6 +688,19 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const wait = d => new Promise(r => setTimeout(r, d));
   function swapAnim() { ms.classList.remove("aiSwap"); void ms.offsetWidth; ms.classList.add("aiSwap"); }   // a soft change of what the list shows
 
+  // only the poll in the newest message can still be answered; older ones are shown as history
+  const pollLive = el => !busy && !el.closest(".aiLocked") && el.closest(".aiM") === ms.lastElementChild;
+  function lockPoll(card, chosen) {
+    if (!card) return;
+    card.classList.add("aiLocked");
+    card.querySelectorAll("button").forEach(b => { b.disabled = true; });
+    chosen.forEach(b => b.classList.add("on"));
+  }
+  function lockOldPolls() {
+    const last = ms.lastElementChild;
+    ms.querySelectorAll(".aiPoll,.aiQuick").forEach(c => { if (c.closest(".aiM") !== last) { c.classList.add("aiLocked"); c.querySelectorAll("button").forEach(b => { b.disabled = true; }); } });
+  }
+
   function renderMsgs() {
     const fromHist = histMode || memMode;
     histMode = false; memMode = false; setMode();
@@ -671,7 +721,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     });
     animFrom = Infinity; loadAnimN = 0;
     if (fromHist) swapAnim();
-    scrollEnd(true);
+    lockOldPolls(); scrollEnd(true);
   }
 
   function addErr(b, m, isLast) {
@@ -1196,6 +1246,19 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const mc = e.target.closest(".aiMemChip"); if (mc && !mc.classList.contains("undone")) { openMemory(); return; }
       const f = e.target.closest(".aiFile"); if (f) { downloadFile(f); return; }
       const q = e.target.closest("[data-q]"); if (q) send(q.dataset.q);
+      const qk = e.target.closest("[data-qk]"); if (qk) { if (pollLive(qk)) { lockPoll(qk.closest(".aiQuick"), [qk]); send(qk.dataset.qk); } return; }
+      const pb = e.target.closest("[data-po]");
+      if (pb) {
+        const card = pb.closest(".aiPoll"); if (!pollLive(pb)) return;
+        if (card.dataset.multi === "1") { pb.classList.toggle("on"); const go = card.querySelector("[data-pgo]"); if (go) go.disabled = !card.querySelector(".aiPb.on"); }
+        else { lockPoll(card, [pb]); send((PICKED[lang()] || PICKED.he) + pb.dataset.po); }
+        return;
+      }
+      const pg = e.target.closest("[data-pgo]");
+      if (pg) {
+        const card = pg.closest(".aiPoll"), on = [...card.querySelectorAll(".aiPb.on")]; if (!on.length || !pollLive(pg)) return;
+        lockPoll(card, on); send((PICKED[lang()] || PICKED.he) + on.map(x => x.dataset.po).join(", "));
+      }
     });
     // long press on a message (touch) or right click / the Menu key (computer) opens the message menu; moving the finger (scrolling) cancels it
     ms.addEventListener("pointerdown", e => {
