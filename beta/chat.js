@@ -196,6 +196,38 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiQuick button{padding:8px 16px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
 .aiQuick button:active{transform:scale(.94)}
 .aiQuick button.on{background:var(--accent);color:var(--on-accent,#fff)}
+.aiDl{margin:2px 0 0;min-width:min(78vw,330px)}
+.aiDlHead{font-weight:800;font-size:17px;margin:0 2px 10px}
+.aiDlWeek{display:flex;gap:5px;margin-bottom:12px}
+.aiDlDay{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0 5px;border-radius:12px;border:1px solid transparent;background:color-mix(in srgb,var(--text) 5%,transparent);color:var(--muted);font:inherit;cursor:pointer;position:relative;transition:background .2s,border-color .2s,transform .15s}
+.aiDlDay small{font-size:11px;font-weight:700}
+.aiDlDay i{width:calc(7px + var(--s,0) * 9px);height:calc(7px + var(--s,0) * 9px);border-radius:50%;background:color-mix(in srgb,var(--muted) 35%,transparent)}
+.aiDlDay.has{color:var(--text)}.aiDlDay.has i{background:var(--accent);box-shadow:0 0 10px -1px var(--accent)}
+.aiDlDay b{position:absolute;top:-6px;inset-inline-end:-2px;min-width:16px;height:16px;border-radius:99px;background:var(--accent);color:var(--on-accent,#fff);font-size:10px;line-height:16px;text-align:center}
+.aiDlDay:disabled{cursor:default;opacity:.5}
+.aiDlDay.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.aiDlDay:not(:disabled):active{transform:scale(.92)}
+.aiDlHero{display:flex;align-items:center;gap:14px;padding:13px;border-radius:18px;margin-bottom:12px;color:var(--text);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--dc) 20%,var(--card)),color-mix(in srgb,var(--dc) 7%,var(--card)));border:1px solid color-mix(in srgb,var(--dc) 45%,var(--line))}
+.aiDlHero.hot{box-shadow:0 0 0 0 color-mix(in srgb,var(--dc) 50%,transparent);animation:aiDlHot 2.4s ease-out infinite}
+.aiDlRing{flex:none;width:58px;height:58px;transform:rotate(-90deg)}
+.aiDlRing circle{fill:none;stroke-width:6;stroke-linecap:round}
+.aiDlRing .bg{stroke:color-mix(in srgb,var(--dc) 22%,transparent)}.aiDlRing .fg{stroke:var(--dc);transition:stroke-dasharray .6s}
+.aiDlHx{min-width:0;display:flex;flex-direction:column;gap:2px}
+.aiDlHx small{font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.02em}
+.aiDlHx b{font-size:16px;line-height:1.3;overflow-wrap:anywhere}
+.aiDlHx span{font-size:19px;font-weight:800;color:var(--dc);margin-top:2px}
+.aiDlSec{margin-top:10px}
+.aiDlSh{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 2px 6px;display:flex;align-items:center;gap:6px}
+.aiDlSh em{font-style:normal;font-size:10.5px;padding:0 6px;border-radius:99px;background:color-mix(in srgb,var(--text) 9%,transparent)}
+.aiDlRow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;margin-bottom:5px;background:color-mix(in srgb,var(--text) 4%,transparent);border-inline-start:4px solid var(--dc);transition:opacity .25s,background .25s,transform .25s}
+.aiDlRow i{display:none}
+.aiDlRx{flex:1;min-width:0;display:flex;flex-direction:column}
+.aiDlRx b{font-size:14px;line-height:1.3;font-weight:650;overflow-wrap:anywhere}.aiDlRx small{font-size:11.5px;color:var(--muted)}
+.aiDlRow>span{flex:none;font-size:12.5px;font-weight:750;color:var(--dc);text-align:end;max-width:42%}
+.aiDlFocus .aiDlRow{opacity:.28}.aiDlFocus .aiDlRow.hit{opacity:1;background:color-mix(in srgb,var(--dc) 16%,transparent);transform:scale(1.015)}
+@keyframes aiDlHot{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--dc) 45%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+@media (prefers-reduced-motion:reduce){.aiDlHero.hot{animation:none}}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -531,8 +563,73 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       o.map((t, i) => '<button type="button" class="aiPb" data-po="' + esc2(t) + '"><i></i><span>' + esc2(t) + "</span></button>").join("") + "</div>" +
       (multi ? '<button type="button" class="aiPgo" data-pgo disabled>' + esc2(PSEND[lang()] || PSEND.he) + "</button>" : "") + "</div>";
   }
+  // ---------------------------------------------------------------------------------------------
+  // Deadline card: the server sends [[deadlines:BASE64]] (a list of [name, course, time]) and the app draws it: one headline, the most urgent item as a hero with a live
+  // countdown ring, the rest grouped by urgency (today / this week / later), and a week strip. Much faster to read than a list of dates.
+  // ---------------------------------------------------------------------------------------------
+  const DL_RE = /\[\[deadlines:([A-Za-z0-9_-]{4,9000})\]\]/g;
+  const DLT = {
+    he: { n: (k) => k === 1 ? "מטלה אחת ממתינה" : k + " מטלות ממתינות", urgent: "הדחופה", today: "היום", week: "השבוע", later: "אחר כך", over: "עבר המועד", in: "בעוד ", min: " דק'", hr: " שעות", day: " ימים",
+      tm: "מחר ", td: "היום ", days: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"], all: "הכול", loc: "he-IL" },
+    en: { n: (k) => k === 1 ? "1 task waiting" : k + " tasks waiting", urgent: "Most urgent", today: "Today", week: "This week", later: "Later", over: "Overdue", in: "in ", min: " min", hr: " h", day: " days",
+      tm: "Tomorrow ", td: "Today ", days: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"], all: "All", loc: "en-GB" },
+    fr: { n: (k) => k === 1 ? "1 tâche en attente" : k + " tâches en attente", urgent: "La plus urgente", today: "Aujourd'hui", week: "Cette semaine", later: "Plus tard", over: "En retard", in: "dans ", min: " min", hr: " h", day: " jours",
+      tm: "Demain ", td: "Aujourd'hui ", days: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"], all: "Tout", loc: "fr-FR" },
+  };
+  const dlt = () => DLT[lang()] || DLT.he;
+  function dlDecode(b64) {
+    try {
+      let b = b64.replace(/-/g, "+").replace(/_/g, "/"); b += "=".repeat((4 - b.length % 4) % 4);
+      const bin = atob(b), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const arr = JSON.parse(new TextDecoder("utf-8").decode(bytes));
+      return Array.isArray(arr) ? arr.filter(x => x && x.t).slice(0, 20) : [];
+    } catch (e) { return []; }
+  }
+  const dlHue = c => { let h = 0; for (const ch of String(c || "")) h = (h * 31 + ch.charCodeAt(0)) % 360; return h; };
+  const dlTime = t => new Date(t * 1000).toLocaleTimeString(dlt().loc, { hour: "2-digit", minute: "2-digit", hour12: false });
+  const dayStart = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x.getTime(); };
+  // "in 5 hours", "tomorrow 21:00", "Wed 21:00", "23/11" - always the shortest thing that tells the student when
+  function dlRel(t, long) {
+    const T = dlt(), now = Date.now(), ms = t * 1000 - now;
+    if (ms < 0) return T.over;
+    const mins = Math.round(ms / 60000);
+    if (mins < 60) return T.in + Math.max(1, mins) + T.min;
+    if (ms < 86400000 && dayStart(t * 1000) === dayStart(now)) return long ? T.in + Math.round(mins / 60) + T.hr : T.td + dlTime(t);
+    const dd = Math.round((dayStart(t * 1000) - dayStart(now)) / 86400000);
+    if (dd === 1) return T.tm + dlTime(t);
+    if (dd < 7) return T.days[new Date(t * 1000).getDay()] + " " + dlTime(t);
+    return new Date(t * 1000).toLocaleDateString(dlt().loc, { day: "2-digit", month: "2-digit" });
+  }
+  function dlHero(it) {
+    const left = Math.max(0, it.t * 1000 - Date.now()), frac = Math.max(0.04, Math.min(1, 1 - left / (7 * 86400000))), C = 2 * Math.PI * 26;
+    const col = "hsl(" + dlHue(it.c) + " 75% 62%)", urgent = left < 86400000;
+    return '<div class="aiDlHero' + (urgent ? " hot" : "") + '" style="--dc:' + col + '"><svg viewBox="0 0 64 64" class="aiDlRing"><circle cx="32" cy="32" r="26" class="bg"/><circle cx="32" cy="32" r="26" class="fg" stroke-dasharray="' + (C * frac).toFixed(1) + " " + C.toFixed(1) + '"/></svg>' +
+      '<div class="aiDlHx"><small>' + esc2(dlt().urgent) + " · " + esc2(it.c) + "</small><b>" + esc2(it.n) + '</b><span data-due="' + it.t + '" data-long="1">' + esc2(dlRel(it.t, true)) + "</span></div></div>";
+  }
+  function dlRow(it) {
+    return '<div class="aiDlRow" data-day="' + dayStart(it.t * 1000) + '" style="--dc:hsl(' + dlHue(it.c) + ' 75% 62%)"><i></i><div class="aiDlRx"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small></div><span data-due="' + it.t + '">' + esc2(dlRel(it.t, false)) + "</span></div>";
+  }
+  function deadlinesHTML(items) {
+    if (!items.length) return "";
+    const T = dlt(), now = Date.now(), today = dayStart(now);
+    const [first, ...rest] = items;
+    const grp = { today: [], week: [], later: [] };
+    rest.forEach(it => { const d = Math.round((dayStart(it.t * 1000) - today) / 86400000); (d <= 0 ? grp.today : d < 7 ? grp.week : grp.later).push(it); });
+    const sec = (k, label) => grp[k].length ? '<div class="aiDlSec"><div class="aiDlSh">' + esc2(label) + " <em>" + grp[k].length + "</em></div>" + grp[k].map(dlRow).join("") + "</div>" : "";
+    let strip = "";
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today + i * 86400000 + 43200000), ds = dayStart(d), c = items.filter(x => dayStart(x.t * 1000) === ds).length;
+      strip += '<button type="button" class="aiDlDay' + (c ? " has" : "") + '" data-dlday="' + ds + '"' + (c ? "" : " disabled") + "><small>" + T.days[d.getDay()] + "</small><i style=\"--s:" + Math.min(1, c / 3).toFixed(2) + '"></i>' + (c ? "<b>" + c + "</b>" : "") + "</button>";
+    }
+    return '<div class="aiDl"><div class="aiDlHead">' + esc2(T.n(items.length)) + '</div><div class="aiDlWeek">' + strip + "</div>" + dlHero(first) +
+      sec("today", T.today) + sec("week", T.week) + sec("later", T.later) + "</div>";
+  }
+  // the countdowns tick by themselves
+  setInterval(() => {
+    try { document.querySelectorAll(".aiDl [data-due]").forEach(el => { const v = dlRel(+el.dataset.due, el.dataset.long === "1"); if (el.textContent !== v) el.textContent = v; }); } catch (e) {}
+  }, 30000);
   const noEmoji = s => String(s).replace(EMOJI_RE, " ");
-  const plain = s => noEmoji(String(s).replace(FILE_RE, (m, r, n) => n).replace(POLL_RE, (m, k, b) => b.split("|").map(x => x.trim()).filter(Boolean).join(" / ")));                       // for copy and share
+  const plain = s => noEmoji(String(s).replace(FILE_RE, (m, r, n) => n).replace(POLL_RE, (m, k, b) => b.split("|").map(x => x.trim()).filter(Boolean).join(" / ")).replace(DL_RE, (m, b) => dlDecode(b).map(x => x.n + " - " + x.c + " - " + new Date(x.t * 1000).toLocaleString(dlt().loc)).join("\n")));                       // for copy and share
   // a waving hand, drawn here (not an emoji of the system)
   const WAVE = '<svg class="aiWave" viewBox="0 0 32 32" aria-hidden="true"><g class="aiWaveHand" fill="#ffc83d"><rect x="7.5" y="13" width="15" height="14" rx="6.5"/><rect x="8" y="5" width="3.8" height="14" rx="1.9"/>' +
     '<rect x="12.1" y="3" width="3.8" height="15" rx="1.9"/><rect x="16.2" y="4" width="3.8" height="14.5" rx="1.9"/><rect x="20.3" y="7" width="3.6" height="12" rx="1.8"/>' +
@@ -542,7 +639,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const files = [];
     src = noEmoji(src).replace(/\[\[[^\]]*$/, "")                                                // a marker still being typed by the stream: not shown yet
       .replace(FILE_RE, (m, ref, name, size) => { files.push([ref, name, size]); return "\u0001" + (files.length - 1) + "\u0001"; })
-      .replace(POLL_RE, (m, kind, body) => { files.push(["\u0000", pollHTML(kind, body)]); return "\u0001" + (files.length - 1) + "\u0001"; });
+      .replace(POLL_RE, (m, kind, body) => { files.push(["\u0000", pollHTML(kind, body)]); return "\u0001" + (files.length - 1) + "\u0001"; })
+      .replace(DL_RE, (m, b) => { files.push(["\u0000", deadlinesHTML(dlDecode(b))]); return "\u0001" + (files.length - 1) + "\u0001"; });
     const html = md1(src);
     return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => files[i][0] === "\u0000" ? files[i][1] : fileCard(files[i][0], files[i][1], files[i][2])) : html;
   }
@@ -1258,6 +1356,14 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         const card = pb.closest(".aiPoll"); if (!pollLive(pb)) return;
         if (card.dataset.multi === "1") { pb.classList.toggle("on"); const go = card.querySelector("[data-pgo]"); if (go) go.disabled = !card.querySelector(".aiPb.on"); }
         else { lockPoll(card, [pb]); send((PICKED[lang()] || PICKED.he) + pb.dataset.po); }
+        return;
+      }
+      const dd = e.target.closest("[data-dlday]");
+      if (dd) {
+        const card = dd.closest(".aiDl"), on = !dd.classList.contains("sel");
+        card.querySelectorAll(".aiDlDay").forEach(x => x.classList.remove("sel"));
+        card.classList.toggle("aiDlFocus", on); if (on) dd.classList.add("sel");
+        card.querySelectorAll(".aiDlRow").forEach(r => r.classList.toggle("hit", on && r.dataset.day === dd.dataset.dlday));
         return;
       }
       const pg = e.target.closest("[data-pgo]");
