@@ -522,7 +522,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const o = parts.slice(0, 4); if (o.length < 1) return "";
       return '<div class="aiQuick">' + o.map(t => '<button type="button" data-qk="' + esc2(t) + '">' + esc2(t) + "</button>").join("") + "</div>";
     }
-    const q = parts[0], o = parts.slice(1, 9); if (!q || o.length < 2) return "";
+    const q = parts[0], o = parts.slice(1, 13); if (!q || o.length < 2) return "";
     const multi = kind === "poll:multi";
     return '<div class="aiPoll" data-multi="' + (multi ? 1 : 0) + '"><div class="aiPq">' + esc2(q) + '</div><div class="aiPo">' +
       o.map((t, i) => '<button type="button" class="aiPb" data-po="' + esc2(t) + '"><i></i><span>' + esc2(t) + "</span></button>").join("") + "</div>" +
