@@ -22,6 +22,10 @@
       connecting: "מתחבר…", wake: "השרת מתעורר, זה יכול לקחת עד דקה…", retry: "נסה שוב", cut: "(התשובה נקטעה)",
       errNet: "אין חיבור לשרת כרגע. נסה שוב בעוד רגע.", errMoodle: "החיבור ל-Moodle פג. התחבר מחדש בהגדרות ונסה שוב.",
       errRate: "יותר מדי הודעות בזמן קצר. נסה שוב בעוד רגע.", errGen: "משהו השתבש. נסה שוב.", errLoad: "לא הצלחתי לטעון את השיחה.",
+      copy: "העתק", copied: "הועתק", share: "שתף", selectTxt: "בחר טקסט", reuse: "ערוך ושלח שוב", msgMenu: "אפשרויות להודעה",
+      delAll: "מחק את כל השיחות", delOne: "מחק שיחה", delOk: "מחק", cancel: "ביטול", deleted: "נמחק", histCount: n => n + " שיחות",
+      delAllQ: "למחוק את כל השיחות הקודמות? אי אפשר לשחזר אותן.", delOneQ: "למחוק את השיחה הזו? אי אפשר לשחזר אותה.",
+      dl: "הורד", dling: "מוריד…", fileGone: "הקובץ כבר לא זמין ב-Moodle.", fileBig: "הקובץ גדול מדי להורדה כאן (מעל 25MB). אפשר להוריד אותו ישירות ב-Moodle.", fileErr: "לא הצלחתי להוריד את הקובץ. נסה שוב.",
     },
     en: {
       title: "AI assistant", sub: "Powered by artificial intelligence", hello: n => "Hello " + n + " 👋", helloNo: "Hello 👋",
@@ -32,6 +36,10 @@
       connecting: "Connecting…", wake: "The server is waking up, this can take up to a minute…", retry: "Try again", cut: "(the answer was cut off)",
       errNet: "Can’t reach the server right now. Try again in a moment.", errMoodle: "The Moodle connection expired. Reconnect in Settings and try again.",
       errRate: "Too many messages in a short time. Try again in a moment.", errGen: "Something went wrong. Try again.", errLoad: "Couldn’t load the chat.",
+      copy: "Copy", copied: "Copied", share: "Share", selectTxt: "Select text", reuse: "Edit and resend", msgMenu: "Message options",
+      delAll: "Delete all chats", delOne: "Delete chat", delOk: "Delete", cancel: "Cancel", deleted: "Deleted", histCount: n => n + (n === 1 ? " chat" : " chats"),
+      delAllQ: "Delete all earlier chats? This can’t be undone.", delOneQ: "Delete this chat? This can’t be undone.",
+      dl: "Download", dling: "Downloading…", fileGone: "The file is no longer available in Moodle.", fileBig: "The file is too big to download here (over 25MB). You can download it directly in Moodle.", fileErr: "Couldn’t download the file. Try again.",
     },
     fr: {
       title: "Assistant IA", sub: "Propulsé par l’intelligence artificielle", hello: n => "Bonjour " + n + " 👋", helloNo: "Bonjour 👋",
@@ -42,6 +50,10 @@
       connecting: "Connexion…", wake: "Le serveur se réveille, cela peut prendre jusqu’à une minute…", retry: "Réessayer", cut: "(la réponse a été coupée)",
       errNet: "Impossible de joindre le serveur pour le moment. Réessayez dans un instant.", errMoodle: "La connexion à Moodle a expiré. Reconnectez-vous dans les réglages et réessayez.",
       errRate: "Trop de messages en peu de temps. Réessayez dans un instant.", errGen: "Une erreur s’est produite. Réessayez.", errLoad: "Impossible de charger la conversation.",
+      copy: "Copier", copied: "Copié", share: "Partager", selectTxt: "Sélectionner le texte", reuse: "Modifier et renvoyer", msgMenu: "Options du message",
+      delAll: "Supprimer toutes les conversations", delOne: "Supprimer la conversation", delOk: "Supprimer", cancel: "Annuler", deleted: "Supprimé", histCount: n => n + (n === 1 ? " conversation" : " conversations"),
+      delAllQ: "Supprimer toutes les conversations précédentes ? Cette action est irréversible.", delOneQ: "Supprimer cette conversation ? Cette action est irréversible.",
+      dl: "Télécharger", dling: "Téléchargement…", fileGone: "Le fichier n’est plus disponible dans Moodle.", fileBig: "Le fichier est trop volumineux pour être téléchargé ici (plus de 25 Mo). Vous pouvez le télécharger directement dans Moodle.", fileErr: "Impossible de télécharger le fichier. Réessayez.",
     },
   };
   const lang = () => (typeof LANG === "string" && TX[LANG] ? LANG : "he");
@@ -76,7 +88,9 @@
 @keyframes aiTwinkle{0%,100%{scale:1;opacity:1}50%{scale:.7;opacity:.75}}
 @keyframes aiDot{0%,80%,100%{opacity:.25;translate:0 0}40%{opacity:1;translate:0 -3px}}
 
-/* the chat window: a full screen on a phone (sized to the visible area, so the keyboard never covers the input), a floating window on a computer */
+/* the chat is a screen of its own, on every device: it replaces the app while it is open (the app is turned off behind it, so there is nothing to scroll or tap
+   behind), and the app comes back when the chat is closed. Sized to the visible area, so the keyboard never covers the input. */
+html.aiOn body > *:not(.aiP):not(#toast):not(script):not(style):not(link):not(meta){visibility:hidden}
 /* --aivh / --aivt / --aikb are set by the script from the visual viewport (the part of the screen the keyboard leaves free): its height, how far it was
    scrolled down, and how much of the bottom the keyboard covers. The window is moved with transform (cheap, no layout) and never follows the document scroll. */
 .aiP{position:fixed;z-index:35;left:0;right:0;top:0;height:var(--aivh,100dvh);transform:translate3d(0,var(--aivt,0px),0);display:flex;flex-direction:column;
@@ -85,11 +99,8 @@
 .aiP[hidden]{display:none}
 .aiP.on{opacity:1;translate:0 0}
 body.calm .aiP{transition:none}
-@media (min-width:760px) and (min-height:520px){      /* tablets and computers: a floating window that stays above the keyboard */
-  .aiP{left:auto;right:auto;inset-inline-end:24px;top:auto;bottom:calc(24px + var(--aikb,0px));transform:none;width:min(430px,calc(100vw - 48px));
-    height:min(700px,calc(var(--aivh,100dvh) - 48px));border-radius:22px;border:1px solid var(--line);box-shadow:0 24px 60px #0006,0 2px 10px #0003;overflow:hidden}
-}
-.aiHd{flex:none;display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 10px max(10px,env(safe-area-inset-left));color:var(--on-accent,#fff);
+@media (min-width:900px){ .aiB{font-size:16px} }            /* big screens: the conversation stays in a centred column (the paddings below) */
+.aiHd{flex:none;display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right),calc((100% - 840px) / 2)) 10px max(10px,env(safe-area-inset-left),calc((100% - 840px) / 2));color:var(--on-accent,#fff);
   background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 50%,#7b5cff))}
 .aiHb{flex:none;width:40px;height:40px;padding:0;border:0;border-radius:12px;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer}
 .aiHb:hover{background:#ffffff29}.aiHb:focus-visible{outline:2px solid #fff;outline-offset:1px}
@@ -133,7 +144,7 @@ body.calm .aiP{transition:none}
 .aiHr b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.aiHr small{color:var(--muted);font-size:12.5px}
 .aiHr.on{background:var(--accent-soft)}
 .aiHe{margin:auto;color:var(--muted);text-align:center;padding:24px}
-.aiFt{flex:none;padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 92%,var(--bg))}
+.aiFt{flex:none;padding:8px max(10px,env(safe-area-inset-right),calc((100% - 840px) / 2)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left),calc((100% - 840px) / 2));border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 92%,var(--bg))}
 .aiP.aiKb .aiFt{padding-bottom:8px}                      /* the keyboard covers the home-indicator area: no gap between the input and the keyboard */
 .aiSt{font-size:12.5px;color:var(--muted);text-align:center;padding:0 0 6px}
 .aiIn{display:flex;gap:8px;align-items:flex-end}
@@ -145,7 +156,45 @@ body.calm .aiP{transition:none}
 .aiSd .aiStopI{fill:currentColor;stroke:none}
 html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiNt{font-size:11.5px;color:var(--muted);text-align:center;padding-top:6px;line-height:1.4}
-.aiMs{padding-inline:max(12px,env(safe-area-inset-left),env(safe-area-inset-right))}
+.aiMs,.aiHs{padding-left:max(12px,env(safe-area-inset-left),calc((100% - 840px) / 2));padding-right:max(12px,env(safe-area-inset-right),calc((100% - 840px) / 2))}
+
+/* long-press menu on a message */
+.aiMnBg{position:absolute;inset:0;z-index:6;background:#0003}
+.aiMn{position:absolute;z-index:7;min-width:200px;max-width:calc(100% - 16px);padding:6px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 40px #0006;display:flex;flex-direction:column}
+.aiMi{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;font-size:15px;text-align:start;cursor:pointer}
+.aiMi:hover,.aiMi:focus-visible{background:var(--accent-soft);outline:none}
+.aiMi svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--accent-t,var(--accent))}
+.aiB.aiHold{outline:2px solid var(--accent);outline-offset:2px}
+@media (hover:none){ .aiB{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} }
+.aiB.aiSel{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+
+/* confirm dialog (delete) */
+.aiDlg{position:absolute;inset:0;z-index:8;display:grid;place-items:center;padding:20px;background:#0008}
+.aiDlg[hidden]{display:none}
+.aiDlgBox{width:min(340px,100%);padding:18px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:0 20px 50px #0007}
+.aiDlgBox p{margin:0 0 16px;line-height:1.5;font-size:15.5px}
+.aiDlgBtns{display:flex;gap:8px;justify-content:flex-end}
+.aiDlgBtns button{padding:10px 18px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-weight:650;cursor:pointer}
+.aiDlgBtns .danger{background:var(--err);border-color:var(--err);color:#fff}
+
+/* history: a delete button on every row, and "delete all" */
+.aiHt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 2px 4px;color:var(--muted);font-size:13.5px}
+.aiLink{border:0;background:none;color:var(--err);font:inherit;font-weight:700;cursor:pointer;padding:6px 4px}
+.aiHrow{display:flex;align-items:stretch;border-bottom:1px solid var(--line)}
+.aiHrow .aiHr{border-bottom:0;flex:1;min-width:0}
+.aiHdel{flex:none;width:46px;border:0;border-radius:10px;background:none;color:var(--muted);display:grid;place-items:center;cursor:pointer}
+.aiHdel:hover,.aiHdel:focus-visible{color:var(--err);background:color-mix(in srgb,var(--err) 10%,transparent)}
+.aiHdel svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* a file the AI sends: a card with a download button */
+.aiFile{display:flex;align-items:center;gap:10px;width:100%;max-width:340px;margin:6px 0 2px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+  background:color-mix(in srgb,var(--accent) 8%,var(--card));color:var(--text);font:inherit;text-align:start;cursor:pointer}
+.aiFile:hover,.aiFile:focus-visible{border-color:var(--accent)}
+.aiFile .aiFi{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--accent);color:var(--on-accent,#fff)}
+.aiFile .aiFi svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.aiFile .aiFn{flex:1;min-width:0;font-weight:650;font-size:14.5px;overflow-wrap:anywhere}
+.aiFile .aiFd{flex:none;font-size:12.5px;font-weight:800;color:var(--accent-t,var(--accent))}
+.aiFile.busy{opacity:.7;cursor:progress}.aiFile.err .aiFd{color:var(--err)}
 
 /* little room left (a phone with the keyboard open, a phone on its side): the chrome gets smaller so the conversation keeps the space */
 .aiP.aiKb .aiNt,.aiP.aiCompact .aiNt{display:none}
@@ -179,6 +228,12 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
   const I_SEND = '<svg class="aiSendI" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>';
   const I_STOP = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect class="aiStopI" x="6" y="6" width="12" height="12" rx="2.5"/></svg>';
 
+  const I_TRASH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/><path d="M10 11v6M14 11v6"/></svg>';
+  const I_COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>';
+  const I_SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg>';
+  const I_SELECT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>';
+  const I_FILE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6M9 14l3 3 3-3"/></svg>';
+
   const esc2 = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   /* a small, safe markdown: everything is escaped first, then **bold**, `code`, lists, headings, http(s) links */
@@ -189,7 +244,20 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
       .replace(/(^|[\s(])\*([^*\s][^*]*?)\*(?=[\s).,!?:;]|$)/g, "$1<i>$2</i>")
       .replace(/https?:\/\/[^\s<]*[^\s<.,;:!?)\]]/g, u => '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + u + "</a>");
   }
+  // [[file:REF|name]] is how the server's file tool lets the AI hand a file over; it becomes a download card. The REF is only a path inside Moodle - no token.
+  const FILE_RE = /\[\[file:([A-Za-z0-9_-]{4,1700})\|([^\]\n]{1,120})\]\]/g;
+  const fileCard = (ref, name) => '<button type="button" class="aiFile" data-ref="' + esc2(ref) + '" data-name="' + esc2(name) + '" aria-label="' + esc2(tx("dl") + " " + name) + '">' +
+    '<span class="aiFi">' + I_FILE + '</span><span class="aiFn" dir="auto">' + esc2(name) + '</span><span class="aiFd">' + esc2(tx("dl")) + "</span></button>";
+  const plain = s => String(s).replace(FILE_RE, (m, r, n) => "📎 " + n);                       // for copy and share
+
   function md(src) {
+    const files = [];
+    src = String(src).replace(/\[\[[^\]]*$/, "")                                                // a marker still being typed by the stream: not shown yet
+      .replace(FILE_RE, (m, ref, name) => { files.push([ref, name]); return "\u0001" + (files.length - 1) + "\u0001"; });
+    const html = md1(src);
+    return files.length ? html.replace(/\u0001(\d+)\u0001/g, (m, i) => fileCard(files[i][0], files[i][1])) : html;
+  }
+  function md1(src) {
     const lines = String(src).replace(/\r/g, "").split("\n");
     const out = []; let para = [], list = null, code = null;
     const flushP = () => { if (para.length) { out.push("<p>" + para.map(inline).join("<br>") + "</p>"); para = []; } };
@@ -285,6 +353,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     if (role === "user") b.textContent = content;
     else if (opts && opts.pending && !content) b.innerHTML = '<span class="aiDots" aria-label="…"><i></i><i></i><i></i></span>';
     else b.innerHTML = md(content);
+    if (!(opts && opts.pending && !content)) { b.tabIndex = 0; b.setAttribute("aria-haspopup", "menu"); }   // reachable from the keyboard (the Menu key opens the same menu)
     row.appendChild(b);
     return { row, b };
   }
@@ -302,6 +371,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     if (!msgs.length) { ms.innerHTML = greeting(); return; }
     msgs.forEach((m, i) => {
       const { row, b } = bubble(m.role, m.content, { pending: m.pending });
+      row.dataset.i = i;
       if (m.err) addErr(b, m, i === msgs.length - 1);
       if (busy && i === msgs.length - 1 && m.role !== "user") curBub = b;
       ms.appendChild(row);
@@ -358,12 +428,13 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
   }
 
   function startNew() {
+    closeMenu();
     gen++; if (ctl) { ctl.abort(); } msgs = []; conv = null; LS.del("aiConv"); setBusy(false); setStatus("");
     renderMsgs();
   }
 
   async function openHistory() {
-    const my = ++gen; histMode = true; setMode();
+    const my = ++gen; histMode = true; setMode(); closeMenu();
     ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>";
     try {
       const res = await call("/api/conversations");
@@ -372,22 +443,159 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
       const list = ((await res.json()).conversations || []).filter(c => c && c.id);
       ms.innerHTML = "";
       if (!list.length) { ms.innerHTML = '<div class="aiHe">' + esc2(tx("histEmpty")) + "</div>"; return; }
-      const wrap = document.createElement("div"); wrap.className = "aiHs"; wrap.style.padding = "0";
+      const wrap = document.createElement("div"); wrap.className = "aiHs"; wrap.style.cssText = "padding-top:0;padding-bottom:0;flex:none";
+      const bar = document.createElement("div"); bar.className = "aiHt";
+      const cnt = document.createElement("span"); cnt.textContent = tx("histCount", list.length);
+      const all = document.createElement("button"); all.type = "button"; all.className = "aiLink"; all.textContent = tx("delAll"); all.onclick = () => deleteAll();
+      bar.append(cnt, all); wrap.appendChild(bar);
       const loc = lang() === "he" ? "he-IL" : lang() === "fr" ? "fr-FR" : "en-GB";
       for (const c of list) {
+        const row = document.createElement("div"); row.className = "aiHrow";
         const r = document.createElement("button"); r.type = "button"; r.className = "aiHr" + (c.id === conv ? " on" : "");
         const title = c.title && c.title !== "שיחה חדשה" ? c.title : tx("histNone");
         const when = new Date(c.updated_at || c.created_at);
         const b = document.createElement("b"); b.textContent = title; b.dir = "auto";
         const sm = document.createElement("small"); sm.textContent = isNaN(when) ? "" : when.toLocaleString(loc, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
         r.append(b, sm); r.onclick = () => { if (c.id === conv && msgs.length) { renderMsgs(); } else loadConv(c.id); };
-        wrap.appendChild(r);
+        const del = document.createElement("button"); del.type = "button"; del.className = "aiHdel"; del.innerHTML = I_TRASH;
+        del.setAttribute("aria-label", tx("delOne") + ": " + title); del.title = tx("delOne"); del.onclick = () => deleteOne(c.id);
+        row.append(r, del); wrap.appendChild(row);
       }
       ms.appendChild(wrap);
     } catch (e) {
       if (my !== gen) return;
       ms.innerHTML = '<div class="aiHe">' + esc2(errText(e)) + "</div>";
     }
+  }
+
+  /* ------------------------------------------------------------ deleting history */
+  // our own confirm box (not window.confirm: it blocks the page and looks foreign); "cancel" has the focus, so a stray Enter deletes nothing
+  function confirmDlg(message, okLabel) {
+    return new Promise(res => {
+      const d = panel.querySelector(".aiDlg"), ok = d.querySelector("[data-ok]"), no = d.querySelector("[data-no]");
+      d.querySelector("p").textContent = message; ok.textContent = okLabel; no.textContent = tx("cancel");
+      const done = v => { d.hidden = true; d.onkeydown = d.onclick = ok.onclick = no.onclick = null; res(v); try { histBtn.focus({ preventScroll: true }); } catch (e) {} };
+      ok.onclick = () => done(true); no.onclick = () => done(false);
+      d.onclick = e => { if (e.target === d) done(false); };
+      d.onkeydown = e => { if (e.key === "Escape") { e.stopPropagation(); done(false); } };
+      d.hidden = false; try { no.focus({ preventScroll: true }); } catch (e) {}
+    });
+  }
+
+  function dropCurrent() {                    // the open conversation was deleted
+    gen++; if (ctl) ctl.abort(); msgs = []; conv = null; LS.del("aiConv"); setBusy(false); setStatus("");
+  }
+
+  async function deleteOne(id) {
+    if (!(await confirmDlg(tx("delOneQ"), tx("delOk")))) return;
+    try {
+      const res = await call("/api/conversations/" + encodeURIComponent(id), { method: "DELETE" });
+      if (!res.ok && res.status !== 404) throw new AiErr(errKind(res));
+    } catch (e) { toast(errText(e), 3500); return; }
+    if (id === conv) dropCurrent();
+    toast(tx("deleted"), 1800); openHistory();
+  }
+
+  async function deleteAll() {
+    if (!(await confirmDlg(tx("delAllQ"), tx("delOk")))) return;
+    try {
+      const res = await call("/api/conversations", { method: "DELETE" });
+      if (!res.ok) throw new AiErr(errKind(res));
+    } catch (e) { toast(errText(e), 3500); return; }
+    dropCurrent(); LS.del("aiLeft");
+    toast(tx("deleted"), 1800); openHistory();
+  }
+
+  /* ------------------------------------------------------------ long-press menu on a message (copy, share, select, edit and resend) */
+  let menuEl = null, menuBg = null, menuFor = null, holdT = 0, holdXY = [0, 0];
+  const cancelHold = () => { clearTimeout(holdT); holdT = 0; };
+
+  function closeMenu() {
+    cancelHold();
+    if (menuEl) { menuEl.remove(); menuEl = null; }
+    if (menuBg) { menuBg.remove(); menuBg = null; }
+    if (menuFor) { menuFor.classList.remove("aiHold"); menuFor = null; }
+  }
+
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch (e) {}
+    try {                                      // older browsers / no permission: the classic way
+      const ta = document.createElement("textarea"); ta.value = t; ta.readOnly = true; ta.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:.01;font-size:16px";
+      panel.appendChild(ta); ta.select(); ta.setSelectionRange(0, t.length); const ok = document.execCommand("copy"); ta.remove(); return ok;
+    } catch (e) { return false; }
+  }
+
+  function openMenu(b, x, y, byKey) {
+    const row = b.closest(".aiM"), idx = row ? +row.dataset.i : -1, m = msgs[idx];
+    if (!m || m.pending || !String(m.content || "").trim()) return;
+    closeMenu();
+    const text = plain(m.content);
+    const items = [{ id: "copy", icon: I_COPY, label: tx("copy") }];
+    if (navigator.share) items.push({ id: "share", icon: I_SHARE, label: tx("share") });
+    items.push({ id: "select", icon: I_SELECT, label: tx("selectTxt") });
+    if (m.role === "user") items.push({ id: "reuse", icon: I_NEW, label: tx("reuse") });
+
+    menuBg = document.createElement("div"); menuBg.className = "aiMnBg"; menuBg.onclick = closeMenu;
+    menuEl = document.createElement("div"); menuEl.className = "aiMn"; menuEl.setAttribute("role", "menu"); menuEl.setAttribute("aria-label", tx("msgMenu"));
+    for (const it of items) {
+      const bt = document.createElement("button"); bt.type = "button"; bt.className = "aiMi"; bt.setAttribute("role", "menuitem"); bt.innerHTML = it.icon + "<span></span>";
+      bt.lastChild.textContent = it.label;
+      bt.onclick = async () => {
+        closeMenu();
+        if (it.id === "copy") toast((await copyText(text)) ? tx("copied") : tx("errGen"), 1600);
+        else if (it.id === "share") { try { await navigator.share({ text }); } catch (e) {} }
+        else if (it.id === "select") { b.classList.add("aiSel"); const r = document.createRange(); r.selectNodeContents(b); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+        else if (it.id === "reuse") { input.value = String(m.content); input.dispatchEvent(new Event("input")); try { input.focus(); input.setSelectionRange(input.value.length, input.value.length); } catch (e) {} }
+      };
+      menuEl.appendChild(bt);
+    }
+    menuEl.addEventListener("keydown", e => {
+      const btns = [...menuEl.querySelectorAll(".aiMi")], i = btns.indexOf(document.activeElement);
+      if (e.key === "Escape") { e.stopPropagation(); const back = b; closeMenu(); try { back.focus({ preventScroll: true }); } catch (er) {} }
+      else if (e.key === "ArrowDown") { e.preventDefault(); btns[(i + 1) % btns.length].focus(); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); btns[(i - 1 + btns.length) % btns.length].focus(); }
+    });
+    panel.append(menuBg, menuEl); menuFor = b; b.classList.add("aiHold");
+
+    // the menu sits next to the message: below it if there is room, else above it, else in the middle; always inside the screen
+    const P = panel.getBoundingClientRect(), B = b.getBoundingClientRect(), mw = menuEl.offsetWidth, mh = menuEl.offsetHeight, gap = 8;
+    const cx = byKey ? (B.left + B.right) / 2 : x;
+    const left = Math.min(Math.max(cx - P.left - mw / 2, gap), Math.max(gap, P.width - mw - gap));
+    let top;
+    if (B.bottom + gap + mh <= P.bottom - gap) top = B.bottom + gap - P.top;
+    else if (B.top - gap - mh >= P.top + gap) top = B.top - gap - mh - P.top;
+    else top = Math.max(gap, (P.height - mh) / 2);
+    menuEl.style.left = Math.round(left) + "px"; menuEl.style.top = Math.round(top) + "px";
+    try { menuEl.querySelector(".aiMi").focus({ preventScroll: true }); } catch (e) {}
+  }
+
+  /* ------------------------------------------------------------ files the AI sends */
+  const fileErrText = e => tx(e && e.kind === "moodle" ? "errMoodle" : e && e.kind === "rate" ? "errRate" : e && e.kind === "nofile" ? "fileGone" : e && e.kind === "big" ? "fileBig" : e && e.kind === "net" ? "errNet" : "fileErr");
+
+  async function downloadFile(btn) {
+    if (btn.classList.contains("busy")) return;
+    const ref = btn.dataset.ref, name = (btn.dataset.name || "file").replace(/[\\/:*?"<>|\r\n]+/g, "_");
+    const lab = btn.querySelector(".aiFd");
+    btn.classList.add("busy"); btn.classList.remove("err"); lab.textContent = tx("dling");
+    try {
+      if (!M.token) throw new AiErr("moodle");
+      const res = await call("/api/moodle/file", { method: "POST", timeout: 120000, body: { ref, moodle_token: M.token } });   // the token goes in the body, never in an address
+      if (!res.ok) throw new AiErr(res.status === 403 ? "moodle" : res.status === 429 ? "rate" : res.status === 404 ? "nofile" : res.status === 413 ? "big" : res.status >= 500 ? "net" : "gen");
+      const blob = await res.blob();
+      const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      let shared = false;
+      if (ios && navigator.canShare && typeof File === "function") {            // iPhone/iPad: the share sheet is where "Save to Files" lives
+        const f = new File([blob], name, { type: blob.type });
+        if (navigator.canShare({ files: [f] })) { try { await navigator.share({ files: [f], title: name }); shared = true; } catch (e) { if (e && e.name === "AbortError") shared = true; } }
+      }
+      if (!shared) {
+        const url = URL.createObjectURL(blob), a = document.createElement("a");
+        a.href = url; a.download = name; a.rel = "noopener"; panel.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      }
+      lab.textContent = tx("dl");
+    } catch (e) { btn.classList.add("err"); lab.textContent = tx("retry"); if (typeof toast === "function") toast(fileErrText(e), 4000); }
+    finally { btn.classList.remove("busy"); }
   }
 
   /* ------------------------------------------------------------ sending */
@@ -493,7 +701,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     });
   }
 
-  const needLock = () => matchMedia("(pointer:coarse)").matches || !matchMedia("(min-width:760px) and (min-height:520px)").matches;
+  const needLock = () => true;               // the chat is a screen of its own on every device, so the page behind is always locked
   function lockPage() {
     if (locked || !needLock()) return;
     locked = true; lockY = window.scrollY || 0;
@@ -531,7 +739,8 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
       '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="new"></button></div>' +
       '<div class="aiMs" role="log" aria-live="polite"></div>' +
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
-      '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>';
+      '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
+      '<div class="aiDlg" hidden role="alertdialog" aria-modal="true"><div class="aiDlgBox"><p></p><div class="aiDlgBtns"><button type="button" data-no></button><button type="button" class="danger" data-ok></button></div></div></div>';
     document.body.appendChild(panel);
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
     statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]');
@@ -552,7 +761,27 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     // dragging on the header or the input bar must not pan the page behind; the message list and the text box keep their own scrolling
     panel.addEventListener("touchmove", e => { if (!e.target.closest(".aiMs,.aiHs,textarea,pre")) e.preventDefault(); }, { passive: false });
     input.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing && matchMedia("(hover:hover)").matches) { e.preventDefault(); if (!busy) send(input.value); } };
-    ms.addEventListener("click", e => { const q = e.target.closest("[data-q]"); if (q) send(q.dataset.q); });
+    ms.addEventListener("click", e => {
+      const f = e.target.closest(".aiFile"); if (f) { downloadFile(f); return; }
+      const q = e.target.closest("[data-q]"); if (q) send(q.dataset.q);
+    });
+    // long press on a message (touch) or right click / the Menu key (computer) opens the message menu; moving the finger (scrolling) cancels it
+    ms.addEventListener("pointerdown", e => {
+      closeMenu();
+      if (e.pointerType === "mouse" || e.button !== 0 || e.target.closest(".aiFile,a,.aiErr button")) return;
+      const b = e.target.closest(".aiB"); if (!b) return;
+      holdXY = [e.clientX, e.clientY];
+      holdT = setTimeout(() => { holdT = 0; try { navigator.vibrate && navigator.vibrate(12); } catch (er) {} openMenu(b, holdXY[0], holdXY[1]); }, 450);
+    });
+    ms.addEventListener("pointermove", e => { if (holdT && Math.hypot(e.clientX - holdXY[0], e.clientY - holdXY[1]) > 10) cancelHold(); });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(t => ms.addEventListener(t, cancelHold));
+    ms.addEventListener("scroll", () => { cancelHold(); if (menuEl) closeMenu(); }, { passive: true });
+    ms.addEventListener("contextmenu", e => {
+      const b = e.target.closest(".aiB"); if (!b) return;
+      e.preventDefault(); if (menuEl) return;
+      openMenu(b, e.clientX, e.clientY, e.clientX === 0 && e.clientY === 0);
+    });
+    document.addEventListener("pointerdown", e => { if (panel && !e.target.closest(".aiB")) document.querySelectorAll(".aiB.aiSel").forEach(x => x.classList.remove("aiSel")); }, true);
     panel.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); close(); } });
     if (window.visualViewport) { visualViewport.addEventListener("resize", scheduleFit); visualViewport.addEventListener("scroll", scheduleFit); }
     addEventListener("resize", scheduleFit); addEventListener("orientationchange", fitSoon);
@@ -584,6 +813,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     panel.hidden = false; fab.hidden = true;
     // the history entry first (the browser saves the page's scroll position for the old entry now), only then lock the page
     if (!pushed) { try { history.pushState({ v: typeof V !== "undefined" ? V.view : "", ai: 1 }, ""); pushed = true; } catch (e) {} }
+    document.documentElement.classList.add("aiOn");           // the app behind is turned off while the chat is open
     lockPage(); baseH = 0; lastKey = ""; kbWas = false; fit(true); fitSoon();
     void panel.offsetWidth; panel.classList.add("on");        // (not requestAnimationFrame: it is paused in some background states and the window would stay invisible)
 
@@ -603,7 +833,9 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     if (!panel || panel.hidden) return;
     left();
     try { if (document.activeElement === input) input.blur(); } catch (e) {}
+    closeMenu(); const dlg = panel.querySelector(".aiDlg"); if (dlg) dlg.hidden = true;
     panel.classList.remove("on"); panel.hidden = true;
+    document.documentElement.classList.remove("aiOn");        // ...and turned back on
     unlockPage();
     if (fab) { fab.hidden = false; }
     if (pushed && !fromPop) { pushed = false; skipPop++; try { history.back(); } catch (e) { skipPop = 0; } }
