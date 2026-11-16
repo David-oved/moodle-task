@@ -213,12 +213,55 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
   .aiM{gap:6px}.aiM .aiAv{width:26px;height:26px}.aiM .aiAv svg{width:18px;height:18px}.aiSug button{font-size:14px}
 }
 @media (pointer:coarse){ .aiHb{width:44px;height:44px} .aiP.aiCompact .aiHb{width:40px;height:40px} }
+
+
+/* ---- opening animation: the circle grows out of the button to a black screen, the face grows into it, winks and smiles; it stays until the chat is ready ---- */
+.aiP.aiIntro{opacity:1;translate:0 0;transition:none;background:transparent}
+.aiP.aiIntro > :not(.aiSplash){visibility:hidden}
+.aiSplash{position:absolute;inset:0;z-index:9;overflow:hidden}
+.aiSplash[hidden]{display:none}
+.aiSplash.aiCovered{background:#050507}
+.aiGrow{position:absolute;left:calc(var(--aicx,50%) - var(--aigr,29px));top:calc(var(--aicy,90%) - var(--aigr,29px));width:calc(var(--aigr,29px) * 2);height:calc(var(--aigr,29px) * 2);border-radius:50%;
+  background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));animation:aiGrow .5s cubic-bezier(.55,0,.2,1) both;will-change:transform}
+.aiGrow::after{content:"";position:absolute;inset:0;border-radius:50%;background:#050507;animation:aiDarken .5s ease-in both}
+.aiGrow > svg{position:absolute;inset:16%;width:68%;height:68%;overflow:visible;animation:aiFadeQuick .22s ease-out both}
+@keyframes aiGrow{from{transform:scale(1)}to{transform:scale(var(--ais,20))}}
+@keyframes aiDarken{0%,22%{opacity:0}100%{opacity:1}}
+@keyframes aiFadeQuick{to{opacity:0;transform:scale(.8)}}
+.aiSpl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.aiGlow{position:absolute;width:min(78vw,380px);aspect-ratio:1;border-radius:50%;opacity:0;animation:aiGlowIn .9s .3s ease-out both;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 50%,transparent) 0%,transparent 66%)}
+.aiFaceBig{position:relative;width:clamp(120px,34vw,176px);aspect-ratio:1;opacity:0;animation:aiFaceIn .62s .32s ease-out both,aiBreathe 3.2s 1.1s ease-in-out infinite;
+  filter:drop-shadow(0 0 26px color-mix(in srgb,var(--accent) 65%,transparent))}
+.aiFaceBig svg{width:100%;height:100%;display:block;overflow:visible}
+.aiSplTx{position:relative;min-height:1.4em;max-width:80%;text-align:center;color:#ffffffa6;font-size:14px;line-height:1.4;opacity:0;transition:opacity .35s}
+.aiSplTx.on{opacity:1}
+@keyframes aiFaceIn{0%{opacity:0;transform:scale(.25) rotate(-10deg)}55%{opacity:1;transform:scale(1.12) rotate(3deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes aiGlowIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+@keyframes aiBreathe{0%,100%{scale:1}50%{scale:1.045}}
+/* the face's life: both eyes blink now and then; the wink closes the right eye and lifts the smile, with a little tilt and a twinkle */
+.aiSplash .aiEye,.aiSplash .aiSmile{transform-box:fill-box;transform-origin:center}
+.aiSplash .aiEye{animation:aiBlink 3.6s 1.5s infinite}
+.aiSplash.aiWink .aiEyeR{animation:aiWinkEye .66s ease-in-out both}
+.aiSplash.aiWink .aiSmile{animation:aiWinkSmile .66s ease-in-out both}
+.aiSplash.aiWink .aiFaceBig svg{transform-origin:50% 60%;animation:aiTilt .66s ease-in-out both}
+html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
+@keyframes aiBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+@keyframes aiWinkEye{0%{transform:scaleY(1)}30%,72%{transform:scaleY(.1) translateY(.5px)}100%{transform:scaleY(1)}}
+@keyframes aiWinkSmile{0%{transform:none}30%,72%{transform:scale(1.18,1.14) translateY(-.4px)}100%{transform:none}}
+@keyframes aiTilt{0%,100%{transform:rotate(0)}32%,70%{transform:rotate(-5deg)}}
+@keyframes aiPop{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.9) rotate(25deg)}100%{transform:scale(1) rotate(0)}}
+.aiSplash.aiOut{animation:aiSplOut .34s ease-in forwards}
+.aiSplash.aiOut .aiSpl{animation:aiSplZoom .34s ease-in forwards}
+@keyframes aiSplOut{to{opacity:0}}
+@keyframes aiSplZoom{to{transform:scale(1.14)}}
+@media (prefers-reduced-motion:reduce){ .aiSplash *{animation:none!important} }
 `;
 
   /* ------------------------------------------------------------ small pieces */
   const FACE = '<svg class="aiFace" viewBox="0 0 40 40" aria-hidden="true" focusable="false">' +
     '<path class="aiBub" d="M10 9h20a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H21l-6.2 5.1a.8.8 0 0 1-1.3-.6V31H10a6 6 0 0 1-6-6V15a6 6 0 0 1 6-6z"/>' +
-    '<ellipse class="aiEye" cx="14.8" cy="19" rx="2.1" ry="2.7"/><ellipse class="aiEye" cx="25.2" cy="19" rx="2.1" ry="2.7"/>' +
+    '<ellipse class="aiEye aiEyeL" cx="14.8" cy="19" rx="2.1" ry="2.7"/><ellipse class="aiEye aiEyeR" cx="25.2" cy="19" rx="2.1" ry="2.7"/>' +
     '<path class="aiSmile" d="M15.3 24.4q4.7 3.8 9.4 0"/>' +
     '<path class="aiSpark" d="M33.5 1.5l1.5 3.9 3.9 1.5-3.9 1.5-1.5 3.9-1.5-3.9-3.9-1.5 3.9-1.5z"/></svg>';
   const I_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
@@ -339,7 +382,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
   const errText = e => tx(e && e.kind === "moodle" ? "errMoodle" : e && e.kind === "rate" ? "errRate" : e && e.kind === "net" ? "errNet" : "errGen");
 
   /* ------------------------------------------------------------ state */
-  let fab = null, panel = null, ms = null, input = null, sendBtn = null, statusEl = null, titleEl = null, histBtn = null, histMode = false;
+  let fab = null, panel = null, splash = null, intro = null, ms = null, input = null, sendBtn = null, statusEl = null, titleEl = null, histBtn = null, histMode = false;
   let msgs = [], conv = null, busy = false, ctl = null, gen = 0, curBub = null, pushed = false, skipPop = 0, lastPending = "";
 
   const left = () => LS.set("aiLeft", Date.now());
@@ -740,10 +783,11 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
       '<div class="aiMs" role="log" aria-live="polite"></div>' +
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
       '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
-      '<div class="aiDlg" hidden role="alertdialog" aria-modal="true"><div class="aiDlgBox"><p></p><div class="aiDlgBtns"><button type="button" data-no></button><button type="button" class="danger" data-ok></button></div></div></div>';
+      '<div class="aiDlg" hidden role="alertdialog" aria-modal="true"><div class="aiDlgBox"><p></p><div class="aiDlgBtns"><button type="button" data-no></button><button type="button" class="danger" data-ok></button></div></div></div>' +
+      '<div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + '</div><div class="aiSplTx"></div></div></div>';
     document.body.appendChild(panel);
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
-    statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]');
+    splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]');
 
     panel.querySelector('[data-a="close"]').onclick = () => close();
     histBtn.onclick = () => (histMode ? renderMsgs() : openHistory());
@@ -806,16 +850,69 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     setMode(); setBusy(busy);
   }
 
+  /* ------------------------------------------------------------ the opening animation
+     0 - 0.5s   the circle of the button grows over the screen, turning black (the app behind is still seen until it is covered)
+     0.3s       the face grows into the middle, with a glow; it breathes and blinks
+     ~1s        it winks and smiles; after that it waits (with a short line of text if it takes long) until the chat is ready, then fades into the chat
+     At least 1.35s in all, so the wink is always seen. With "calm" or reduced motion there is no animation at all. */
+  const INTRO_MIN = 1350;
+  const introAllowed = () => !document.body.classList.contains("calm") && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const setSplText = t => { const e = splash && splash.querySelector(".aiSplTx"); if (e) { e.textContent = t || ""; e.classList.toggle("on", !!t); } };
+
+  function startIntro(fr) {
+    if (!introAllowed() || !splash) return null;
+    panel.classList.add("aiIntro");                         // first (it removes the small slide-in offset), then measure
+    const P = panel.getBoundingClientRect();
+    const cx = fr && fr.width ? fr.left + fr.width / 2 - P.left : P.width - 44, cy = fr && fr.height ? fr.top + fr.height / 2 - P.top : P.height - 110;
+    const gr = Math.max(20, fr && fr.width ? fr.width / 2 : 29);
+    const R = Math.hypot(Math.max(cx, P.width - cx), Math.max(cy, P.height - cy)) + 8;
+    const s = panel.style;
+    s.setProperty("--aicx", Math.round(cx) + "px"); s.setProperty("--aicy", Math.round(cy) + "px"); s.setProperty("--aigr", gr + "px"); s.setProperty("--ais", (R / gr).toFixed(2));
+    setSplText(""); splash.className = "aiSplash"; splash.hidden = false;
+    const it = { t0: performance.now(), timers: [] };
+    const at = (ms, fn) => it.timers.push(setTimeout(fn, ms));
+    at(480, () => { splash.classList.add("aiCovered"); document.documentElement.classList.add("aiOn"); });     // covered: now the app behind can be turned off
+    at(980, () => splash.classList.add("aiWink")); at(980 + 700, () => splash.classList.remove("aiWink"));
+    at(2800, () => setSplText(tx("connecting"))); at(7000, () => setSplText(tx("wake")));
+    return it;
+  }
+
+  function clearIntro() {
+    if (intro) { intro.timers.forEach(clearTimeout); intro = null; }
+    if (splash) { splash.hidden = true; splash.className = "aiSplash"; }
+    if (panel) panel.classList.remove("aiIntro");
+  }
+
+  function finishIntro(it) {                  // resolves when the chat is on screen
+    return new Promise(res => {
+      if (!it) return res();
+      setTimeout(() => {
+        if (intro !== it) return res();       // closed in the meantime
+        it.timers.forEach(clearTimeout); document.documentElement.classList.add("aiOn");
+        splash.classList.add("aiOut"); panel.classList.add("on"); panel.classList.remove("aiIntro");
+        setTimeout(() => { if (intro === it) { intro = null; splash.hidden = true; splash.className = "aiSplash"; } }, 360);
+        res();
+      }, Math.max(0, INTRO_MIN - (performance.now() - it.t0)));
+    });
+  }
+
   async function open() {
     build();
     if (!M.token) { if (typeof toast === "function") toast(tx("errMoodle"), 3500); return; }
     applyTexts();
+    const fr = fab.getBoundingClientRect();                     // where the circle is, before it is hidden
     panel.hidden = false; fab.hidden = true;
     // the history entry first (the browser saves the page's scroll position for the old entry now), only then lock the page
     if (!pushed) { try { history.pushState({ v: typeof V !== "undefined" ? V.view : "", ai: 1 }, ""); pushed = true; } catch (e) {} }
-    document.documentElement.classList.add("aiOn");           // the app behind is turned off while the chat is open
     lockPage(); baseH = 0; lastKey = ""; kbWas = false; fit(true); fitSoon();
-    void panel.offsetWidth; panel.classList.add("on");        // (not requestAnimationFrame: it is paused in some background states and the window would stay invisible)
+    intro = startIntro(fr);
+    if (!intro) { document.documentElement.classList.add("aiOn"); void panel.offsetWidth; panel.classList.add("on"); }   // no animation: just there (not requestAnimationFrame, which is paused in some background states)
+    const my = intro;
+    try { await openLoad(); } finally { await finishIntro(my); }
+    if (matchMedia("(hover:hover)").matches) input.focus();
+  }
+
+  async function openLoad() {                 // what the chat needs before it can be shown
 
     const sid = LS.get("aiConv", null), lf = LS.get("aiLeft", 0);
     const recent = sid && lf && Date.now() - lf <= HOUR;
@@ -826,7 +923,6 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
       catch (e) { ms.innerHTML = '<div class="aiHe">' + esc2(errText(e)) + "</div>"; return; }
       if (recent) await loadConv(sid); else startNew();                                   // an hour or more away: a new conversation
     }
-    if (matchMedia("(hover:hover)").matches) input.focus();
   }
 
   function close(fromPop) {
@@ -834,7 +930,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
     left();
     try { if (document.activeElement === input) input.blur(); } catch (e) {}
     closeMenu(); const dlg = panel.querySelector(".aiDlg"); if (dlg) dlg.hidden = true;
-    panel.classList.remove("on"); panel.hidden = true;
+    clearIntro(); panel.classList.remove("on"); panel.hidden = true;
     document.documentElement.classList.remove("aiOn");        // ...and turned back on
     unlockPage();
     if (fab) { fab.hidden = false; }
