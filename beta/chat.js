@@ -471,6 +471,35 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiRtI>div{min-width:0;flex:1}.aiRtI b{display:block;font-size:14.5px;line-height:1.25}
 .aiRt.pills .aiRtI{display:inline-flex;margin:0 6px 6px 0;padding:5px 12px 5px 6px;border:1px solid color-mix(in srgb,var(--rc) 40%,var(--line));border-radius:99px;background:color-mix(in srgb,var(--rc) 12%,var(--card))}.aiRt.pills .aiRtI+.aiRtI{border-top:1px solid color-mix(in srgb,var(--rc) 40%,var(--line))}
 .aiRt.pills .aiRtI>i{min-width:30px;height:28px;border-radius:99px;font-size:14px}.aiRt.pills .aiRtI small{display:none}
+/* ---- desktop (a mouse and a wide screen): answers with cards use the whole column, side by side; hover feedback; the walk-through stays inside the column */
+@media (hover:hover){
+  .aiBk{transition:box-shadow .2s ease,border-color .2s ease}
+  .aiBk:hover{border-color:color-mix(in srgb,var(--bc) 55%,var(--line));box-shadow:0 10px 26px -14px color-mix(in srgb,var(--bc) 70%,transparent)}
+  .aiQuick button:hover{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+  .aiTk:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+}
+@media (min-width:900px){
+  .aiQuick{flex-wrap:wrap;overflow:visible;gap:8px}
+  .aiQuick button{font-size:14px;padding:7px 16px}
+  .aiB{max-width:min(88%,640px)}
+  .aiDmS{padding-left:max(14px,calc((100% - 840px) / 2 + 14px));padding-right:max(14px,calc((100% - 840px) / 2 + 14px));font-size:18px}
+  .aiDmSt b{font-size:20px}
+  .aiDemo.hero .aiDmS{left:50%;right:auto;width:min(700px,90%);padding:0;transform:translateX(-50%);font-size:22px}
+  .aiDemo.hero .aiDmSt b{font-size:36px;margin-bottom:8px}
+  .aiDmBtns,.aiDmGo{left:max(24px,calc(50% - 190px));right:max(24px,calc(50% - 190px))}
+  .aiDmBtns button,.aiDmGo{font-size:17px;padding:16px}
+  .aiDmGlow{width:560px;margin:-280px 0 0 -280px}
+  .aiDmX{width:42px;height:42px;inset-inline-start:max(14px,calc((100% - 840px) / 2))}
+}
+@supports selector(:has(a)){
+  @media (min-width:900px){
+    html[dir] .aiM.ai:has(.aiUi){align-self:stretch}
+    .aiM.ai:has(.aiUi) .aiB{flex:1;min-width:0;max-width:100%}
+    .aiUi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;align-items:start;min-width:0}
+    .aiUi>.aiUiT,.aiUi>.aiHero,.aiUi>.aiHg,.aiUi>.aiTg,.aiUi>.aiTbl,.aiUi>.aiAcc,.aiUi>.aiTb,.aiUi>.aiTm,.aiUi>.aiCmpC,.aiUi>.aiQuick,.aiUi>.aiCo,.aiUi>.aiBn,.aiUi>.aiLk,.aiUi>.aiHl,.aiUi>.aiFoc{grid-column:1/-1}
+    .aiUi>:last-child:nth-child(odd){grid-column:1/-1}
+  }
+}
 .aiWipe{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:18px 0 8px;padding:12px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--err,#e5484d) 55%,transparent);background:color-mix(in srgb,var(--err,#e5484d) 9%,transparent);color:var(--err,#e5484d);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .aiWipe svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .aiWipe:active{transform:scale(.98)}
@@ -2247,11 +2276,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 .atFace.atBreathe svg{animation:aiBreathe 2.6s ease-in-out infinite}
 .atRing{position:absolute;inset:-14px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 80%,#fff);opacity:0;animation:atRing 2.4s ease-out infinite}
 .atRing.r2{animation-delay:1.2s}
-.atTx{position:absolute;left:0;right:0;top:calc(50% + 100px);z-index:3;padding:0 24px;text-align:center;color:#fff;pointer-events:none}
+.atTx{position:absolute;left:0;right:0;top:calc(50% + 100px);z-index:3;padding:0 max(24px,calc((100% - 780px) / 2));text-align:center;color:#fff;pointer-events:none}
 .atTx b{display:block;text-shadow:0 2px 14px #000c;font-size:clamp(22px,6.4vw,32px);line-height:1.25;font-weight:800;letter-spacing:.2px}
 .atTx b span{display:inline-block;opacity:0;animation:atWord .7s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 .atTx small{display:block;margin-top:10px;font-size:clamp(14px,4vw,17px);color:#ffffffb8;opacity:0;animation:atSub .7s .55s ease-out both}
 .atTx.atGone{animation:atGone .45s ease-in both}
+@media (min-width:900px){.atTx b{font-size:42px}.atTx small{font-size:20px;margin-top:14px}.atSkip{width:46px;height:46px}}
 .atChips{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .atChips i{font-style:normal;padding:6px 14px;border-radius:99px;background:#ffffff1f;border:1px solid #ffffff3d;color:#fff;font-size:14px;opacity:0;animation:atChip .6s var(--cd) cubic-bezier(.2,.9,.3,1.4) both}
 .atIcon{margin:16px auto 0;width:44px;height:44px;color:color-mix(in srgb,var(--accent) 55%,#fff);opacity:0;animation:atChip .7s .45s cubic-bezier(.2,.9,.3,1.4) both}
@@ -2319,7 +2349,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const face = root.querySelector(".atFace"), inner = root.querySelector(".atIn"), txEl = root.querySelector(".atTx"), dots = root.querySelectorAll(".atDots i");
     const setFace = (x, y, s, r) => { face.style.setProperty("--fx", x + "px"); face.style.setProperty("--fy", y + "px"); face.style.setProperty("--fs", s); face.style.setProperty("--fr", r + "deg"); };
     // where the face rests in each scene (a little drift and tilt, like it is alive); the last scene flies it onto the real button
-    const hh = vh / 2, ww = vw / 2;
+    const ds = vw >= 900 ? 1.4 : 1;                          // a wide screen: Uri is bigger and roams a central area, near the words
+    const hh = vh / 2, ww = Math.min(vw, 620) / 2;
     const lay = [
       { f: [0, -hh * .26, 1, 0], top: "calc(50% + 100px)", dx: 0 },
       { f: [-ww * .42, hh * .5, .8, -10], top: "max(56px, calc(50% - 250px))", dx: 0 },
@@ -2355,7 +2386,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         txEl.style.top = "calc(50% - 70px)"; txEl.style.left = "0px"; txEl.style.right = "0px";
         inner.className = "atIn w5";
       } else {
-        const L = lay[Math.min(i, lay.length - 1)]; setFace(L.f[0], L.f[1], L.f[2], L.f[3]);
+        const L = lay[Math.min(i, lay.length - 1)]; setFace(L.f[0], L.f[1], L.f[2] * ds, L.f[3]);
         txEl.style.top = L.top; txEl.style.left = L.dx + "px"; txEl.style.right = -L.dx + "px";
         face.classList.add("atBreathe");
         inner.className = "atIn w" + (i + 1);
@@ -2375,7 +2406,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     }
     const skipBtn = root.querySelector(".atSkip"); if (skipBtn) skipBtn.addEventListener("click", e => { e.stopPropagation(); finish(); });
     // timeline: the face grows out of the circle into the middle of the screen, then the scenes follow one another
-    later(() => { setFace(0, -vh / 2 * .26, 1, 0); face.classList.add("atBreathe"); }, 350);
+    later(() => { setFace(0, -vh / 2 * .26, ds, 0); face.classList.add("atBreathe"); }, 350);
     later(burst, 1000);
     const START = 1300, STEP = 2800;
     scenes.forEach((sc, i) => {
@@ -2502,7 +2533,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       // x, y are percentages of the screen (physical left/top), size in px; the speech bubble goes below Uri when Uri is in the upper half, above it otherwise
       place(x, y, size, hero) {
         ov.classList.toggle("hero", !!hero);
-        M.style.setProperty("--mx", x); M.style.setProperty("--my", y); M.style.setProperty("--ms", size + "px");
+        const wide = innerWidth >= 900, k = wide ? Math.min(1, 900 / innerWidth) : 1, ds = wide ? 1.45 : 1;          // a wide screen: Uri stays near the conversation column and is bigger
+        M.style.setProperty("--mx", 50 + (x - 50) * k); M.style.setProperty("--my", y); M.style.setProperty("--ms", Math.round(size * ds) + "px");
         S.style.top = hero ? "calc(" + y + "% + " + (size / 2 + 20) + "px)" : "";
       },
       say(t, html) {
