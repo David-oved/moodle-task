@@ -216,6 +216,8 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiTkBar{flex:1;height:5px;border-radius:99px;background:color-mix(in srgb,var(--dc) 16%,transparent);overflow:hidden;display:block}
 .aiTkBar u{display:block;height:100%;width:calc(var(--u) * 100%);border-radius:inherit;background:var(--dc);text-decoration:none}
 .aiTk.hot{border-color:color-mix(in srgb,var(--dc) 55%,var(--line))}
+.aiTk.late{border-color:#e5484d88}
+.aiTk.late .aiTkS{background:#e5484d;color:#fff;border-inline-end-color:#fff8}
 .aiTk.hot .aiTkS{background:var(--dc);color:#fff;border-inline-end-color:#fff8}
 .aiTl{position:relative;padding-inline-start:20px}
 .aiTl::before{content:"";position:absolute;inset-inline-start:5px;top:8px;bottom:8px;width:2px;border-radius:2px;background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 15%,transparent))}
@@ -273,12 +275,12 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiMs,.aiHs{padding-left:max(12px,env(safe-area-inset-left),calc((100% - 840px) / 2));padding-right:max(12px,env(safe-area-inset-right),calc((100% - 840px) / 2))}
 
 /* long-press menu on a message */
-.aiMnBg{position:absolute;inset:0;z-index:6;background:#0003}
+.aiMnBg{position:absolute;inset:0;z-index:5;background:#0000004d;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
 .aiMn{position:absolute;z-index:7;min-width:200px;max-width:calc(100% - 16px);padding:6px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 40px #0006;display:flex;flex-direction:column}
 .aiMi{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;font-size:15px;text-align:start;cursor:pointer}
 .aiMi:hover,.aiMi:focus-visible{background:var(--accent-soft);outline:none}
 .aiMi svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--accent-t,var(--accent))}
-.aiB.aiHold{outline:2px solid var(--accent);outline-offset:2px}
+.aiHold{position:relative;z-index:6;transform:scale(1.045);box-shadow:0 14px 34px -8px #000a,0 0 0 2px color-mix(in srgb,var(--accent) 70%,transparent);transition:transform .22s cubic-bezier(.34,1.5,.64,1),box-shadow .22s}
 @media (hover:none){ .aiP{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} .aiP textarea,.aiP input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default} .aiB{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} }
 .aiB.aiSel{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 
@@ -646,10 +648,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const ordDay = (t) => { const d = new Date(t * 1000); return { wd: dlt().days[d.getDay()], day: d.getDate(), mon: d.toLocaleDateString(dlt().loc, { month: "short" }) }; };
   // how full the "time left" bar is: empty far away, full when it is due
   const uiUrgency = t => Math.max(0.05, Math.min(1, 1 - (t * 1000 - Date.now()) / (5 * 86400000)));
-  const itAttr = (k, it) => ' data-it="' + esc2(JSON.stringify({ k, n: it.n || "", c: it.c || "", v: it.v || "" })) + '"';
+  const itAttr = (k, it) => ' data-it="' + esc2(JSON.stringify({ k, n: it.n || "", c: it.c || "", v: it.v || "", t: it.t || 0, d: it.d || "", u: it.u || "", o: it.o ? 1 : 0 })) + '"';
   function uiTicket(it) {
-    const o = ordDay(it.t), left = it.t * 1000 - Date.now(), hot = left < 86400000, col = "hsl(" + dlHue(it.c) + " 72% 58%)";
-    return '<div class="aiTk' + (hot ? " hot" : "") + '"' + itAttr("d", it) + ' style="--dc:' + col + ';--u:' + uiUrgency(it.t).toFixed(2) + '"><div class="aiTkS"><small>' + esc2(o.wd) + "</small><b>" + o.day + "</b><small>" + esc2(o.mon) + '</small></div>' +
+    const o = ordDay(it.t), left = it.t * 1000 - Date.now(), late = left < 0, hot = left < 86400000, col = late ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)";
+    return '<div class="aiTk' + (late ? " late" : hot ? " hot" : "") + '"' + itAttr("d", it) + ' style="--dc:' + col + ';--u:' + uiUrgency(it.t).toFixed(2) + '"><div class="aiTkS"><small>' + esc2(o.wd) + "</small><b>" + o.day + "</b><small>" + esc2(o.mon) + '</small></div>' +
       '<div class="aiTkB"><b>' + esc2(it.n) + "</b><em>" + esc2(it.c) + '</em><div class="aiTkT"><span data-due="' + it.t + '">' + esc2(dlRel(it.t, false)) + '</span><i class="aiTkBar"><u></u></i></div></div></div>';
   }
   function uiTimeline(items) {
@@ -658,12 +660,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     return '<div class="aiTl">' + days.map(g => {
       const dd = Math.round((g.k - today) / 86400000), o = ordDay(g.t);
       const label = dd <= 0 ? T.today : dd === 1 ? T.tm.trim() : o.wd + " " + o.day + " " + o.mon;
-      return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR"' + itAttr("d", it) + ' style="--dc:hsl(' + dlHue(it.c) + ' 72% 58%)"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(dlTime(it.t)) + "</span></div>").join("") + "</div>";
+      return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR"' + itAttr("d", it) + ' style="--dc:' + (it.t * 1000 < Date.now() ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)") + '"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(dlTime(it.t)) + "</span></div>").join("") + "</div>";
     }).join("") + "</div>";
   }
   function uiFocus(items) {
     const f = items[0], hrs = Math.max(0, Math.round((f.t * 1000 - Date.now()) / 3600000)), big = hrs < 48 ? hrs : Math.round(hrs / 24), unit = hrs < 48 ? dlt().hr.trim() : dlt().day.trim();
-    const col = "hsl(" + dlHue(f.c) + " 72% 58%)";
+    const col = f.t * 1000 < Date.now() ? "#e5484d" : "hsl(" + dlHue(f.c) + " 72% 58%)";
     return '<div class="aiFc"' + itAttr("d", f) + ' style="--dc:' + col + '"><div class="aiFcN"><b data-focus="' + f.t + '">' + big + "</b><small>" + esc2(unit) + '</small></div><div class="aiFcX"><b>' + esc2(f.n) + "</b><em>" + esc2(f.c) + "</em><span data-due=\"" + f.t + "\">" + esc2(dlRel(f.t, false)) + "</span></div></div>" +
       items.slice(1).map(it => uiTicket(it)).join("");
   }
@@ -1161,19 +1163,23 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   // long press on a task, a course or a grade inside the AI's cards: ask about it, get its files, and so on
   const ITM = {
-    he: { ask: "שאל על זה", files: "הקבצים של זה", tasks: "המטלות בקורס", grades: "הציונים בקורס", cfiles: "הקבצים של הקורס", copy: "העתק",
+    he: { open: "פתח ב-Moodle", ask: "שאל על זה", files: "הקבצים של זה", tasks: "המטלות בקורס", grades: "הציונים בקורס", cfiles: "הקבצים של הקורס", copy: "העתק",
       q: { d: (n, c) => 'ספר לי על המטלה "' + n + '" בקורס ' + c, df: (n, c) => 'שלח לי קבצים שקשורים ל"' + n + '" בקורס ' + c, g: (n) => 'ספר לי על הציון "' + n + '" ואיך הוא מחושב', c: (n) => "ספר לי על הקורס " + n, ct: (n) => "מה המטלות שלי בקורס " + n + "?", cg: (n) => "מה הציונים שלי בקורס " + n + "?", cf: (n) => "אילו קבצים יש בקורס " + n + "?" } },
-    en: { ask: "Ask about this", files: "Files for this", tasks: "Tasks in this course", grades: "Grades in this course", cfiles: "Course files", copy: "Copy",
+    en: { open: "Open in Moodle", ask: "Ask about this", files: "Files for this", tasks: "Tasks in this course", grades: "Grades in this course", cfiles: "Course files", copy: "Copy",
       q: { d: (n, c) => 'Tell me about the task "' + n + '" in ' + c, df: (n, c) => 'Send me files related to "' + n + '" in ' + c, g: (n) => 'Tell me about the grade "' + n + '" and how it is calculated', c: (n) => "Tell me about the course " + n, ct: (n) => "What are my tasks in " + n + "?", cg: (n) => "What are my grades in " + n + "?", cf: (n) => "Which files are in " + n + "?" } },
-    fr: { ask: "Poser une question", files: "Fichiers liés", tasks: "Devoirs du cours", grades: "Notes du cours", cfiles: "Fichiers du cours", copy: "Copier",
+    fr: { open: "Ouvrir dans Moodle", ask: "Poser une question", files: "Fichiers liés", tasks: "Devoirs du cours", grades: "Notes du cours", cfiles: "Fichiers du cours", copy: "Copier",
       q: { d: (n, c) => 'Parle-moi du devoir "' + n + '" dans ' + c, df: (n, c) => 'Envoie-moi les fichiers liés à "' + n + '" dans ' + c, g: (n) => 'Parle-moi de la note "' + n + '" et de son calcul', c: (n) => "Parle-moi du cours " + n, ct: (n) => "Quels sont mes devoirs en " + n + " ?", cg: (n) => "Quelles sont mes notes en " + n + " ?", cf: (n) => "Quels fichiers y a-t-il dans " + n + " ?" } },
   };
   function openItemMenu(el, x, y, byKey) {
     let d; try { d = JSON.parse(el.dataset.it); } catch (e) { return; }
     const T = ITM[lang()] || ITM.he, n = d.n || "", c = d.c || "";
-    const go = q => () => { send(q); };
+    const ctxOf = { n, c, t: d.t || 0, d: d.d || "", v: d.v || "", o: d.o ? 1 : 0 };
+    const go = q => () => { send(q, ctxOf); };
     const items = [];
-    if (d.k === "d") { items.push({ icon: I_NEW, label: T.ask, run: go(T.q.d(n, c)) }, { icon: I_SELECT, label: T.files, run: go(T.q.df(n, c)) }); }
+    if (d.k === "d") {
+      items.push({ icon: I_NEW, label: T.ask, run: go(T.q.d(n, c)) }, { icon: I_SELECT, label: T.files, run: go(T.q.df(n, c)) });
+      if (typeof d.u === "string" && d.u.startsWith("https://moodle.jct.ac.il/")) items.push({ icon: I_SHARE, label: T.open, run: () => { window.open(d.u, "_blank", "noopener,noreferrer"); } });
+    }
     else if (d.k === "c") { items.push({ icon: I_NEW, label: T.ask, run: go(T.q.c(n)) }, { icon: I_SELECT, label: T.tasks, run: go(T.q.ct(n)) }, { icon: I_SELECT, label: T.grades, run: go(T.q.cg(n)) }, { icon: I_SELECT, label: T.cfiles, run: go(T.q.cf(n)) }); }
     else if (d.k === "g") items.push({ icon: I_NEW, label: T.ask, run: go(T.q.g(n)) });
     items.push({ icon: I_COPY, label: T.copy, run: async () => toast((await copyText(n + (c ? " - " + c : "") + (d.v ? ": " + d.v : ""))) ? tx("copied") : tx("errGen"), 1600) });
@@ -1237,7 +1243,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   /* ------------------------------------------------------------ sending */
-  async function send(text) {
+  async function send(text, ctx) {
     text = String(text || "").trim().slice(0, 2000);
     if (!text || busy) return;
     gen++;                                    // a pending history/load result must not overwrite the chat now
@@ -1261,12 +1267,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         if (!r.ok) throw new AiErr(errKind(r));
         conv = (await r.json()).id; LS.set("aiConv", conv);
       }
-      let res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true } });
+      let res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true, ctx: ctx || undefined } });
       if (res.status === 404) {                // the conversation is gone on the server: start a new one and send again
         const r = await call("/api/conversations", { method: "POST" });
         if (!r.ok) throw new AiErr(errKind(r));
         conv = (await r.json()).id; LS.set("aiConv", conv);
-        res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true } });
+        res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true, ctx: ctx || undefined } });
       }
       if (!res.ok) throw new AiErr(errKind(res));
       clearTimeout(wake); setStatus();
