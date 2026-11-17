@@ -276,6 +276,9 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiMi:hover,.aiMi:focus-visible{background:var(--accent-soft);outline:none}
 .aiMi svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--accent-t,var(--accent))}
 .aiHoldRow{position:relative;z-index:6}
+.aiP:not(.aiBusy) .aiHd .aiAv{animation:aiBreathe 4.2s ease-in-out infinite}
+.aiTk,.aiTlR,.aiGg,.aiCh span,.aiFc,.aiCo{transition:transform .16s ease,background-color .2s}
+.aiTk:active,.aiTlR:active,.aiGg:active,.aiCh span:active,.aiFc:active{transform:scale(.982)}
 .aiPeek{position:absolute;z-index:7;width:48px;height:30px;overflow:hidden;pointer-events:none}
 .aiPeekF{position:absolute;left:0;bottom:-20px;width:48px;height:48px;animation:aiPeekUp .6s .1s cubic-bezier(.34,1.56,.64,1) both}
 .aiPeekF svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 3px 8px #0007);animation:aiPeekLook 2.6s .8s ease-in-out infinite}
@@ -943,7 +946,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   const atEnd = () => ms.scrollHeight - ms.scrollTop - ms.clientHeight < 90;
-  function scrollEnd(force) { if (force || atEnd()) ms.scrollTop = ms.scrollHeight; }
+  // a new message glides into view; while an answer streams the list just stays glued to the end (no competing animations = no shaking)
+  function scrollEnd(force) {
+    if (!(force || atEnd())) return;
+    if (force && !busy && !matchMedia("(prefers-reduced-motion: reduce)").matches) { try { ms.scrollTo({ top: ms.scrollHeight, behavior: "smooth" }); return; } catch (e) {} }
+    ms.scrollTop = ms.scrollHeight;
+  }
 
   function setMode() {
     const sub = histMode || memMode;
