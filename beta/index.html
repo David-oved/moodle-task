@@ -142,6 +142,8 @@ body.app[data-view=tasks] #dash,body.app[data-view=tasks] #ttv{display:none}
 body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
 body.app[data-view=chat] #dash,body.app[data-view=chat] #tasks,body.app[data-view=chat] #ttv{display:none}
 #chatv{display:none}body.app[data-view=chat] #chatv{display:block}
+#pgv{display:none}body.app.xv #pgv{display:block}body.app.xv :is(#dash,#tasks,#ttv,#chatv){display:none!important}
+.tabbar .xtab{display:none!important}
 /* settings live in the tab bar now (phone + tablet) and in the side bar (computer): no gear in the header */
 #bSet{display:none!important}
 .tabbar .sbset{display:flex}
@@ -250,6 +252,67 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 }
 .dtop .dedit.sm{padding:5px 10px;font-size:12.5px;font-weight:600;color:var(--muted);background:none;border-color:transparent;gap:5px}
 .dtop .dedit.sm .i{width:15px;height:15px}
+
+/* ---------- tablet & computer: the extra tabs and their pages ---------- */
+@media (min-width:600px){
+  .tabbar .xtab:not([hidden]){display:flex!important}
+  .tabbar .home{order:1}.tabbar [data-v=tasks]{order:2}.tabbar [data-v=tt]{order:3}.tabbar [data-v=exams]{order:4}.tabbar [data-v=grades]{order:5}.tabbar [data-v=courses]{order:6}.tabbar [data-v=news]{order:7}.tabbar [data-v=chat]{order:8}.tabbar .sbset{order:9}
+}
+@media (min-width:600px) and (max-width:999px){
+  .tabbar{width:min(880px,calc(100% - 24px));gap:2px;padding:5px}
+  .tabbar button{flex:1 1 0;min-width:0;flex-direction:column;gap:2px;font-size:11.5px;padding:6px 2px 5px;border-radius:16px}
+  .tabbar button b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tabbar .ti{position:relative}
+  .tabbar .badge{inset-block-start:-6px;inset-inline-end:-12px}
+  body.app main{padding-bottom:110px}
+}
+@media (min-width:1000px){ body.app .tabbar [data-v=exams]{margin-top:12px;position:relative}
+  body.app .tabbar [data-v=exams]::before{content:"";position:absolute;top:-7px;inset-inline:10px;border-top:1px solid var(--line)} }
+#pgv{max-width:1180px;margin:0 auto;padding-bottom:24px}
+.pghd{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin:4px 2px 14px}
+.pghd h2{font-size:22px;font-weight:800;margin:0;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.pghd h2 .i{width:22px;height:22px;color:var(--accent-t)}
+.pghd .hint{flex:1;min-width:160px}
+.pghd .pgact{display:flex;gap:8px;flex-wrap:wrap}
+.pgsec{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin:20px 2px 10px;color:var(--muted)}
+.pgsec .i{width:17px;height:17px}
+.pgbox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px}
+.pgchips{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}.pgchips::-webkit-scrollbar{display:none}
+.pgchips .chip{flex:none;display:inline-flex;align-items:center;gap:6px}
+.pgchips .chip i.cd0{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.pgchips .chip{opacity:.8}.pgchips .chip.on{opacity:1}
+.pgchips .pgn{font-size:11.5px;font-weight:700;color:#fff;background:var(--err);border-radius:99px;padding:0 7px;line-height:18px}
+.pgnews{display:grid;gap:16px;align-items:start}
+@media (min-width:1000px){ .pgnews{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)} }
+.pgnews .pgbox > .hint{padding:6px 0}
+#pgv .ni{margin-bottom:6px}
+#pgv .grcols{columns:2 380px;column-gap:14px}
+#pgv .grcols .grc{break-inside:avoid;display:block}
+.pgcrsg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.pgcrs{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;border-top:4px solid var(--c)}
+.pgcrs .pgch{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 14px 6px}
+.pgcrs .pgch b{font-size:16.5px;font-weight:800;line-height:1.25;flex:1;min-width:0}
+.pgcrs .pgch .nb{flex:none}
+.pgcrs .pgch:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.pgcrs .pgtl{display:flex;gap:8px;padding:4px 14px 8px}
+.pgcrs .pgtl span{flex:1;background:color-mix(in srgb,var(--c) 10%,transparent);border-radius:12px;padding:7px 8px;text-align:center;font-size:12px;color:var(--muted)}
+.pgcrs .pgtl b{display:block;font-size:19px;color:var(--text);font-weight:800;line-height:1.2}
+.pgcrs .pgtl span.late b{color:var(--err)}
+.pgcrs .pgnx{all:unset;cursor:pointer;display:flex;align-items:center;gap:9px;padding:7px 14px;font-size:13.5px;border-top:1px solid var(--line)}
+.pgcrs .pgnx:hover{background:color-mix(in srgb,var(--text) 4%,transparent)}
+.pgcrs .pgnx .i{width:16px;height:16px;color:var(--c);flex:none}
+.pgcrs .pgnx .sw{flex:1;min-width:0;display:flex;flex-direction:column}
+.pgcrs .pgnx .sw b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pgcrs .pgnx .sw small{color:var(--muted);font-size:12px}
+.pgcrs .pgbt{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px 13px;margin-top:auto;border-top:1px solid var(--line)}
+.pgcrs .pgbt .btn{font-size:13px;padding:6px 10px}
+.pgold{display:flex;flex-wrap:wrap;gap:8px}
+.pgold .chip{display:inline-flex;align-items:center;gap:6px}
+.pgexg{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+.pgexg .er{margin:0}
+.pgsem{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pgsem .wbar{flex:1;min-width:160px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.pgsem .wbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
 .dfoot{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 8px}
 .dedit2{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border:0;background:none;color:var(--accent-t);font-size:15.5px;font-weight:700}
 .dedit2 .i{width:19px;height:19px}
@@ -1327,7 +1390,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
   .tabbar .home.on{color:var(--accent-t)}
   .tabbar .home:not(.on) .ti{background:color-mix(in srgb,var(--accent) 82%,var(--card))!important}
 }
-@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=chat]{order:3} body.app .tabbar [data-v=tt]{order:4} body.app .tabbar .sbset{order:9} }
+@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=tt]{order:3} body.app .tabbar [data-v=exams]{order:4} body.app .tabbar [data-v=grades]{order:5} body.app .tabbar [data-v=courses]{order:6} body.app .tabbar [data-v=news]{order:7} body.app .tabbar [data-v=chat]{order:8} body.app .tabbar .sbset{order:9} }
 @media (max-width:999px){ .tabbar .sbset.has-dot::after{top:4px;inset-inline-end:calc(50% - 22px)} }
 @media (min-width:600px) and (max-width:999px){ .tabbar button{font-size:13.5px;padding:8px 4px} }
 /* X instead of "סגירה" */
@@ -1559,6 +1622,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
   </section>
 
   <section id="chatv"><div id="chatList"></div></section>
+  <section id="pgv" aria-live="off"></section>   <!-- tablet & computer: the grades / courses / announcements / exams tabs -->
   <section id="tasks">
     <div class="sech"><span data-i18n="viewTasks"></span><span class="hint" id="sechN"></span></div>
     <div id="focus" class="focus" hidden><span id="focusTxt"></span><button id="bFocusCrs" class="link" hidden data-i18n="crsOpen"></button><button id="bFocusClear" data-i18n="clearFocus"></button></div>
@@ -1585,6 +1649,10 @@ body.app:not([data-view=dash]) .dfoot{display:none}
   <button data-v="chat" class="b"><span class="ti"><svg class="i"><use href="#i-message-circle"/></svg><i class="badge" id="chatBadge" hidden></i></span><b data-i18n="viewChat"></b></button>
   <button data-v="dash" class="b home"><span class="ti"><svg class="i"><use href="#i-layout-dashboard"/></svg></span><b data-i18n="viewDash"></b></button>
   <button data-v="tt" class="b"><span class="ti"><svg class="i"><use href="#i-calendar-days"/></svg></span><b data-i18n="viewTT"></b></button>
+  <button data-v="exams" class="b xtab"><span class="ti"><svg class="i"><use href="#i-graduation-cap"/></svg><i class="badge" id="xbExams" hidden></i></span><b data-i18n="tabExams"></b></button>
+  <button data-v="grades" class="b xtab"><span class="ti"><svg class="i"><use href="#i-award"/></svg><i class="badge" id="xbGrades" hidden></i></span><b data-i18n="tabGrades"></b></button>
+  <button data-v="courses" class="b xtab"><span class="ti"><svg class="i"><use href="#i-book-open"/></svg></span><b data-i18n="tabCourses"></b></button>
+  <button data-v="news" class="b xtab"><span class="ti"><svg class="i"><use href="#i-megaphone"/></svg><i class="badge" id="xbNews" hidden></i></span><b data-i18n="tabNews"></b></button>
   <button class="b sbset" id="bNavSet"><span class="ti"><svg class="i"><use href="#i-settings"/></svg></span><b data-i18n="settings"></b></button>
 </nav>
 
@@ -2214,6 +2282,7 @@ const I18N = {
     pctSem: n => n + "% מהסמסטר", examsLbl: "📝 מבחנים",
     semDates: "תאריכי הסמסטר", semHint: "לפי לוח השנה האקדמי של המוסד. מה שתזין כאן גובר על ברירת המחדל.", semStart: "תחילת הסמסטר", semEnd: "יום הלימודים האחרון",
     exStart: "תחילת המבחנים", exEnd: "סוף המבחנים", semAuto: "↺ מחק את מה שהזנתי",
+    tabExams: "מבחנים", tabGrades: "ציונים", tabCourses: "קורסים", tabNews: "הודעות", pgGrOn: "להפעיל את הציונים", pgNew: n => n + " חדש", pgChat: "צ׳אט", pgCrsN: n => n + " קורסים פעילים", pgCrsOld: n => "קורסים קודמים (" + n + ")", pgCrsHid: n => n === 1 ? "קורס אחד מוסתר." : n + " קורסים מוסתרים.", pgManage: "ניהול הקורסים", pgAll: "הכל", pgAnn: "הודעות מהמרצים", pgFresh: "חדש בקורסים (שבוע אחרון)", pgFreshNone: "אין משהו חדש בשבוע האחרון", pgExAdd: "בוחן או מבחן", pgExEdit: "מועדי המבחנים",
     newsTitle: "הודעות מהקורסים", newsNone: "אין הודעות ב-45 הימים האחרונים", newsOff: "לא הצלחתי לטעון הודעות", markAllRead: "סמן הכל כנקרא", newsOpen: "פתח בפורום ↗",
     newsMore: n => "עוד " + n + " הודעות", newsLess: "הצג פחות", newsLoading: "טוען הודעות…",
     examsTitle: "מבחנים", exNone: "עוד לא הוזנו מועדי מבחנים. Moodle לא מפרסם אותם, אז מזינים פעם אחת לכל קורס.", exAddBtn: "📝 הזן מועדי מבחנים",
@@ -2456,6 +2525,7 @@ const I18N = {
     pctSem: n => n + "% of the semester", examsLbl: "📝 Exams",
     semDates: "Semester dates", semHint: "From your institution’s academic calendar. What you enter here overrides the default.", semStart: "Semester start", semEnd: "Last day of classes",
     exStart: "Exams start", exEnd: "Exams end", semAuto: "↺ Clear what I entered",
+    tabExams: "Exams", tabGrades: "Grades", tabCourses: "Courses", tabNews: "News", pgGrOn: "Turn grades on", pgNew: n => n + " new", pgChat: "Chat", pgCrsN: n => n + " active courses", pgCrsOld: n => "Earlier courses (" + n + ")", pgCrsHid: n => n === 1 ? "1 course is hidden." : n + " courses are hidden.", pgManage: "Manage courses", pgAll: "All", pgAnn: "From the lecturers", pgFresh: "New in your courses (last week)", pgFreshNone: "Nothing new in the last week", pgExAdd: "Quiz or exam", pgExEdit: "Exam dates",
     newsTitle: "Course announcements", newsNone: "No announcements in the last 45 days", newsOff: "Couldn’t load announcements", markAllRead: "Mark all read", newsOpen: "Open in forum ↗",
     newsMore: n => n + " more", newsLess: "Show less", newsLoading: "Loading announcements…",
     examsTitle: "Exams", exNone: "No exam dates yet. Moodle doesn’t publish them, so you enter them once per course.", exAddBtn: "📝 Enter exam dates",
@@ -2698,6 +2768,7 @@ const I18N = {
     pctSem: n => n + " % du semestre", examsLbl: "📝 Examens",
     semDates: "Dates du semestre", semHint: "Selon le calendrier académique de l’établissement. Ce que vous saisissez ici remplace la valeur par défaut.", semStart: "Début du semestre", semEnd: "Dernier jour de cours",
     exStart: "Début des examens", exEnd: "Fin des examens", semAuto: "↺ Effacer mes dates",
+    tabExams: "Examens", tabGrades: "Notes", tabCourses: "Cours", tabNews: "Annonces", pgGrOn: "Activer les notes", pgNew: n => n + " nouv.", pgChat: "Chat", pgCrsN: n => n + " cours actifs", pgCrsOld: n => "Cours précédents (" + n + ")", pgCrsHid: n => n === 1 ? "1 cours masqué." : n + " cours masqués.", pgManage: "Gérer les cours", pgAll: "Tout", pgAnn: "Des enseignants", pgFresh: "Nouveau dans vos cours (7 jours)", pgFreshNone: "Rien de nouveau cette semaine", pgExAdd: "Contrôle ou examen", pgExEdit: "Dates d’examen",
     newsTitle: "Annonces des cours", newsNone: "Aucune annonce depuis 45 jours", newsOff: "Impossible de charger les annonces", markAllRead: "Tout marquer comme lu", newsOpen: "Ouvrir dans le forum ↗",
     newsMore: n => n + " de plus", newsLess: "Afficher moins", newsLoading: "Chargement des annonces…",
     examsTitle: "Examens", exNone: "Aucune date d’examen. Moodle ne les publie pas : saisissez-les une fois par cours.", exAddBtn: "📝 Saisir les dates d’examen",
@@ -3833,11 +3904,7 @@ function examList() {
   return out.filter(x => !isOff(x.cid)).sort((a, b) => a.ts - b.ts);
 }
 const dayDate = ts => { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", year: "numeric" }); } catch (e) { return ymd(ts); } };
-function renderExams(now) {
-  const el = $("#exams"), L = examList().filter(x => x.allDay ? addD(x.ts, 1) > now : x.ts > now - 3 * 3600), so = S("examOffers", now);
-  if (!L.length) { el.innerHTML = so + '<div class="exempty">' + esc(t("exNone")) + '<button data-exedit>' + lbl("exAddBtn", "graduation-cap") + "</button></div>"; return; }
-  const N = 5, shown = V.exAll ? L : L.slice(0, N);
-  el.innerHTML = so + shown.map(x => {
+function exRowHTML(x, now) {
     const days = daysBetween(now, x.ts);
     const right = x.allDay ? (days >= 2 ? '<span class="en">' + days + '</span><span class="eu">' + esc(t("daysU", days)) + "</span>" : '<span class="en" style="font-size:15px">' + esc(t(days === 1 ? "exTomorrow" : "exToday")) + "</span>")
       : x.ts <= now || days === 0 ? '<span class="en" style="font-size:15px">' + esc(t("exToday")) + "</span>" + (x.ts > now ? cdSpan(x.ts, now) : "")
@@ -3845,7 +3912,12 @@ function renderExams(now) {
     return '<button class="er ' + x.m + (x.ts - now < 3 * DAY ? " soon" : "") + '" ' + (x.m === "q" ? 'data-xqedit="' + x.id + '"' : "data-exedit") + ' style="--c:' + (x.cid ? colorOf(x.cid) : "var(--muted)") + '"><span class="eb"><b><bdi>' + esc(exName(x)) +
       "</bdi></b><small>" + (x.m === "q" ? '<span class="qk">' + esc(exLbl(x)) + "</span>" + esc(" · " + (x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.k !== "other" && x.note ? " · " + x.note : "")) : esc(exLbl(x) + " · " + (x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.lev && x.lev.note ? " · " + x.lev.note : ""))) +
       (x.lev ? ' <span class="lv">' + esc(t(x.lev.draft ? "exLev" : "exLevFinal")) + "</span>" : "") + '</small></span><span class="ec">' + right + "</span></button>";
-  }).join("") + (L.length > N ? '<button class="link" data-exall>' + esc(V.exAll ? t("newsLess") : t("exMore", L.length - N)) + "</button>" : "") +
+  }
+function renderExams(now) {
+  const el = $("#exams"), L = examList().filter(x => x.allDay ? addD(x.ts, 1) > now : x.ts > now - 3 * 3600), so = S("examOffers", now);
+  if (!L.length) { el.innerHTML = so + '<div class="exempty">' + esc(t("exNone")) + '<button data-exedit>' + lbl("exAddBtn", "graduation-cap") + "</button></div>"; return; }
+  const N = 5, shown = V.exAll ? L : L.slice(0, N);
+  el.innerHTML = so + shown.map(x => exRowHTML(x, now)).join("") + (L.length > N ? '<button class="link" data-exall>' + esc(V.exAll ? t("newsLess") : t("exMore", L.length - N)) + "</button>" : "") +
     (shown.some(x => x.lev && x.lev.draft) ? '<div class="exnote">ⓘ ' + esc(t("exLevNote", new Date(parseYmd(shown.find(x => x.lev).lev.published) * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric", year: "numeric" }))) + "</div>" : "");
 }
 function renderExSheet() {
@@ -4156,7 +4228,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.0-beta.4";
+const APP_VERSION = "1.9.0-beta.5";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4469,6 +4541,7 @@ function grSection(cid) {
 /* the grades page: what's new, then every course with all its grades */
 const GP = { open: {} };
 function openGrades(cid) {
+  if (xtabsOn()) return goGrades(cid);            // tablet & computer: grades have their own tab
   useHit("gradesPage"); $$(".sheet:not([hidden])").forEach(sh => { if (sh.id !== "grSheet") sh.hidden = true; });
   if (cid) GP.open[cid] = true;
   renderGrades(); $("#grSheet").hidden = false; $("#grBox").scrollTop = 0;
@@ -4477,24 +4550,30 @@ function openGrades(cid) {
 }
 function renderGrades() {
   const box = $("#grBox"); if (!box || !V.data) return;
-  const g = grAll(), now = nowS(), cs = V.data.courses.filter(c => !isOff(c.id) && courseCurrent(c, now));
+  const g = grAll();
   let h = '<div class="crshead grhead"><div class="crsht">' + ic("award") + "<h3>" + esc(t("grPageT")) + '</h3><button class="xbtn" data-grx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button></div>" +
     '<div class="hint">' + (g.at ? esc(t("grAt", ago(Math.floor(g.at / 1000)))) + " · " : "") + (GR.busy ? esc(t("grLoading")) : '<button class="link" data-grre>' + esc(t("refresh")) + "</button>") + "</div></div>";
-  if (!grOn()) { box.innerHTML = h + '<p class="hint">' + esc(t("grOffHint")) + "</p>"; return; }
+  const top = box.scrollTop; box.innerHTML = h + grBodyHTML(false); box.scrollTop = top;
+  if (V.view === "grades") renderPage();
+}
+function grBodyHTML(page) {
+  const g = grAll(), now = nowS(), cs = V.data.courses.filter(c => !isOff(c.id) && courseCurrent(c, now));
+  if (!grOn()) return '<p class="hint">' + esc(t("grOffHint")) + "</p>" + (page ? '<button class="primary" data-pggron>' + ic("award") + " " + esc(t("pgGrOn")) + "</button>" : "");
+  let h = "";
   const recent = [];
   for (const c of cs) for (const it of ((g.c[c.id] || {}).items || [])) if (it.raw != null && it.at && now - it.at < 14 * DAY) recent.push([it, c.id]);
   recent.sort((a, b) => b[0].at - a[0].at);
   if (recent.length) h += '<div class="grsec">' + ic("sparkles") + "<span>" + esc(t("grRecent")) + "</span></div>" + recent.slice(0, 8).map(([it, cid]) => grRow(it, cid, true)).join("");
   h += '<div class="grsec">' + ic("book-open") + "<span>" + esc(t("grByCourse")) + "</span></div>";
-  h += cs.map(c => {
+  h += (page ? '<div class="grcols">' : "") + cs.map(c => {
     const cg = g.c[c.id] || {}, got = (cg.items || []).filter(i => i.raw != null).length, tot = grTot(cg);
     const sub = cg.err === "hidden" ? t("grHiddenShort") : !cg.at ? t("grNone") : cg.err && !(cg.items || []).length ? t("grFailShort") : t("grCnt", got, (cg.items || []).length);
     return '<details class="grc" data-grc="' + c.id + '" style="--c:' + colorOf(c.id) + '"' + (GP.open[c.id] ? " open" : "") + '><summary><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small>" + esc(sub) + "</small></span>" +
       (tot ? '<b class="grt' + grCls(tot.p) + '">' + esc(grNum(tot.raw)) + "</b>" : '<b class="grt dim">—</b>') + "</summary>" +
       '<div class="grcb">' + grCourseBody(c.id, true) + '<div class="crsbtns"><button class="btn" data-grcrs="' + c.id + '">' + ic("book-open") + " " + esc(t("tkCourse")) + "</button></div></div></details>";
-  }).join("");
+  }).join("") + (page ? "</div>" : "");
   h += '<p class="hint">' + esc(t("grTotHint")) + "</p>";
-  const top = box.scrollTop; box.innerHTML = h; box.scrollTop = top;
+  return h;
 }
 $("#grSheet").addEventListener("click", e => {
   const g = sel => e.target.closest(sel);
@@ -4541,19 +4620,26 @@ document.addEventListener("click", e => {
 });
 function freshSeen(ids) { const all = LS.get("fresh", []) || [], ks = []; for (const x of all) if (!ids || ids.includes(x.id)) { x.seen = 1; ks.push("f|" + x.id); } LS.set("fresh", all); rdAdd(ks); }
 function openedCard() { try { return DX.id; } catch (e) { return ""; } }      // the overview card opened on top, if any (safe before DX exists)
+function freshItemHTML(x) {
+  const c = courseName(x.cid), sub = esc(t(FR_LBL[x.k])) + " · <bdi>" + esc(c) + "</bdi> · " + esc(ago(x.at)), cls = "fri" + (x.seen ? "" : " new");
+  const inner = '<span class="fric">' + ic(FR_IC[x.k] || "file-text") + '</span><span class="nt"><b><bdi>' + esc(x.n) + "</bdi></b><small>" + sub + "</small></span>";
+  return x.key ? '<button class="' + cls + '" data-frgo="' + esc(x.key) + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
+    : x.k === "grade" ? '<button class="' + cls + '" data-frcrs="' + x.cid + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
+    : '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>";
+}
+function newsItemHTML(n, d) {
+  const c = d.courses.find(y => y.id === n.cid), own = (n.files || []).concat((n.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
+  return '<details class="ni' + (isNewNews(n) ? " new" : "") + '" data-nid="' + n.id + '" style="--c:' + colorOf(n.cid) + '"' + (V.newsOpen.has(n.id) ? " open" : "") + '><summary><span class="nt"><b><bdi>' + esc(n.subj) + "</bdi></b><small><bdi>" +
+    esc(shortName(c ? c.name : "")) + "</bdi>" + (n.by ? " · <bdi>" + esc(n.by) + "</bdi>" : "") + " · " + esc(ago(n.at)) + '</small></span></summary><div class="nm"><pre>' + esc(n.msg) + "</pre>" +
+    (own.length ? '<div class="files">' + own.map(fileLink).join("") + "</div>" : "") + '<a class="op" href="' + esc(n.url) + '" target="_blank" rel="noopener noreferrer">' + esc(t("newsOpen")) + "</a></div></details>";
+}
 function renderFresh() {
   const el = $("#fresh"); if (!el) return;
   const L = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false), nNew = L.filter(x => !x.seen).length;
   if (!L.length) { el.innerHTML = ""; return; }
   const all = V.freshAll || openedCard() === "newsCard", N = all ? L.length : 3;
   el.innerHTML = '<div class="frl"><div class="frh"><span>' + esc(t("frTitle")) + (nNew ? ' <i class="nb">' + nNew + "</i>" : "") + "</span>" + (nNew ? '<button class="link" data-frseen>' + esc(t("frSeen")) + "</button>" : "") + "</div>" +
-    L.slice(0, N).map(x => {
-      const c = courseName(x.cid), sub = esc(t(FR_LBL[x.k])) + " · <bdi>" + esc(c) + "</bdi> · " + esc(ago(x.at)), cls = "fri" + (x.seen ? "" : " new");
-      const inner = '<span class="fric">' + ic(FR_IC[x.k] || "file-text") + '</span><span class="nt"><b><bdi>' + esc(x.n) + "</bdi></b><small>" + sub + "</small></span>";
-      return x.key ? '<button class="' + cls + '" data-frgo="' + esc(x.key) + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
-        : x.k === "grade" ? '<button class="' + cls + '" data-frcrs="' + x.cid + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
-        : '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>";
-    }).join("") + (L.length > 3 && openedCard() !== "newsCard" ? '<button class="link frmore" data-frmore>' + esc(V.freshAll ? t("newsLess") : t("frMore", L.length - 3)) + "</button>" : "") + "</div>";
+    L.slice(0, N).map(freshItemHTML).join("") + (L.length > 3 && openedCard() !== "newsCard" ? '<button class="link frmore" data-frmore>' + esc(V.freshAll ? t("newsLess") : t("frMore", L.length - 3)) + "</button>" : "") + "</div>";
 }
 function renderNews(d) {
   renderFresh();
@@ -4563,12 +4649,7 @@ function renderNews(d) {
   $("#newsBadge").hidden = !fresh; $("#newsBadge").textContent = fresh; $("#bNewsRead").hidden = !fresh;
   if (!L.length) { el.innerHTML = '<div class="hint">' + esc(t("newsNone")) + "</div>"; return; }
   const opened = openedCard() === "newsCard", N = 3, shown = V.newsAll || opened ? L : L.slice(0, N);
-  el.innerHTML = shown.map(n => {
-    const c = d.courses.find(y => y.id === n.cid), own = (n.files || []).concat((n.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
-    return '<details class="ni' + (isNewNews(n) ? " new" : "") + '" data-nid="' + n.id + '" style="--c:' + colorOf(n.cid) + '"' + (V.newsOpen.has(n.id) ? " open" : "") + '><summary><span class="nt"><b><bdi>' + esc(n.subj) + "</bdi></b><small><bdi>" +
-      esc(shortName(c ? c.name : "")) + "</bdi>" + (n.by ? " · <bdi>" + esc(n.by) + "</bdi>" : "") + " · " + esc(ago(n.at)) + '</small></span></summary><div class="nm"><pre>' + esc(n.msg) + "</pre>" +
-      (own.length ? '<div class="files">' + own.map(fileLink).join("") + "</div>" : "") + '<a class="op" href="' + esc(n.url) + '" target="_blank" rel="noopener noreferrer">' + esc(t("newsOpen")) + "</a></div></details>";
-  }).join("") + (L.length > N && !opened ? '<button class="link" id="bNewsMore">' + esc(V.newsAll ? t("newsLess") : t("newsMore", L.length - N)) + "</button>" : "");
+  el.innerHTML = shown.map(n => newsItemHTML(n, d)).join("") + (L.length > N && !opened ? '<button class="link" id="bNewsMore">' + esc(V.newsAll ? t("newsLess") : t("newsMore", L.length - N)) + "</button>" : "");
 }
 
 /* ---------- render: everything ---------- */
@@ -4585,11 +4666,125 @@ function renderNews(d) {
 function setView(v, fromHistory) {
   const prev = V.view;
   if (v !== "dash" && typeof DX !== "undefined" && DX.id) dExpClose(true);          // leaving the overview: an opened card closes with it
-  V.view = v === "tasks" || v === "tt" || v === "chat" ? v : "dash";
+  V.view = v === "tasks" || v === "tt" || v === "chat" || (XTABS.includes(v) && xtabsOn()) ? v : "dash";
+  document.body.classList.toggle("xv", XTABS.includes(V.view));
   if (!fromHistory && NAV.ready && V.view !== prev) history.pushState({ v: V.view }, ""); LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
-  $("#pTitle").textContent = t(V.view === "tasks" ? "viewTasks" : V.view === "tt" ? "viewTT" : V.view === "chat" ? "viewChat" : "viewDash");
+  $("#pTitle").textContent = t(V.view === "tasks" ? "viewTasks" : V.view === "tt" ? "viewTT" : V.view === "chat" ? "viewChat" : XTABS.includes(V.view) ? XT_T[V.view] : "viewDash");
+  if (XTABS.includes(V.view) && V.view !== prev) { PG.enter = 1; if (V.view === "grades" && V.data && grOn() && Date.now() - (grAll().at || 0) > 5 * 60e3) gradeScan(V.data, true); }
 }
+/* ---------- tablet & computer: more tabs. There's room for them, so grades, courses, announcements and exams – which on a phone are windows – get a page each ---------- */
+const XTABS = ["exams", "grades", "courses", "news"], XT_T = { exams: "tabExams", grades: "tabGrades", courses: "tabCourses", news: "tabNews" };
+const xtabsOn = () => document.body.classList.contains("app") && matchMedia("(min-width:600px)").matches;
+const PG = { nc: 0, old: false, enter: 0 };
+function goGrades(cid) {
+  $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true);
+  if (cid) GP.open[cid] = true;
+  setView("grades"); render(); window.scrollTo(0, 0);
+  if (cid) setTimeout(() => { const el = $('#pgv [data-grc="' + cid + '"]'); if (el) el.scrollIntoView({ block: "center", behavior: "smooth" }); }, 80);
+}
+function xtBadges() {
+  const d = V.data; if (!d) return;
+  const fr = freshAll().filter(x => !x.seen), nn = (d.news || []).filter(n => !isOff(n.cid) && isNewNews(n)).length;
+  const nNews = nn + fr.filter(x => x.k !== "grade" && P.newAl !== false).length, nGr = grOn() ? fr.filter(x => x.k === "grade").length : 0;
+  const now = nowS(), ex = examList().filter(x => x.ts >= dayStart(now) && x.ts - now < 3 * DAY).length;
+  const set = (id, n) => { const b = $(id); if (!b) return; b.hidden = !n; b.textContent = n > 99 ? "99+" : n; };
+  set("#xbNews", nNews); set("#xbGrades", nGr); set("#xbExams", ex);
+}
+const pgHead = (icn, title, sub, act) => '<div class="pghd"><h2>' + ic(icn) + esc(title) + "</h2>" + (sub ? '<span class="hint">' + sub + "</span>" : '<span class="hint"></span>') + (act ? '<span class="pgact">' + act + "</span>" : "") + "</div>";
+function renderPage() {
+  const el = $("#pgv"), d = V.data; if (!el || !d || !XTABS.includes(V.view)) return;
+  const now = nowS(), v = V.view;
+  const h = v === "grades" ? pgGrades() : v === "courses" ? pgCourses(d, now) : v === "news" ? pgNews(d) : pgExams(now);
+  el.innerHTML = h; el.dataset.v = v; PG.enter = 0;
+}
+function pgGrades() {
+  const g = grAll();
+  return pgHead("award", t("grPageT"), grOn() ? (g.at ? esc(t("grAt", ago(Math.floor(g.at / 1000)))) + " · " : "") + (GR.busy ? esc(t("grLoading")) : '<button class="link" data-grre>' + esc(t("refresh")) + "</button>") : "") + grBodyHTML(true);
+}
+function pgCourses(d, now) {
+  const cs = d.courses.filter(c => !isOff(c.id) && courseCurrent(c, now)), past = d.courses.filter(c => !isOff(c.id) && !courseCurrent(c, now)), hid = d.courses.filter(c => isOff(c.id)).length;
+  const fr = freshAll().filter(x => !x.seen), g = grAll(), MU = M.url;
+  const card = c => {
+    const s = crsSummary(c.id, now), col = colorOf(c.id);
+    const nNew = (d.news || []).filter(n => n.cid === c.id && isNewNews(n)).length + fr.filter(x => x.cid === c.id && (x.k === "grade" ? grOn() : P.newAl !== false)).length;
+    const tot = grOn() ? grTot(g.c[c.id] || {}) : null;
+    const tl = (n, l, cls) => '<span' + (cls ? ' class="' + cls + '"' : "") + "><b>" + esc(String(n)) + "</b>" + esc(l) + "</span>";
+    const nx = (icn, b, sm, a) => '<button class="pgnx"' + a + ">" + ic(icn) + '<span class="sw"><b><bdi>' + esc(b) + "</bdi></b><small>" + sm + "</small></span></button>";
+    let h = '<div class="pgcrs" style="--c:' + col + '"><button class="pgch" data-crs="' + c.id + '"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b>" + (nNew ? '<i class="nb">' + esc(t("pgNew", nNew)) + "</i>" : "") + "</button>";
+    h += '<div class="pgtl">' + tl(s.open.length, t("crsTOpen")) + tl(s.late.length, t("crsTLate"), s.late.length ? "late" : "") + (tot ? tl(grNum(tot.raw), t("tabGrades")) : tl(s.done + "/" + s.all.length, t("crsTDone"))) + "</div>";
+    if (s.next) h += nx("alarm-clock", tName(s.next.name), esc(t("crsNextDue")) + " · " + cdSpan(s.next.due, now), ' data-pgtk="' + esc(s.next.key) + '"');
+    if (s.exam) h += nx("graduation-cap", exLbl(s.exam), esc(t("crsNextExam")) + " · " + esc(s.exam.allDay ? dayDate(s.exam.ts) : when(s.exam.ts)), " data-pgv=\"exams\"");
+    if (s.cls) h += nx("clock", ttKind(s.cls.x) + (s.cls.x.place ? " · " + s.cls.x.place : ""), esc(t("crsNextClass")) + " · " + esc(dayName(s.cls.x.day) + " " + s.cls.x.s), " data-pgv=\"tt\"");
+    h += '<div class="pgbt"><button class="btn" data-crs="' + c.id + '">' + ic("book-open") + " " + esc(t("tkCourse")) + "</button>" +
+      (P.soc_on ? '<button class="btn" data-pgchat="' + c.id + '">' + ic("message-circle") + " " + esc(t("pgChat")) + "</button>" : "") +
+      (MU ? '<a class="btn" href="' + esc(MU + "/course/view.php?id=" + c.id) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + " Moodle</a>" : "") + "</div></div>";
+    return h;
+  };
+  let h = pgHead("book-open", t("dcCourses"), esc(t("pgCrsN", cs.length)), "");
+  h += cs.length ? '<div class="pgcrsg">' + cs.map(card).join("") + "</div>" : '<p class="hint">' + esc(t("crsNone")) + "</p>";
+  if (past.length) h += '<div class="pgsec"><button class="link" data-pgold>' + ic(PG.old ? "chevron-up" : "chevron-down") + " " + esc(t("pgCrsOld", past.length)) + "</button></div>" +
+    (PG.old ? '<div class="pgold">' + past.map(c => '<button class="chip on" data-crs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><bdi>' + esc(shortName(c.name)) + "</bdi></button>").join("") + "</div>" : "");
+  if (hid) h += '<p class="hint" style="margin-top:14px">' + esc(t("pgCrsHid", hid)) + ' <button class="link" data-pgset="courses">' + esc(t("pgManage")) + "</button></p>";
+  return h;
+}
+function pgNews(d) {
+  const all = (d.news || []).filter(n => !isOff(n.cid)), fr = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false);
+  const cids = [...new Set(all.map(n => n.cid).concat(fr.map(x => x.cid)))], cs = d.courses.filter(c => cids.includes(c.id));
+  if (PG.nc && !cids.includes(PG.nc)) PG.nc = 0;
+  const L = all.filter(n => !PG.nc || n.cid === PG.nc), F = fr.filter(x => !PG.nc || x.cid === PG.nc);
+  const nNew = all.filter(isNewNews).length + fr.filter(x => !x.seen).length;
+  const cnt = cid => all.filter(n => n.cid === cid && isNewNews(n)).length + fr.filter(x => x.cid === cid && !x.seen).length;
+  let h = pgHead("megaphone", t("newsTitle"), d.news ? "" : esc(V.loading || V.newsLoading ? t("newsLoading") : t("newsOff")), nNew ? '<button class="btn" data-pgread>' + ic("check-check") + " " + esc(t("markAllRead")) + "</button>" : "");
+  if (cs.length > 1) h += '<div class="pgchips"><button class="chip' + (!PG.nc ? " on" : "") + '" data-pgnc="0">' + esc(t("pgAll")) + "</button>" +
+    cs.map(c => { const n = cnt(c.id); return '<button class="chip' + (PG.nc === c.id ? " on" : "") + '" data-pgnc="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="cd0"></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? '<span class="pgn">' + n + "</span>" : "") + "</button>"; }).join("") + "</div>";
+  h += '<div class="pgnews"><div><div class="pgsec">' + ic("megaphone") + esc(t("pgAnn")) + "</div>" + (L.length ? L.map(n => newsItemHTML(n, d)).join("") : '<p class="hint">' + esc(t("newsNone")) + "</p>") + "</div>";
+  h += '<div><div class="pgsec">' + ic("sparkles") + esc(t("pgFresh")) + '</div><div class="frl">' + (F.length ? F.map(freshItemHTML).join("") : '<p class="hint">' + esc(t("pgFreshNone")) + "</p>") + "</div></div></div>";
+  return h;
+}
+function pgExams(now) {
+  const L = examList().filter(x => x.allDay ? addD(x.ts, 1) > now : x.ts > now - 3 * 3600), S0 = semDates(now);
+  let sub = "";
+  if (S0) { const segs = weekSegs(S0.s, S0.e, "w"), cur = segs.find(x => now >= x.a && now < x.b), p = Math.max(0, Math.min(100, Math.round(100 * (now - S0.s) / (S0.e - S0.s))));
+    sub = esc(t("wWeek", cur ? cur.n : p >= 100 ? segs.length : 0, segs.length)) + (S0.xs && now < S0.xs ? " · " + t("toExams", daysBetween(now, S0.xs)) : ""); }
+  let h = pgHead("graduation-cap", t("examsTitle"), sub, '<button class="btn" data-pgexadd>' + ic("plus") + " " + esc(t("pgExAdd")) + "</button>" + '<button class="btn" data-exedit>' + ic("square-pen") + " " + esc(t("pgExEdit")) + "</button>");
+  h += L.length ? '<div class="pgexg">' + L.map(x => exRowHTML(x, now)).join("") + "</div>" : '<div class="pgbox"><p class="hint">' + esc(t("exNone")) + "</p></div>";
+  if (L.some(x => x.lev && x.lev.draft)) h += '<p class="hint" style="margin-top:12px">ⓘ ' + esc(t("exLevNote", new Date(parseYmd(L.find(x => x.lev).lev.published) * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric", year: "numeric" }))) + "</p>";
+  return h;
+}
+$("#pgv").addEventListener("click", e => {
+  const g = sel => e.target.closest(sel);
+  if (g("[data-grre]")) { useHit("gradeRefresh"); return gradeScan(V.data, true); }
+  if (g("[data-pggron]")) { P.grades = true; savePrefs(); useHit("grades_1"); gradeScan(V.data, true); return render(); }
+  { const b = g("[data-grcrs]"); if (b) return openCourse(Number(b.dataset.grcrs), "grades"); }
+  { const b = g("[data-pgtk]"); if (b) return openTask(b.dataset.pgtk); }
+  { const b = g("[data-pgv]"); if (b) { setView(b.dataset.pgv); render(); return window.scrollTo(0, 0); } }
+  { const b = g("[data-pgchat]"); if (b) { const cid = Number(b.dataset.pgchat); useHit("pgChat"); return socEnsure(() => SOC.openChat(cid, "c")); } }
+  if (g("[data-pgold]")) { PG.old = !PG.old; return renderPage(); }
+  { const b = g("[data-pgset]"); if (b) return openSetPage(b.dataset.pgset); }
+  { const b = g("[data-pgnc]"); if (b) { PG.nc = Number(b.dataset.pgnc); useHit("pgNewsCrs"); return renderPage(); } }
+  if (g("[data-pgread]")) { markRead(((V.data && V.data.news) || []).map(n => n.id)); freshSeen(null); return render(); }
+  if (g("[data-pgexadd]")) return openExams(true);
+  if (g("[data-exedit]")) return openExams();
+  { const xe = g("[data-xqedit]"); if (xe) { openExams(); xqFill((P.xq || []).find(q => q.id === xe.dataset.xqedit)); return; } }
+  { const it = g("[data-frid]"); if (it) { freshSeen([it.dataset.frid]); useHit("freshOpen");
+    if (it.dataset.frgo) { e.preventDefault(); openTask(it.dataset.frgo); } else if (it.dataset.frcrs) { e.preventDefault(); goGrades(Number(it.dataset.frcrs)); return; }
+    setTimeout(() => { renderPage(); xtBadges(); renderFresh(); }, 300); return; } }
+  const sm = g(".ni summary");
+  if (sm) { const it = sm.parentElement, id = Number(it.dataset.nid);
+    if (it.open) V.newsOpen.delete(id); else { V.newsOpen.add(id); markRead([id]); it.classList.remove("new"); }
+    xtBadges(); renderNews(V.data); }
+});
+$("#pgv").addEventListener("toggle", e => { const d = e.target.closest && e.target.closest("[data-grc]"); if (d) GP.open[d.dataset.grc] = d.open; }, true);
+/* computer: 1–9 move between the tabs (in the order of the side bar), when nothing is being typed and no window is open */
+addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey || e.altKey || !/^[1-9]$/.test(e.key) || !xtabsOn() || !matchMedia("(pointer: fine)").matches) return;
+  if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
+  if ($$(".sheet:not([hidden])").length || !$("#tour").hidden || document.body.classList.contains("dashed") || (typeof DX !== "undefined" && DX.id)) return;
+  const tabs = $$("#tabbar [data-v]").filter(b => b.offsetParent).sort((a, b) => (+getComputedStyle(a).order) - (+getComputedStyle(b).order)), b = tabs[Number(e.key) - 1];
+  if (b) { e.preventDefault(); b.click(); }
+});
+matchMedia("(min-width:600px)").addEventListener("change", q => { if (!q.matches && XTABS.includes(V.view)) { setView("dash"); render(); } });
 const wide = () => false;          // every screen size now moves between tabs (phone: bottom bar, tablet: floating bar, computer: side bar)
 const bigScreen = () => window.matchMedia("(min-width:760px)").matches;
 /* wide screens: the overview is a masonry of cards (like Google Keep) — every card takes rows by its own height */
@@ -4691,6 +4886,8 @@ function render() {
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
   if (socOn()) S("render", now); else { $("#socTop").innerHTML = ""; $("#chatBadge").hidden = true; }
   if (V.view === "chat") renderChatv();
+  if (XTABS.includes(V.view)) renderPage();
+  xtBadges();
   explainDraw(V.view, $("#exView"));
   $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>" + esc(t("diag", d.diag.length)) + "</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
 }
