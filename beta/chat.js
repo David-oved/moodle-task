@@ -2439,7 +2439,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       ms.innerHTML = ""; ms.style.paddingBottom = "190px"; ms.style.paddingTop = "74px";
       // part 1: hello (big, in the middle, on the black stage)
       await part(async () => { act("wave"); burst("stars"); say(L.hi); await dw(1200); });
-      ov.classList.remove("hero"); S.style.top = "";
+      ov.classList.remove("hero"); ov.querySelector(".aiDmS").style.top = "";
       // part 2: write and send; Uri stands by the input and then runs up to the answer
       await part(async () => {
         place(18, 72, 70); act("jump"); say(L.s1); await dw(1700);
