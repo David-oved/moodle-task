@@ -2209,5 +2209,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     // for tests only: pretend the visible area is something else (a keyboard of a given size), then re-measure
     _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
     _fit() { fit(true); },
+    _md(src) { return md(src); },                      // for tests only: render a message text the way the chat does
   };
 })();
