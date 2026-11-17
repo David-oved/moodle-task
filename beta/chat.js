@@ -389,10 +389,10 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiDmMi{width:100%;height:100%;transform-origin:50% 80%;animation:aiDmIdle 3.6s ease-in-out infinite}
 .aiDmMi svg{width:100%;height:100%;display:block;overflow:visible}
 @keyframes aiDmIdle{0%,100%{transform:translate(0,0) rotate(-2deg)}30%{transform:translate(6px,-7px) rotate(3deg)}65%{transform:translate(-6px,-3px) rotate(-3deg)}}
-.aiDmS{position:absolute;left:12px;right:12px;top:var(--cap,64px);z-index:2;padding:8px 13px;border-radius:14px;background:#0a0c18d9;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid #ffffff1f;border-inline-start:3px solid var(--accent);color:#fff;font-size:14px;font-weight:600;line-height:1.4;box-shadow:0 8px 22px -10px #000c;pointer-events:none;text-align:start;opacity:0;transition:opacity .3s ease,top .5s ease}
+.aiDmS{position:absolute;left:12px;right:12px;top:var(--cap,64px);z-index:2;box-sizing:border-box;min-height:58px;display:flex;align-items:center;padding:8px 13px;border-radius:14px;background:#0a0c18f2;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid #ffffff1f;border-inline-start:3px solid var(--accent);color:#fff;font-size:14px;font-weight:600;line-height:1.4;box-shadow:0 8px 22px -10px #000c;pointer-events:none;text-align:start;opacity:0;transition:opacity .3s ease,top .5s ease}
 .aiDmS b{font-size:16px;font-weight:800}
 .aiDmS.on{opacity:1}
-.aiDemo.hero .aiDmS{left:26px;right:26px;padding:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;text-align:center;font-size:17px;font-weight:600;line-height:1.55;color:#ffffffe6;text-shadow:0 2px 14px #000}
+.aiDemo.hero .aiDmS{left:26px;right:26px;display:block;min-height:0;padding:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;text-align:center;font-size:17px;font-weight:600;line-height:1.55;color:#ffffffe6;text-shadow:0 2px 14px #000}
 .aiDemo.hero .aiDmS b{display:block;margin-bottom:4px;font-size:25px;font-weight:850;color:#fff}
 .aiDmS i{font-style:normal;display:inline-block;opacity:0;animation:aiDmWord .4s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 @keyframes aiDmWord{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
@@ -2340,7 +2340,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     try { closeMenu(); } catch (e) {}
     if (input) { input.readOnly = false; input.value = ""; const w = input.closest(".aiIn"); if (w) w.classList.remove("aiDmFocus"); }
     if (sendBtn) sendBtn.classList.remove("aiDmPress");
-    if (ms) { ms.style.paddingBottom = ""; ms.style.paddingTop = ""; }
+    if (ms) { ms.style.paddingBottom = ""; ms.style.marginTop = ""; }
     if (restore) { try { renderMsgs(); } catch (e) {} }
   }
 
@@ -2430,13 +2430,13 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const a = bubble("assistant", "", { pending: true }); a.row.classList.add("aiIn", "aiPend"); ms.appendChild(a.row); scrollEnd(true);
       await dw(550);
       a.row.classList.remove("aiPend"); a.b.innerHTML = md(demoUi(blocks)); a.b.classList.remove("aiFill"); void a.b.offsetWidth; a.b.classList.add("aiFill");
-      try { ms.scrollTo({ top: Math.max(0, a.row.offsetTop - 84), behavior: "smooth" }); } catch (e) { ms.scrollTop = a.row.offsetTop; }
+      try { ms.scrollTo({ top: Math.max(0, a.row.offsetTop - 10), behavior: "smooth" }); } catch (e) { ms.scrollTop = a.row.offsetTop; }
       return a;
     };
     // every part lasts exactly DEMO_PART: the scene runs, then waits for whatever time is left
     const part = async fn => { const t0 = Date.now(); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
     try {
-      ms.innerHTML = ""; ms.style.paddingBottom = "190px"; ms.style.paddingTop = "74px";
+      ms.innerHTML = ""; ms.style.paddingBottom = "190px"; ms.style.marginTop = "74px";
       // part 1: hello (big, in the middle, on the black stage)
       await part(async () => { act("wave"); burst("stars"); say(L.hi); await dw(1200); });
       ov.classList.remove("hero"); ov.querySelector(".aiDmS").style.top = "";
