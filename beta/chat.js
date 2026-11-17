@@ -189,6 +189,11 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiPb.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--card))}
 .aiPb.on i{background:var(--accent);border-color:var(--accent)}
 .aiPb.on i::after{content:"";width:5px;height:9px;border:solid var(--on-accent,#fff);border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.aiPt{display:flex;gap:6px;margin-top:10px}
+.aiPt input{flex:1;min-width:0;padding:9px 13px;border-radius:99px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:16px}
+.aiPt input:focus{outline:none;border-color:var(--accent)}
+.aiPt button{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:var(--accent);color:var(--on-accent,#fff);display:grid;place-items:center;cursor:pointer}
+.aiPt button svg{width:18px;height:18px;fill:currentColor}
 .aiPgo{margin-top:10px;padding:9px 18px;border-radius:99px;border:0;background:var(--accent);color:var(--on-accent,#fff);font:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s,transform .15s}
 .aiPgo:disabled{opacity:.35;cursor:default}
 .aiPgo:not(:disabled):active{transform:scale(.95)}
@@ -274,7 +279,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiMi:hover,.aiMi:focus-visible{background:var(--accent-soft);outline:none}
 .aiMi svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--accent-t,var(--accent))}
 .aiB.aiHold{outline:2px solid var(--accent);outline-offset:2px}
-@media (hover:none){ .aiB{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} }
+@media (hover:none){ .aiP{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} .aiP textarea,.aiP input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default} .aiB{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} }
 .aiB.aiSel{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 
 /* confirm dialog (delete) */
@@ -569,6 +574,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const POLL_RE = /\[\[(poll:(?:single|multi)|quick)\|([^\]\n]{1,700})\]\]/g;
   const PICKED = { he: "בחרתי: ", en: "I chose: ", fr: "J'ai choisi : " };
   const PSEND = { he: "שלח", en: "Send", fr: "Envoyer" };
+  const PTXT = { he: "או כתוב משהו אחר…", en: "Or type something else…", fr: "Ou écris autre chose…" };
   function pollHTML(kind, body) {
     const parts = body.split("|").map(x => x.trim()).filter(Boolean);
     if (kind === "quick") {
@@ -579,7 +585,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const multi = kind === "poll:multi";
     return '<div class="aiPoll" data-multi="' + (multi ? 1 : 0) + '"><div class="aiPq">' + esc2(q) + '</div><div class="aiPo">' +
       o.map((t, i) => '<button type="button" class="aiPb" data-po="' + esc2(t) + '"><i></i><span>' + esc2(t) + "</span></button>").join("") + "</div>" +
-      (multi ? '<button type="button" class="aiPgo" data-pgo disabled>' + esc2(PSEND[lang()] || PSEND.he) + "</button>" : "") + "</div>";
+      (multi ? '<button type="button" class="aiPgo" data-pgo disabled>' + esc2(PSEND[lang()] || PSEND.he) + "</button>" : "") +
+      '<form class="aiPt"><input type="text" maxlength="200" enterkeyhint="send" autocomplete="off" placeholder="' + esc2(PTXT[lang()] || PTXT.he) + '"><button type="submit" aria-label="' + esc2(PSEND[lang()] || PSEND.he) + '"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-7z"/></svg></button></form></div>';
   }
   // ---------------------------------------------------------------------------------------------
   // Deadline card: the server sends [[deadlines:BASE64]] (a list of [name, course, time]) and the app draws it: one headline, the most urgent item as a hero with a live
@@ -639,9 +646,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const ordDay = (t) => { const d = new Date(t * 1000); return { wd: dlt().days[d.getDay()], day: d.getDate(), mon: d.toLocaleDateString(dlt().loc, { month: "short" }) }; };
   // how full the "time left" bar is: empty far away, full when it is due
   const uiUrgency = t => Math.max(0.05, Math.min(1, 1 - (t * 1000 - Date.now()) / (5 * 86400000)));
+  const itAttr = (k, it) => ' data-it="' + esc2(JSON.stringify({ k, n: it.n || "", c: it.c || "", v: it.v || "" })) + '"';
   function uiTicket(it) {
     const o = ordDay(it.t), left = it.t * 1000 - Date.now(), hot = left < 86400000, col = "hsl(" + dlHue(it.c) + " 72% 58%)";
-    return '<div class="aiTk' + (hot ? " hot" : "") + '" style="--dc:' + col + ';--u:' + uiUrgency(it.t).toFixed(2) + '"><div class="aiTkS"><small>' + esc2(o.wd) + "</small><b>" + o.day + "</b><small>" + esc2(o.mon) + '</small></div>' +
+    return '<div class="aiTk' + (hot ? " hot" : "") + '"' + itAttr("d", it) + ' style="--dc:' + col + ';--u:' + uiUrgency(it.t).toFixed(2) + '"><div class="aiTkS"><small>' + esc2(o.wd) + "</small><b>" + o.day + "</b><small>" + esc2(o.mon) + '</small></div>' +
       '<div class="aiTkB"><b>' + esc2(it.n) + "</b><em>" + esc2(it.c) + '</em><div class="aiTkT"><span data-due="' + it.t + '">' + esc2(dlRel(it.t, false)) + '</span><i class="aiTkBar"><u></u></i></div></div></div>';
   }
   function uiTimeline(items) {
@@ -650,19 +658,19 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     return '<div class="aiTl">' + days.map(g => {
       const dd = Math.round((g.k - today) / 86400000), o = ordDay(g.t);
       const label = dd <= 0 ? T.today : dd === 1 ? T.tm.trim() : o.wd + " " + o.day + " " + o.mon;
-      return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR" style="--dc:hsl(' + dlHue(it.c) + ' 72% 58%)"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(dlTime(it.t)) + "</span></div>").join("") + "</div>";
+      return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR"' + itAttr("d", it) + ' style="--dc:hsl(' + dlHue(it.c) + ' 72% 58%)"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(dlTime(it.t)) + "</span></div>").join("") + "</div>";
     }).join("") + "</div>";
   }
   function uiFocus(items) {
     const f = items[0], hrs = Math.max(0, Math.round((f.t * 1000 - Date.now()) / 3600000)), big = hrs < 48 ? hrs : Math.round(hrs / 24), unit = hrs < 48 ? dlt().hr.trim() : dlt().day.trim();
     const col = "hsl(" + dlHue(f.c) + " 72% 58%)";
-    return '<div class="aiFc" style="--dc:' + col + '"><div class="aiFcN"><b data-focus="' + f.t + '">' + big + "</b><small>" + esc2(unit) + '</small></div><div class="aiFcX"><b>' + esc2(f.n) + "</b><em>" + esc2(f.c) + "</em><span data-due=\"" + f.t + "\">" + esc2(dlRel(f.t, false)) + "</span></div></div>" +
+    return '<div class="aiFc"' + itAttr("d", f) + ' style="--dc:' + col + '"><div class="aiFcN"><b data-focus="' + f.t + '">' + big + "</b><small>" + esc2(unit) + '</small></div><div class="aiFcX"><b>' + esc2(f.n) + "</b><em>" + esc2(f.c) + "</em><span data-due=\"" + f.t + "\">" + esc2(dlRel(f.t, false)) + "</span></div></div>" +
       items.slice(1).map(it => uiTicket(it)).join("");
   }
   const gaugeCol = v => v >= 85 ? "#22a55e" : v >= 65 ? "#e8a000" : "#e5484d";
   function uiGauge(it) {
     const num = parseFloat(String(it.v).replace(/[^0-9.]/g, "")), ok = isFinite(num), C = 2 * Math.PI * 22, col = ok ? gaugeCol(num) : "var(--muted)";
-    return '<div class="aiGg" style="--gc:' + col + '"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" class="bg"/><circle cx="28" cy="28" r="22" class="fg" stroke-dasharray="' + (ok ? (C * Math.min(1, num / 100)).toFixed(1) : 0) + " " + C.toFixed(1) + '"/></svg><b>' + esc2(it.v) + "</b><small>" + esc2(it.n) + "</small></div>";
+    return '<div class="aiGg"' + itAttr("g", it) + ' style="--gc:' + col + '"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" class="bg"/><circle cx="28" cy="28" r="22" class="fg" stroke-dasharray="' + (ok ? (C * Math.min(1, num / 100)).toFixed(1) : 0) + " " + C.toFixed(1) + '"/></svg><b>' + esc2(it.v) + "</b><small>" + esc2(it.n) + "</small></div>";
   }
   function uiBlock(b) {
     const head = b.ti ? '<div class="aiUiT">' + esc2(b.ti) + "</div>" : "";
@@ -671,11 +679,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       return head + body;
     }
     if (b.k === "grades" && b.it && b.it.length) return head + (b.s === "list"
-      ? '<div class="aiLs">' + b.it.map(it => "<div><span>" + esc2(it.n) + "</span><b>" + esc2(it.v) + "</b></div>").join("") + "</div>"
+      ? '<div class="aiLs">' + b.it.map(it => "<div" + itAttr("g", it) + "><span>" + esc2(it.n) + "</span><b>" + esc2(it.v) + "</b></div>").join("") + "</div>"
       : '<div class="aiGgs">' + b.it.map(uiGauge).join("") + "</div>");
     if (b.k === "courses" && b.it && b.it.length) return head + (b.s === "list"
-      ? '<div class="aiLs">' + b.it.map(it => "<div><span>" + esc2(it.n) + "</span></div>").join("") + "</div>"
-      : '<div class="aiCh">' + b.it.map(it => '<span style="--dc:hsl(' + dlHue(it.n) + ' 72% 58%)"><i></i>' + esc2(it.n) + "</span>").join("") + "</div>");
+      ? '<div class="aiLs">' + b.it.map(it => "<div" + itAttr("c", it) + "><span>" + esc2(it.n) + "</span></div>").join("") + "</div>"
+      : '<div class="aiCh">' + b.it.map(it => '<span' + itAttr("c", it) + ' style="--dc:hsl(' + dlHue(it.n) + ' 72% 58%)"><i></i>' + esc2(it.n) + "</span>").join("") + "</div>");
     if (b.k === "callout") return '<div class="aiCo ' + esc2(b.tone || "info") + '">' + (UI_ICONS[b.tone] || UI_ICONS.info) + "<div>" + (b.ti ? "<b>" + esc2(b.ti) + "</b>" : "") + "<span>" + esc2(b.tx) + "</span></div></div>";
     if (b.k === "stats" && b.it) return head + '<div class="aiSt">' + b.it.map(it => "<div><b>" + esc2(it.v) + "</b><small>" + esc2(it.l) + "</small></div>").join("") + "</div>";
     if (b.k === "steps" && b.it) return head + '<ol class="aiSp">' + b.it.map(it => "<li>" + esc2(it.l) + "</li>").join("") + "</ol>";
@@ -855,12 +863,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function lockPoll(card, chosen) {
     if (!card) return;
     card.classList.add("aiLocked");
-    card.querySelectorAll("button").forEach(b => { b.disabled = true; });
+    card.querySelectorAll("button,input").forEach(b => { b.disabled = true; });
     chosen.forEach(b => b.classList.add("on"));
   }
   function lockOldPolls() {
     const last = ms.lastElementChild;
-    ms.querySelectorAll(".aiPoll,.aiQuick").forEach(c => { if (c.closest(".aiM") !== last) { c.classList.add("aiLocked"); c.querySelectorAll("button").forEach(b => { b.disabled = true; }); } });
+    ms.querySelectorAll(".aiPoll,.aiQuick").forEach(c => { if (c.closest(".aiM") !== last) { c.classList.add("aiLocked"); c.querySelectorAll("button,input").forEach(b => { b.disabled = true; }); } });
   }
 
   function renderMsgs() {
@@ -1109,28 +1117,15 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     } catch (e) { return false; }
   }
 
-  function openMenu(b, x, y, byKey) {
-    const row = b.closest(".aiM"), idx = row ? +row.dataset.i : -1, m = msgs[idx];
-    if (!m || m.pending || !String(m.content || "").trim()) return;
+  function showMenu(b, items, x, y, byKey) {
     closeMenu();
-    const text = plain(m.content);
-    const items = [{ id: "copy", icon: I_COPY, label: tx("copy") }];
-    if (navigator.share) items.push({ id: "share", icon: I_SHARE, label: tx("share") });
-    items.push({ id: "select", icon: I_SELECT, label: tx("selectTxt") });
-    if (m.role === "user") items.push({ id: "reuse", icon: I_NEW, label: tx("reuse") });
-
+    try { getSelection().removeAllRanges(); } catch (e) {}
     menuBg = document.createElement("div"); menuBg.className = "aiMnBg"; menuBg.onclick = closeMenu;
     menuEl = document.createElement("div"); menuEl.className = "aiMn"; menuEl.setAttribute("role", "menu"); menuEl.setAttribute("aria-label", tx("msgMenu"));
     for (const it of items) {
       const bt = document.createElement("button"); bt.type = "button"; bt.className = "aiMi"; bt.setAttribute("role", "menuitem"); bt.innerHTML = it.icon + "<span></span>";
       bt.lastChild.textContent = it.label;
-      bt.onclick = async () => {
-        closeMenu();
-        if (it.id === "copy") toast((await copyText(text)) ? tx("copied") : tx("errGen"), 1600);
-        else if (it.id === "share") { try { await navigator.share({ text }); } catch (e) {} }
-        else if (it.id === "select") { b.classList.add("aiSel"); const r = document.createRange(); r.selectNodeContents(b); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
-        else if (it.id === "reuse") { input.value = String(m.content); input.dispatchEvent(new Event("input")); try { input.focus(); input.setSelectionRange(input.value.length, input.value.length); } catch (e) {} }
-      };
+      bt.onclick = async () => { closeMenu(); await it.run(); };
       menuEl.appendChild(bt);
     }
     menuEl.addEventListener("keydown", e => {
@@ -1141,7 +1136,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     });
     panel.append(menuBg, menuEl); menuFor = b; b.classList.add("aiHold");
 
-    // the menu sits next to the message: below it if there is room, else above it, else in the middle; always inside the screen
+    // the menu sits next to the pressed thing: below it if there is room, else above it, else in the middle; always inside the screen
     const P = panel.getBoundingClientRect(), B = b.getBoundingClientRect(), mw = menuEl.offsetWidth, mh = menuEl.offsetHeight, gap = 8;
     const cx = byKey ? (B.left + B.right) / 2 : x;
     const left = Math.min(Math.max(cx - P.left - mw / 2, gap), Math.max(gap, P.width - mw - gap));
@@ -1151,6 +1146,38 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     else top = Math.max(gap, (P.height - mh) / 2);
     menuEl.style.left = Math.round(left) + "px"; menuEl.style.top = Math.round(top) + "px"; menuEl.style.setProperty("--mo", top < B.top - P.top ? "50% 100%" : "50% 0");
     try { menuEl.querySelector(".aiMi").focus({ preventScroll: true }); } catch (e) {}
+  }
+
+  function openMenu(b, x, y, byKey) {
+    const row = b.closest(".aiM"), idx = row ? +row.dataset.i : -1, m = msgs[idx];
+    if (!m || m.pending || !String(m.content || "").trim()) return;
+    const text = plain(m.content);
+    const items = [{ icon: I_COPY, label: tx("copy"), run: async () => toast((await copyText(text)) ? tx("copied") : tx("errGen"), 1600) }];
+    if (navigator.share) items.push({ icon: I_SHARE, label: tx("share"), run: async () => { try { await navigator.share({ text }); } catch (e) {} } });
+    items.push({ icon: I_SELECT, label: tx("selectTxt"), run: () => { b.classList.add("aiSel"); const r = document.createRange(); r.selectNodeContents(b); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } });
+    if (m.role === "user") items.push({ icon: I_NEW, label: tx("reuse"), run: () => { input.value = String(m.content); input.dispatchEvent(new Event("input")); try { input.focus(); input.setSelectionRange(input.value.length, input.value.length); } catch (e) {} } });
+    showMenu(b, items, x, y, byKey);
+  }
+
+  // long press on a task, a course or a grade inside the AI's cards: ask about it, get its files, and so on
+  const ITM = {
+    he: { ask: "שאל על זה", files: "הקבצים של זה", tasks: "המטלות בקורס", grades: "הציונים בקורס", cfiles: "הקבצים של הקורס", copy: "העתק",
+      q: { d: (n, c) => 'ספר לי על המטלה "' + n + '" בקורס ' + c, df: (n, c) => 'שלח לי קבצים שקשורים ל"' + n + '" בקורס ' + c, g: (n) => 'ספר לי על הציון "' + n + '" ואיך הוא מחושב', c: (n) => "ספר לי על הקורס " + n, ct: (n) => "מה המטלות שלי בקורס " + n + "?", cg: (n) => "מה הציונים שלי בקורס " + n + "?", cf: (n) => "אילו קבצים יש בקורס " + n + "?" } },
+    en: { ask: "Ask about this", files: "Files for this", tasks: "Tasks in this course", grades: "Grades in this course", cfiles: "Course files", copy: "Copy",
+      q: { d: (n, c) => 'Tell me about the task "' + n + '" in ' + c, df: (n, c) => 'Send me files related to "' + n + '" in ' + c, g: (n) => 'Tell me about the grade "' + n + '" and how it is calculated', c: (n) => "Tell me about the course " + n, ct: (n) => "What are my tasks in " + n + "?", cg: (n) => "What are my grades in " + n + "?", cf: (n) => "Which files are in " + n + "?" } },
+    fr: { ask: "Poser une question", files: "Fichiers liés", tasks: "Devoirs du cours", grades: "Notes du cours", cfiles: "Fichiers du cours", copy: "Copier",
+      q: { d: (n, c) => 'Parle-moi du devoir "' + n + '" dans ' + c, df: (n, c) => 'Envoie-moi les fichiers liés à "' + n + '" dans ' + c, g: (n) => 'Parle-moi de la note "' + n + '" et de son calcul', c: (n) => "Parle-moi du cours " + n, ct: (n) => "Quels sont mes devoirs en " + n + " ?", cg: (n) => "Quelles sont mes notes en " + n + " ?", cf: (n) => "Quels fichiers y a-t-il dans " + n + " ?" } },
+  };
+  function openItemMenu(el, x, y, byKey) {
+    let d; try { d = JSON.parse(el.dataset.it); } catch (e) { return; }
+    const T = ITM[lang()] || ITM.he, n = d.n || "", c = d.c || "";
+    const go = q => () => { send(q); };
+    const items = [];
+    if (d.k === "d") { items.push({ icon: I_NEW, label: T.ask, run: go(T.q.d(n, c)) }, { icon: I_SELECT, label: T.files, run: go(T.q.df(n, c)) }); }
+    else if (d.k === "c") { items.push({ icon: I_NEW, label: T.ask, run: go(T.q.c(n)) }, { icon: I_SELECT, label: T.tasks, run: go(T.q.ct(n)) }, { icon: I_SELECT, label: T.grades, run: go(T.q.cg(n)) }, { icon: I_SELECT, label: T.cfiles, run: go(T.q.cf(n)) }); }
+    else if (d.k === "g") items.push({ icon: I_NEW, label: T.ask, run: go(T.q.g(n)) });
+    items.push({ icon: I_COPY, label: T.copy, run: async () => toast((await copyText(n + (c ? " - " + c : "") + (d.v ? ": " + d.v : ""))) ? tx("copied") : tx("errGen"), 1600) });
+    showMenu(el, items, x, y, byKey);
   }
 
   /* ------------------------------------------------------------ files the AI sends */
@@ -1406,6 +1433,13 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     // dragging on the header or the input bar must not pan the page behind; the message list and the text box keep their own scrolling
     panel.addEventListener("touchmove", e => { if (!e.target.closest(".aiMs,.aiHs,textarea,pre")) e.preventDefault(); }, { passive: false });
     input.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing && matchMedia("(hover:hover)").matches) { e.preventDefault(); if (!busy) send(input.value); } };
+    ms.addEventListener("submit", e => {
+      const f = e.target.closest && e.target.closest(".aiPt"); if (!f) return;
+      e.preventDefault();
+      const card = f.closest(".aiPoll"), v = f.querySelector("input").value.trim();
+      if (!v || !pollLive(f)) return;
+      lockPoll(card, []); send(v);
+    });
     ms.addEventListener("click", e => {
       const u = e.target.closest("[data-undo]"); if (u) { undoMem(u.dataset.undo); return; }
       const mc = e.target.closest(".aiMemChip"); if (mc && !mc.classList.contains("undone")) { openMemory(); return; }
@@ -1429,9 +1463,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ms.addEventListener("pointerdown", e => {
       closeMenu();
       if (e.pointerType === "mouse" || e.button !== 0 || e.target.closest(".aiFile,a,.aiErr button")) return;
-      const b = e.target.closest(".aiB"); if (!b) return;
+      const itEl = e.target.closest("[data-it]"), b = e.target.closest(".aiB"); if (!b) return;
       holdXY = [e.clientX, e.clientY];
-      holdT = setTimeout(() => { holdT = 0; try { navigator.vibrate && navigator.vibrate(12); } catch (er) {} openMenu(b, holdXY[0], holdXY[1]); }, 450);
+      holdT = setTimeout(() => { holdT = 0; try { navigator.vibrate && navigator.vibrate(12); } catch (er) {} if (itEl && !busy) openItemMenu(itEl, holdXY[0], holdXY[1]); else openMenu(b, holdXY[0], holdXY[1]); }, 450);
     });
     ms.addEventListener("pointermove", e => { if (holdT && Math.hypot(e.clientX - holdXY[0], e.clientY - holdXY[1]) > 10) cancelHold(); });
     ["pointerup", "pointercancel", "pointerleave"].forEach(t => ms.addEventListener(t, cancelHold));
@@ -1439,9 +1473,18 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ms.addEventListener("contextmenu", e => {
       const b = e.target.closest(".aiB"); if (!b) return;
       e.preventDefault(); if (menuEl) return;
-      openMenu(b, e.clientX, e.clientY, e.clientX === 0 && e.clientY === 0);
+      const itEl = e.target.closest("[data-it]");
+      if (itEl && !busy) openItemMenu(itEl, e.clientX, e.clientY, e.clientX === 0 && e.clientY === 0);
+      else openMenu(b, e.clientX, e.clientY, e.clientX === 0 && e.clientY === 0);
     });
     document.addEventListener("pointerdown", e => { if (panel && !e.target.closest(".aiB")) document.querySelectorAll(".aiB.aiSel").forEach(x => x.classList.remove("aiSel")); }, true);
+    // on a touch screen the browser must never start its own text selection from a long press (iPhone selected the whole screen): only what the student chose to select, and the text boxes
+    panel.addEventListener("selectstart", e => {
+      if (!matchMedia("(hover:none)").matches) return;
+      const n = e.target.nodeType === 3 ? e.target.parentElement : e.target;
+      if (n && n.closest && n.closest(".aiSel,textarea,input")) return;
+      e.preventDefault();
+    });
     panel.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); close(); } });
     if (window.visualViewport) { visualViewport.addEventListener("resize", scheduleFit); visualViewport.addEventListener("scroll", scheduleFit); }
     addEventListener("resize", scheduleFit); addEventListener("orientationchange", fitSoon);
