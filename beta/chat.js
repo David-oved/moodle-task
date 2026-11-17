@@ -26,7 +26,7 @@
       delAll: "מחק את כל השיחות", delOne: "מחק שיחה", delOk: "מחק", cancel: "ביטול", deleted: "נמחק", histCount: n => n === 1 ? "שיחה אחת" : n + " שיחות",
       delAllQ: "למחוק את כל השיחות הקודמות? אי אפשר לשחזר אותן.", delOneQ: "למחוק את השיחה הזו? אי אפשר לשחזר אותה.",
       dl: "הורד", dling: "מוריד…", fileGone: "הקובץ כבר לא זמין ב-Moodle.", fileBig: "הקובץ גדול מדי להורדה כאן (מעל 25MB). אפשר להוריד אותו ישירות ב-Moodle.", fileErr: "לא הצלחתי להוריד את הקובץ. נסה שוב.", errTitle: "משהו לא תקין",
-      stSend: "שולח את הבקשה", stWait: "ממתין לתשובה מהשרת", stKb: "מחפש במאגר הידע של המכללה", stThink: "חושב מה צריך לעשות", stWrite: "כותב את התשובה",
+      stSend: "שולח את הבקשה", stWait: "ממתין לתשובה מהשרת", stKb: "מחפש במאגר הידע של המכללה", stThink: "מחליט איך לענות לך הכי טוב", stRead: "קורא את השאלה שלך", stFound: t => "מצאתי במאגר: " + t, tl_show_ui: () => "מסדר לך את התשובה בכרטיסים", stWrite: "כותב את התשובה",
       stMemAdd: "שומר בזיכרון", stMemDel: "מוחק מהזיכרון", tlGeneric: "פונה ל-Moodle", tlVisual: "מסדר לך את זה בצורה ויזואלית",
       tl_get_my_courses: () => "מושך את רשימת הקורסים שלך מ-Moodle", tl_get_course_assignments: a => a ? "בודק מטלות ומועדי הגשה בקורס " + a : "בודק מטלות ומועדי הגשה",
       tl_get_course_grades: a => a ? "בודק את הציונים שלך בקורס " + a : "בודק את הציונים שלך", tl_get_calendar_events: () => "קורא את היומן שלך ב-Moodle",
@@ -52,7 +52,7 @@
       delAll: "Delete all chats", delOne: "Delete chat", delOk: "Delete", cancel: "Cancel", deleted: "Deleted", histCount: n => n + (n === 1 ? " chat" : " chats"),
       delAllQ: "Delete all earlier chats? This can’t be undone.", delOneQ: "Delete this chat? This can’t be undone.",
       dl: "Download", dling: "Downloading…", fileGone: "The file is no longer available in Moodle.", fileBig: "The file is too big to download here (over 25MB). You can download it directly in Moodle.", fileErr: "Couldn’t download the file. Try again.", errTitle: "Something’s not right",
-      stSend: "Sending your request", stWait: "Waiting for the server", stKb: "Searching the college’s knowledge base", stThink: "Working out what to do", stWrite: "Writing the answer",
+      stSend: "Sending your request", stWait: "Waiting for the server", stKb: "Searching the college’s knowledge base", stThink: "Deciding how to answer you best", stRead: "Reading your question", stFound: t => "Found in the knowledge base: " + t, tl_show_ui: () => "Laying out the answer as cards", stWrite: "Writing the answer",
       stMemAdd: "Saving to memory", stMemDel: "Removing from memory", tlGeneric: "Asking Moodle", tlVisual: "Laying it out visually for you",
       tl_get_my_courses: () => "Fetching your course list from Moodle", tl_get_course_assignments: a => a ? "Checking assignments and deadlines in " + a : "Checking assignments and deadlines",
       tl_get_course_grades: a => a ? "Checking your grades in " + a : "Checking your grades", tl_get_calendar_events: () => "Reading your Moodle calendar",
@@ -78,7 +78,7 @@
       delAll: "Supprimer toutes les conversations", delOne: "Supprimer la conversation", delOk: "Supprimer", cancel: "Annuler", deleted: "Supprimé", histCount: n => n + (n === 1 ? " conversation" : " conversations"),
       delAllQ: "Supprimer toutes les conversations précédentes ? Cette action est irréversible.", delOneQ: "Supprimer cette conversation ? Cette action est irréversible.",
       dl: "Télécharger", dling: "Téléchargement…", fileGone: "Le fichier n’est plus disponible dans Moodle.", fileBig: "Le fichier est trop volumineux pour être téléchargé ici (plus de 25 Mo). Vous pouvez le télécharger directement dans Moodle.", fileErr: "Impossible de télécharger le fichier. Réessayez.", errTitle: "Quelque chose ne va pas",
-      stSend: "Envoi de la demande", stWait: "Attente du serveur", stKb: "Recherche dans la base de connaissances du collège", stThink: "Je réfléchis à ce qu’il faut faire", stWrite: "Rédaction de la réponse",
+      stSend: "Envoi de la demande", stWait: "Attente du serveur", stKb: "Recherche dans la base de connaissances du collège", stThink: "Je choisis la meilleure façon de répondre", stRead: "Je lis ta question", stFound: t => "Trouvé dans la base : " + t, tl_show_ui: () => "Je mets la réponse en cartes", stWrite: "Rédaction de la réponse",
       stMemAdd: "Enregistrement en mémoire", stMemDel: "Suppression de la mémoire", tlGeneric: "Question à Moodle", tlVisual: "Je le mets en forme pour toi",
       tl_get_my_courses: () => "Récupération de vos cours sur Moodle", tl_get_course_assignments: a => a ? "Vérification des devoirs et échéances de " + a : "Vérification des devoirs et échéances",
       tl_get_course_grades: a => a ? "Vérification de vos notes en " + a : "Vérification de vos notes", tl_get_calendar_events: () => "Lecture de votre calendrier Moodle",
@@ -654,7 +654,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 @keyframes aiSpin{to{transform:rotate(360deg)}}
 
 /* ---- what the bot is doing: a small list of steps in the waiting bubble ---- */
-.aiAct{display:flex;align-items:center;gap:10px;min-width:170px;font-size:14px;line-height:1.35;animation:aiActIn .28s ease-out}
+.aiAct{display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:200px;font-size:14px;line-height:1.35}
+.aiStp{display:flex;align-items:center;gap:9px;max-width:100%}.aiStp.now{animation:aiActIn .28s ease-out}
+.aiStp.done{opacity:.55;font-size:12.5px}.aiStp.done span{text-decoration:none}
+.aiCk{flex:none;position:relative;width:16px;height:16px;border-radius:50%;background:color-mix(in srgb,var(--accent) 80%,transparent)}
+.aiCk::after{content:"";position:absolute;left:5px;top:3px;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .aiAct.out{animation:aiActOut .17s ease-in forwards}
 .aiAct .aiSi{flex:none;width:16px;height:16px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--accent) 22%,transparent);border-top-color:var(--accent);animation:aiSpin .8s linear infinite}
 .aiAct span{min-width:0;overflow-wrap:anywhere}
@@ -1210,27 +1214,40 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   /* ------------------------------------------------------------ rendering */
   // what the bot is doing: only the real actions (Moodle, memory), as one line that spins; when it is done the line goes and the next one comes
   const DOTS = '<span class="aiDots" aria-label="…"><i></i><i></i><i></i></span>';
-  const activityHTML = status => status ? '<div class="aiAct" role="status"><i class="aiSi"></i><span>' + esc2(status) + "…</span></div>" : DOTS;
+  const activityHTML = (status, done) => status ? '<div class="aiAct" role="status">' + (done || []).slice(-3).map(l => '<div class="aiStp done"><i class="aiCk"></i><span>' + esc2(l) + "</span></div>").join("") +
+    '<div class="aiStp now"><i class="aiSi"></i><span>' + esc2(status) + "…</span></div></div>" : DOTS;
   // what the bot remembered or forgot in this answer
   const chipsHTML = mem => (mem || []).map((e, i) => '<div class="aiMemChip' + (e.op === "del" ? " del" : "") + (e.undone ? " undone" : "") + '"><span class="aiMemI">' + I_BRAIN + '</span><span class="aiMemT">' +
     esc2((e.op === "del" ? tx("memGone") : tx("memSaved")) + ": " + (e.text || "")) + "</span>" + (e.op === "add" && !e.undone ? '<button type="button" data-undo="' + esc2(e.id || "") + '">' + esc2(tx("memUndo")) + "</button>" : e.undone ? "<span>" + esc2(tx("memUndone")) + "</span>" : "") + "</div>").join("");
   const toolLabel = e => { const k = "tl_" + e.name; return (TX[lang()][k] || TX.he[k]) ? tx(k, e.arg) : tx("tlGeneric"); };
+  // the steps queue up and each one stays at least 0.7s, so the student can read what Uri is doing; the answer's first words cut it short
+  function paintAct(ai) { if (curBub && !ai.content) { curBub.innerHTML = activityHTML(ai.status, ai.steps); scrollEnd(false); } }
+  function pumpAct(ai) {
+    if (ai.stepTm) return;
+    const next = (ai.stepQ || []).shift(); if (next === undefined) return;
+    if (ai.status && next !== ai.status) (ai.steps = ai.steps || []).push(ai.status);
+    ai.status = next; paintAct(ai);
+    ai.stepTm = setTimeout(() => { ai.stepTm = 0; pumpAct(ai); }, 700);
+  }
   function setActivity(ai, label) {
-    ai.status = label || "";
-    if (!curBub || ai.content) return;
-    const old = curBub.querySelector(".aiAct");
-    const paint = () => { ai.swapT = 0; if (curBub && !ai.content) { curBub.innerHTML = activityHTML(ai.status); scrollEnd(false); } };
-    if (old) { old.classList.add("out"); if (!ai.swapT) ai.swapT = setTimeout(paint, 170); }     // the old line fades away, then the next comes (the latest wins)
-    else paint();
+    if (!label) { ai.stepQ = []; clearTimeout(ai.stepTm); ai.stepTm = 0; ai.status = ""; paintAct(ai); return; }       // writing: the dots come back
+    const q = ai.stepQ = ai.stepQ || [];
+    if (label === ai.status || q[q.length - 1] === label) return;
+    q.push(label); if (q.length > 3) q.splice(1, q.length - 3);
+    pumpAct(ai);
   }
   function onStreamEvent(ai, e) {
     if (!e) return;
     if (e.s === "mem") { (ai.mem = ai.mem || []).push(e); return; }                              // the note under the answer says it
-    if (e.s === "tool") { if (!ai.status) setActivity(ai, toolLabel(e)); return; }                // the first real action of a round
-    if (e.s === "write" && ai.status) setActivity(ai, "");                                       // done: the line goes, the dots come back
+    if (e.s === "kb") { setActivity(ai, tx("stKb")); return; }
+    if (e.s === "kbdone") { setActivity(ai, e.t ? tx("stFound", e.t) : tx("stThink")); return; }
+    if (e.s === "think") { setActivity(ai, tx("stThink")); return; }
+    if (e.s === "tool") { setActivity(ai, toolLabel(e)); return; }                                // every real action, in order
+    if (e.s === "write" && ai.status) { setActivity(ai, ""); return; }                           // done: the dots come back
     if (e.s === "visual") {                                                                     // the iron rule: the text so far is being redrawn as cards
-      ai.content = ""; ai.lastHtml = ""; ai.pending = true; ai.status = "";
-      if (curBub) { curBub.classList.remove("aiStream"); const r = curBub.closest(".aiM"); if (r) r.classList.add("aiPend"); curBub.innerHTML = activityHTML(tx("tlVisual")); ai.status = tx("tlVisual"); scrollEnd(false); }
+      ai.content = ""; ai.lastHtml = ""; ai.pending = true; ai.status = ""; ai.steps = []; ai.stepQ = [];
+      if (curBub) { curBub.classList.remove("aiStream"); const r = curBub.closest(".aiM"); if (r) r.classList.add("aiPend"); }
+      setActivity(ai, tx("tlVisual"));
     }
   }
 
@@ -1676,6 +1693,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     msgs.push({ role: "user", content: text });
     const ai = { role: "assistant", content: "", pending: true }; msgs.push(ai);
     setBusy(true); renderMsgs(); busy = true; curBub = ms.lastElementChild.querySelector(".aiB");
+    setActivity(ai, tx("stRead"));
     const ur = ms.children[msgs.length - 2];
     // the rise starts at the input bar, but never more than 280px below the message (a short chat must not make it fly across the screen)
     if (ur) { ur.style.setProperty("--fy", Math.min(280, Math.max(0, Math.round(from.top - ur.getBoundingClientRect().top))) + "px"); void ur.offsetWidth; ur.classList.add("aiIn"); }
@@ -1714,7 +1732,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       };
       const upd = () => {
         if (!ai.content) return;                   // only events so far: the steps stay
-        const first = ai.pending; ai.pending = false; ai.status = ""; clearTimeout(ai.swapT); ai.swapT = 0;
+        const first = ai.pending; ai.pending = false; ai.status = ""; ai.stepQ = []; clearTimeout(ai.stepTm); ai.stepTm = 0; clearTimeout(ai.swapT); ai.swapT = 0;
         if (curBub) {
           const h = (withCaret(md(ai.content)) + chipsHTML(ai.mem)) || curBub.innerHTML;
           curBub.classList.add("aiStream");
