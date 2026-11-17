@@ -260,7 +260,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiUi.fresh .aiBk.a-pop{animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) calc(var(--i,0) * 70ms) both}
 .aiUi.fresh .aiBk.a-slide{animation:aiKSlide .55s cubic-bezier(.2,.9,.3,1) calc(var(--i,0) * 70ms) both}
 .aiUi.fresh .aiBk.a-glow{animation:aiKRise .5s ease calc(var(--i,0) * 70ms) both,aiKGlow 1.6s ease calc(var(--i,0) * 70ms + .3s) 1}
-.aiUi.fresh .aiBk li,.aiUi.fresh .aiBk .aiTmI,.aiUi.fresh .aiBk .aiHlI,.aiUi.fresh .aiBk .aiPzI{animation:aiKRise .45s ease calc(var(--i,0) * 70ms + var(--k,0) * 55ms + 150ms) both}
+.aiUi.fresh .aiBk li,.aiUi.fresh .aiBk .aiRtI,.aiUi.fresh .aiBk .aiHeroS>div,.aiUi.fresh .aiBk .aiTmI,.aiUi.fresh .aiBk .aiHlI,.aiUi.fresh .aiBk .aiPzI{animation:aiKRise .45s ease calc(var(--i,0) * 70ms + var(--k,0) * 55ms + 150ms) both}
 @keyframes aiKFade{from{opacity:0}to{opacity:1}}
 @keyframes aiKRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes aiKPop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
@@ -389,12 +389,30 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiDmMi{width:100%;height:100%;transform-origin:50% 80%;animation:aiDmIdle 3.6s ease-in-out infinite}
 .aiDmMi svg{width:100%;height:100%;display:block;overflow:visible}
 @keyframes aiDmIdle{0%,100%{transform:translate(0,0) rotate(-2deg)}30%{transform:translate(6px,-7px) rotate(3deg)}65%{transform:translate(-6px,-3px) rotate(-3deg)}}
-.aiDmS{position:absolute;left:0;right:0;top:0;height:var(--caph,64px);z-index:2;box-sizing:border-box;display:flex;align-items:center;padding:max(10px,env(safe-area-inset-top)) 58px 10px 16px;background:var(--capbg,var(--accent));color:var(--on-accent,#fff);font-size:14.5px;font-weight:620;line-height:1.35;pointer-events:none;text-align:start;overflow:hidden;opacity:0;transition:opacity .3s ease}
-.aiDmS b{font-size:16px;font-weight:800}
+.aiDmS{position:absolute;left:0;right:0;top:0;height:var(--caph,64px);z-index:2;box-sizing:border-box;display:flex;align-items:center;gap:11px;padding:max(10px,env(safe-area-inset-top)) 14px 12px 14px;color:#fff;font-size:16px;font-weight:700;line-height:1.3;pointer-events:none;text-align:start;overflow:hidden;opacity:0;transition:opacity .3s ease;
+  background:linear-gradient(110deg,#6d5df6,#a259ff 38%,#ff5fa2 70%,#6d5df6);background-size:260% 100%;animation:aiDmBg 7s linear infinite;box-shadow:0 10px 34px -8px #7b5cffcc,0 0 0 1px #ffffff2e inset}
+@keyframes aiDmBg{to{background-position:260% 0}}
+.aiDmS::before{content:"";position:absolute;top:0;bottom:0;width:38%;left:-45%;background:linear-gradient(100deg,transparent,#ffffff55,transparent);transform:skewX(-18deg);animation:aiDmShine 2.8s ease-in-out infinite;pointer-events:none}
+@keyframes aiDmShine{0%{left:-45%}55%,100%{left:125%}}
 .aiDmS.on{opacity:1}
-.aiDemo.hero .aiDmS{left:26px;right:26px;height:auto;display:block;padding:0;background:none;text-align:center;font-size:17px;font-weight:600;line-height:1.55;color:#ffffffe6;text-shadow:0 2px 14px #000;overflow:visible}
-.aiDemo.hero .aiDmS b{display:block;margin-bottom:4px;font-size:25px;font-weight:850;color:#fff}
-.aiDmS i{font-style:normal;display:inline-block;opacity:0;animation:aiDmWord .4s var(--wd) cubic-bezier(.2,.9,.3,1) both}
+.aiDmS.on .aiDmSt{animation:aiDmSay .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes aiDmSay{0%{transform:translateY(-10px) scale(.96);filter:brightness(2.2)}100%{transform:none;filter:none}}
+.aiDmSa{position:relative;flex:none;width:46px;height:46px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 14px -3px #0006;animation:aiDmTalk 1.1s ease-in-out infinite}
+.aiDmSa::before,.aiDmSa::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #ffffffaa;animation:aiDmRing 1.8s ease-out infinite}.aiDmSa::after{animation-delay:.9s}
+@keyframes aiDmRing{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+@keyframes aiDmTalk{0%,100%{transform:scale(1) rotate(-2deg)}30%{transform:scale(1.07,.95) rotate(2deg)}60%{transform:scale(.97,1.05) rotate(-1deg)}}
+.aiDmSa svg{width:34px;height:34px;display:block;overflow:visible}
+.aiDmSt{position:relative;flex:1;min-width:0;text-shadow:0 1px 10px #3a1c8a99}
+.aiDmSt b{font-size:17px;font-weight:850}
+.aiDmSn{position:relative;flex:none;min-width:34px;height:22px;padding:0 7px;box-sizing:border-box;border-radius:99px;background:#00000040;display:grid;place-items:center;font-size:11.5px;font-weight:800;letter-spacing:.04em;direction:ltr}
+.aiDmPb{position:absolute;left:0;right:0;bottom:0;height:4px;background:#00000030}.aiDmPb::after{content:"";position:absolute;inset-block:0;left:0;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#fff,#ffd24a);box-shadow:0 0 12px #ffd24a}
+.aiDmPb.run::after{animation:aiDmFill var(--pd,8s) linear forwards}
+@keyframes aiDmFill{to{transform:scaleX(1)}}
+.aiDemo.hero .aiDmS{left:26px;right:26px;height:auto;display:block;padding:0;background:none;box-shadow:none;animation:none;text-align:center;font-size:17px;font-weight:600;line-height:1.55;color:#ffffffe6;text-shadow:0 2px 14px #000;overflow:visible}
+.aiDemo.hero .aiDmS::before,.aiDemo.hero .aiDmSa,.aiDemo.hero .aiDmSn,.aiDemo.hero .aiDmPb{display:none}
+.aiDemo.hero .aiDmSt{text-shadow:0 2px 14px #000;animation:none!important}
+.aiDemo.hero .aiDmSt b{display:block;margin-bottom:4px;font-size:25px;font-weight:850;color:#fff}
+.aiDmSt i{font-style:normal;display:inline-block;opacity:0;animation:aiDmWord .4s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 @keyframes aiDmWord{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
 .aiDmMi.jump{animation:aiDmJump .75s cubic-bezier(.3,1.6,.5,1)}
 .aiDmMi.wig{animation:aiDmWig .8s ease-in-out}
@@ -428,7 +446,25 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 @keyframes aiDmPart{0%{opacity:0;transform:translate(0,0) scale(.3)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1) rotate(40deg)}}
 .aiSd.aiDmPress{transform:scale(.8)!important;box-shadow:0 0 0 9px color-mix(in srgb,var(--accent) 38%,transparent)}
 .aiIn.aiDmFocus textarea{outline:2px solid var(--accent);border-color:transparent;box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}
-@media (prefers-reduced-motion:reduce){.aiDmMi,.aiDmS i,.aiDmTap,.aiDmGo,.aiDmGlow,.aiDmP,.aiDmBtns button{animation:none!important}.aiDmS i{opacity:1}}
+@media (prefers-reduced-motion:reduce){.aiDmS,.aiDmS::before,.aiDmSa,.aiDmSa::before,.aiDmSa::after,.aiDmSt,.aiDmMi,.aiDmSt i,.aiDmTap,.aiDmGo,.aiDmGlow,.aiDmP,.aiDmBtns button{animation:none!important}.aiDmSt i{opacity:1}}
+.aiBk.aiHero{position:relative;overflow:hidden;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px;color:#fff;border:0;background:linear-gradient(135deg,var(--bc),color-mix(in srgb,var(--bc) 52%,#1b1238))}
+.aiBk.aiHero::before{content:"";position:absolute;inset-inline-end:-34px;top:-46px;width:140px;height:140px;border-radius:50%;background:#ffffff1c}
+.aiBk.aiHero::after{content:"";position:absolute;inset-inline-start:-24px;bottom:-52px;width:110px;height:110px;border-radius:50%;background:#ffffff12}
+.aiBk.aiHero.soft{color:var(--text);background:color-mix(in srgb,var(--bc) 14%,var(--card));border:1px solid color-mix(in srgb,var(--bc) 30%,var(--line))}
+.aiHeroI{position:relative;flex:none;width:48px;height:48px;border-radius:15px;background:#ffffff2e;display:grid;place-items:center;animation:aiHeroF 3.2s ease-in-out infinite}.aiHeroI .aiIc{width:27px;height:27px;color:#fff}
+.aiHero.soft .aiHeroI{background:var(--bc)}
+.aiHeroT{position:relative;flex:1;min-width:0}.aiHeroT b{display:block;font-size:19px;font-weight:850;line-height:1.2}.aiHeroT em{display:block;font-style:normal;font-size:14px;opacity:.92;margin-top:2px}
+.aiBk.aiHero .aiHeroT small{color:#ffffffd6;margin-top:3px}.aiBk.aiHero.soft .aiHeroT small{color:var(--muted)}
+.aiHeroS{position:relative;flex-basis:100%;display:flex;gap:8px}.aiHeroS>div{flex:1;min-width:0;text-align:center;padding:8px 6px;border-radius:13px;background:#ffffff26}
+.aiHero.soft .aiHeroS>div{background:color-mix(in srgb,var(--bc) 16%,var(--card))}
+.aiHeroS b{display:block;font-size:20px;font-weight:900;line-height:1.15;direction:ltr}.aiBk.aiHero .aiHeroS small{color:#ffffffcc;font-size:12px}.aiBk.aiHero.soft .aiHeroS small{color:var(--muted)}
+@keyframes aiHeroF{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}
+.aiRtI{display:flex;align-items:center;gap:12px;padding:8px 0}.aiRtI+.aiRtI{border-top:1px dashed color-mix(in srgb,var(--bc) 26%,var(--line))}
+.aiRtI>i{flex:none;min-width:46px;height:38px;padding:0 10px;box-sizing:border-box;border-radius:13px;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:18px;letter-spacing:-.01em;color:#fff;direction:ltr;background:linear-gradient(145deg,var(--rc),color-mix(in srgb,var(--rc) 58%,#000));box-shadow:0 5px 14px -5px var(--rc)}
+.aiRtI>i.dot{min-width:14px;width:14px;height:14px;padding:0;border-radius:50%}
+.aiRtI>div{min-width:0;flex:1}.aiRtI b{display:block;font-size:14.5px;line-height:1.25}
+.aiRt.pills .aiRtI{display:inline-flex;margin:0 6px 6px 0;padding:5px 12px 5px 6px;border:1px solid color-mix(in srgb,var(--rc) 40%,var(--line));border-radius:99px;background:color-mix(in srgb,var(--rc) 12%,var(--card))}.aiRt.pills .aiRtI+.aiRtI{border-top:1px solid color-mix(in srgb,var(--rc) 40%,var(--line))}
+.aiRt.pills .aiRtI>i{min-width:30px;height:28px;border-radius:99px;font-size:14px}.aiRt.pills .aiRtI small{display:none}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -1062,6 +1098,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       case "quote": return uiBk(b, "aiQt " + (b.s || "quote"), (b.s === "definition" ? "<b>" + esc2(b.su || b.ti || "") + "</b><p>" + esc2(b.tx) + "</p>" : "<p>" + esc2(b.tx) + "</p>" + (b.su || b.ti ? "<small>" + esc2(b.su || b.ti) + "</small>" : "")), false);
       case "summary": return uiBk(b, "aiSm " + (b.s || "card"), (b.ti ? "<b>" + (b.ic ? uiIc(b.ic) : "") + esc2(b.ti) + "</b>" : "") + (b.tx ? "<p>" + esc2(b.tx) + "</p>" : "") + (it.length ? "<ul>" + it.map(x => "<li>" + esc2(x.l) + "</li>").join("") + "</ul>" : ""), false);
       case "heading": return uiBk(b, "aiHg " + (b.s || "plain"), (b.ic ? uiIc(b.ic) : "") + "<div><b>" + esc2(b.ti) + "</b>" + (b.tx ? "<small>" + esc2(b.tx) + "</small>" : "") + "</div>", false);
+      case "hero": return b.ti ? uiBk(b, "aiHero " + (b.s || "gradient"), '<span class="aiHeroI">' + uiIc(b.ic || "star") + '</span><div class="aiHeroT"><b>' + esc2(b.ti) + "</b>" + (b.su ? "<em>" + esc2(b.su) + "</em>" : "") + (b.tx ? "<small>" + esc2(b.tx) + "</small>" : "") + "</div>" +
+        (it.length ? '<div class="aiHeroS">' + it.map((x, i) => '<div style="--k:' + i + '"><b>' + esc2(x.v) + "</b><small>" + esc2(x.l) + "</small></div>").join("") + "</div>" : ""), false) : "";
+      case "routes": return it.length ? uiBk(b, "aiRt " + (b.s || "badges"), it.map((x, i) => '<div class="aiRtI" style="--k:' + i + ";--rc:hsl(" + dlHue(x.b || x.l) + ' 70% 48%)">' + (x.b ? "<i>" + esc2(x.b) + "</i>" : '<i class="dot"></i>') + "<div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></div>").join(""), true) : "";
       case "tags": return it.length ? uiBk(b, "aiTg", it.map(x => "<span>" + (x.ic ? uiIc(x.ic) : "") + esc2(x.l) + "</span>").join(""), true) : "";
       default: return null;
     }
@@ -2369,7 +2408,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // builds the black stage with Uri on it; used both for the first-time gate and for the replay
   function demoStage(L, withGate) {
     const ov = document.createElement("div"); ov.className = "aiDemo hero" + (withGate ? " gate" : "");
-    ov.innerHTML = '<div class="aiDmGlow"></div><button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"></div>' +
+    ov.innerHTML = '<div class="aiDmGlow"></div><button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"><span class="aiDmSa">' + FACE + '</span><span class="aiDmSt"></span><span class="aiDmSn"></span><i class="aiDmPb"></i></div>' +
       (withGate ? '<div class="aiDmBtns"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div>" : "");
     panel.appendChild(ov);
     try { const hd = panel.querySelector(".aiHd"); if (hd) { const cs = getComputedStyle(hd); ov.style.setProperty("--caph", Math.round(hd.getBoundingClientRect().bottom - panel.getBoundingClientRect().top) + "px"); ov.style.setProperty("--capbg", cs.backgroundImage && cs.backgroundImage !== "none" ? cs.backgroundImage : cs.backgroundColor); } } catch (e) {}
@@ -2407,7 +2446,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   // Uri's body language: where it stands, what it says, how it moves, and emotional bursts
   function demoApi(ov, L, tok) {
-    const M = ov.querySelector(".aiDmM"), Mi = ov.querySelector(".aiDmMi"), S = ov.querySelector(".aiDmS");
+    const M = ov.querySelector(".aiDmM"), Mi = ov.querySelector(".aiDmMi"), S = ov.querySelector(".aiDmS"), St = S.querySelector(".aiDmSt"), Sn = S.querySelector(".aiDmSn"), Pb = S.querySelector(".aiDmPb");
     Mi.addEventListener("animationend", () => { if (Mi.className !== "aiDmMi") Mi.className = "aiDmMi"; });
     const api = {
       dw: t => new Promise((ok, no) => setTimeout(() => (demoOn && demoTok === tok) ? ok() : no(new Error("demo-stop")), t)),
@@ -2418,10 +2457,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         S.style.top = hero ? "calc(" + y + "% + " + (size / 2 + 20) + "px)" : "";
       },
       say(t, html) {
-        S.innerHTML = html ? "<span>" + t + "</span>" : "<span>" + String(t).split(" ").map((w, k) => '<i style="--wd:' + (k * 0.05).toFixed(2) + 's">' + esc2(w) + "</i>").join(" ") + "</span>";
+        St.innerHTML = html ? "<span>" + t + "</span>" : "<span>" + String(t).split(" ").map((w, k) => '<i style="--wd:' + (k * 0.05).toFixed(2) + 's">' + esc2(w) + "</i>").join(" ") + "</span>";
         S.classList.remove("on"); void S.offsetWidth; S.classList.add("on");
       },
       act(n) { Mi.className = "aiDmMi"; void Mi.offsetWidth; Mi.className = "aiDmMi " + n; },
+      step(n, total) { Sn.textContent = n + "/" + total; Pb.classList.remove("run"); void Pb.offsetWidth; Pb.style.setProperty("--pd", (DEMO_PART / 1000) + "s"); Pb.classList.add("run"); },
       burst(kind) {
         const r = M.getBoundingClientRect(), P = panel.getBoundingClientRect(), cx = r.left + r.width / 2 - P.left, cy = r.top + r.height / 2 - P.top;
         const cols = ["#ff6b8b", "#ffd24a", "#7ad7ff", "#9b8cff", "#5ee0a0", "#ff9f43"];
@@ -2439,7 +2479,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   async function demoRun(L, tok, ov, api, onExit) {
-    const { dw, place, say, act, burst } = api;
+    const { dw, place, say, act, burst, step } = api;
     ov.querySelector(".aiDmX").onclick = () => { demoStop(false); onExit(); };
     const type = async text => {
       const wrap = input.closest(".aiIn"); input.readOnly = true; if (wrap) wrap.classList.add("aiDmFocus");
@@ -2456,7 +2496,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       return a;
     };
     // every part lasts exactly DEMO_PART: the scene runs, then waits for whatever time is left
-    const part = async fn => { const t0 = Date.now(); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
+    let partNo = 0;
+    const part = async fn => { const t0 = Date.now(); step(++partNo, 8); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
     try {
       ms.innerHTML = ""; ms.style.paddingBottom = "190px";
       // part 1: hello (big, in the middle, on the black stage)
