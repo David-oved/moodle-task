@@ -1902,12 +1902,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         if (!r.ok) throw new AiErr(errKind(r));
         conv = (await r.json()).id; LS.set("aiConv", conv);
       }
-      let res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true, ctx: ctx || undefined } });
+      let res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true, ctx: ctx || undefined, lang: lang() } });
       if (res.status === 404) {                // the conversation is gone on the server: start a new one and send again
         const r = await call("/api/conversations", { method: "POST" });
         if (!r.ok) throw new AiErr(errKind(r));
         conv = (await r.json()).id; LS.set("aiConv", conv);
-        res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true, ctx: ctx || undefined } });
+        res = await call("/api/chat/stream/v2", { method: "POST", ctl: myCtl, timeout: 95000, body: { conversation_id: conv, question: text, moodle_token: M.token || null, status: true, ctx: ctx || undefined, lang: lang() } });
       }
       if (!res.ok) throw new AiErr(errKind(res));
       clearTimeout(wake); setStatus();
