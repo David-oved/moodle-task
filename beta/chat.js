@@ -373,33 +373,31 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiBk{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
 .aiBk *{min-width:0;max-width:100%}
 .aiHrow b,.aiHtab b{white-space:normal}
-.aiDmGate{position:absolute;inset:0;z-index:31;display:grid;place-items:center;padding:24px;background:#05060d99;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);animation:aiFadeIn .35s ease both}
-.aiDmGate.out{animation:aiDmOut .3s ease both}
-@keyframes aiDmOut{to{opacity:0}}
-.aiDmGB{width:min(340px,100%);padding:26px 22px 20px;border-radius:26px;text-align:center;color:var(--text);background:var(--card);border:1px solid var(--line);box-shadow:0 24px 60px #0008;animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) both}
-.aiDmGM{width:96px;height:96px;margin:-62px auto 8px;filter:drop-shadow(0 10px 22px color-mix(in srgb,var(--accent) 65%,transparent));animation:aiDmFloat 2.4s ease-in-out infinite}
-.aiDmGM svg{width:100%;height:100%;overflow:visible}
-.aiDmGB h3{margin:6px 0 6px;font-size:20px;font-weight:850}.aiDmGB p{margin:0 0 18px;color:var(--muted);font-size:14.5px;line-height:1.45}
-.aiDmGBt{display:flex;flex-direction:column;gap:9px}
-.aiDmGBt button{padding:13px;border-radius:15px;border:0;font:inherit;font-size:15.5px;font-weight:750;cursor:pointer;transition:transform .15s}
-.aiDmGBt button:active{transform:scale(.97)}
-.aiDmNow{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#7b5cff));color:var(--on-accent,#fff)}
-.aiDmLater{background:color-mix(in srgb,var(--text) 8%,transparent);color:var(--text)}
-@keyframes aiDmFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
-.aiDemo{position:absolute;inset:0;z-index:30;pointer-events:auto;overflow:hidden}
-.aiDmX{position:absolute;top:calc(10px + env(safe-area-inset-top));inset-inline-start:10px;z-index:2;width:36px;height:36px;border-radius:50%;border:1.5px solid #ffffff59;background:#0006;color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.aiDemo{position:absolute;inset:0;z-index:30;pointer-events:auto;overflow:hidden;background:transparent;transition:background .9s ease}
+.aiDemo.hero{background:#05060d}
+.aiDemo.hero.dim,.aiDemo.dim{background:#05060dc4}
+.aiDmGlow{position:absolute;left:50%;top:34%;width:min(80vw,360px);aspect-ratio:1;margin:calc(min(80vw,360px) / -2) 0 0 calc(min(80vw,360px) / -2);border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 50%,transparent) 0%,transparent 66%);opacity:0;transition:opacity .9s;pointer-events:none}
+.aiDemo.hero .aiDmGlow{opacity:1;animation:aiDmGlowP 3.4s ease-in-out infinite}
+@keyframes aiDmGlowP{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.aiDmX{position:absolute;top:calc(10px + env(safe-area-inset-top));inset-inline-start:10px;z-index:3;width:36px;height:36px;border-radius:50%;border:1.5px solid #ffffff59;background:#0006;color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.aiDemo.gate .aiDmX{display:none}
 .aiDmX svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
-.aiDemo.hero{background:#05060d99;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-.aiDmM{position:absolute;inset-inline-start:12px;bottom:calc(92px + env(safe-area-inset-bottom));width:66px;height:66px;transition:inset-inline-start .9s cubic-bezier(.34,1.3,.5,1),bottom .9s cubic-bezier(.34,1.3,.5,1),width .9s cubic-bezier(.34,1.3,.5,1),height .9s cubic-bezier(.34,1.3,.5,1);filter:drop-shadow(0 6px 14px color-mix(in srgb,var(--accent) 60%,transparent));pointer-events:none}
-.aiDmMi{width:100%;height:100%;transform-origin:50% 80%}.aiDmMi svg{width:100%;height:100%;display:block;overflow:visible}
-.aiDemo.hero .aiDmM{inset-inline-start:calc(50% - 62px);bottom:52%;width:124px;height:124px}
-.aiDmS{position:absolute;inset-inline-start:90px;inset-inline-end:12px;bottom:calc(98px + env(safe-area-inset-bottom));padding:11px 15px;border-radius:18px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 62%,#7b5cff));color:var(--on-accent,#fff);font-size:15px;font-weight:650;line-height:1.4;box-shadow:0 10px 26px -8px #000a;pointer-events:none;transition:inset-inline-start .9s cubic-bezier(.34,1.3,.5,1),inset-inline-end .9s,bottom .9s cubic-bezier(.34,1.3,.5,1)}
-.aiDmS::after{content:"";position:absolute;inset-inline-start:-6px;bottom:18px;width:14px;height:14px;background:inherit;transform:rotate(45deg);border-radius:3px;z-index:-1}
+/* Uri walks around: --mx/--my are percentages of the screen, --ms the size */
+.aiDmM{position:absolute;left:calc(var(--mx, 50) * 1%);top:calc(var(--my, 34) * 1%);width:var(--ms, 66px);height:var(--ms, 66px);margin:calc(var(--ms, 66px) / -2) 0 0 calc(var(--ms, 66px) / -2);z-index:2;
+  transition:left 1.15s cubic-bezier(.34,1.35,.5,1),top 1.15s cubic-bezier(.34,1.35,.5,1),width .9s cubic-bezier(.34,1.3,.5,1),height .9s cubic-bezier(.34,1.3,.5,1),margin .9s cubic-bezier(.34,1.3,.5,1);
+  filter:drop-shadow(0 6px 16px color-mix(in srgb,var(--accent) 65%,transparent));pointer-events:none}
+.aiDmMi{width:100%;height:100%;transform-origin:50% 80%;animation:aiDmIdle 3.6s ease-in-out infinite}
+.aiDmMi svg{width:100%;height:100%;display:block;overflow:visible}
+@keyframes aiDmIdle{0%,100%{transform:translate(0,0) rotate(-2deg)}30%{transform:translate(6px,-7px) rotate(3deg)}65%{transform:translate(-6px,-3px) rotate(-3deg)}}
+.aiDmS{position:absolute;left:14px;right:14px;z-index:2;padding:11px 15px;border-radius:18px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 62%,#7b5cff));color:var(--on-accent,#fff);font-size:15px;font-weight:650;line-height:1.45;box-shadow:0 10px 26px -8px #000a;pointer-events:none;text-align:center;
+  transition:top 1.15s cubic-bezier(.34,1.35,.5,1),bottom 1.15s cubic-bezier(.34,1.35,.5,1)}
+.aiDmS b{font-size:17px;font-weight:850}
+.aiDmS::after{content:"";position:absolute;left:clamp(16px,calc(var(--tx, 50) * 1% - 21px),calc(100% - 30px));width:14px;height:14px;background:inherit;transform:rotate(45deg);border-radius:3px;z-index:-1}
+.aiDmS.below::after{top:-6px}.aiDmS.above::after{bottom:-6px}
 .aiDmS.on{animation:aiKPop .45s cubic-bezier(.34,1.56,.64,1) both}
+.aiDemo.hero .aiDmS{left:22px;right:22px;font-size:16.5px}
 .aiDmS i{font-style:normal;display:inline-block;opacity:0;animation:aiDmWord .4s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 @keyframes aiDmWord{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
-.aiDemo.hero .aiDmS{inset-inline-start:22px;inset-inline-end:22px;bottom:calc(52% - 92px);text-align:center;font-size:17px}
-.aiDemo.hero .aiDmS::after{inset-inline-start:calc(50% - 7px);bottom:auto;top:-6px}
 .aiDmMi.jump{animation:aiDmJump .75s cubic-bezier(.3,1.6,.5,1)}
 .aiDmMi.wig{animation:aiDmWig .8s ease-in-out}
 .aiDmMi.spin{animation:aiDmSpin .9s cubic-bezier(.3,1.2,.4,1)}
@@ -412,14 +410,27 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 @keyframes aiDmFlip{0%{transform:perspective(500px) rotateY(0)}100%{transform:perspective(500px) rotateY(360deg)}}
 @keyframes aiDmShake{0%,100%{transform:translateX(0)}15%{transform:translateX(-9px) rotate(-6deg)}35%{transform:translateX(9px) rotate(6deg)}55%{transform:translateX(-6px)}75%{transform:translateX(5px)}}
 @keyframes aiDmWave{0%,100%{transform:rotate(0)}15%{transform:rotate(-16deg)}30%{transform:rotate(14deg)}45%{transform:rotate(-12deg)}60%{transform:rotate(10deg)}}
-.aiDmGo{position:absolute;inset-inline:22px;bottom:calc(34px + env(safe-area-inset-bottom));padding:15px;border-radius:17px;border:0;font:inherit;font-size:17px;font-weight:800;color:var(--on-accent,#fff);background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#7b5cff));cursor:pointer;box-shadow:0 12px 30px -8px color-mix(in srgb,var(--accent) 70%,#000);animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) both}
+/* the two buttons that open under Uri at the start (the walk-through is required) */
+.aiDmBtns{position:absolute;left:24px;right:24px;bottom:calc(9% + env(safe-area-inset-bottom));z-index:2;display:flex;flex-direction:column;gap:10px}
+.aiDmBtns.out{animation:aiDmOut .3s ease both}
+@keyframes aiDmOut{to{opacity:0;transform:translateY(12px)}}
+.aiDmBtns button{padding:14px;border-radius:16px;border:0;font:inherit;font-size:16px;font-weight:780;cursor:pointer;transition:transform .15s;animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) both}
+.aiDmBtns .aiDmNow{animation-delay:1.1s}.aiDmBtns .aiDmLater{animation-delay:1.3s}
+.aiDmBtns button:active{transform:scale(.97)}
+.aiDmNow{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#7b5cff));color:var(--on-accent,#fff)}
+.aiDmLater{background:#ffffff1f;color:#fff;border:1px solid #ffffff40!important}
+.aiDmGo{position:absolute;left:22px;right:22px;bottom:calc(34px + env(safe-area-inset-bottom));z-index:2;padding:15px;border-radius:17px;border:0;font:inherit;font-size:17px;font-weight:800;color:var(--on-accent,#fff);background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#7b5cff));cursor:pointer;box-shadow:0 12px 30px -8px color-mix(in srgb,var(--accent) 70%,#000);animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) both}
 .aiDmTap{position:absolute;z-index:3;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;border:3px solid #fff;background:#ffffff40;pointer-events:none;animation:aiDmTapA 1.1s ease-out both}
 .aiDmTap.hold{animation:aiDmHoldA .9s ease-in-out both}
 @keyframes aiDmTapA{0%{transform:scale(.3);opacity:1}100%{transform:scale(1.6);opacity:0}}
 @keyframes aiDmHoldA{0%{transform:scale(.4);opacity:0}25%{opacity:1;transform:scale(1)}100%{transform:scale(.8);opacity:1;background:#ffffff80}}
+.aiDmP{position:absolute;z-index:4;width:20px;height:20px;margin:-10px 0 0 -10px;pointer-events:none;opacity:0;animation:aiDmPart 1.7s cubic-bezier(.2,.8,.3,1) var(--dl,0ms) both}
+.aiDmP .aiIc{width:100%;height:100%;fill:currentColor;stroke:none}
+.aiDmP.dot{width:9px;height:9px;margin:-4px 0 0 -4px;border-radius:50%}
+@keyframes aiDmPart{0%{opacity:0;transform:translate(0,0) scale(.3)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1) rotate(40deg)}}
 .aiSd.aiDmPress{transform:scale(.8)!important;box-shadow:0 0 0 9px color-mix(in srgb,var(--accent) 38%,transparent)}
 .aiIn.aiDmFocus textarea{outline:2px solid var(--accent);border-color:transparent;box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}
-@media (prefers-reduced-motion:reduce){.aiDmGM,.aiDmMi,.aiDmS.on,.aiDmS i,.aiDmTap,.aiDmGo,.aiDmGB{animation:none!important}.aiDmS i{opacity:1}}
+@media (prefers-reduced-motion:reduce){.aiDmMi,.aiDmS.on,.aiDmS i,.aiDmTap,.aiDmGo,.aiDmGlow,.aiDmP,.aiDmBtns button{animation:none!important}.aiDmS i{opacity:1}}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -724,6 +735,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     '<path class="aiMouth" d="M14.6 26.2q1.6-2.4 3.2 0t3.2 0 3.2 0"/><path class="aiTongue" d="M22.2 26.4v2.2a1.5 1.5 0 0 0 3 0v-2.2z"/></svg>';
   const I_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const I_HIST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>';
+  const I_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg>';
   const I_NEW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
   const I_BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   const I_SEND = '<svg class="aiSendI" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>';
@@ -1828,7 +1840,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.innerHTML =
       '<div class="aiHd"><button type="button" class="aiHb" data-a="close"></button>' +
       '<div class="aiTt"><div class="aiAv">' + FACE + '<span class="aiTag">AI</span></div><div class="aiTl"><b></b><small></small></div></div>' +
-      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="mem"></button><button type="button" class="aiHb" data-a="new"></button></div>' +
+      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="mem"></button><button type="button" class="aiHb" data-a="new"></button><button type="button" class="aiHb" data-a="demo"></button></div>' +
       '<div class="aiMs" role="log" aria-live="polite"></div>' +
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
       '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
@@ -1842,6 +1854,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     histBtn.onclick = () => (histMode || memMode ? renderMsgs() : openHistory());
     memBtn.onclick = () => (memMode ? renderMsgs() : openMemory());
     panel.querySelector('[data-a="new"]').onclick = () => { startNew(); if (matchMedia("(hover:hover)").matches) input.focus(); };
+    panel.querySelector('[data-a="demo"]').onclick = () => demoReplay();
     // sending must not close the keyboard: remember if it was up, keep the focus where it is, and put it back after the send
     sendBtn.addEventListener("pointerdown", () => { kbIntent = document.activeElement === input; });
     sendBtn.addEventListener("mousedown", e => e.preventDefault());
@@ -1934,6 +1947,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.querySelector('[data-a="close"]').innerHTML = I_X; panel.querySelector('[data-a="close"]').setAttribute("aria-label", tx("close")); panel.querySelector('[data-a="close"]').title = tx("close");
     memBtn.innerHTML = I_BRAIN; memBtn.setAttribute("aria-label", tx("memTitle")); memBtn.title = tx("memTitle");
     const nb = panel.querySelector('[data-a="new"]'); nb.innerHTML = I_NEW; nb.setAttribute("aria-label", tx("newc")); nb.title = tx("newc");
+    const db = panel.querySelector('[data-a="demo"]'); db.innerHTML = I_PLAY; { const lbl = demoData().replay; db.setAttribute("aria-label", lbl); db.title = lbl; }
     input.placeholder = tx("ph"); input.setAttribute("aria-label", tx("ph"));
     panel.querySelector(".aiNt").textContent = tx("note");
     panel.setAttribute("aria-label", tx("title"));
@@ -2254,33 +2268,37 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     // timeline: the face grows out of the circle into the middle of the screen, then the scenes follow one another
     later(() => { setFace(0, -vh / 2 * .26, 1, 0); face.classList.add("atBreathe"); }, 350);
     later(burst, 1000);
-    const START = 1300, STEP = 2900;
+    const START = 1300, STEP = 2800;
     scenes.forEach((sc, i) => {
       later(() => scene(i), START + i * STEP);
       if (i < scenes.length - 1) later(() => txEl.classList.add("atGone"), START + (i + 1) * STEP - 420);
     });
-    later(finish, START + (scenes.length - 1) * STEP + 3300);
+    later(finish, START + scenes.length * STEP);             // the last part gets exactly the same time as every other part
     later(finish, 30000);                                      // safety net: whatever happens, the screen is never locked for good
   }
 
   // =============================================================================================
-  // Uri's guided demo: the first time the chat is opened (after the wink) Uri offers a short walk-through, and the chat stays locked until it was watched.
+  // Uri's guided demo: the first time the chat is opened (after the wink) the screen stays black, Uri stays on it, and two buttons open: the walk-through is required before chatting.
   // It plays INSIDE the real chat: a question is typed into the real input box, the real send button is pressed, the real bubbles and cards appear.
-  // Nothing is sent to the server - the answers are prepared and simply come up with the same animations. Uri (the mascot) explains every feature.
+  // Nothing is sent to the server - the answers are prepared and simply come up with the same animations. Uri (the mascot) walks around the screen and explains every feature.
+  // Every part of the walk-through lasts exactly the same time (DEMO_PART). A button in the chat header plays it again.
   // =============================================================================================
   let demoOn = false, demoTok = 0;
+  const DEMO_PART = 8000;
   const demoSeen = () => { try { return !!LS.get("aiDemoSeen", ""); } catch (e) { return true; } };
   const demoUi = bl => { const bytes = new TextEncoder().encode(JSON.stringify({ b: bl })); let bin = ""; bytes.forEach(c => { bin += String.fromCharCode(c); }); return "[[ui:" + btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") + "]]"; };
   const demoData = () => {
     const now = Math.floor(Date.now() / 1000), H = 3600;
     const he = {
-      gateT: "אורי מתחיל הסבר קצר", gateS: "בערך דקה, ואז אפשר להתחיל. רוצים לצפות עכשיו?", now: "לצפות עכשיו", later: "בפעם אחרת", go: "יאללה, מתחילים", exit: "יציאה",
+      gateT: "אורי מתחיל הסבר קצר", gateS: "כדי להתחיל לשוחח איתי צריך לצפות בהסבר, זה לוקח כדקה. אפשר עכשיו או בפעם אחרת, ובינתיים הצ'אט נעול.",
+      now: "לצפות עכשיו", later: "בפעם אחרת", go: "יאללה, מתחילים", exit: "יציאה", replay: "הסבר מאורי (סרטון)",
       hi: "היי, אני אורי! בדקה אראה לך איך הכול עובד. זו הדגמה, אף שאלה לא נשלחת באמת.",
       s1: "כותבים לי שאלה, בדיוק כמו לחבר", s1b: "ושולחים. אני עונה תוך רגע, עם כפתורים ללחיצה",
       s2: "אני מכיר את כל המידע על המרכז האקדמי לב, לא רק את Moodle", s2b: "מעונות, שכר לימוד, שעות, אנשי קשר, לוח שנה ומפות. הכול מהאתר הרשמי",
       s3: "וגם את האישי שלך מ-Moodle: מטלות, ציונים וקבצים", s3b: "איחורים באדום, וספירה לאחור לכל מועד (זו דוגמה)",
       s4: "צריך לדבר עם מישהו? אני נותן את הפרטים", s4b: "חיוג, מייל, וואטסאפ או העתקה, בלחיצה אחת",
       s5: "ועוד טריק: לחיצה ארוכה", s5b: "על מטלה, קורס או הודעה, ואני פותח תפריט: לשאול עליה, לקבל קבצים או להעתיק",
+      heart: "ואם משהו לא ברור, תגידו לי. אני לומד מכם ומשתפר כל הזמן, כי אכפת לי שיהיה לכם קל.",
       bye: "זהו! אני אורי, ואני כאן בשבילך. שאלו אותי כל דבר.",
       q1: "איך מגיעים לקמפוס לב?", q2: "כמה עולה חדר במעונות?", q3: "מה המטלות שלי השבוע?", q4: "איך מדברים עם מזכירות תלמידים?",
       a1: [{ k: "location", s: "card", ti: "קמפוס לב", su: "גבעת מרדכי, ירושלים", tx: "קמפוס לב, גבעת מרדכי, ירושלים", co: "green" },
@@ -2293,13 +2311,15 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         { k: "hours", s: "compact", ti: "שעות קבלה", co: "blue", it: [{ d: "א', ג'", h: "13:00-16:30", l: "" }, { d: "ב', ד', ה'", h: "13:00-15:00", l: "" }] }],
     };
     const en = {
-      gateT: "Uri is starting a short walk-through", gateS: "About a minute, then you can start. Watch it now?", now: "Watch now", later: "Another time", go: "Let's start", exit: "Exit",
+      gateT: "Uri is starting a short walk-through", gateS: "To start chatting with me you need to watch it, it takes about a minute. Now or another time - until then the chat is locked.",
+      now: "Watch now", later: "Another time", go: "Let's start", exit: "Exit", replay: "Watch Uri's walk-through",
       hi: "Hi, I'm Uri! In a minute I'll show you how everything works. This is a demo, no question is really sent.",
       s1: "You write me a question, just like to a friend", s1b: "and send it. I answer in a moment, with buttons you can tap",
       s2: "I know all the information about the Lev Academic Center, not only Moodle", s2b: "Dorms, tuition, hours, contacts, calendar and maps. All from the official site",
       s3: "And your personal data from Moodle too: tasks, grades and files", s3b: "Late items in red, and a countdown for every deadline (this is an example)",
       s4: "Need to talk to someone? I give you the details", s4b: "Call, email, WhatsApp or copy, with one tap",
       s5: "One more trick: a long press", s5b: "on a task, a course or a message, and I open a menu: ask about it, get its files or copy",
+      heart: "And if something is unclear, tell me. I learn from you and keep getting better, because I care that it is easy for you.",
       bye: "That's it! I'm Uri and I'm here for you. Ask me anything.",
       q1: "How do I get to the Lev campus?", q2: "How much is a dorm room?", q3: "What are my tasks this week?", q4: "How do I contact the students' secretariat?",
       a1: [{ k: "location", s: "card", ti: "Lev campus", su: "Givat Mordechai, Jerusalem", tx: "Lev campus, Givat Mordechai, Jerusalem", co: "green" },
@@ -2317,7 +2337,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function demoStop(restore) {
     if (!panel) return;
     const was = demoOn; demoOn = false; demoTok++;
-    panel.querySelectorAll(".aiDemo,.aiDmGate,.aiDmTap").forEach(x => x.remove());
+    panel.querySelectorAll(".aiDemo,.aiDmTap,.aiDmP").forEach(x => x.remove());
     if (!was) return;
     try { closeMenu(); } catch (e) {}
     if (input) { input.readOnly = false; input.value = ""; const w = input.closest(".aiIn"); if (w) w.classList.remove("aiDmFocus"); }
@@ -2326,32 +2346,83 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (restore) { try { renderMsgs(); } catch (e) {} }
   }
 
+  // builds the black stage with Uri on it; used both for the first-time gate and for the replay
+  function demoStage(L, withGate) {
+    const ov = document.createElement("div"); ov.className = "aiDemo hero" + (withGate ? " gate" : "");
+    ov.innerHTML = '<div class="aiDmGlow"></div><button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"></div>' +
+      (withGate ? '<div class="aiDmBtns"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div>" : "");
+    panel.appendChild(ov);
+    return ov;
+  }
+
   // resolves true when the student finished the demo, false when he left (the chat then closes and the demo is offered again next time)
   function demoGate() {
     return new Promise(res => {
       const L = demoData();
       demoOn = true; const tok = ++demoTok;
-      const g = document.createElement("div"); g.className = "aiDmGate";
-      g.innerHTML = '<div class="aiDmGB"><div class="aiDmGM">' + FACE + "</div><h3>" + esc2(L.gateT) + "</h3><p>" + esc2(L.gateS) + '</p><div class="aiDmGBt"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div></div>";
-      panel.appendChild(g);
-      g.querySelector(".aiDmLater").onclick = () => { demoStop(false); res(false); };
-      g.querySelector(".aiDmNow").onclick = async () => {
-        g.classList.add("out"); setTimeout(() => g.remove(), 300);
-        const ok = await demoRun(L, tok, () => res(false));
+      const ov = demoStage(L, true), api = demoApi(ov, L, tok);
+      api.place(50, 34, 124, true);
+      api.say('<b>' + esc2(L.gateT) + "</b><br>" + esc2(L.gateS), true);
+      api.act("wave");
+      ov.querySelector(".aiDmLater").onclick = () => { demoStop(false); res(false); };
+      ov.querySelector(".aiDmNow").onclick = async () => {
+        ov.classList.remove("gate"); const b = ov.querySelector(".aiDmBtns"); if (b) { b.classList.add("out"); setTimeout(() => b.remove(), 350); }
+        const ok = await demoRun(L, tok, ov, api, () => res(false));
         if (ok) { try { LS.set("aiDemoSeen", "1"); } catch (e) {} demoStop(true); res(true); }
       };
     });
   }
 
-  async function demoRun(L, tok, onExit) {
-    const dw = t => new Promise((ok, no) => setTimeout(() => (demoOn && demoTok === tok) ? ok() : no(new Error("demo-stop")), t));
-    const ov = document.createElement("div"); ov.className = "aiDemo hero";
-    ov.innerHTML = '<button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"></div>';
-    panel.appendChild(ov);
-    const Mi = ov.querySelector(".aiDmMi"), S = ov.querySelector(".aiDmS");
+  // replay from the button in the header (does not change the "seen" flag; leaving just returns to the chat)
+  async function demoReplay() {
+    if (!panel || demoOn || busy || closing) return;
+    const L = demoData();
+    demoOn = true; const tok = ++demoTok;
+    const ov = demoStage(L, false), api = demoApi(ov, L, tok);
+    api.place(50, 34, 124, true);
+    const ok = await demoRun(L, tok, ov, api, () => {});
+    if (ok) demoStop(true);
+  }
+
+  // Uri's body language: where it stands, what it says, how it moves, and emotional bursts
+  function demoApi(ov, L, tok) {
+    const M = ov.querySelector(".aiDmM"), Mi = ov.querySelector(".aiDmMi"), S = ov.querySelector(".aiDmS");
+    Mi.addEventListener("animationend", () => { if (Mi.className !== "aiDmMi") Mi.className = "aiDmMi"; });
+    const api = {
+      dw: t => new Promise((ok, no) => setTimeout(() => (demoOn && demoTok === tok) ? ok() : no(new Error("demo-stop")), t)),
+      // x, y are percentages of the screen (physical left/top), size in px; the speech bubble goes below Uri when Uri is in the upper half, above it otherwise
+      place(x, y, size, hero) {
+        ov.classList.toggle("hero", !!hero);
+        M.style.setProperty("--mx", x); M.style.setProperty("--my", y); M.style.setProperty("--ms", size + "px");
+        const gap = size / 2 + 16;
+        if (y < 52) { S.style.top = "calc(" + y + "% + " + gap + "px)"; S.style.bottom = "auto"; S.classList.add("below"); S.classList.remove("above"); }
+        else { S.style.bottom = "calc(" + (100 - y) + "% + " + gap + "px)"; S.style.top = "auto"; S.classList.add("above"); S.classList.remove("below"); }
+        S.style.setProperty("--tx", x);
+      },
+      say(t, html) {
+        S.innerHTML = html ? "<span>" + t + "</span>" : "<span>" + String(t).split(" ").map((w, k) => '<i style="--wd:' + (k * 0.05).toFixed(2) + 's">' + esc2(w) + "</i>").join(" ") + "</span>";
+        S.classList.remove("on"); void S.offsetWidth; S.classList.add("on");
+      },
+      act(n) { Mi.className = "aiDmMi"; void Mi.offsetWidth; Mi.className = "aiDmMi " + n; },
+      burst(kind) {
+        const r = M.getBoundingClientRect(), P = panel.getBoundingClientRect(), cx = r.left + r.width / 2 - P.left, cy = r.top + r.height / 2 - P.top;
+        const cols = ["#ff6b8b", "#ffd24a", "#7ad7ff", "#9b8cff", "#5ee0a0", "#ff9f43"];
+        for (let k = 0; k < 18; k++) {
+          const e = document.createElement("i"); e.className = "aiDmP"; const a = Math.random() * Math.PI * 2, d = 70 + Math.random() * 110;
+          e.style.left = cx + "px"; e.style.top = cy + "px"; e.style.setProperty("--dx", Math.cos(a) * d + "px"); e.style.setProperty("--dy", (Math.sin(a) * d - 50) + "px"); e.style.setProperty("--dl", (k * 25) + "ms");
+          if (kind === "hearts" || (kind === "mix" && k % 2 === 0)) { e.innerHTML = uiIc("heart"); e.style.color = "#ff6b8b"; }
+          else if (kind === "stars") { e.innerHTML = uiIc("star"); e.style.color = "#ffd24a"; }
+          else { e.classList.add("dot"); e.style.background = cols[k % cols.length]; }
+          panel.appendChild(e); setTimeout(() => e.remove(), 1900);
+        }
+      },
+    };
+    return api;
+  }
+
+  async function demoRun(L, tok, ov, api, onExit) {
+    const { dw, place, say, act, burst } = api;
     ov.querySelector(".aiDmX").onclick = () => { demoStop(false); onExit(); };
-    const say = t => { S.innerHTML = "<span>" + String(t).split(" ").map((w, k) => '<i style="--wd:' + (k * 0.05).toFixed(2) + 's">' + esc2(w) + "</i>").join(" ") + "</span>"; S.classList.remove("on"); void S.offsetWidth; S.classList.add("on"); };
-    const act = n => { Mi.className = "aiDmMi"; void Mi.offsetWidth; Mi.className = "aiDmMi " + n; };
     const type = async text => {
       const wrap = input.closest(".aiIn"); input.readOnly = true; if (wrap) wrap.classList.add("aiDmFocus");
       for (let i = 1; i <= text.length; i++) { input.value = text.slice(0, i); input.dispatchEvent(new Event("input")); await dw(40); }
@@ -2366,35 +2437,50 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       try { ms.scrollTo({ top: Math.max(0, a.row.offsetTop - 10), behavior: "smooth" }); } catch (e) { ms.scrollTop = a.row.offsetTop; }
       return a;
     };
+    // every part lasts exactly DEMO_PART: the scene runs, then waits for whatever time is left
+    const part = async fn => { const t0 = Date.now(); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
     try {
       ms.innerHTML = ""; ms.style.paddingBottom = "190px";
-      // 0. hello
-      act("wave"); say(L.hi); await dw(5200);
-      ov.classList.remove("hero"); act("jump"); await dw(1100);
-      // 1. write and send
-      say(L.s1); act("wig"); await dw(1700);
-      await type(L.q1); act("jump"); say(L.s1b); await answer(L.a1); await dw(4300);
-      // 2. everything about the college
-      say(L.s2); act("flip"); await dw(2200);
-      await type(L.q2); await answer(L.a2); say(L.s2b); act("wig"); await dw(4600);
-      // 3. the personal Moodle data
-      say(L.s3); act("jump"); await dw(2200);
-      await type(L.q3); await answer(L.a3); say(L.s3b); act("wig"); await dw(4400);
-      // 4. contacts with one-tap actions
-      say(L.s4); act("shake"); await dw(1900);
-      await type(L.q4); const c4 = await answer(L.a4); say(L.s4b); act("jump"); await dw(1500);
-      const btn = c4.b.querySelector(".aiAc"); if (btn) { const r = btn.getBoundingClientRect(), P = panel.getBoundingClientRect(); const t = document.createElement("i"); t.className = "aiDmTap"; t.style.left = (r.left + r.width / 2 - P.left) + "px"; t.style.top = (r.top + r.height / 2 - P.top) + "px"; panel.appendChild(t); setTimeout(() => t.remove(), 1200); }
-      await dw(3200);
-      // 5. long press on a task
-      const card = ms.querySelector(".aiTk");
-      if (card) {
-        card.scrollIntoView({ block: "center", behavior: "smooth" }); say(L.s5); act("spin"); await dw(2400);
-        const r = card.getBoundingClientRect(), P = panel.getBoundingClientRect(), x = r.left + r.width * 0.3, y = r.top + r.height / 2;
-        const t = document.createElement("i"); t.className = "aiDmTap hold"; t.style.left = (x - P.left) + "px"; t.style.top = (y - P.top) + "px"; panel.appendChild(t);
-        await dw(900); t.remove(); openItemMenu(card, x, y); say(L.s5b); act("wig"); await dw(6200); closeMenu(); await dw(500);
-      }
-      // 6. goodbye
-      ms.style.paddingBottom = ""; ov.classList.add("hero"); act("spin"); say(L.bye); await dw(3200);
+      // part 1: hello (big, in the middle, on the black stage)
+      await part(async () => { act("wave"); burst("stars"); say(L.hi); await dw(1200); });
+      ov.classList.remove("hero");
+      // part 2: write and send; Uri stands by the input and then runs up to the answer
+      await part(async () => {
+        place(18, 72, 70); act("jump"); say(L.s1); await dw(1700);
+        await type(L.q1); act("jump"); const a = await answer(L.a1); place(82, 20, 66); say(L.s1b); act("wig");
+      });
+      // part 3: everything about the college
+      await part(async () => {
+        place(20, 26, 70); act("flip"); say(L.s2); await dw(1900);
+        await type(L.q2); place(82, 76, 66); await answer(L.a2); say(L.s2b); act("jump");
+      });
+      // part 4: the personal Moodle data
+      await part(async () => {
+        place(82, 76, 70); act("jump"); say(L.s3); await dw(1900);
+        await type(L.q3); place(18, 24, 66); await answer(L.a3); say(L.s3b); act("wig");
+      });
+      // part 5: contacts with one-tap actions
+      await part(async () => {
+        place(16, 74, 70); act("shake"); say(L.s4); await dw(1500);
+        await type(L.q4); const c4 = await answer(L.a4); place(84, 26, 66); say(L.s4b); act("jump"); await dw(1300);
+        const btn = c4.b.querySelector(".aiAc");
+        if (btn) { const r = btn.getBoundingClientRect(), P = panel.getBoundingClientRect(); const t = document.createElement("i"); t.className = "aiDmTap"; t.style.left = (r.left + r.width / 2 - P.left) + "px"; t.style.top = (r.top + r.height / 2 - P.top) + "px"; panel.appendChild(t); setTimeout(() => t.remove(), 1200); }
+      });
+      // part 6: long press on a task
+      await part(async () => {
+        const card = ms.querySelector(".aiTk");
+        place(84, 80, 70); act("spin"); say(L.s5);
+        if (card) {
+          card.scrollIntoView({ block: "center", behavior: "smooth" }); await dw(1700);
+          const r = card.getBoundingClientRect(), P = panel.getBoundingClientRect(), x = r.left + r.width * 0.3, y = r.top + r.height / 2;
+          const t = document.createElement("i"); t.className = "aiDmTap hold"; t.style.left = (x - P.left) + "px"; t.style.top = (y - P.top) + "px"; panel.appendChild(t);
+          await dw(900); t.remove(); openItemMenu(card, x, y); say(L.s5b); act("wig"); await dw(3600); closeMenu();
+        }
+      });
+      // part 7: the emotional one - Uri comes close, the screen dims, hearts float up
+      await part(async () => { ms.style.paddingBottom = ""; ov.classList.add("dim"); place(50, 46, 112); act("jump"); say(L.heart); await dw(900); burst("hearts"); await dw(2200); burst("hearts"); });
+      // part 8: goodbye
+      await part(async () => { ov.classList.remove("dim"); place(50, 34, 124, true); act("spin"); say(L.bye); await dw(1000); burst("mix"); });
       const go = document.createElement("button"); go.type = "button"; go.className = "aiDmGo"; go.textContent = L.go; ov.appendChild(go);
       await new Promise((ok, no) => { go.onclick = ok; const iv = setInterval(() => { if (!(demoOn && demoTok === tok)) { clearInterval(iv); no(new Error("demo-stop")); } }, 300); });
       return true;
