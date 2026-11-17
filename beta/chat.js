@@ -208,6 +208,8 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiTkB{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .aiTkB b{font-size:15px;line-height:1.3;font-weight:700;overflow-wrap:anywhere}
 .aiTkB em{font-style:normal;font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.aiTkB small{font-size:12px;color:var(--muted);opacity:.85}
+.aiTk.late .aiTkB small,.aiTk .aiTkP.late~*{color:#e5484d}
 .aiTkP{flex:none;max-width:44%;text-align:center;padding:5px 11px;border-radius:99px;font-size:12.5px;line-height:1.25;font-weight:800;color:var(--muted);background:color-mix(in srgb,var(--text) 8%,transparent)}
 .aiTkP.soon{color:#e8a000;background:#e8a00024}
 .aiTkP.hot{color:#e8590c;background:#e8590c24}
@@ -274,6 +276,22 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiMi:hover,.aiMi:focus-visible{background:var(--accent-soft);outline:none}
 .aiMi svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--accent-t,var(--accent))}
 .aiHoldRow{position:relative;z-index:6}
+.aiPeek{position:absolute;z-index:7;width:48px;height:30px;overflow:hidden;pointer-events:none}
+.aiPeekF{position:absolute;left:0;bottom:-20px;width:48px;height:48px;animation:aiPeekUp .6s .1s cubic-bezier(.34,1.56,.64,1) both}
+.aiPeekF svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 3px 8px #0007);animation:aiPeekLook 2.6s .8s ease-in-out infinite}
+.aiPeek.below .aiPeekF{top:-20px;bottom:auto;animation-name:aiPeekDown}
+@keyframes aiPeekUp{from{transform:translateY(80%) rotate(-14deg) scale(.7);opacity:0}55%{opacity:1}to{transform:none;opacity:1}}
+@keyframes aiPeekDown{from{transform:translateY(-80%) rotate(166deg) scale(.7);opacity:0}55%{opacity:1}to{transform:rotate(180deg);opacity:1}}
+@keyframes aiPeekLook{0%,100%{transform:translateX(0) rotate(0)}28%{transform:translateX(7px) rotate(7deg)}62%{transform:translateX(-6px) rotate(-6deg)}}
+.aiMn .aiMi{animation:aiMiIn .32s cubic-bezier(.2,.9,.3,1) calc(var(--k,0) * 45ms + 60ms) both}
+@keyframes aiMiIn{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+.aiUi.fresh .aiTk,.aiUi.fresh .aiTlR,.aiUi.fresh .aiGg,.aiUi.fresh .aiFc{animation:aiUiIn .5s cubic-bezier(.2,.9,.3,1) calc(var(--i,0) * 55ms) both}
+.aiB.aiStream .aiUi.fresh *{animation:none!important}
+@keyframes aiUiIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+.aiPb.on i::after{animation:aiTickIn .28s cubic-bezier(.34,1.8,.6,1)}
+@keyframes aiTickIn{from{scale:0}to{scale:1}}
+.aiPb:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line))}
+@media (prefers-reduced-motion:reduce){.aiPeekF,.aiPeekF svg,.aiMn .aiMi,.aiUi.fresh *,.aiHold{animation:none!important}}
 .aiP.aiFocusing .aiMs .aiM:not(.aiHoldRow){filter:blur(6px);opacity:.5;transition:filter .28s,opacity .28s}
 .aiP.aiFocusing > .aiHd,.aiP.aiFocusing > .aiFt{filter:blur(5px);opacity:.6;transition:filter .28s,opacity .28s}
 .aiHasHold [data-it]:not(.aiHold){opacity:.3;filter:blur(3px);transition:opacity .25s,filter .25s}
@@ -594,11 +612,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // ---------------------------------------------------------------------------------------------
   const UI_RE = /\[\[ui:([A-Za-z0-9_-]{4,24000})\]\]/g;
   const DLT = {
-    he: { n: (k) => k === 1 ? "מטלה אחת ממתינה" : k + " מטלות ממתינות", urgent: "הדחופה", today: "היום", week: "השבוע", later: "אחר כך", over: "עבר המועד", in: "בעוד ", min: " דק'", hr: " שעות", day: " ימים",
+    he: { n: (k) => k === 1 ? "מטלה אחת ממתינה" : k + " מטלות ממתינות", urgent: "הדחופה", today: "היום", week: "השבוע", later: "אחר כך", over: "באיחור", was: "היה אמור ב", mtg: "מפגש", ago: "לפני ", in: "בעוד ", min: " דק'", hr: " שעות", day: " ימים",
       tm: "מחר ", td: "היום ", days: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"], all: "הכול", loc: "he-IL" },
-    en: { n: (k) => k === 1 ? "1 task waiting" : k + " tasks waiting", urgent: "Most urgent", today: "Today", week: "This week", later: "Later", over: "Overdue", in: "in ", min: " min", hr: " h", day: " days",
+    en: { n: (k) => k === 1 ? "1 task waiting" : k + " tasks waiting", urgent: "Most urgent", today: "Today", week: "This week", later: "Later", over: "Late", was: "was due ", mtg: "Meeting", ago: "", in: "in ", min: " min", hr: " h", day: " days",
       tm: "Tomorrow ", td: "Today ", days: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"], all: "All", loc: "en-GB" },
-    fr: { n: (k) => k === 1 ? "1 tâche en attente" : k + " tâches en attente", urgent: "La plus urgente", today: "Aujourd'hui", week: "Cette semaine", later: "Plus tard", over: "En retard", in: "dans ", min: " min", hr: " h", day: " jours",
+    fr: { n: (k) => k === 1 ? "1 tâche en attente" : k + " tâches en attente", urgent: "La plus urgente", today: "Aujourd'hui", week: "Cette semaine", later: "Plus tard", over: "En retard", was: "prévu le ", mtg: "Réunion", ago: "il y a ", in: "dans ", min: " min", hr: " h", day: " jours",
       tm: "Demain ", td: "Aujourd'hui ", days: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"], all: "Tout", loc: "fr-FR" },
   };
   const dlt = () => DLT[lang()] || DLT.he;
@@ -647,11 +665,21 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // how full the "time left" bar is: empty far away, full when it is due
   const uiUrgency = t => Math.max(0.05, Math.min(1, 1 - (t * 1000 - Date.now()) / (5 * 86400000)));
   const itAttr = (k, it) => ' data-it="' + esc2(JSON.stringify({ k, n: it.n || "", c: it.c || "", v: it.v || "", t: it.t || 0, d: it.d || "", u: it.u || "", o: it.o ? 1 : 0 })) + '"';
+  // "Wed 18.11 · 21:00" - the exact moment, always shown
+  const dlFull = t => { const d = new Date(t * 1000); return dlt().days[d.getDay()] + " " + String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0") + " · " + dlTime(t); };
+  const dlAgo = t => {
+    const T = dlt(), ms = Date.now() - t * 1000, mins = Math.round(ms / 60000);
+    const x = mins < 60 ? Math.max(1, mins) + T.min : ms < 86400000 ? Math.round(mins / 60) + T.hr : Math.round(ms / 86400000) + T.day;
+    return lang() === "en" ? x.trim() + " ago" : T.ago + x.trim();
+  };
+  let uiN = 0;
+  const uiI = () => ";--i:" + Math.min(uiN++, 12);
   function uiTicket(it) {
     const left = it.t * 1000 - Date.now(), late = left < 0, hot = left < 86400000, soon = left < 3 * 86400000;
     const col = late ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)";
     const cls = late ? "late" : hot ? "hot" : soon ? "soon" : "";
-    return '<div class="aiTk"' + itAttr("d", it) + ' style="--dc:' + col + '"><div class="aiTkB"><b>' + esc2(it.n) + "</b><em>" + esc2(it.c) + '</em></div>' +
+    const T = dlt(), when = late ? T.was + dlFull(it.t) + " · " + dlAgo(it.t) : dlFull(it.t);
+    return '<div class="aiTk"' + itAttr("d", it) + ' style="--dc:' + col + uiI() + '"><div class="aiTkB"><b>' + esc2(it.n) + "</b><em>" + esc2(it.c) + (it.g ? " · " + esc2(T.mtg) : "") + '</em><small>' + esc2(when) + '</small></div>' +
       '<span class="aiTkP ' + cls + '" data-due="' + it.t + '"' + (hot ? ' data-long="1"' : "") + ">" + esc2(dlRel(it.t, hot)) + "</span></div>";
   }
   function uiTimeline(items) {
@@ -660,19 +688,19 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     return '<div class="aiTl">' + days.map(g => {
       const dd = Math.round((g.k - today) / 86400000), o = ordDay(g.t);
       const label = dd <= 0 ? T.today : dd === 1 ? T.tm.trim() : o.wd + " " + o.day + " " + o.mon;
-      return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR"' + itAttr("d", it) + ' style="--dc:' + (it.t * 1000 < Date.now() ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)") + '"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(dlTime(it.t)) + "</span></div>").join("") + "</div>";
+      return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR"' + itAttr("d", it) + ' style="--dc:' + (it.t * 1000 < Date.now() ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)") + uiI() + '"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(it.t * 1000 < Date.now() ? dlt().over + " · " + dlTime(it.t) : dlTime(it.t)) + "</span></div>").join("") + "</div>";
     }).join("") + "</div>";
   }
   function uiFocus(items) {
-    const f = items[0], hrs = Math.max(0, Math.round((f.t * 1000 - Date.now()) / 3600000)), big = hrs < 48 ? hrs : Math.round(hrs / 24), unit = hrs < 48 ? dlt().hr.trim() : dlt().day.trim();
+    const f = items[0], lateF = f.t * 1000 < Date.now(), hrs = Math.max(0, Math.round((f.t * 1000 - Date.now()) / 3600000)), big = lateF ? "!" : hrs < 48 ? hrs : Math.round(hrs / 24), unit = lateF ? dlt().over : hrs < 48 ? dlt().hr.trim() : dlt().day.trim();
     const col = f.t * 1000 < Date.now() ? "#e5484d" : "hsl(" + dlHue(f.c) + " 72% 58%)";
-    return '<div class="aiFc"' + itAttr("d", f) + ' style="--dc:' + col + '"><div class="aiFcN"><b data-focus="' + f.t + '">' + big + "</b><small>" + esc2(unit) + '</small></div><div class="aiFcX"><b>' + esc2(f.n) + "</b><em>" + esc2(f.c) + "</em><span data-due=\"" + f.t + "\">" + esc2(dlRel(f.t, false)) + "</span></div></div>" +
+    return '<div class="aiFc"' + itAttr("d", f) + ' style="--dc:' + col + '"><div class="aiFcN"><b data-focus="' + f.t + '">' + big + "</b><small>" + esc2(unit) + '</small></div><div class="aiFcX"><b>' + esc2(f.n) + "</b><em>" + esc2(f.c) + "</em><span data-due=\"" + f.t + "\">" + esc2(lateF ? dlt().was + dlFull(f.t) : dlRel(f.t, false)) + "</span></div></div>" +
       items.slice(1).map(it => uiTicket(it)).join("");
   }
   const gaugeCol = v => v >= 85 ? "#22a55e" : v >= 65 ? "#e8a000" : "#e5484d";
   function uiGauge(it) {
     const num = parseFloat(String(it.v).replace(/[^0-9.]/g, "")), ok = isFinite(num), C = 2 * Math.PI * 22, col = ok ? gaugeCol(num) : "var(--muted)";
-    return '<div class="aiGg"' + itAttr("g", it) + ' style="--gc:' + col + '"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" class="bg"/><circle cx="28" cy="28" r="22" class="fg" stroke-dasharray="' + (ok ? (C * Math.min(1, num / 100)).toFixed(1) : 0) + " " + C.toFixed(1) + '"/></svg><b>' + esc2(it.v) + "</b><small>" + esc2(it.n) + "</small></div>";
+    return '<div class="aiGg"' + itAttr("g", it) + ' style="--gc:' + col + uiI() + '"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" class="bg"/><circle cx="28" cy="28" r="22" class="fg" stroke-dasharray="' + (ok ? (C * Math.min(1, num / 100)).toFixed(1) : 0) + " " + C.toFixed(1) + '"/></svg><b>' + esc2(it.v) + "</b><small>" + esc2(it.n) + "</small></div>";
   }
   function uiBlock(b) {
     const head = b.ti ? '<div class="aiUiT">' + esc2(b.ti) + "</div>" : "";
@@ -693,7 +721,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (b.k === "buttons" && b.it) return '<div class="aiQuick">' + b.it.map(it => '<button type="button" data-qk="' + esc2(it.v || it.l) + '">' + esc2(it.l) + "</button>").join("") + "</div>";
     return "";
   }
-  const uiHTML = blocks => blocks.length ? '<div class="aiUi">' + blocks.map(uiBlock).join("") + "</div>" : "";
+  const uiHTML = blocks => {
+    if (!blocks.length) return "";
+    uiN = 0;
+    setTimeout(() => { try { document.querySelectorAll(".aiUi.fresh").forEach(x => x.classList.remove("fresh")); } catch (e) {} }, 2200);
+    return '<div class="aiUi fresh">' + blocks.map(uiBlock).join("") + "</div>";
+  };
   const uiPlain = blocks => blocks.map(b => (b.ti ? b.ti + ":\n" : "") + (b.tx || "") + (b.it || []).map(it => "- " + (it.n || it.l || "") + (it.c ? " (" + it.c + ")" : "") + (it.t ? " " + new Date(it.t * 1000).toLocaleString(dlt().loc) : "") + (it.v ? ": " + it.v : "")).join("\n")).join("\n\n");
   // the countdowns tick by themselves
   setInterval(() => {
@@ -1104,8 +1137,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   let menuEl = null, menuBg = null, menuFor = null, holdT = 0, holdXY = [0, 0];
   const cancelHold = () => { clearTimeout(holdT); holdT = 0; };
 
+  let menuPeek = null;
   function closeMenu() {
     cancelHold();
+    if (menuPeek) { menuPeek.remove(); menuPeek = null; }
     if (menuEl) { menuEl.remove(); menuEl = null; }
     if (menuBg) { menuBg.remove(); menuBg = null; }
     if (menuFor) { menuFor.classList.remove("aiHold"); menuFor = null; }
@@ -1127,8 +1162,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     try { getSelection().removeAllRanges(); } catch (e) {}
     menuBg = document.createElement("div"); menuBg.className = "aiMnBg"; menuBg.onclick = closeMenu;
     menuEl = document.createElement("div"); menuEl.className = "aiMn"; menuEl.setAttribute("role", "menu"); menuEl.setAttribute("aria-label", tx("msgMenu"));
+    let ki = 0;
     for (const it of items) {
-      const bt = document.createElement("button"); bt.type = "button"; bt.className = "aiMi"; bt.setAttribute("role", "menuitem"); bt.innerHTML = it.icon + "<span></span>";
+      const bt = document.createElement("button"); bt.type = "button"; bt.className = "aiMi"; bt.setAttribute("role", "menuitem"); bt.innerHTML = it.icon + "<span></span>"; bt.style.setProperty("--k", ki++);
       bt.lastChild.textContent = it.label;
       bt.onclick = async () => { closeMenu(); await it.run(); };
       menuEl.appendChild(bt);
@@ -1153,6 +1189,15 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     else if (B.top - gap - mh >= P.top + gap) top = B.top - gap - mh - P.top;
     else top = Math.max(gap, (P.height - mh) / 2);
     menuEl.style.left = Math.round(left) + "px"; menuEl.style.top = Math.round(top) + "px"; menuEl.style.setProperty("--mo", top < B.top - P.top ? "50% 100%" : "50% 0");
+    // the chat's character peeks over the edge of the menu, looking at what was pressed (above the menu if there is room, else it hangs under it)
+    try {
+      const mr = menuEl.getBoundingClientRect(), pk = document.createElement("div"); pk.className = "aiPeek";
+      pk.innerHTML = '<div class="aiPeekF">' + FACE + "</div>";
+      const x = Math.min(Math.max(mr.left - P.left + 18, 6), P.width - 54);
+      if (mr.top - P.top - 32 >= 4) { pk.style.top = Math.round(mr.top - P.top - 30) + "px"; }
+      else { pk.classList.add("below"); pk.style.top = Math.round(mr.bottom - P.top) + "px"; }
+      pk.style.left = Math.round(x) + "px"; panel.appendChild(pk); menuPeek = pk;
+    } catch (e) {}
     try { menuEl.querySelector(".aiMi").focus({ preventScroll: true }); } catch (e) {}
   }
 
