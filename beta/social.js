@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.0-beta.2";
+const SOC_V = "1.9.0-beta.3";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -273,7 +273,8 @@ function askTime(key, how) {
   const cur = myRep(key);
   sheet("socTime", '<h3><span>' + esc(t(cur !== undefined ? "socTimeT2" : "socTimeT")) + "</span>" + xbtn() + '</h3><div class="hint"><bdi>' + esc(x.name) + "</bdi> · <bdi>" + esc(shortName(x.course)) + "</bdi></div>" +
     '<div class="stime">' + HOURS.map(h => '<button data-soch="' + h[0] + '"' + (cur === h[0] ? ' class="on" aria-pressed="true"' : "") + '><span class="e">' + h[1] + "</span><span>" + esc(t(h[2])) + "</span></button>").join("") + "</div>" +
-    '<div class="hint" style="text-align:center">' + esc(t("socTimeHint")) + '</div><button class="link" data-socx style="width:100%;margin-top:4px">' + esc(t("socSkip")) + "</button>");
+    '<div class="hint" style="text-align:center">' + esc(t("socTimeHint")) + '</div><button class="link" data-socx style="width:100%;margin-top:4px">' + esc(t("socSkip")) + "</button>" +
+    (x.gone ? '<button class="link" data-socnotsub style="width:100%;margin-top:2px;color:var(--muted)">' + esc(t("notSubBtn")) + "</button>" : ""));   // a guess (it left Moodle's list): "I didn't submit" undoes it
   ST.timeKey = key; markAsked(key); return true;
 }
 /* the button on every submitted task (and on the course page): report, or change what was reported */
@@ -885,6 +886,7 @@ document.addEventListener("click", e => {
   const g = s => e.target.closest(s);
   let b;
   if ((b = g("[data-socx]"))) { const s = b.closest(".sheet"); if (s) s.hidden = true; return; }
+  if (g("[data-socnotsub]")) { const k = ST.timeKey; close("socTime"); if (k && window.notSubmitted) window.notSubmitted(k); return; }
   if ((b = g("[data-soch]"))) return sendTime(Number(b.dataset.soch));
   if ((b = g("[data-soctime]"))) { e.preventDefault(); useHit("socTimeBtn"); $$(".sheet:not([hidden])").forEach(sh => { if (sh.id !== "socTime" && sh.id !== "tkSheet") sh.hidden = true; }); return askTime(b.dataset.soctime, "me"); }
   if ((b = g("[data-socadd]"))) return addShared(Number(b.dataset.socadd));
