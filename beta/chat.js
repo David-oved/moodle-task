@@ -14,8 +14,8 @@
   /* ------------------------------------------------------------ texts (he / en / fr) */
   const TX = {
     he: {
-      title: "עוזר AI", sub: "מבוסס בינה מלאכותית", hello: n => "שלום " + n, helloNo: "שלום",
-      intro: "אני עוזר AI. אפשר לשאול אותי על המטלות, הציונים, המועדים והקורסים שלך.",
+      title: "אורי", sub: "העוזר של המרכז האקדמי לב", hello: n => "שלום " + n, helloNo: "שלום",
+      intro: "אני אורי. אפשר לשאול אותי על המרכז האקדמי לב, ועל המטלות, הציונים, המועדים והקורסים שלך.",
       s1: "מה המטלות הפתוחות שלי?", s2: "מה המועדים הקרובים שלי?", s3: "איך הציונים שלי בקורסים?",
       ph: "כתוב שאלה…", send: "שלח", stop: "עצור", close: "סגור", hist: "שיחות קודמות", newc: "שיחה חדשה", back: "חזרה לשיחה",
       note: "AI עלול לטעות. כדאי לוודא פרטים חשובים ב-Moodle.", histEmpty: "עדיין אין שיחות קודמות", histNone: "שיחה ללא כותרת",
@@ -40,8 +40,8 @@
       fileHint: "הקש להורדה", dlDone: "הורד", dlProg: (p, a, b) => p + "% · " + a + " מתוך " + b,
     },
     en: {
-      title: "AI assistant", sub: "Powered by artificial intelligence", hello: n => "Hello " + n, helloNo: "Hello",
-      intro: "I’m an AI assistant. Ask me about your assignments, grades, deadlines and courses.",
+      title: "Uri", sub: "The assistant of the Lev Academic Center", hello: n => "Hello " + n, helloNo: "Hello",
+      intro: "I’m Uri. Ask me about the Lev Academic Center, and about your assignments, grades, deadlines and courses.",
       s1: "What are my open assignments?", s2: "What are my upcoming deadlines?", s3: "How are my grades in my courses?",
       ph: "Type a question…", send: "Send", stop: "Stop", close: "Close", hist: "Earlier chats", newc: "New chat", back: "Back to the chat",
       note: "AI can make mistakes. Check important details in Moodle.", histEmpty: "No earlier chats yet", histNone: "Untitled chat",
@@ -66,8 +66,8 @@
       fileHint: "Tap to download", dlDone: "Downloaded", dlProg: (p, a, b) => p + "% · " + a + " of " + b,
     },
     fr: {
-      title: "Assistant IA", sub: "Propulsé par l’intelligence artificielle", hello: n => "Bonjour " + n, helloNo: "Bonjour",
-      intro: "Je suis un assistant IA. Posez-moi des questions sur vos devoirs, notes, échéances et cours.",
+      title: "Uri", sub: "L’assistant du Centre académique Lev", hello: n => "Bonjour " + n, helloNo: "Bonjour",
+      intro: "Je suis Uri. Posez-moi des questions sur le Centre académique Lev, et sur vos devoirs, notes, échéances et cours.",
       s1: "Quels sont mes devoirs en cours ?", s2: "Quelles sont mes prochaines échéances ?", s3: "Comment sont mes notes dans mes cours ?",
       ph: "Écrivez une question…", send: "Envoyer", stop: "Arrêter", close: "Fermer", hist: "Conversations précédentes", newc: "Nouvelle conversation", back: "Retour à la conversation",
       note: "L’IA peut se tromper. Vérifiez les détails importants dans Moodle.", histEmpty: "Aucune conversation précédente", histNone: "Conversation sans titre",
@@ -373,6 +373,53 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiBk{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
 .aiBk *{min-width:0;max-width:100%}
 .aiHrow b,.aiHtab b{white-space:normal}
+.aiDmGate{position:absolute;inset:0;z-index:31;display:grid;place-items:center;padding:24px;background:#05060d99;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);animation:aiFadeIn .35s ease both}
+.aiDmGate.out{animation:aiDmOut .3s ease both}
+@keyframes aiDmOut{to{opacity:0}}
+.aiDmGB{width:min(340px,100%);padding:26px 22px 20px;border-radius:26px;text-align:center;color:var(--text);background:var(--card);border:1px solid var(--line);box-shadow:0 24px 60px #0008;animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) both}
+.aiDmGM{width:96px;height:96px;margin:-62px auto 8px;filter:drop-shadow(0 10px 22px color-mix(in srgb,var(--accent) 65%,transparent));animation:aiDmFloat 2.4s ease-in-out infinite}
+.aiDmGM svg{width:100%;height:100%;overflow:visible}
+.aiDmGB h3{margin:6px 0 6px;font-size:20px;font-weight:850}.aiDmGB p{margin:0 0 18px;color:var(--muted);font-size:14.5px;line-height:1.45}
+.aiDmGBt{display:flex;flex-direction:column;gap:9px}
+.aiDmGBt button{padding:13px;border-radius:15px;border:0;font:inherit;font-size:15.5px;font-weight:750;cursor:pointer;transition:transform .15s}
+.aiDmGBt button:active{transform:scale(.97)}
+.aiDmNow{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#7b5cff));color:var(--on-accent,#fff)}
+.aiDmLater{background:color-mix(in srgb,var(--text) 8%,transparent);color:var(--text)}
+@keyframes aiDmFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+.aiDemo{position:absolute;inset:0;z-index:30;pointer-events:auto;overflow:hidden}
+.aiDmX{position:absolute;top:calc(10px + env(safe-area-inset-top));inset-inline-start:10px;z-index:2;width:36px;height:36px;border-radius:50%;border:1.5px solid #ffffff59;background:#0006;color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.aiDmX svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.aiDemo.hero{background:#05060d99;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.aiDmM{position:absolute;inset-inline-start:12px;bottom:calc(92px + env(safe-area-inset-bottom));width:66px;height:66px;transition:inset-inline-start .9s cubic-bezier(.34,1.3,.5,1),bottom .9s cubic-bezier(.34,1.3,.5,1),width .9s cubic-bezier(.34,1.3,.5,1),height .9s cubic-bezier(.34,1.3,.5,1);filter:drop-shadow(0 6px 14px color-mix(in srgb,var(--accent) 60%,transparent));pointer-events:none}
+.aiDmMi{width:100%;height:100%;transform-origin:50% 80%}.aiDmMi svg{width:100%;height:100%;display:block;overflow:visible}
+.aiDemo.hero .aiDmM{inset-inline-start:calc(50% - 62px);bottom:52%;width:124px;height:124px}
+.aiDmS{position:absolute;inset-inline-start:90px;inset-inline-end:12px;bottom:calc(98px + env(safe-area-inset-bottom));padding:11px 15px;border-radius:18px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 62%,#7b5cff));color:var(--on-accent,#fff);font-size:15px;font-weight:650;line-height:1.4;box-shadow:0 10px 26px -8px #000a;pointer-events:none;transition:inset-inline-start .9s cubic-bezier(.34,1.3,.5,1),inset-inline-end .9s,bottom .9s cubic-bezier(.34,1.3,.5,1)}
+.aiDmS::after{content:"";position:absolute;inset-inline-start:-6px;bottom:18px;width:14px;height:14px;background:inherit;transform:rotate(45deg);border-radius:3px;z-index:-1}
+.aiDmS.on{animation:aiKPop .45s cubic-bezier(.34,1.56,.64,1) both}
+.aiDmS i{font-style:normal;display:inline-block;opacity:0;animation:aiDmWord .4s var(--wd) cubic-bezier(.2,.9,.3,1) both}
+@keyframes aiDmWord{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
+.aiDemo.hero .aiDmS{inset-inline-start:22px;inset-inline-end:22px;bottom:calc(52% - 92px);text-align:center;font-size:17px}
+.aiDemo.hero .aiDmS::after{inset-inline-start:calc(50% - 7px);bottom:auto;top:-6px}
+.aiDmMi.jump{animation:aiDmJump .75s cubic-bezier(.3,1.6,.5,1)}
+.aiDmMi.wig{animation:aiDmWig .8s ease-in-out}
+.aiDmMi.spin{animation:aiDmSpin .9s cubic-bezier(.3,1.2,.4,1)}
+.aiDmMi.flip{animation:aiDmFlip 1s cubic-bezier(.3,1.1,.4,1)}
+.aiDmMi.shake{animation:aiDmShake .7s ease-in-out}
+.aiDmMi.wave{animation:aiDmWave 1.6s ease-in-out}
+@keyframes aiDmJump{0%{transform:none}30%{transform:translateY(-26px) scale(.92,1.1)}55%{transform:translateY(0) scale(1.14,.88)}75%{transform:translateY(-9px)}100%{transform:none}}
+@keyframes aiDmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}45%{transform:rotate(12deg)}70%{transform:rotate(-8deg)}}
+@keyframes aiDmSpin{0%{transform:rotate(0) scale(1)}60%{transform:rotate(380deg) scale(1.25)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes aiDmFlip{0%{transform:perspective(500px) rotateY(0)}100%{transform:perspective(500px) rotateY(360deg)}}
+@keyframes aiDmShake{0%,100%{transform:translateX(0)}15%{transform:translateX(-9px) rotate(-6deg)}35%{transform:translateX(9px) rotate(6deg)}55%{transform:translateX(-6px)}75%{transform:translateX(5px)}}
+@keyframes aiDmWave{0%,100%{transform:rotate(0)}15%{transform:rotate(-16deg)}30%{transform:rotate(14deg)}45%{transform:rotate(-12deg)}60%{transform:rotate(10deg)}}
+.aiDmGo{position:absolute;inset-inline:22px;bottom:calc(34px + env(safe-area-inset-bottom));padding:15px;border-radius:17px;border:0;font:inherit;font-size:17px;font-weight:800;color:var(--on-accent,#fff);background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#7b5cff));cursor:pointer;box-shadow:0 12px 30px -8px color-mix(in srgb,var(--accent) 70%,#000);animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) both}
+.aiDmTap{position:absolute;z-index:3;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;border:3px solid #fff;background:#ffffff40;pointer-events:none;animation:aiDmTapA 1.1s ease-out both}
+.aiDmTap.hold{animation:aiDmHoldA .9s ease-in-out both}
+@keyframes aiDmTapA{0%{transform:scale(.3);opacity:1}100%{transform:scale(1.6);opacity:0}}
+@keyframes aiDmHoldA{0%{transform:scale(.4);opacity:0}25%{opacity:1;transform:scale(1)}100%{transform:scale(.8);opacity:1;background:#ffffff80}}
+.aiSd.aiDmPress{transform:scale(.8)!important;box-shadow:0 0 0 9px color-mix(in srgb,var(--accent) 38%,transparent)}
+.aiIn.aiDmFocus textarea{outline:2px solid var(--accent);border-color:transparent;box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}
+@media (prefers-reduced-motion:reduce){.aiDmGM,.aiDmMi,.aiDmS.on,.aiDmS i,.aiDmTap,.aiDmGo,.aiDmGB{animation:none!important}.aiDmS i{opacity:1}}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -1605,7 +1652,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   /* ------------------------------------------------------------ sending */
   async function send(text, ctx) {
     text = String(text || "").trim().slice(0, 2000);
-    if (!text || busy) return;
+    if (!text || busy || demoOn) return;
     gen++;                                    // a pending history/load result must not overwrite the chat now
     histMode = false; memMode = false; setMode();
     lastPending = text;
@@ -1968,6 +2015,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     try { fail = await openLoad(); } catch (e) { fail = e; }
     if (fail && my) { await failIntro(my, fail); return; }
     await finishIntro(my);
+    // the first time: Uri offers the guided walk-through, and the chat stays locked until it was watched (leaving = it is offered again next time)
+    if (!demoSeen()) {
+      if (!introAllowed()) { try { LS.set("aiDemoSeen", "1"); } catch (e) {} }
+      else { const watched = await demoGate(); if (!watched) { close(); return; } }
+    }
     if (matchMedia("(hover:hover)").matches) input.focus();
   }
 
@@ -1984,7 +2036,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   function teardown() {                       // the visual part of closing, all at once
-    clearIntro(); panel.classList.remove("on", "aiIntro"); panel.hidden = true;
+    demoStop(false); clearIntro(); panel.classList.remove("on", "aiIntro"); panel.hidden = true;
     document.documentElement.classList.remove("aiOn");        // the app is turned back on
     unlockPage();
     if (fab) { fab.style.visibility = ""; fab.hidden = false; }
@@ -2012,7 +2064,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   function close(fromPop, instant) {
     if (!panel || panel.hidden || closing) return;
-    left();
+    left(); demoStop(false);
     try { if (document.activeElement === input) input.blur(); } catch (e) {}
     closeMenu(); const dlg = panel.querySelector(".aiDlg"); if (dlg) dlg.hidden = true;
     const failed = !!(intro && intro.failed), midIntro = !!(intro && !intro.failed);      // closed while the opening animation still plays: no fuss, just close
@@ -2031,22 +2083,25 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const TOUR_ONCE = true;
   const TOUR = {
     he: [
-      { t: "היי! אני העוזר החדש שלך", s: "חדש באפליקציה" },
+      { t: "היי! אני אורי, העוזר החדש שלך", s: "חדש באפליקציה" },
       { t: "שואלים אותי הכול על הלימודים", s: "מטלות, ציונים, מועדים וקורסים", chips: ["מטלות", "ציונים", "מועדים"] },
+      { t: "אני מכיר את כל המרכז האקדמי לב", s: "לא רק את Moodle: מעונות, שכר לימוד, שעות ואנשי קשר", chips: ["מעונות", "שכר לימוד", "שעות", "מפת הקמפוס"] },
       { t: "אני גם שולח לך קבצים", s: "תרגילים והרצאות מהקורסים, ישר לצ'אט", icon: "file" },
       { t: "זוכר מה שחשוב לך", s: "והשיחות שלך נשארות רק שלך", icon: "shield" },
       { t: "לפתיחה, לוחצים על העיגול הזה", s: "תמיד כאן בשבילך", last: true },
     ],
     en: [
-      { t: "Hi! I'm your new assistant", s: "New in the app" },
+      { t: "Hi! I'm Uri, your new assistant", s: "New in the app" },
       { t: "Ask me anything about your studies", s: "Tasks, grades, deadlines and courses", chips: ["Tasks", "Grades", "Deadlines"] },
+      { t: "I know the whole Lev Academic Center", s: "Not just Moodle: dorms, tuition, hours and contacts", chips: ["Dorms", "Tuition", "Hours", "Campus map"] },
       { t: "I can send you files too", s: "Exercises and lectures from your courses, right in the chat", icon: "file" },
       { t: "I remember what matters to you", s: "And your chats stay yours alone", icon: "shield" },
       { t: "To open me, tap this circle", s: "Always here for you", last: true },
     ],
     fr: [
-      { t: "Salut ! Je suis ton nouvel assistant", s: "Nouveau dans l'appli" },
+      { t: "Salut ! Je suis Uri, ton nouvel assistant", s: "Nouveau dans l'appli" },
       { t: "Demande-moi tout sur tes études", s: "Devoirs, notes, échéances et cours", chips: ["Devoirs", "Notes", "Échéances"] },
+      { t: "Je connais tout le Centre académique Lev", s: "Pas seulement Moodle : résidences, frais, horaires et contacts", chips: ["Résidences", "Frais", "Horaires", "Plan du campus"] },
       { t: "Je t'envoie aussi des fichiers", s: "Exercices et cours, directement dans le chat", icon: "file" },
       { t: "Je retiens ce qui compte pour toi", s: "Et tes conversations restent privées", icon: "shield" },
       { t: "Pour m'ouvrir, touche ce cercle", s: "Toujours là pour toi", last: true },
@@ -2208,6 +2263,147 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     later(finish, 30000);                                      // safety net: whatever happens, the screen is never locked for good
   }
 
+  // =============================================================================================
+  // Uri's guided demo: the first time the chat is opened (after the wink) Uri offers a short walk-through, and the chat stays locked until it was watched.
+  // It plays INSIDE the real chat: a question is typed into the real input box, the real send button is pressed, the real bubbles and cards appear.
+  // Nothing is sent to the server - the answers are prepared and simply come up with the same animations. Uri (the mascot) explains every feature.
+  // =============================================================================================
+  let demoOn = false, demoTok = 0;
+  const demoSeen = () => { try { return !!LS.get("aiDemoSeen", ""); } catch (e) { return true; } };
+  const demoUi = bl => { const bytes = new TextEncoder().encode(JSON.stringify({ b: bl })); let bin = ""; bytes.forEach(c => { bin += String.fromCharCode(c); }); return "[[ui:" + btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") + "]]"; };
+  const demoData = () => {
+    const now = Math.floor(Date.now() / 1000), H = 3600;
+    const he = {
+      gateT: "אורי מתחיל הסבר קצר", gateS: "בערך דקה, ואז אפשר להתחיל. רוצים לצפות עכשיו?", now: "לצפות עכשיו", later: "בפעם אחרת", go: "יאללה, מתחילים", exit: "יציאה",
+      hi: "היי, אני אורי! בדקה אראה לך איך הכול עובד. זו הדגמה, אף שאלה לא נשלחת באמת.",
+      s1: "כותבים לי שאלה, בדיוק כמו לחבר", s1b: "ושולחים. אני עונה תוך רגע, עם כפתורים ללחיצה",
+      s2: "אני מכיר את כל המידע על המרכז האקדמי לב, לא רק את Moodle", s2b: "מעונות, שכר לימוד, שעות, אנשי קשר, לוח שנה ומפות. הכול מהאתר הרשמי",
+      s3: "וגם את האישי שלך מ-Moodle: מטלות, ציונים וקבצים", s3b: "איחורים באדום, וספירה לאחור לכל מועד (זו דוגמה)",
+      s4: "צריך לדבר עם מישהו? אני נותן את הפרטים", s4b: "חיוג, מייל, וואטסאפ או העתקה, בלחיצה אחת",
+      s5: "ועוד טריק: לחיצה ארוכה", s5b: "על מטלה, קורס או הודעה, ואני פותח תפריט: לשאול עליה, לקבל קבצים או להעתיק",
+      bye: "זהו! אני אורי, ואני כאן בשבילך. שאלו אותי כל דבר.",
+      q1: "איך מגיעים לקמפוס לב?", q2: "כמה עולה חדר במעונות?", q3: "מה המטלות שלי השבוע?", q4: "איך מדברים עם מזכירות תלמידים?",
+      a1: [{ k: "location", s: "card", ti: "קמפוס לב", su: "גבעת מרדכי, ירושלים", tx: "קמפוס לב, גבעת מרדכי, ירושלים", co: "green" },
+        { k: "tags", s: "chips", ti: "קווי אוטובוס", co: "blue", ic: "bus", it: [{ l: "5" }, { l: "6" }, { l: "9" }, { l: "39" }] },
+        { k: "banner", s: "bar", tone: "tip", co: "purple", tx: "סטודנטים נכנסים בשער הדרומי, מכיוון בית וגן" }],
+      a2: [{ k: "price", s: "tags", ti: "מעונות רווקים בלב, לשנה", co: "orange", ic: "money", it: [{ l: "החל מ", v: "8,100 ש\"ח" }, { l: "עד", v: "14,300 ש\"ח" }] },
+        { k: "tags", s: "chips", ti: "ועוד על המרכז", co: "teal", it: [{ l: "שכר לימוד", ic: "book" }, { l: "שעות", ic: "clock" }, { l: "אנשי קשר", ic: "user" }, { l: "לוח שנה", ic: "calendar" }, { l: "מפות", ic: "pin" }] }],
+      a3: [{ k: "deadlines", s: "tickets", ti: "", it: [{ n: "תרגיל בית 4", c: "מתמטיקה בדידה", t: now - 2 * H }, { n: "דוח מעבדה", c: "פיזיקה", t: now + 5 * H }, { n: "הגשת פרויקט", c: "מבוא למדעי המחשב", t: now + 3 * 86400 }] }],
+      a4: [{ k: "contact", s: "card", ti: "מזכירות תלמידים", su: "קמפוס לב", co: "blue", ic: "user", it: [{ t: "phone", v: "02-675-1009", l: "" }, { t: "email", v: "maztal@jct.ac.il", l: "" }] },
+        { k: "hours", s: "compact", ti: "שעות קבלה", co: "blue", it: [{ d: "א', ג'", h: "13:00-16:30", l: "" }, { d: "ב', ד', ה'", h: "13:00-15:00", l: "" }] }],
+    };
+    const en = {
+      gateT: "Uri is starting a short walk-through", gateS: "About a minute, then you can start. Watch it now?", now: "Watch now", later: "Another time", go: "Let's start", exit: "Exit",
+      hi: "Hi, I'm Uri! In a minute I'll show you how everything works. This is a demo, no question is really sent.",
+      s1: "You write me a question, just like to a friend", s1b: "and send it. I answer in a moment, with buttons you can tap",
+      s2: "I know all the information about the Lev Academic Center, not only Moodle", s2b: "Dorms, tuition, hours, contacts, calendar and maps. All from the official site",
+      s3: "And your personal data from Moodle too: tasks, grades and files", s3b: "Late items in red, and a countdown for every deadline (this is an example)",
+      s4: "Need to talk to someone? I give you the details", s4b: "Call, email, WhatsApp or copy, with one tap",
+      s5: "One more trick: a long press", s5b: "on a task, a course or a message, and I open a menu: ask about it, get its files or copy",
+      bye: "That's it! I'm Uri and I'm here for you. Ask me anything.",
+      q1: "How do I get to the Lev campus?", q2: "How much is a dorm room?", q3: "What are my tasks this week?", q4: "How do I contact the students' secretariat?",
+      a1: [{ k: "location", s: "card", ti: "Lev campus", su: "Givat Mordechai, Jerusalem", tx: "Lev campus, Givat Mordechai, Jerusalem", co: "green" },
+        { k: "tags", s: "chips", ti: "Bus lines", co: "blue", ic: "bus", it: [{ l: "5" }, { l: "6" }, { l: "9" }, { l: "39" }] },
+        { k: "banner", s: "bar", tone: "tip", co: "purple", tx: "Students enter through the south gate, from the Beit Vegan side" }],
+      a2: [{ k: "price", s: "tags", ti: "Single dorms at Lev, per year", co: "orange", ic: "money", it: [{ l: "From", v: "8,100 NIS" }, { l: "Up to", v: "14,300 NIS" }] },
+        { k: "tags", s: "chips", ti: "And more about the college", co: "teal", it: [{ l: "Tuition", ic: "book" }, { l: "Hours", ic: "clock" }, { l: "Contacts", ic: "user" }, { l: "Calendar", ic: "calendar" }, { l: "Maps", ic: "pin" }] }],
+      a3: [{ k: "deadlines", s: "tickets", ti: "", it: [{ n: "Homework 4", c: "Discrete Math", t: now - 2 * H }, { n: "Lab report", c: "Physics", t: now + 5 * H }, { n: "Project submission", c: "Intro to CS", t: now + 3 * 86400 }] }],
+      a4: [{ k: "contact", s: "card", ti: "Students' secretariat", su: "Lev campus", co: "blue", ic: "user", it: [{ t: "phone", v: "02-675-1009", l: "" }, { t: "email", v: "maztal@jct.ac.il", l: "" }] },
+        { k: "hours", s: "compact", ti: "Reception hours", co: "blue", it: [{ d: "Sun, Tue", h: "13:00-16:30", l: "" }, { d: "Mon, Wed, Thu", h: "13:00-15:00", l: "" }] }],
+    };
+    return lang() === "he" ? he : en;
+  };
+
+  function demoStop(restore) {
+    if (!panel) return;
+    const was = demoOn; demoOn = false; demoTok++;
+    panel.querySelectorAll(".aiDemo,.aiDmGate,.aiDmTap").forEach(x => x.remove());
+    if (!was) return;
+    try { closeMenu(); } catch (e) {}
+    if (input) { input.readOnly = false; input.value = ""; const w = input.closest(".aiIn"); if (w) w.classList.remove("aiDmFocus"); }
+    if (sendBtn) sendBtn.classList.remove("aiDmPress");
+    if (ms) ms.style.paddingBottom = "";
+    if (restore) { try { renderMsgs(); } catch (e) {} }
+  }
+
+  // resolves true when the student finished the demo, false when he left (the chat then closes and the demo is offered again next time)
+  function demoGate() {
+    return new Promise(res => {
+      const L = demoData();
+      demoOn = true; const tok = ++demoTok;
+      const g = document.createElement("div"); g.className = "aiDmGate";
+      g.innerHTML = '<div class="aiDmGB"><div class="aiDmGM">' + FACE + "</div><h3>" + esc2(L.gateT) + "</h3><p>" + esc2(L.gateS) + '</p><div class="aiDmGBt"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div></div>";
+      panel.appendChild(g);
+      g.querySelector(".aiDmLater").onclick = () => { demoStop(false); res(false); };
+      g.querySelector(".aiDmNow").onclick = async () => {
+        g.classList.add("out"); setTimeout(() => g.remove(), 300);
+        const ok = await demoRun(L, tok, () => res(false));
+        if (ok) { try { LS.set("aiDemoSeen", "1"); } catch (e) {} demoStop(true); res(true); }
+      };
+    });
+  }
+
+  async function demoRun(L, tok, onExit) {
+    const dw = t => new Promise((ok, no) => setTimeout(() => (demoOn && demoTok === tok) ? ok() : no(new Error("demo-stop")), t));
+    const ov = document.createElement("div"); ov.className = "aiDemo hero";
+    ov.innerHTML = '<button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"></div>';
+    panel.appendChild(ov);
+    const Mi = ov.querySelector(".aiDmMi"), S = ov.querySelector(".aiDmS");
+    ov.querySelector(".aiDmX").onclick = () => { demoStop(false); onExit(); };
+    const say = t => { S.innerHTML = "<span>" + String(t).split(" ").map((w, k) => '<i style="--wd:' + (k * 0.05).toFixed(2) + 's">' + esc2(w) + "</i>").join(" ") + "</span>"; S.classList.remove("on"); void S.offsetWidth; S.classList.add("on"); };
+    const act = n => { Mi.className = "aiDmMi"; void Mi.offsetWidth; Mi.className = "aiDmMi " + n; };
+    const type = async text => {
+      const wrap = input.closest(".aiIn"); input.readOnly = true; if (wrap) wrap.classList.add("aiDmFocus");
+      for (let i = 1; i <= text.length; i++) { input.value = text.slice(0, i); input.dispatchEvent(new Event("input")); await dw(40); }
+      await dw(380); sendBtn.classList.add("aiDmPress"); await dw(240); sendBtn.classList.remove("aiDmPress");
+      if (wrap) wrap.classList.remove("aiDmFocus"); input.value = ""; input.dispatchEvent(new Event("input"));
+      const u = bubble("user", text); u.row.classList.add("aiIn"); ms.appendChild(u.row); scrollEnd(true);
+    };
+    const answer = async blocks => {
+      const a = bubble("assistant", "", { pending: true }); a.row.classList.add("aiIn", "aiPend"); ms.appendChild(a.row); scrollEnd(true);
+      await dw(550);
+      a.row.classList.remove("aiPend"); a.b.innerHTML = md(demoUi(blocks)); a.b.classList.remove("aiFill"); void a.b.offsetWidth; a.b.classList.add("aiFill");
+      try { ms.scrollTo({ top: Math.max(0, a.row.offsetTop - 10), behavior: "smooth" }); } catch (e) { ms.scrollTop = a.row.offsetTop; }
+      return a;
+    };
+    try {
+      ms.innerHTML = ""; ms.style.paddingBottom = "190px";
+      // 0. hello
+      act("wave"); say(L.hi); await dw(5200);
+      ov.classList.remove("hero"); act("jump"); await dw(1100);
+      // 1. write and send
+      say(L.s1); act("wig"); await dw(1700);
+      await type(L.q1); act("jump"); say(L.s1b); await answer(L.a1); await dw(4300);
+      // 2. everything about the college
+      say(L.s2); act("flip"); await dw(2200);
+      await type(L.q2); await answer(L.a2); say(L.s2b); act("wig"); await dw(4600);
+      // 3. the personal Moodle data
+      say(L.s3); act("jump"); await dw(2200);
+      await type(L.q3); await answer(L.a3); say(L.s3b); act("wig"); await dw(4400);
+      // 4. contacts with one-tap actions
+      say(L.s4); act("shake"); await dw(1900);
+      await type(L.q4); const c4 = await answer(L.a4); say(L.s4b); act("jump"); await dw(1500);
+      const btn = c4.b.querySelector(".aiAc"); if (btn) { const r = btn.getBoundingClientRect(), P = panel.getBoundingClientRect(); const t = document.createElement("i"); t.className = "aiDmTap"; t.style.left = (r.left + r.width / 2 - P.left) + "px"; t.style.top = (r.top + r.height / 2 - P.top) + "px"; panel.appendChild(t); setTimeout(() => t.remove(), 1200); }
+      await dw(3200);
+      // 5. long press on a task
+      const card = ms.querySelector(".aiTk");
+      if (card) {
+        card.scrollIntoView({ block: "center", behavior: "smooth" }); say(L.s5); act("spin"); await dw(2400);
+        const r = card.getBoundingClientRect(), P = panel.getBoundingClientRect(), x = r.left + r.width * 0.3, y = r.top + r.height / 2;
+        const t = document.createElement("i"); t.className = "aiDmTap hold"; t.style.left = (x - P.left) + "px"; t.style.top = (y - P.top) + "px"; panel.appendChild(t);
+        await dw(900); t.remove(); openItemMenu(card, x, y); say(L.s5b); act("wig"); await dw(6200); closeMenu(); await dw(500);
+      }
+      // 6. goodbye
+      ms.style.paddingBottom = ""; ov.classList.add("hero"); act("spin"); say(L.bye); await dw(3200);
+      const go = document.createElement("button"); go.type = "button"; go.className = "aiDmGo"; go.textContent = L.go; ov.appendChild(go);
+      await new Promise((ok, no) => { go.onclick = ok; const iv = setInterval(() => { if (!(demoOn && demoTok === tok)) { clearInterval(iv); no(new Error("demo-stop")); } }, 300); });
+      return true;
+    } catch (e) {
+      if (!e || e.message !== "demo-stop") console.error(e);
+      return false;
+    }
+  }
+
   window.AIChat = {
     show() { build(); warmUp(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; try { runTour(); } catch (e) { tourState = 2; const t = document.getElementById("aiTour"); if (t) t.remove(); fab.style.visibility = ""; } },
     hide() { if (fab) fab.hidden = true; if (panel && !panel.hidden) close(false, true); },
@@ -2215,6 +2411,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     // for tests only: pretend the visible area is something else (a keyboard of a given size), then re-measure
     _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
     _fit() { fit(true); },
-    _md(src) { return md(src); },                      // for tests only: render a message text the way the chat does
+    _md(src) { return md(src); },
+    _demo() { return demoGate(); },                      // for tests only: render a message text the way the chat does
   };
 })();
