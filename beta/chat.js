@@ -27,7 +27,7 @@
       delAllQ: "למחוק את כל השיחות הקודמות? אי אפשר לשחזר אותן.", delOneQ: "למחוק את השיחה הזו? אי אפשר לשחזר אותה.",
       dl: "הורד", dling: "מוריד…", fileGone: "הקובץ כבר לא זמין ב-Moodle.", fileBig: "הקובץ גדול מדי להורדה כאן (מעל 25MB). אפשר להוריד אותו ישירות ב-Moodle.", fileErr: "לא הצלחתי להוריד את הקובץ. נסה שוב.", errTitle: "משהו לא תקין",
       stSend: "שולח את הבקשה", stWait: "ממתין לתשובה מהשרת", stKb: "מחפש במאגר הידע של המכללה", stThink: "חושב מה צריך לעשות", stWrite: "כותב את התשובה",
-      stMemAdd: "שומר בזיכרון", stMemDel: "מוחק מהזיכרון", tlGeneric: "פונה ל-Moodle",
+      stMemAdd: "שומר בזיכרון", stMemDel: "מוחק מהזיכרון", tlGeneric: "פונה ל-Moodle", tlVisual: "מסדר לך את זה בצורה ויזואלית",
       tl_get_my_courses: () => "מושך את רשימת הקורסים שלך מ-Moodle", tl_get_course_assignments: a => a ? "בודק מטלות ומועדי הגשה בקורס " + a : "בודק מטלות ומועדי הגשה",
       tl_get_course_grades: a => a ? "בודק את הציונים שלך בקורס " + a : "בודק את הציונים שלך", tl_get_calendar_events: () => "קורא את היומן שלך ב-Moodle",
       tl_get_course_content: a => a ? "קורא את התוכן של הקורס " + a : "קורא את תוכן הקורס", tl_get_course_files: (a, d) => (a ? "מחפש קבצים בקורס " + a : "מחפש קבצים") + (d ? " (" + d + ")" : ""),
@@ -53,7 +53,7 @@
       delAllQ: "Delete all earlier chats? This can’t be undone.", delOneQ: "Delete this chat? This can’t be undone.",
       dl: "Download", dling: "Downloading…", fileGone: "The file is no longer available in Moodle.", fileBig: "The file is too big to download here (over 25MB). You can download it directly in Moodle.", fileErr: "Couldn’t download the file. Try again.", errTitle: "Something’s not right",
       stSend: "Sending your request", stWait: "Waiting for the server", stKb: "Searching the college’s knowledge base", stThink: "Working out what to do", stWrite: "Writing the answer",
-      stMemAdd: "Saving to memory", stMemDel: "Removing from memory", tlGeneric: "Asking Moodle",
+      stMemAdd: "Saving to memory", stMemDel: "Removing from memory", tlGeneric: "Asking Moodle", tlVisual: "Laying it out visually for you",
       tl_get_my_courses: () => "Fetching your course list from Moodle", tl_get_course_assignments: a => a ? "Checking assignments and deadlines in " + a : "Checking assignments and deadlines",
       tl_get_course_grades: a => a ? "Checking your grades in " + a : "Checking your grades", tl_get_calendar_events: () => "Reading your Moodle calendar",
       tl_get_course_content: a => a ? "Reading the content of " + a : "Reading the course content", tl_get_course_files: (a, d) => (a ? "Searching files in " + a : "Searching files") + (d ? " (" + d + ")" : ""),
@@ -79,7 +79,7 @@
       delAllQ: "Supprimer toutes les conversations précédentes ? Cette action est irréversible.", delOneQ: "Supprimer cette conversation ? Cette action est irréversible.",
       dl: "Télécharger", dling: "Téléchargement…", fileGone: "Le fichier n’est plus disponible dans Moodle.", fileBig: "Le fichier est trop volumineux pour être téléchargé ici (plus de 25 Mo). Vous pouvez le télécharger directement dans Moodle.", fileErr: "Impossible de télécharger le fichier. Réessayez.", errTitle: "Quelque chose ne va pas",
       stSend: "Envoi de la demande", stWait: "Attente du serveur", stKb: "Recherche dans la base de connaissances du collège", stThink: "Je réfléchis à ce qu’il faut faire", stWrite: "Rédaction de la réponse",
-      stMemAdd: "Enregistrement en mémoire", stMemDel: "Suppression de la mémoire", tlGeneric: "Question à Moodle",
+      stMemAdd: "Enregistrement en mémoire", stMemDel: "Suppression de la mémoire", tlGeneric: "Question à Moodle", tlVisual: "Je le mets en forme pour toi",
       tl_get_my_courses: () => "Récupération de vos cours sur Moodle", tl_get_course_assignments: a => a ? "Vérification des devoirs et échéances de " + a : "Vérification des devoirs et échéances",
       tl_get_course_grades: a => a ? "Vérification de vos notes en " + a : "Vérification de vos notes", tl_get_calendar_events: () => "Lecture de votre calendrier Moodle",
       tl_get_course_content: a => a ? "Lecture du contenu de " + a : "Lecture du contenu du cours", tl_get_course_files: (a, d) => (a ? "Recherche de fichiers dans " + a : "Recherche de fichiers") + (d ? " (" + d + ")" : ""),
@@ -389,10 +389,10 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiDmMi{width:100%;height:100%;transform-origin:50% 80%;animation:aiDmIdle 3.6s ease-in-out infinite}
 .aiDmMi svg{width:100%;height:100%;display:block;overflow:visible}
 @keyframes aiDmIdle{0%,100%{transform:translate(0,0) rotate(-2deg)}30%{transform:translate(6px,-7px) rotate(3deg)}65%{transform:translate(-6px,-3px) rotate(-3deg)}}
-.aiDmS{position:absolute;left:12px;right:12px;top:var(--cap,64px);z-index:2;box-sizing:border-box;min-height:58px;display:flex;align-items:center;padding:8px 13px;border-radius:14px;background:#0a0c18f2;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid #ffffff1f;border-inline-start:3px solid var(--accent);color:#fff;font-size:14px;font-weight:600;line-height:1.4;box-shadow:0 8px 22px -10px #000c;pointer-events:none;text-align:start;opacity:0;transition:opacity .3s ease,top .5s ease}
+.aiDmS{position:absolute;left:0;right:0;top:0;height:var(--caph,64px);z-index:2;box-sizing:border-box;display:flex;align-items:center;padding:max(10px,env(safe-area-inset-top)) 58px 10px 16px;background:var(--capbg,var(--accent));color:var(--on-accent,#fff);font-size:14.5px;font-weight:620;line-height:1.35;pointer-events:none;text-align:start;overflow:hidden;opacity:0;transition:opacity .3s ease}
 .aiDmS b{font-size:16px;font-weight:800}
 .aiDmS.on{opacity:1}
-.aiDemo.hero .aiDmS{left:26px;right:26px;display:block;min-height:0;padding:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;text-align:center;font-size:17px;font-weight:600;line-height:1.55;color:#ffffffe6;text-shadow:0 2px 14px #000}
+.aiDemo.hero .aiDmS{left:26px;right:26px;height:auto;display:block;padding:0;background:none;text-align:center;font-size:17px;font-weight:600;line-height:1.55;color:#ffffffe6;text-shadow:0 2px 14px #000;overflow:visible}
 .aiDemo.hero .aiDmS b{display:block;margin-bottom:4px;font-size:25px;font-weight:850;color:#fff}
 .aiDmS i{font-style:normal;display:inline-block;opacity:0;animation:aiDmWord .4s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 @keyframes aiDmWord{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
@@ -1228,6 +1228,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (e.s === "mem") { (ai.mem = ai.mem || []).push(e); return; }                              // the note under the answer says it
     if (e.s === "tool") { if (!ai.status) setActivity(ai, toolLabel(e)); return; }                // the first real action of a round
     if (e.s === "write" && ai.status) setActivity(ai, "");                                       // done: the line goes, the dots come back
+    if (e.s === "visual") {                                                                     // the iron rule: the text so far is being redrawn as cards
+      ai.content = ""; ai.lastHtml = ""; ai.pending = true; ai.status = "";
+      if (curBub) { curBub.classList.remove("aiStream"); const r = curBub.closest(".aiM"); if (r) r.classList.add("aiPend"); curBub.innerHTML = activityHTML(tx("tlVisual")); ai.status = tx("tlVisual"); scrollEnd(false); }
+    }
   }
 
   function bubble(role, content, opts) {
@@ -2340,7 +2344,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     try { closeMenu(); } catch (e) {}
     if (input) { input.readOnly = false; input.value = ""; const w = input.closest(".aiIn"); if (w) w.classList.remove("aiDmFocus"); }
     if (sendBtn) sendBtn.classList.remove("aiDmPress");
-    if (ms) { ms.style.paddingBottom = ""; ms.style.marginTop = ""; }
+    if (ms) { ms.style.paddingBottom = ""; }
     if (restore) { try { renderMsgs(); } catch (e) {} }
   }
 
@@ -2350,7 +2354,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ov.innerHTML = '<div class="aiDmGlow"></div><button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"></div>' +
       (withGate ? '<div class="aiDmBtns"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div>" : "");
     panel.appendChild(ov);
-    try { const hd = panel.querySelector(".aiHd"); if (hd) ov.style.setProperty("--cap", Math.round(hd.getBoundingClientRect().bottom - panel.getBoundingClientRect().top + 8) + "px"); } catch (e) {}
+    try { const hd = panel.querySelector(".aiHd"); if (hd) { const cs = getComputedStyle(hd); ov.style.setProperty("--caph", Math.round(hd.getBoundingClientRect().bottom - panel.getBoundingClientRect().top) + "px"); ov.style.setProperty("--capbg", cs.backgroundImage && cs.backgroundImage !== "none" ? cs.backgroundImage : cs.backgroundColor); } } catch (e) {}
     return ov;
   }
 
@@ -2436,7 +2440,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     // every part lasts exactly DEMO_PART: the scene runs, then waits for whatever time is left
     const part = async fn => { const t0 = Date.now(); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
     try {
-      ms.innerHTML = ""; ms.style.paddingBottom = "190px"; ms.style.marginTop = "74px";
+      ms.innerHTML = ""; ms.style.paddingBottom = "190px";
       // part 1: hello (big, in the middle, on the black stage)
       await part(async () => { act("wave"); burst("stars"); say(L.hi); await dw(1200); });
       ov.classList.remove("hero"); ov.querySelector(".aiDmS").style.top = "";
