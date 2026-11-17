@@ -2380,7 +2380,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     demoOn = true; const tok = ++demoTok;
     const ov = demoStage(L, false), api = demoApi(ov, L, tok);
     api.place(50, 34, 124, true);
-    const ok = await demoRun(L, tok, ov, api, () => {});
+    const ok = await demoRun(L, tok, ov, api, () => { try { renderMsgs(); } catch (e) {} });      // leaving early also brings the real chat back
     if (ok) demoStop(true);
   }
 
