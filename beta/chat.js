@@ -288,12 +288,12 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHbadge i{width:8px;height:8px;border-radius:50%;background:currentColor}
 .aiHbadge.on{color:#22a55e;background:#22a55e1f}.aiHbadge.on i{animation:aiHsP 1.6s ease-in-out infinite}.aiHbadge.off{color:#e5484d;background:#e5484d1f}
 @keyframes aiHsP{0%,100%{opacity:1}50%{opacity:.35}}
-.aiHtr{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;align-items:start;padding:9px 8px;border-bottom:1px dashed color-mix(in srgb,var(--bc) 26%,var(--line))}.aiHtr:last-child{border-bottom:0}
+.aiHtr{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 10px;align-items:start;padding:8px 6px;border-bottom:1px dashed color-mix(in srgb,var(--bc) 26%,var(--line))}.aiHtr:last-child{border-bottom:0}
 .aiHtr.today{background:color-mix(in srgb,var(--bc) 12%,transparent);border-radius:12px;border-bottom-color:transparent}
 .aiHtd{display:flex;flex-direction:column;gap:2px;min-width:44px}.aiHtd b{font-size:14.5px;font-weight:850;white-space:nowrap}
 .aiHtd small{font-size:11.5px;color:var(--muted)}.aiHtd em{font-style:normal;font-size:11px;font-weight:800;color:var(--bc)}
-.aiHtt{display:flex;flex-wrap:wrap;gap:6px}
-.aiHtt i{font-style:normal;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;padding:4px 11px;border-radius:99px;font-size:13.5px;font-weight:800;letter-spacing:.01em;background:color-mix(in srgb,var(--bc) 15%,var(--card));border:1px solid color-mix(in srgb,var(--bc) 32%,var(--line))}
+.aiHtt{display:flex;flex-wrap:wrap;gap:5px}
+.aiHtt i{font-style:normal;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;padding:3px 8px;border-radius:99px;font-size:12.5px;font-weight:800;letter-spacing:0;background:color-mix(in srgb,var(--bc) 15%,var(--card));border:1px solid color-mix(in srgb,var(--bc) 32%,var(--line))}
 .aiHtt i.tx{direction:rtl;font-weight:650;font-size:12.5px;letter-spacing:0}
 .aiHw{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .aiHwd{border-radius:11px;padding:6px 1px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);font-size:10px;line-height:1.35;min-height:52px}
