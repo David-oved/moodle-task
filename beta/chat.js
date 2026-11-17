@@ -36,6 +36,7 @@
       tl_get_completion_status: a => a ? "בודק מה כבר השלמת בקורס " + a : "בודק מה כבר השלמת", tl_search_college_info: () => "בודק במידע של המכללה", tl_get_my_exams: a => a ? "בודק מבחנים ובחנים בקורס " + a : "בודק את המבחנים והבחנים שלך", tl_remember_about_student: () => "שומר בזיכרון", tl_forget_about_student: () => "מוחק מהזיכרון",
       memBtn: "זיכרון", memTitle: "מה אני זוכר עליך", memIntro: "אלה דברים שסיפרת לי, כדי שאוכל לעזור לך יותר טוב. הם נשמרים רק אצלך ואפשר למחוק כל אחד.",
       memEmpty: "עדיין לא זכרתי שום דבר עליך. אפשר לספר לי, למשל ״עזבתי את הקורס אלגברה״.", memSaved: "נשמר בזיכרון", memGone: "נמחק מהזיכרון", memUndo: "בטל", memUndone: "בוטל",
+      devT: "למפתחים: מפתח AI אישי", devNote: "אופציה למפתחים: הבוט יענה בעזרת מפתח ה-API שלך (Google, OpenAI, Grok או Groq) במקום המודל הציבורי. הקריאות מחויבות בחשבון שלך אצל הספק. המפתח נשמר מוצפן אצלנו ולא מוצג שוב.", devNone: "אין מפתח אישי: הבוט משתמש במודל הציבורי.", devSaved: m => "מפתח שמור: " + m, devPh: "הדבק מפתח API", devSave: "שמור מפתח", devList: "טען מודלים", devTest: "בדוק", devOn: "השתמש במפתח האישי שלי", devDel: "מחק את המפתח", devDelQ: "למחוק את המפתח האישי? הבוט יחזור למודל הציבורי.", devOk: ms => "עובד · " + ms + " שניות", devFail: "נכשל", useTitle: "השימוש במפתח שלי", useCalls: "קריאות", useFails: "נכשלו", useEmpty: "עדיין אין שימוש בשבוע האחרון", useNote: "רק על המפתח האישי שלך, 7 הימים האחרונים. אצל הספק תראה את החיוב המלא.", useBtn: "השימוש במפתח שלי",
       winMin: "הקטן לחלון קטן (אפשר להמשיך להשתמש באפליקציה)", winMax: "הגדל למסך מלא", wipeBtn: "מחק את כל המידע שלי", wipeQ1: "למחוק את כל מה שיש עליך אצלנו? השיחות, הזיכרון והחשבון שלך יימחקו, ואי אפשר לשחזר.", wipeQ2: "בטוח? אחרי המחיקה זה כאילו מעולם לא פתחת את הצ'אט.", wipeOk: "המשך", wipeOk2: "מחק הכול", wiped: "כל המידע שלך נמחק", memDelAll: "מחק את כל הזיכרון", memDelAllQ: "למחוק את כל מה שאני זוכר עליך? אי אפשר לשחזר.", memLeft: "עזבת", memDelOne: "מחק", memCount: n => n === 1 ? "דבר אחד" : n + " דברים",
       fileHint: "הקש להורדה", dlDone: "הורד", dlProg: (p, a, b) => p + "% · " + a + " מתוך " + b,
     },
@@ -62,6 +63,7 @@
       tl_get_completion_status: a => a ? "Checking what you completed in " + a : "Checking what you completed", tl_search_college_info: () => "Checking the college’s information", tl_get_my_exams: a => a ? "Checking exams and quizzes in " + a : "Checking your exams and quizzes", tl_remember_about_student: () => "Saving to memory", tl_forget_about_student: () => "Removing from memory",
       memBtn: "Memory", memTitle: "What I remember about you", memIntro: "These are things you told me, so I can help you better. They are kept only for you and you can delete any of them.",
       memEmpty: "I haven’t remembered anything about you yet. You can tell me, for example “I left the Algebra course”.", memSaved: "Saved to memory", memGone: "Removed from memory", memUndo: "Undo", memUndone: "Undone",
+      devT: "For developers: personal AI key", devNote: "Developer option: the bot answers with your own API key (Google, OpenAI, Grok or Groq) instead of the public model. Calls are billed to your account with the provider. The key is stored encrypted and never shown again.", devNone: "No personal key: the bot uses the public model.", devSaved: m => "Saved key: " + m, devPh: "Paste an API key", devSave: "Save key", devList: "Load models", devTest: "Test", devOn: "Use my personal key", devDel: "Delete the key", devDelQ: "Delete the personal key? The bot returns to the public model.", devOk: ms => "Works · " + ms + " s", devFail: "Failed", useTitle: "My key usage", useCalls: "calls", useFails: "failed", useEmpty: "No usage in the last week", useNote: "Only your personal key, last 7 days. The full bill is with the provider.", useBtn: "My key usage",
       winMin: "Shrink to a small window (keep using the app)", winMax: "Make full screen", wipeBtn: "Delete all my data", wipeQ1: "Delete everything we hold about you? Your chats, memory and account will be erased and this can’t be undone.", wipeQ2: "Are you sure? Afterwards it is as if you never opened the chat.", wipeOk: "Continue", wipeOk2: "Delete everything", wiped: "All your data was deleted", memDelAll: "Delete all memory", memDelAllQ: "Delete everything I remember about you? This can’t be undone.", memLeft: "Left", memDelOne: "Delete", memCount: n => n === 1 ? "1 item" : n + " items",
       fileHint: "Tap to download", dlDone: "Downloaded", dlProg: (p, a, b) => p + "% · " + a + " of " + b,
     },
@@ -88,6 +90,7 @@
       tl_get_completion_status: a => a ? "Vérification de ce que vous avez terminé dans " + a : "Vérification de ce que vous avez terminé", tl_search_college_info: () => "Je consulte les informations du collège", tl_get_my_exams: a => a ? "Vérification des examens et quiz de " + a : "Vérification de vos examens et quiz", tl_remember_about_student: () => "Enregistrement en mémoire", tl_forget_about_student: () => "Suppression de la mémoire",
       memBtn: "Mémoire", memTitle: "Ce dont je me souviens", memIntro: "Ce sont des choses que vous m’avez dites, pour mieux vous aider. Elles ne sont gardées que pour vous et vous pouvez en supprimer.",
       memEmpty: "Je ne me souviens encore de rien à votre sujet. Vous pouvez me dire, par exemple « j’ai quitté le cours d’algèbre ».", memSaved: "Enregistré en mémoire", memGone: "Supprimé de la mémoire", memUndo: "Annuler", memUndone: "Annulé",
+      devT: "Pour les développeurs : clé IA perso", devNote: "Option développeur : le bot répond avec ta propre clé API (Google, OpenAI, Grok ou Groq) au lieu du modèle public. Les appels sont facturés chez le fournisseur. La clé est chiffrée et jamais ré-affichée.", devNone: "Pas de clé perso : le bot utilise le modèle public.", devSaved: m => "Clé enregistrée : " + m, devPh: "Colle une clé API", devSave: "Enregistrer", devList: "Charger les modèles", devTest: "Tester", devOn: "Utiliser ma clé perso", devDel: "Supprimer la clé", devDelQ: "Supprimer la clé perso ? Le bot revient au modèle public.", devOk: ms => "OK · " + ms + " s", devFail: "Échec", useTitle: "Usage de ma clé", useCalls: "appels", useFails: "échecs", useEmpty: "Aucun usage cette semaine", useNote: "Uniquement ta clé perso, 7 derniers jours.", useBtn: "Usage de ma clé",
       winMin: "Réduire en petite fenêtre (continuer à utiliser l’appli)", winMax: "Plein écran", wipeBtn: "Supprimer toutes mes données", wipeQ1: "Supprimer tout ce que nous avons sur toi ? Tes conversations, ta mémoire et ton compte seront effacés, de façon irréversible.", wipeQ2: "Sûr ? Ensuite, c’est comme si tu n’avais jamais ouvert le chat.", wipeOk: "Continuer", wipeOk2: "Tout supprimer", wiped: "Toutes tes données ont été supprimées", memDelAll: "Supprimer toute la mémoire", memDelAllQ: "Supprimer tout ce dont je me souviens ? Cette action est irréversible.", memLeft: "Quitté", memDelOne: "Supprimer", memCount: n => n === 1 ? "1 élément" : n + " éléments",
       fileHint: "Touchez pour télécharger", dlDone: "Téléchargé", dlProg: (p, a, b) => p + " % · " + a + " sur " + b,
     },
@@ -588,6 +591,20 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiBk.aiHero{padding:28px 34px;flex-wrap:nowrap}
   .aiHeroS{flex:none}.aiHeroT b{font-size:32px}.aiHeroS b{font-size:34px}
 }
+.aiDev{margin:16px 0 4px;border:1px dashed var(--line);border-radius:14px;padding:2px 12px;opacity:.85}
+.aiDev>summary{cursor:pointer;padding:10px 0;font-size:13px;font-weight:700;color:var(--muted);list-style:none}.aiDev>summary::-webkit-details-marker{display:none}
+.aiDevB{display:flex;flex-direction:column;gap:9px;padding:2px 0 12px}.aiDevN{margin:0;font-size:12.5px;line-height:1.5;color:var(--muted)}
+.aiDevS{font-size:13px;font-weight:700}.aiDevR{display:flex;gap:6px;flex-wrap:wrap}
+.aiDev select,.aiDev input[type=password]{flex:1;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:13px}
+.aiDev button{padding:8px 12px;border-radius:10px;border:1px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.aiDev button.danger{border-color:var(--err,#e5484d);color:var(--err,#e5484d)}.aiDev button:disabled{opacity:.5}
+.aiDevC{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700}.aiDevOut{font-size:12.5px}
+.aiUse{display:flex;flex-direction:column;gap:14px;padding-top:6px}.aiUseT{display:flex;gap:10px}.aiUseT>div{flex:1;text-align:center;padding:12px 6px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.aiUseT b{display:block;font-size:26px;font-weight:900;color:var(--accent-t,var(--accent))}.aiUseT small{font-size:12px;color:var(--muted)}
+.aiUseB{display:flex;align-items:flex-end;gap:6px;height:110px}.aiUseB>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;font-size:11px;color:var(--muted)}
+.aiUseB i{display:block;width:100%;border-radius:6px 6px 2px 2px;background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 50%,#7b5cff));min-height:2px}.aiUseB em{font-style:normal;font-weight:800;color:var(--text)}
+.aiUseM{font-size:13px}.aiUseM>div{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.aiHb[data-a="use"][hidden]{display:none}
 .aiWipe{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:18px 0 8px;padding:12px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--err,#e5484d) 55%,transparent);background:color-mix(in srgb,var(--err,#e5484d) 9%,transparent);color:var(--err,#e5484d);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .aiWipe svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .aiWipe:active{transform:scale(.98)}
@@ -898,6 +915,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const I_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const I_HIST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>';
   const I_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg>';
+  const I_USE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>';
   const I_NEW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
   const I_BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   const I_SEND = '<svg class="aiSendI" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>';
@@ -1622,6 +1640,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
           row.appendChild(d); wrap.appendChild(row);
         });
       }
+      wrap.appendChild(buildDevSection());
       const wipe = document.createElement("button"); wipe.type = "button"; wipe.className = "aiWipe"; wipe.innerHTML = I_TRASH + "<span>" + esc2(tx("wipeBtn")) + "</span>"; wipe.onclick = () => deleteMyData();
       wrap.appendChild(wipe);
       ms.appendChild(wrap); swapAnim();
@@ -1640,6 +1659,91 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     dropCurrent(); ["aiSess", "aiConv", "aiLeft", "aiDemoSeen", "aiTourSeen", "aiTourPending"].forEach(k => { try { LS.del(k); } catch (e) {} });
     toast(tx("wiped"), 3500);
     await wait(900); try { close(); } catch (e) {}
+  }
+
+  /* ------------------------------------------------------------ personal AI key (developers): hidden under the memory settings */
+  let personalOn = false;
+  function setPersonal(on) { personalOn = !!on; try { LS.set("aiPersonal", on ? 1 : 0); } catch (e) {} const b = panel && panel.querySelector('[data-a="use"]'); if (b) b.hidden = !on; }
+  async function refreshAiMode() {
+    try { const r = await call("/api/me/ai"); if (r.ok) { const j = await r.json(); setPersonal(j.mode === "personal" && j.has_key); } } catch (e) {}
+  }
+  const DEV_PROV = [["google", "Google Gemini"], ["openai", "OpenAI"], ["xai", "xAI Grok"], ["groq", "Groq"]];
+  function buildDevSection() {
+    const d = document.createElement("details"); d.className = "aiDev";
+    const sm = document.createElement("summary"); sm.textContent = tx("devT"); d.appendChild(sm);
+    const body = document.createElement("div"); body.className = "aiDevB"; d.appendChild(body);
+    let st = null, models = [];
+    const api = async (path, method, data) => {
+      const r = await call(path, { method: method || "GET", body: data }); let j = {}; try { j = await r.json(); } catch (e) {}
+      if (!r.ok) throw new Error(j.detail || "error"); return j;
+    };
+    const opt = (sel, v, label) => { const o = document.createElement("option"); o.value = v; o.textContent = label || v; sel.appendChild(o); };
+    const render = () => {
+      body.innerHTML = "";
+      const n = document.createElement("p"); n.className = "aiDevN"; n.textContent = tx("devNote"); body.appendChild(n);
+      const s1 = document.createElement("div"); s1.className = "aiDevS"; s1.textContent = st && st.has_key ? tx("devSaved", (DEV_PROV.find(x => x[0] === st.kind) || [0, st.kind])[1] + " " + st.masked) : tx("devNone"); body.appendChild(s1);
+      const r1 = document.createElement("div"); r1.className = "aiDevR";
+      const ps = document.createElement("select"); DEV_PROV.forEach(([v, l]) => opt(ps, v, l)); if (st && st.kind) ps.value = st.kind;
+      const ki = document.createElement("input"); ki.type = "password"; ki.placeholder = tx("devPh"); ki.autocomplete = "off";
+      const sv = document.createElement("button"); sv.type = "button"; sv.textContent = tx("devSave");
+      sv.onclick = async () => { if (!ki.value.trim()) return; try { st = await api("/api/me/ai/key", "POST", { provider: ps.value, api_key: ki.value.trim() }); models = []; setPersonal(false); render(); } catch (e) { toast(e.message, 4000); } };
+      r1.append(ps, ki, sv); body.appendChild(r1);
+      if (!(st && st.has_key)) return;
+      const r2 = document.createElement("div"); r2.className = "aiDevR";
+      const m1 = document.createElement("select"), m2 = document.createElement("select");
+      const fillSel = (sel, cur, withNone) => { sel.innerHTML = ""; if (withNone) opt(sel, "", "-"); const all = [...new Set([...(models || []), ...(st.models || [])])]; all.forEach(m => opt(sel, m)); sel.value = cur || ""; };
+      fillSel(m1, (st.models || [])[0], false); fillSel(m2, (st.models || [])[1], true);
+      const ld = document.createElement("button"); ld.type = "button"; ld.textContent = tx("devList");
+      const out = document.createElement("div"); out.className = "aiDevOut";
+      ld.onclick = async () => { try { const j = await api("/api/me/ai/models-list", "POST"); models = j.models; fillSel(m1, m1.value, false); fillSel(m2, m2.value, true); } catch (e) { out.textContent = e.message; } };
+      const ts = document.createElement("button"); ts.type = "button"; ts.textContent = tx("devTest");
+      ts.onclick = async () => {
+        if (!m1.value) { out.textContent = "-"; return; } out.textContent = "...";
+        try { const j = await api("/api/me/ai/test", "POST", { model: m1.value }); out.textContent = j.success ? "✓ " + tx("devOk", (j.latency_ms / 1000).toFixed(1)) : "✗ " + tx("devFail") + ": " + (j.error || j.status_code || ""); }
+        catch (e) { out.textContent = "✗ " + e.message; }
+      };
+      r2.append(m1, m2, ld, ts); body.append(r2, out);
+      const lb = document.createElement("label"); lb.className = "aiDevC"; const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = st.mode === "personal";
+      lb.append(cb, document.createTextNode(tx("devOn"))); body.appendChild(lb);
+      const apply = async () => {
+        const ms = [m1.value, m2.value].filter((v, i, a) => v && a.indexOf(v) === i);
+        try { st = await api("/api/me/ai/choose", "POST", { models: ms, mode: cb.checked ? "personal" : "public" }); setPersonal(st.mode === "personal"); }
+        catch (e) { cb.checked = false; toast(e.message, 4000); }
+      };
+      cb.onchange = apply; m1.onchange = m2.onchange = () => { if (cb.checked) apply(); };
+      const del = document.createElement("button"); del.type = "button"; del.className = "danger"; del.textContent = tx("devDel");
+      del.onclick = async () => { if (!(await confirmDlg(tx("devDelQ"), tx("delOk")))) return; try { await api("/api/me/ai", "DELETE"); st = null; models = []; setPersonal(false); render(); } catch (e) { toast(e.message, 3500); } };
+      body.appendChild(del);
+    };
+    const load = async () => { try { st = await api("/api/me/ai"); } catch (e) { st = null; } render(); };
+    d.addEventListener("toggle", () => { if (d.open && !st) load(); });
+    render();
+    return d;
+  }
+
+  async function openUsage() {
+    const my = ++gen; histMode = false; memMode = true; setMode(); closeMenu();
+    titleEl.querySelector("b").textContent = tx("useTitle");
+    ms.innerHTML = '<div class="aiHe">' + esc2(tx("connecting")) + "</div>";
+    try {
+      const res = await call("/api/me/ai/usage"); if (my !== gen) return;
+      if (!res.ok) throw new AiErr(errKind(res));
+      const j = await res.json();
+      const byDay = {}; (j.days || []).forEach(d => { byDay[d.day] = d; });
+      const days = []; for (let i = 6; i >= 0; i--) { const dt = new Date(Date.now() - i * 86400000); const k = dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0"); days.push([k, (byDay[k] || {}).calls || 0]); }
+      const top = Math.max(1, ...days.map(d => d[1]));
+      const per = {}; (j.models || []).forEach(m => { per[m.model] = (per[m.model] || 0) + m.calls; });
+      ms.innerHTML = "";
+      const wrap = document.createElement("div"); wrap.className = "aiHs aiUse"; wrap.style.cssText = "padding-top:6px;padding-bottom:0;flex:none";
+      wrap.innerHTML = '<div class="aiUseT"><div><b>' + (j.total_calls || 0) + "</b><small>" + esc2(tx("useCalls")) + '</small></div><div><b>' + (j.total_fails || 0) + "</b><small>" + esc2(tx("useFails")) + "</small></div></div>" +
+        (j.total_calls || j.total_fails ? '<div class="aiUseB">' + days.map(([k, v]) => '<div><em>' + (v || "") + '</em><i style="height:' + Math.round(v / top * 80) + 'px"></i><span>' + k.slice(8) + "/" + k.slice(5, 7) + "</span></div>").join("") + "</div>" +
+          '<div class="aiUseM">' + Object.entries(per).sort((a, b) => b[1] - a[1]).map(([m, c]) => "<div><span>" + esc2(m) + "</span><b>" + c + "</b></div>").join("") + "</div>" : '<div class="aiHe">' + esc2(tx("useEmpty")) + "</div>") +
+        '<p class="aiDevN">' + esc2(tx("useNote")) + "</p>";
+      ms.appendChild(wrap); swapAnim();
+    } catch (e) {
+      if (my !== gen) return;
+      ms.innerHTML = '<div class="aiHe">' + esc2(e instanceof AiErr ? errText(e) : tx("errLoad")) + "</div>";
+    }
   }
 
   async function deleteMem(id, row) {
@@ -2127,7 +2231,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.innerHTML =
       '<div class="aiHd"><button type="button" class="aiHb" data-a="close"></button>' +
       '<div class="aiTt"><div class="aiAv">' + FACE + '<span class="aiTag">AI</span></div><div class="aiTl"><b></b><small></small></div></div>' +
-      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="mem"></button><button type="button" class="aiHb" data-a="new"></button><button type="button" class="aiHb" data-a="demo"></button><button type="button" class="aiHb" data-a="win" hidden></button></div>' +
+      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="mem"></button><button type="button" class="aiHb" data-a="new"></button><button type="button" class="aiHb" data-a="demo"></button><button type="button" class="aiHb" data-a="win" hidden></button><button type="button" class="aiHb" data-a="use" hidden></button></div>' +
       '<div class="aiMs" role="log" aria-live="polite"></div>' +
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
       '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
@@ -2143,6 +2247,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.querySelector('[data-a="new"]').onclick = () => { startNew(); if (matchMedia("(hover:hover)").matches) input.focus(); };
     panel.querySelector('[data-a="demo"]').onclick = () => demoReplay();
     panel.querySelector('[data-a="win"]').onclick = () => setWin(!winMode);
+    panel.querySelector('[data-a="use"]').onclick = () => (memMode ? renderMsgs() : openUsage());
+    try { setPersonal(!!LS.get("aiPersonal", 0)); } catch (e) {}
     winPointers();
     // sending must not close the keyboard: remember if it was up, keep the focus where it is, and put it back after the send
     sendBtn.addEventListener("pointerdown", () => { kbIntent = document.activeElement === input; });
@@ -2236,6 +2342,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.querySelector('[data-a="close"]').innerHTML = I_X; panel.querySelector('[data-a="close"]').setAttribute("aria-label", tx("close")); panel.querySelector('[data-a="close"]').title = tx("close");
     memBtn.innerHTML = I_BRAIN; memBtn.setAttribute("aria-label", tx("memTitle")); memBtn.title = tx("memTitle");
     const nb = panel.querySelector('[data-a="new"]'); nb.innerHTML = I_NEW; nb.setAttribute("aria-label", tx("newc")); nb.title = tx("newc");
+    { const ub = panel.querySelector('[data-a="use"]'); ub.innerHTML = I_USE; ub.setAttribute("aria-label", tx("useBtn")); ub.title = tx("useBtn"); }
     const db = panel.querySelector('[data-a="demo"]'); db.innerHTML = I_PLAY; { const lbl = demoData().replay; db.setAttribute("aria-label", lbl); db.title = lbl; }
     input.placeholder = tx("ph"); input.setAttribute("aria-label", tx("ph"));
     panel.querySelector(".aiNt").textContent = tx("note");
@@ -2316,7 +2423,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (!pushed) { try { history.pushState({ v: typeof V !== "undefined" ? V.view : "", ai: 1 }, ""); pushed = true; } catch (e) {} }
       lockPage();
     }
-    baseH = 0; lastKey = ""; kbWas = false; fit(true); fitSoon(); updateWinBtn();
+    baseH = 0; lastKey = ""; kbWas = false; fit(true); fitSoon(); updateWinBtn(); refreshAiMode();
     intro = winStart ? null : startIntro(fr);
     if (!intro) { if (!winMode) document.documentElement.classList.add("aiOn"); void panel.offsetWidth; panel.classList.add("on"); }   // no animation: just there (not requestAnimationFrame, which is paused in some background states)
     const my = intro;
