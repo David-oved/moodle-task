@@ -214,8 +214,8 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiTkP.soon{color:#e8a000;background:#e8a00024}
 .aiTkP.hot{color:#e8590c;background:#e8590c24}
 .aiTkP.late{color:#fff;background:#e5484d}
-.aiTl{position:relative;padding-inline-start:20px}
-.aiTl::before{content:"";position:absolute;inset-inline-start:5px;top:8px;bottom:8px;width:2px;border-radius:2px;background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 15%,transparent))}
+.aiTlW{position:relative;padding-inline-start:20px}
+.aiTlW::before{content:"";position:absolute;inset-inline-start:5px;top:8px;bottom:8px;width:2px;border-radius:2px;background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 15%,transparent))}
 .aiTlD{margin-bottom:10px}
 .aiTlH{position:relative;font-size:12.5px;font-weight:800;color:var(--accent-t,var(--accent));margin-bottom:5px}
 .aiTlH i{position:absolute;inset-inline-start:-20px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--card);border:3px solid var(--accent)}
@@ -238,9 +238,9 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiCo{--cc:var(--accent)}.aiCo.warn{--cc:#e8590c}.aiCo.success{--cc:#22a55e}.aiCo.tip{--cc:#a855f7}
 .aiCo svg{flex:none;width:21px;height:21px;fill:none;stroke:var(--cc);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
 .aiCo b{display:block;margin-bottom:1px}
-.aiSt{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px}
-.aiSt>div{text-align:center;padding:10px 4px;border-radius:14px;background:color-mix(in srgb,var(--accent) 9%,var(--card));border:1px solid var(--line)}
-.aiSt b{display:block;font-size:24px;font-weight:900;color:var(--accent-t,var(--accent));line-height:1.1}.aiSt small{font-size:11.5px;color:var(--muted)}
+.aiStx{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px}
+.aiStx>div{text-align:center;padding:10px 4px;border-radius:14px;background:color-mix(in srgb,var(--accent) 9%,var(--card));border:1px solid var(--line)}
+.aiStx b{display:block;font-size:24px;font-weight:900;color:var(--accent-t,var(--accent));line-height:1.1}.aiStx small{font-size:11.5px;color:var(--muted)}
 .aiPr{display:flex;flex-direction:column;gap:10px}
 .aiPrT{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;margin-bottom:4px}.aiPrT b{font-weight:800}
 .aiPr i{display:block;height:8px;border-radius:99px;background:color-mix(in srgb,var(--text) 10%,transparent);overflow:hidden}
@@ -283,15 +283,15 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiCt.row .aiAc em,.aiCt.row .aiAc i,.aiCt.row .aiAcC{display:none}.aiCt.row .aiAc{padding:9px;flex:none}.aiCt.row .aiAvt{width:34px;height:34px;font-size:14px}
 .aiCt.big{text-align:center}.aiCt.big .aiCtH{flex-direction:column}.aiCt.big .aiAvt{width:58px;height:58px;font-size:23px}.aiCt.big .aiCtH b{font-size:17px}.aiCt.big .aiAc{padding:13px}
 .aiHH{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px;font-size:14.5px}.aiHH>.aiIc{color:var(--bc)}
-.aiHs{margin-inline-start:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px}
-.aiHs i{width:8px;height:8px;border-radius:50%;background:currentColor}
-.aiHs.on{color:#22a55e;background:#22a55e1f}.aiHs.on i{animation:aiHsP 1.6s ease-in-out infinite}.aiHs.off{color:#e5484d;background:#e5484d1f}
+.aiHbadge{margin-inline-start:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px}
+.aiHbadge i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.aiHbadge.on{color:#22a55e;background:#22a55e1f}.aiHbadge.on i{animation:aiHsP 1.6s ease-in-out infinite}.aiHbadge.off{color:#e5484d;background:#e5484d1f}
 @keyframes aiHsP{0%,100%{opacity:1}50%{opacity:.35}}
-.aiHr{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed color-mix(in srgb,var(--bc) 28%,var(--line));font-size:14px}.aiHr:last-child{border-bottom:0}
-.aiHr b{direction:ltr;font-weight:800;color:var(--bc);white-space:nowrap}
+.aiHrow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed color-mix(in srgb,var(--bc) 28%,var(--line));font-size:14px}.aiHrow:last-child{border-bottom:0}
+.aiHrow b{direction:ltr;font-weight:800;color:var(--bc);white-space:nowrap}
 .aiHw{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
-.aiHd{border-radius:11px;padding:6px 1px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);font-size:10px;line-height:1.35;min-height:52px}
-.aiHd b{display:block;font-size:12.5px;margin-bottom:3px}.aiHd span{display:block;direction:ltr;font-size:9.5px}.aiHd.today{background:var(--bc);color:#fff}.aiHd.none{opacity:.45}
+.aiHwd{border-radius:11px;padding:6px 1px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);font-size:10px;line-height:1.35;min-height:52px}
+.aiHwd b{display:block;font-size:12.5px;margin-bottom:3px}.aiHwd span{display:block;direction:ltr;font-size:9.5px}.aiHwd.today{background:var(--bc);color:#fff}.aiHwd.none{opacity:.45}
 .aiHc{display:flex;flex-wrap:wrap;gap:7px}.aiHc span{padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));font-size:13px}
 .aiSt2 ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;position:relative}
 .aiSt2 li{display:flex;gap:11px;align-items:flex-start;position:relative}
@@ -318,7 +318,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiCo2,.aiBn{display:flex;gap:10px;align-items:flex-start;line-height:1.45;font-size:14px}.aiCo2>.aiIc,.aiBn>.aiIc{color:var(--bc);margin-top:1px}.aiCo2 b{display:block;margin-bottom:1px}
 .aiBn{padding:9px 12px;border-radius:12px;background:var(--bc);color:#fff;border:0}.aiBn>.aiIc{color:#fff}.aiBn.card{padding:13px;font-size:15px}
 .aiLi ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}.aiLi li{display:flex;gap:10px;align-items:flex-start}
-.aiLi .aiIc{color:var(--bc);margin-top:1px}.aiDot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--bc);margin-top:7px}
+.aiLi .aiIc{color:var(--bc);margin-top:1px}.aiLiDot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--bc);margin-top:7px}
 .aiLiN{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;background:var(--bc)}
 .aiLi li b{font-size:14.5px;line-height:1.35;font-weight:650}
 .aiLi.cards li{padding:10px;border-radius:13px;background:var(--card);border:1px solid var(--line)}
@@ -367,6 +367,12 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHg.accent{border-inline-start:4px solid var(--bc);padding-inline-start:10px;border-radius:2px}.aiHg.centered{justify-content:center;text-align:center}
 .aiTg{display:flex;flex-wrap:wrap;gap:7px}.aiTg>.aiBkT{flex-basis:100%;margin-bottom:0}.aiTg span{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;background:color-mix(in srgb,var(--bc) 15%,var(--card));font-size:13px;font-weight:650}
 .aiTg .aiIc{width:15px;height:15px;color:var(--bc)}
+/* nothing inside an answer may ever be wider than the bubble: it wraps, scrolls inside itself, or is shortened */
+.aiM .aiB{min-width:0}
+.aiUi{width:100%;max-width:100%;min-width:0}
+.aiBk{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+.aiBk *{min-width:0;max-width:100%}
+.aiHrow b,.aiHtab b{white-space:normal}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -812,7 +818,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function uiTimeline(items) {
     const days = []; items.forEach(it => { const k = dayStart(it.t * 1000); let g = days.find(x => x.k === k); if (!g) days.push(g = { k, t: it.t, list: [] }); g.list.push(it); });
     const T = dlt(), today = dayStart(Date.now());
-    return '<div class="aiTl">' + days.map(g => {
+    return '<div class="aiTlW">' + days.map(g => {
       const dd = Math.round((g.k - today) / 86400000), o = ordDay(g.t);
       const label = dd <= 0 ? T.today : dd === 1 ? T.tm.trim() : o.wd + " " + o.day + " " + o.mon;
       return '<div class="aiTlD"><div class="aiTlH"><i></i>' + esc2(label) + '</div>' + g.list.map(it => '<div class="aiTlR"' + itAttr("d", it) + ' style="--dc:' + (it.t * 1000 < Date.now() ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)") + uiI() + '"><b>' + esc2(it.n) + "</b><small>" + esc2(it.c) + '</small><span>' + esc2(it.t * 1000 < Date.now() ? dlt().over + " · " + dlTime(it.t) : dlTime(it.t)) + "</span></div>").join("") + "</div>";
@@ -934,18 +940,18 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const uiHM = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
   function uiHours(b) {
     const L = ul(), st = uiOpenNow(b.it);
-    const badge = st ? '<span class="aiHs ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed) + "</span>" : "";
+    const badge = st ? '<span class="aiHbadge ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed) + "</span>" : "";
     let body;
     if (b.s === "week") {
       const today = new Date().getDay();
       body = '<div class="aiHw">' + L.dayN.map((n, d) => {
         const t = b.it.filter(r => uiDays(r.d).has(d)).map(r => r.h).join("\n");
-        return '<div class="aiHd' + (d === today ? " today" : "") + (t ? "" : " none") + '"><b>' + esc2(n) + "</b><span>" + (t ? esc2(t).replace(/\n/g, "<br>").replace(/\s*[-–]\s*/g, "<br>") : "-") + "</span></div>";
+        return '<div class="aiHwd' + (d === today ? " today" : "") + (t ? "" : " none") + '"><b>' + esc2(n) + "</b><span>" + (t ? esc2(t).replace(/\n/g, "<br>").replace(/\s*[-–]\s*/g, "<br>") : "-") + "</span></div>";
       }).join("") + "</div>";
     } else if (b.s === "compact") {
       body = '<div class="aiHc">' + b.it.map(r => "<span><b>" + esc2(r.l || r.d) + "</b> " + esc2(r.h) + "</span>").join("") + "</div>";
     } else {
-      body = '<div class="aiHt">' + b.it.map(r => '<div class="aiHr"><span>' + esc2(r.l ? r.l + (r.d ? " · " + r.d : "") : r.d) + "</span><b>" + esc2(r.h) + "</b></div>").join("") + "</div>";
+      body = '<div class="aiHtab">' + b.it.map(r => '<div class="aiHrow"><span>' + esc2(r.l ? r.l + (r.d ? " · " + r.d : "") : r.d) + "</span><b>" + esc2(r.h) + "</b></div>").join("") + "</div>";
     }
     return uiBk(b, "aiHours", '<div class="aiHH">' + uiIc(b.ic || "clock") + "<b>" + esc2(b.ti || "") + "</b>" + badge + "</div>" + body + (b.tx ? '<div class="aiNote">' + esc2(b.tx) + "</div>" : ""), false);
   }
@@ -973,7 +979,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         const tone = b.tone || "info", ic = b.ic || { warn: "warning", danger: "warning", success: "check", tip: "bolt", info: "info" }[tone] || "info";
         return uiBk({ ...b, co: b.co || ({ warn: "orange", danger: "red", success: "green", tip: "purple", info: "blue" }[tone]) }, (b.k === "banner" ? "aiBn " : "aiCo2 ") + (b.s || ""), uiIc(ic) + "<div>" + (b.ti ? "<b>" + esc2(b.ti) + "</b>" : "") + "<span>" + esc2(b.tx) + "</span></div>", false);
       }
-      case "list": return it.length ? uiBk(b, "aiLi " + (b.s || "bullets"), "<ul>" + it.map((x, i) => '<li style="--k:' + i + '">' + (b.s === "icons" || x.ic ? uiIc(x.ic || b.ic || "check") : b.s === "numbers" ? '<span class="aiLiN">' + (i + 1) + "</span>" : '<i class="aiDot"></i>') + "<div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></li>").join("") + "</ul>", true) : "";
+      case "list": return it.length ? uiBk(b, "aiLi " + (b.s || "bullets"), "<ul>" + it.map((x, i) => '<li style="--k:' + i + '">' + (b.s === "icons" || x.ic ? uiIc(x.ic || b.ic || "check") : b.s === "numbers" ? '<span class="aiLiN">' + (i + 1) + "</span>" : '<i class="aiLiDot"></i>') + "<div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></li>").join("") + "</ul>", true) : "";
       case "checklist": return it.length ? uiBk(b, "aiCk", it.map(x => '<label class="aiCkI"><input type="checkbox"><i>' + uiIc("check") + "</i><div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></label>").join(""), true) : "";
       case "accordion": return it.length ? uiBk(b, "aiAcc", it.map(x => '<details><summary><span>' + esc2(x.q) + "</span>" + uiIc("arrow") + "</summary><p>" + esc2(x.a) + "</p></details>").join(""), true) : "";
       case "tabs": return it.length ? uiBk(b, "aiTb", '<div class="aiTbH" role="tablist">' + it.map((x, i) => '<button type="button" role="tab" data-tab="' + i + '" class="' + (i === 0 ? "on" : "") + '">' + esc2(x.l) + "</button>").join("") + "</div>" + it.map((x, i) => '<div class="aiTbP' + (i === 0 ? " on" : "") + '" data-pane="' + i + '">' + esc2(x.tx) + "</div>").join(""), true) : "";
@@ -1013,7 +1019,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       ? '<div class="aiLs">' + b.it.map(it => "<div" + itAttr("c", it) + "><span>" + esc2(it.n) + "</span></div>").join("") + "</div>"
       : '<div class="aiCh">' + b.it.map(it => '<span' + itAttr("c", it) + ' style="--dc:hsl(' + dlHue(it.n) + ' 72% 58%)"><i></i>' + esc2(it.n) + "</span>").join("") + "</div>");
     if (b.k === "callout") return '<div class="aiCo ' + esc2(b.tone || "info") + '">' + (UI_ICONS[b.tone] || UI_ICONS.info) + "<div>" + (b.ti ? "<b>" + esc2(b.ti) + "</b>" : "") + "<span>" + esc2(b.tx) + "</span></div></div>";
-    if (b.k === "stats" && b.it) return head + '<div class="aiSt">' + b.it.map(it => "<div><b>" + esc2(it.v) + "</b><small>" + esc2(it.l) + "</small></div>").join("") + "</div>";
+    if (b.k === "stats" && b.it) return head + '<div class="aiStx">' + b.it.map(it => "<div><b>" + esc2(it.v) + "</b><small>" + esc2(it.l) + "</small></div>").join("") + "</div>";
     if (b.k === "steps" && b.it) return head + '<ol class="aiSp">' + b.it.map(it => "<li>" + esc2(it.l) + "</li>").join("") + "</ol>";
     if (b.k === "progress" && b.it) return head + '<div class="aiPr">' + b.it.map(it => { const v = Math.max(0, Math.min(100, parseFloat(it.v) || 0)); return '<div><div class="aiPrT"><span>' + esc2(it.l) + "</span><b>" + Math.round(v) + '%</b></div><i><u style="width:' + v + '%;background:' + gaugeCol(v) + '"></u></i></div>'; }).join("") + "</div>";
     if (b.k === "buttons" && b.it) return '<div class="aiQuick">' + b.it.map(it => '<button type="button" data-qk="' + esc2(it.v || it.l) + '">' + esc2(it.l) + "</button>").join("") + "</div>";
