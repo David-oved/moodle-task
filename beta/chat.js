@@ -36,7 +36,7 @@
       tl_get_completion_status: a => a ? "בודק מה כבר השלמת בקורס " + a : "בודק מה כבר השלמת", tl_remember_about_student: () => "שומר בזיכרון", tl_forget_about_student: () => "מוחק מהזיכרון",
       memBtn: "זיכרון", memTitle: "מה אני זוכר עליך", memIntro: "אלה דברים שסיפרת לי, כדי שאוכל לעזור לך יותר טוב. הם נשמרים רק אצלך ואפשר למחוק כל אחד.",
       memEmpty: "עדיין לא זכרתי שום דבר עליך. אפשר לספר לי, למשל ״עזבתי את הקורס אלגברה״.", memSaved: "נשמר בזיכרון", memGone: "נמחק מהזיכרון", memUndo: "בטל", memUndone: "בוטל",
-      wipeBtn: "מחק את כל המידע שלי", wipeQ1: "למחוק את כל מה שיש עליך אצלנו? השיחות, הזיכרון והחשבון שלך יימחקו, ואי אפשר לשחזר.", wipeQ2: "בטוח? אחרי המחיקה זה כאילו מעולם לא פתחת את הצ'אט.", wipeOk: "המשך", wipeOk2: "מחק הכול", wiped: "כל המידע שלך נמחק", memDelAll: "מחק את כל הזיכרון", memDelAllQ: "למחוק את כל מה שאני זוכר עליך? אי אפשר לשחזר.", memLeft: "עזבת", memDelOne: "מחק", memCount: n => n === 1 ? "דבר אחד" : n + " דברים",
+      winMin: "הקטן לחלון קטן (אפשר להמשיך להשתמש באפליקציה)", winMax: "הגדל למסך מלא", wipeBtn: "מחק את כל המידע שלי", wipeQ1: "למחוק את כל מה שיש עליך אצלנו? השיחות, הזיכרון והחשבון שלך יימחקו, ואי אפשר לשחזר.", wipeQ2: "בטוח? אחרי המחיקה זה כאילו מעולם לא פתחת את הצ'אט.", wipeOk: "המשך", wipeOk2: "מחק הכול", wiped: "כל המידע שלך נמחק", memDelAll: "מחק את כל הזיכרון", memDelAllQ: "למחוק את כל מה שאני זוכר עליך? אי אפשר לשחזר.", memLeft: "עזבת", memDelOne: "מחק", memCount: n => n === 1 ? "דבר אחד" : n + " דברים",
       fileHint: "הקש להורדה", dlDone: "הורד", dlProg: (p, a, b) => p + "% · " + a + " מתוך " + b,
     },
     en: {
@@ -62,7 +62,7 @@
       tl_get_completion_status: a => a ? "Checking what you completed in " + a : "Checking what you completed", tl_remember_about_student: () => "Saving to memory", tl_forget_about_student: () => "Removing from memory",
       memBtn: "Memory", memTitle: "What I remember about you", memIntro: "These are things you told me, so I can help you better. They are kept only for you and you can delete any of them.",
       memEmpty: "I haven’t remembered anything about you yet. You can tell me, for example “I left the Algebra course”.", memSaved: "Saved to memory", memGone: "Removed from memory", memUndo: "Undo", memUndone: "Undone",
-      wipeBtn: "Delete all my data", wipeQ1: "Delete everything we hold about you? Your chats, memory and account will be erased and this can’t be undone.", wipeQ2: "Are you sure? Afterwards it is as if you never opened the chat.", wipeOk: "Continue", wipeOk2: "Delete everything", wiped: "All your data was deleted", memDelAll: "Delete all memory", memDelAllQ: "Delete everything I remember about you? This can’t be undone.", memLeft: "Left", memDelOne: "Delete", memCount: n => n === 1 ? "1 item" : n + " items",
+      winMin: "Shrink to a small window (keep using the app)", winMax: "Make full screen", wipeBtn: "Delete all my data", wipeQ1: "Delete everything we hold about you? Your chats, memory and account will be erased and this can’t be undone.", wipeQ2: "Are you sure? Afterwards it is as if you never opened the chat.", wipeOk: "Continue", wipeOk2: "Delete everything", wiped: "All your data was deleted", memDelAll: "Delete all memory", memDelAllQ: "Delete everything I remember about you? This can’t be undone.", memLeft: "Left", memDelOne: "Delete", memCount: n => n === 1 ? "1 item" : n + " items",
       fileHint: "Tap to download", dlDone: "Downloaded", dlProg: (p, a, b) => p + "% · " + a + " of " + b,
     },
     fr: {
@@ -88,7 +88,7 @@
       tl_get_completion_status: a => a ? "Vérification de ce que vous avez terminé dans " + a : "Vérification de ce que vous avez terminé", tl_remember_about_student: () => "Enregistrement en mémoire", tl_forget_about_student: () => "Suppression de la mémoire",
       memBtn: "Mémoire", memTitle: "Ce dont je me souviens", memIntro: "Ce sont des choses que vous m’avez dites, pour mieux vous aider. Elles ne sont gardées que pour vous et vous pouvez en supprimer.",
       memEmpty: "Je ne me souviens encore de rien à votre sujet. Vous pouvez me dire, par exemple « j’ai quitté le cours d’algèbre ».", memSaved: "Enregistré en mémoire", memGone: "Supprimé de la mémoire", memUndo: "Annuler", memUndone: "Annulé",
-      wipeBtn: "Supprimer toutes mes données", wipeQ1: "Supprimer tout ce que nous avons sur toi ? Tes conversations, ta mémoire et ton compte seront effacés, de façon irréversible.", wipeQ2: "Sûr ? Ensuite, c’est comme si tu n’avais jamais ouvert le chat.", wipeOk: "Continuer", wipeOk2: "Tout supprimer", wiped: "Toutes tes données ont été supprimées", memDelAll: "Supprimer toute la mémoire", memDelAllQ: "Supprimer tout ce dont je me souviens ? Cette action est irréversible.", memLeft: "Quitté", memDelOne: "Supprimer", memCount: n => n === 1 ? "1 élément" : n + " éléments",
+      winMin: "Réduire en petite fenêtre (continuer à utiliser l’appli)", winMax: "Plein écran", wipeBtn: "Supprimer toutes mes données", wipeQ1: "Supprimer tout ce que nous avons sur toi ? Tes conversations, ta mémoire et ton compte seront effacés, de façon irréversible.", wipeQ2: "Sûr ? Ensuite, c’est comme si tu n’avais jamais ouvert le chat.", wipeOk: "Continuer", wipeOk2: "Tout supprimer", wiped: "Toutes tes données ont été supprimées", memDelAll: "Supprimer toute la mémoire", memDelAllQ: "Supprimer tout ce dont je me souviens ? Cette action est irréversible.", memLeft: "Quitté", memDelOne: "Supprimer", memCount: n => n === 1 ? "1 élément" : n + " éléments",
       fileHint: "Touchez pour télécharger", dlDone: "Téléchargé", dlProg: (p, a, b) => p + " % · " + a + " sur " + b,
     },
   };
@@ -135,12 +135,12 @@ html.aiOn body > *:not(.aiP):not(#toast):not(script):not(style):not(link):not(me
   opacity:0;translate:0 14px;transition:opacity .2s ease,translate .22s ease}
 .aiP[hidden]{display:none}
 .aiP.on{opacity:1;translate:0 0}
-.aiP{--aicol:840px}
-@media (min-width:1280px){.aiP{--aicol:960px}}
-@media (min-width:1700px){.aiP{--aicol:1120px}}
+.aiP{--aicol:840px;container:aip / inline-size}
+@container aip (min-width:1280px){.aiP>*{--aicol:960px}}
+@container aip (min-width:1700px){.aiP>*{--aicol:1120px}}
 body.calm .aiP{transition:none}
-@media (min-width:900px){ .aiB{font-size:16px} }
-@media (min-width:1280px){ .aiB{max-width:min(88%,720px)} }            /* big screens: the conversation stays in a centred column (the paddings below) */
+@container aip (min-width:900px){ .aiB{font-size:16px} }
+@container aip (min-width:1280px){ .aiB{max-width:min(88%,720px)} }            /* big screens: the conversation stays in a centred column (the paddings below) */
 .aiHd{flex:none;display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right),calc((100% - var(--aicol,840px)) / 2)) 10px max(10px,env(safe-area-inset-left),calc((100% - var(--aicol,840px)) / 2));color:var(--on-accent,#fff);
   background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 50%,#7b5cff))}
 .aiHb{flex:none;width:40px;height:40px;padding:0;border:0;border-radius:12px;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer}
@@ -183,7 +183,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiSug{display:flex;flex-direction:column;gap:8px;width:100%;max-width:330px;margin-top:8px}
 .aiSug button{padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);text-align:start;font:inherit;font-size:14.5px;cursor:pointer}
 .aiSug button:hover{border-color:var(--accent)}
-@media (min-width:700px){.aiSug{max-width:480px}.aiHi p{max-width:44ch}.aiHi h2{font-size:27px}}
+@container aip (min-width:700px){.aiSug{max-width:480px}.aiHi p{max-width:44ch}.aiHi h2{font-size:27px}}
 .aiPoll{margin-top:12px;padding:12px;border-radius:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 7%,var(--card))}
 .aiPq{font-weight:700;font-size:14.5px;margin-bottom:10px}
 .aiPo{display:flex;flex-direction:column;gap:7px}
@@ -483,7 +483,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiQuick button:hover{background:color-mix(in srgb,var(--accent) 14%,transparent)}
   .aiTk:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
 }
-@media (min-width:700px){
+@container aip (min-width:700px){
   .aiQuick{flex-wrap:wrap;overflow:visible;gap:8px}
   .aiQuick button{font-size:14px;padding:7px 16px}
   .aiB{max-width:min(88%,640px)}
@@ -501,11 +501,90 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 @supports selector(:has(a)){
   html[dir] .aiM.ai:has(.aiUi){align-self:stretch}
   .aiM.ai:has(.aiUi) .aiB{flex:1;min-width:0;max-width:100%}
-  @media (min-width:600px){
+  @container aip (min-width:600px){
     .aiUi{display:flex;flex-direction:row;flex-wrap:wrap;gap:11px;align-items:stretch}
     .aiUi>*{flex:1 1 300px;min-width:0}
     .aiUi>.aiUiT,.aiUi>.aiHero,.aiUi>.aiHg,.aiUi>.aiTg,.aiUi>.aiTbl,.aiUi>.aiAcc,.aiUi>.aiTb,.aiUi>.aiTm,.aiUi>.aiCmpC,.aiUi>.aiQuick,.aiUi>.aiCo,.aiUi>.aiCo2,.aiUi>.aiBn,.aiUi>.aiLk,.aiUi>.aiHl,.aiUi>.aiFoc,.aiUi>.aiSm,.aiUi>.aiStx{flex-basis:100%}
   }
+}
+/* ---- computer only: the chat as a small floating window (phone-sized) next to the app, which stays usable; it can be dragged and resized */
+.aiRz{display:none}
+.aiP.aiWin{left:var(--aiwx,24px);top:var(--aiwy,24px);right:auto;bottom:auto;width:var(--aiww,400px);height:var(--aiwh,640px)!important;transform:none!important;z-index:60;
+  border-radius:18px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));box-shadow:0 26px 70px -14px #000d,0 0 0 1px #0005}
+.aiP.aiWin .aiHd{cursor:grab;user-select:none;-webkit-user-select:none}.aiP.aiWin .aiHd:active{cursor:grabbing}
+.aiP.aiWin .aiRz{display:block;position:absolute;right:0;bottom:0;width:22px;height:22px;z-index:50;cursor:nwse-resize;touch-action:none;
+  background:linear-gradient(135deg,transparent 52%,color-mix(in srgb,var(--muted) 70%,transparent) 52% 60%,transparent 60% 72%,color-mix(in srgb,var(--muted) 70%,transparent) 72% 80%,transparent 80%)}
+.aiP:has(.aiDemo) [data-a="win"]{display:none}
+.aiHb[data-a="win"][hidden]{display:none}
+/* ---- the WIDE designs (a computer, an iPad): not the phone cards stretched, but each display laid out for a big screen. They apply by the chat's own width, so the small floating window gets the phone design. */
+@container aip (min-width:760px){
+  .aiM.ai:has(.aiUi) .aiB{padding:16px 18px}
+  .aiBk{padding:18px 20px;border-radius:20px}
+  .aiBkT{font-size:16.5px;margin-bottom:13px;gap:10px}.aiBkT .aiIc{width:22px;height:22px}
+  .aiBk small{font-size:13.5px}
+  .aiUiT{font-size:17px}
+  /* opening card: icon + title on one side, the big numbers on the other */
+  .aiBk.aiHero{padding:24px 28px;gap:24px;flex-wrap:nowrap;align-items:center}
+  .aiHeroI{width:68px;height:68px;border-radius:20px}.aiHeroI .aiIc{width:36px;height:36px}
+  .aiHeroT b{font-size:29px}.aiHeroT em{font-size:16px}.aiBk.aiHero .aiHeroT small{font-size:14.5px}
+  .aiHeroS{flex:none;flex-basis:auto;margin-inline-start:auto;gap:12px}.aiHeroS>div{min-width:140px;padding:14px 18px;border-radius:16px}.aiHeroS b{font-size:30px}.aiBk.aiHero .aiHeroS small{font-size:13px}
+  /* deadlines, grades, courses */
+  .aiTk{padding:15px 18px;border-radius:16px;gap:16px}.aiTkB b{font-size:16.5px}.aiTkB em{font-size:13.5px}.aiTkB small{font-size:13px}.aiTkP{font-size:13.5px;padding:6px 14px}
+  .aiGgs{grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:14px}
+  .aiGg svg{width:96px;height:96px}.aiGg circle{stroke-width:7}.aiGg b{top:calc(8px + 48px);font-size:20px}.aiGg small{font-size:13px}
+  .aiCh{gap:9px}.aiCh span{padding:8px 16px;font-size:14.5px}
+  /* contact: who on one side, the actions in a row on the other */
+  .aiCt.card,.aiCt.big{display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px}
+  .aiCt.card .aiCtH,.aiCt.big .aiCtH{flex:1 1 230px}.aiCt.card .aiNote,.aiCt.big .aiNote{flex-basis:100%;order:3;margin:0}
+  .aiCt.card .aiCtA,.aiCt.big .aiCtA{flex:1 1 300px;flex-direction:row;flex-wrap:wrap;margin:0}.aiCt.card .aiAcG{flex:1 1 200px}
+  .aiAvt{width:52px;height:52px;font-size:21px}.aiCtH b{font-size:17px}
+  .aiAc{padding:11px 15px}.aiAc i{font-size:14.5px}.aiAc em{font-size:12.5px}
+  /* hours */
+  .aiHtr{padding:11px 14px;gap:6px 22px}.aiHtd b{font-size:15.5px}.aiHtt{gap:8px}.aiHtt i{padding:5px 13px;font-size:14px}.aiHtt i.tx{font-size:13.5px}
+  .aiHw{gap:9px}.aiHwd{min-height:92px;padding:14px 4px;border-radius:15px;font-size:12px}.aiHwd b{font-size:16px;margin-bottom:6px}.aiHwd span{font-size:12.5px}
+  .aiHc span{padding:7px 15px;font-size:14px}
+  /* steps: numbered tiles instead of a thin vertical line */
+  .aiSt2 ol{flex-direction:row;flex-wrap:wrap;gap:12px}
+  .aiSt2 li{flex:1 1 190px;flex-direction:column;align-items:flex-start;gap:10px;padding:14px 15px;border-radius:15px;background:var(--card);border:1px solid var(--line)}
+  .aiSt2.timeline li:not(:last-child)::before{display:none}
+  .aiStN{width:34px;height:34px;font-size:16px}.aiSt2 li b{font-size:15.5px}
+  /* facts, lists, checklists: two columns inside the card */
+  .aiFa:not(.chips):not(.grid),.aiCk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:30px}
+  .aiFa:not(.chips):not(.grid)>.aiBkT,.aiCk>.aiBkT{grid-column:1/-1}
+  .aiFaR{padding:10px 0;font-size:15px}
+  .aiCkI{padding:9px 0}.aiCkI b{font-size:15.5px}
+  .aiLi ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 26px}.aiLi li b{font-size:15.5px}.aiLi.cards ul{gap:12px}
+  /* numbers */
+  .aiHl{gap:14px}.aiHlI b{font-size:46px}.aiHlI span{font-size:15px;margin-top:4px}
+  .aiPzI span{font-size:15px}.aiPzI b{font-size:19px}.aiPz.tags .aiPzI{padding:9px 20px}.aiPz.big .aiPzI{padding:14px 16px}.aiPz.big .aiPzI b{font-size:32px}
+  .aiStx{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}.aiStx>div{padding:16px 6px;border-radius:16px}.aiStx b{font-size:36px}.aiStx small{font-size:13px}
+  .aiPr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 28px}.aiPrT{font-size:15px}.aiPr i{height:11px}
+  /* notes, banners, text */
+  .aiCo2,.aiBn{font-size:15.5px;gap:14px}.aiBn{padding:14px 20px;border-radius:14px}
+  .aiCo2>.aiIc,.aiBn>.aiIc{width:24px;height:24px}
+  .aiQt p{font-size:17px;line-height:1.6}.aiSm p,.aiSm li{font-size:15.5px}.aiSm li{margin:.25em 0}
+  .aiHg b{font-size:21px}.aiHg small{font-size:14.5px}
+  .aiTg span,.aiTg i{font-size:14.5px;padding:7px 16px}
+  /* questions, tabs, tables */
+  .aiAcc summary{font-size:16px;padding:14px 0}.aiAcc details p{font-size:15.5px;line-height:1.6}
+  .aiTbH button{padding:8px 20px;font-size:14.5px}.aiTbP{font-size:15.5px}
+  .aiTbl table{font-size:15px}.aiTbl th,.aiTbl td{padding:12px 16px}.aiTbl thead th{font-size:13.5px}
+  .aiCmpC{gap:13px}.aiCmpCard{flex:1 1 230px;padding:16px;border-radius:16px}
+  /* links and places */
+  .aiLk.list,.aiLk.buttons,.aiLk.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .aiLk>.aiBkT{grid-column:1/-1;margin-bottom:3px}
+  .aiLoc{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px}.aiLocH{flex:1 1 260px}.aiLocA{flex:1 1 300px}
+  /* routes: one tile per line / option */
+  .aiRt.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .aiRt.badges>.aiBkT{grid-column:1/-1;margin-bottom:0}
+  .aiRt.badges .aiRtI{flex-direction:column;align-items:flex-start;gap:12px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+  .aiRt.badges .aiRtI+.aiRtI{border-top:1px solid var(--line)}
+  .aiRtI>i{min-width:58px;height:46px;border-radius:15px;font-size:23px}.aiRtI b{font-size:16px}
+  .aiTm .aiTmI b{font-size:15.5px}
+}
+@container aip (min-width:1000px){
+  .aiUi>*{flex-basis:360px}
+  .aiBk.aiHero{padding:28px 34px}.aiHeroT b{font-size:32px}.aiHeroS b{font-size:34px}
 }
 .aiWipe{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:18px 0 8px;padding:12px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--err,#e5484d) 55%,transparent);background:color-mix(in srgb,var(--err,#e5484d) 9%,transparent);color:var(--err,#e5484d);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .aiWipe svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -597,7 +676,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiP.aiCompact .aiSd{width:40px;height:40px}
 .aiP.aiTiny .aiTt .aiTl,.aiP.aiTiny .aiHi .aiSug,.aiP.aiTiny .aiSt{display:none}.aiP.aiTiny .aiHd{padding-top:max(4px,env(safe-area-inset-top));padding-bottom:4px}
 .aiP.aiTiny .aiHi h2{font-size:17px}
-@media (max-width:359px){                                  /* the narrowest phones (320, a folded foldable) */
+@container aip (max-width:359px){                          /* the narrowest windows (a 320 phone, a folded foldable, a small floating window) */
   .aiHb{width:36px;height:36px}.aiHd{gap:2px}.aiTt{gap:6px}.aiTt b{font-size:15px}.aiB{max-width:92%;padding:8px 11px;font-size:14.5px}
   .aiM{gap:6px}.aiM .aiAv{width:26px;height:26px}.aiM .aiAv svg{width:18px;height:18px}.aiSug button{font-size:14px}
 }
@@ -1911,7 +1990,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   function fit(force) {
-    if (!panel || panel.hidden) return;
+    if (!panel || panel.hidden || winMode) return;
     const vv = vvp(), ih = innerHeight;
     const ok = vv && (vv.scale || 1) < 1.05;                   // pinch-zoomed in: that is not the keyboard, ignore it
     const vh = Math.round(ok ? vv.height : ih), off = Math.round(ok ? vv.offsetTop : 0), vw = Math.round(vv ? vv.width : innerWidth);
@@ -1953,6 +2032,77 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     go(); setTimeout(go, 60); setTimeout(() => { go(); if (!panel || panel.hidden) restoreY = null; }, 350);
   }
 
+  /* ------------------------------------------------------------ the floating window (computer only) */
+  const I_WIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><rect x="12" y="12" width="7" height="5.5" rx="1.2"/></svg>';
+  const I_MAX = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>';
+  let winMode = false, winGeo = null, fabRect = null;
+  const winOK = () => matchMedia("(min-width:900px) and (hover:hover) and (pointer:fine)").matches && innerHeight >= 520;
+  const winWanted = () => { try { return !!LS.get("aiWin", 0) && winOK() && demoSeen(); } catch (e) { return false; } };
+  function winDefault() {
+    const w = 400, h = Math.min(700, innerHeight - 56), fr = fabRect;
+    const left = fr && fr.width && fr.left + fr.width / 2 < innerWidth / 2;
+    return { x: left ? 24 : innerWidth - w - 24, y: innerHeight - h - 24, w, h };
+  }
+  function applyWinGeo() {
+    const g = winGeo || (winGeo = LS.get("aiWinGeo", null) || winDefault());
+    g.w = Math.round(Math.max(340, Math.min(g.w || 400, 760, innerWidth - 16)));
+    g.h = Math.round(Math.max(420, Math.min(g.h || 640, innerHeight - 16)));
+    g.x = Math.round(Math.max(8, Math.min(g.x, innerWidth - g.w - 8)));
+    g.y = Math.round(Math.max(8, Math.min(g.y, innerHeight - g.h - 8)));
+    const st = panel.style; st.setProperty("--aiwx", g.x + "px"); st.setProperty("--aiwy", g.y + "px"); st.setProperty("--aiww", g.w + "px"); st.setProperty("--aiwh", g.h + "px");
+    panel.classList.toggle("aiCompact", g.h < 470); panel.classList.toggle("aiTiny", g.h < 300);
+  }
+  const saveWin = () => { try { LS.set("aiWinGeo", { x: winGeo.x, y: winGeo.y, w: winGeo.w, h: winGeo.h }); } catch (e) {} };
+  function updateWinBtn() {
+    const b = panel && panel.querySelector('[data-a="win"]'); if (!b) return;
+    b.hidden = !winOK() && !winMode;
+    b.innerHTML = winMode ? I_MAX : I_WIN; const l = tx(winMode ? "winMax" : "winMin"); b.setAttribute("aria-label", l); b.title = l;
+  }
+  function enterWinState() {                  // the window look, without touching history or the page lock
+    winMode = true; panel.classList.add("aiWin"); panel.setAttribute("aria-modal", "false"); applyWinGeo();
+    document.documentElement.classList.remove("aiOn"); unlockPage(); updateWinBtn();
+  }
+  function setWin(on, remember) {
+    if (!panel || panel.hidden || on === winMode) return;
+    if (on && (!winOK() || demoOn || intro)) return;
+    if (on) {
+      enterWinState();
+      if (pushed) { pushed = false; skipPop++; try { history.back(); } catch (e) { skipPop = 0; } }      // the browser's Back must act on the app now, not close the chat
+    } else {
+      winMode = false; panel.classList.remove("aiWin"); panel.setAttribute("aria-modal", "true"); panel.style.removeProperty("height");
+      if (!pushed) { try { history.pushState({ v: typeof V !== "undefined" ? V.view : "", ai: 1 }, ""); pushed = true; } catch (e) {} }
+      lockPage(); document.documentElement.classList.add("aiOn"); baseH = 0; lastKey = ""; fit(true); fitSoon();
+      panel.classList.remove("aiCompact", "aiTiny");
+    }
+    if (remember !== false) { try { LS.set("aiWin", on ? 1 : 0); } catch (e) {} }
+    updateWinBtn(); if (!on) fit(true);
+    try { ms.scrollTop = ms.scrollHeight; } catch (e) {}
+  }
+  function winPointers() {                    // drag by the header, resize by the corner, double click on the header = full screen
+    const hd = panel.querySelector(".aiHd"), rz = panel.querySelector(".aiRz");
+    let drag = null, size = null;
+    hd.addEventListener("pointerdown", e => {
+      if (!winMode || e.button !== 0 || e.target.closest(".aiHb")) return;
+      drag = { id: e.pointerId, dx: e.clientX - winGeo.x, dy: e.clientY - winGeo.y }; try { hd.setPointerCapture(e.pointerId); } catch (er) {} e.preventDefault();
+    });
+    hd.addEventListener("pointermove", e => { if (drag && e.pointerId === drag.id) { winGeo.x = e.clientX - drag.dx; winGeo.y = e.clientY - drag.dy; applyWinGeo(); } });
+    const endDrag = e => { if (drag && e.pointerId === drag.id) { drag = null; saveWin(); } };
+    hd.addEventListener("pointerup", endDrag); hd.addEventListener("pointercancel", endDrag);
+    hd.addEventListener("dblclick", e => { if (winMode && !e.target.closest(".aiHb")) setWin(false); });
+    rz.addEventListener("pointerdown", e => {
+      if (!winMode || e.button !== 0) return;
+      size = { id: e.pointerId, x0: e.clientX, y0: e.clientY, w: winGeo.w, h: winGeo.h }; try { rz.setPointerCapture(e.pointerId); } catch (er) {} e.preventDefault();
+    });
+    rz.addEventListener("pointermove", e => { if (size && e.pointerId === size.id) { winGeo.w = size.w + (e.clientX - size.x0); winGeo.h = size.h + (e.clientY - size.y0); applyWinGeo(); } });
+    const endSize = e => { if (size && e.pointerId === size.id) { size = null; saveWin(); } };
+    rz.addEventListener("pointerup", endSize); rz.addEventListener("pointercancel", endSize);
+    addEventListener("resize", () => {
+      if (!panel || panel.hidden) { return; }
+      if (winMode && !winOK()) setWin(false, false); else if (winMode) applyWinGeo();
+      updateWinBtn();
+    });
+  }
+
   function build() {
     if (panel) return;
     const st = document.createElement("style"); st.textContent = CSS; document.head.appendChild(st);
@@ -1975,12 +2125,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     panel.innerHTML =
       '<div class="aiHd"><button type="button" class="aiHb" data-a="close"></button>' +
       '<div class="aiTt"><div class="aiAv">' + FACE + '<span class="aiTag">AI</span></div><div class="aiTl"><b></b><small></small></div></div>' +
-      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="mem"></button><button type="button" class="aiHb" data-a="new"></button><button type="button" class="aiHb" data-a="demo"></button></div>' +
+      '<button type="button" class="aiHb" data-a="hist"></button><button type="button" class="aiHb" data-a="mem"></button><button type="button" class="aiHb" data-a="new"></button><button type="button" class="aiHb" data-a="demo"></button><button type="button" class="aiHb" data-a="win" hidden></button></div>' +
       '<div class="aiMs" role="log" aria-live="polite"></div>' +
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
       '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
       '<div class="aiDlg" hidden role="alertdialog" aria-modal="true"><div class="aiDlgBox"><p></p><div class="aiDlgBtns"><button type="button" data-no></button><button type="button" class="danger" data-ok></button></div></div></div>' +
-      '<div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + FACE_DEAD + '</div><div class="aiSplTx"></div></div></div>';
+      '<div class="aiRz" aria-hidden="true"></div><div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + FACE_DEAD + '</div><div class="aiSplTx"></div></div></div>';
     document.body.appendChild(panel);
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
     splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]'); memBtn = panel.querySelector('[data-a="mem"]');
@@ -1990,6 +2140,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     memBtn.onclick = () => (memMode ? renderMsgs() : openMemory());
     panel.querySelector('[data-a="new"]').onclick = () => { startNew(); if (matchMedia("(hover:hover)").matches) input.focus(); };
     panel.querySelector('[data-a="demo"]').onclick = () => demoReplay();
+    panel.querySelector('[data-a="win"]').onclick = () => setWin(!winMode);
+    winPointers();
     // sending must not close the keyboard: remember if it was up, keep the focus where it is, and put it back after the send
     sendBtn.addEventListener("pointerdown", () => { kbIntent = document.activeElement === input; });
     sendBtn.addEventListener("mousedown", e => e.preventDefault());
@@ -2086,7 +2238,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     input.placeholder = tx("ph"); input.setAttribute("aria-label", tx("ph"));
     panel.querySelector(".aiNt").textContent = tx("note");
     panel.setAttribute("aria-label", tx("title"));
-    setMode(); setBusy(busy);
+    setMode(); setBusy(busy); try { updateWinBtn(); } catch (e) {}
   }
 
   /* ------------------------------------------------------------ the opening animation
@@ -2153,12 +2305,18 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (!M.token) { if (typeof toast === "function") toast(tx("errMoodle"), 3500); return; }
     applyTexts();
     const fr = fab.getBoundingClientRect();                     // where the circle is, before it is hidden
+    fabRect = fr;
+    const winStart = winWanted();                               // a computer, and the student left it as a small window last time: it opens as one (no opening animation)
     panel.hidden = false; fab.hidden = true;
-    // the history entry first (the browser saves the page's scroll position for the old entry now), only then lock the page
-    if (!pushed) { try { history.pushState({ v: typeof V !== "undefined" ? V.view : "", ai: 1 }, ""); pushed = true; } catch (e) {} }
-    lockPage(); baseH = 0; lastKey = ""; kbWas = false; fit(true); fitSoon();
-    intro = startIntro(fr);
-    if (!intro) { document.documentElement.classList.add("aiOn"); void panel.offsetWidth; panel.classList.add("on"); }   // no animation: just there (not requestAnimationFrame, which is paused in some background states)
+    if (winStart) enterWinState();
+    else {
+      // the history entry first (the browser saves the page's scroll position for the old entry now), only then lock the page
+      if (!pushed) { try { history.pushState({ v: typeof V !== "undefined" ? V.view : "", ai: 1 }, ""); pushed = true; } catch (e) {} }
+      lockPage();
+    }
+    baseH = 0; lastKey = ""; kbWas = false; fit(true); fitSoon(); updateWinBtn();
+    intro = winStart ? null : startIntro(fr);
+    if (!intro) { if (!winMode) document.documentElement.classList.add("aiOn"); void panel.offsetWidth; panel.classList.add("on"); }   // no animation: just there (not requestAnimationFrame, which is paused in some background states)
     const my = intro;
     let fail = null;
     try { fail = await openLoad(); } catch (e) { fail = e; }
@@ -2185,7 +2343,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   function teardown() {                       // the visual part of closing, all at once
-    demoStop(false); clearIntro(); panel.classList.remove("on", "aiIntro"); panel.hidden = true;
+    demoStop(false); clearIntro(); panel.classList.remove("on", "aiIntro", "aiWin", "aiCompact", "aiTiny"); panel.hidden = true; winMode = false; panel.setAttribute("aria-modal", "true");
     document.documentElement.classList.remove("aiOn");        // the app is turned back on
     unlockPage();
     if (fab) { fab.style.visibility = ""; fab.hidden = false; }
@@ -2217,7 +2375,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     try { if (document.activeElement === input) input.blur(); } catch (e) {}
     closeMenu(); const dlg = panel.querySelector(".aiDlg"); if (dlg) dlg.hidden = true;
     const failed = !!(intro && intro.failed), midIntro = !!(intro && !intro.failed);      // closed while the opening animation still plays: no fuss, just close
-    const animate = !instant && !midIntro && introAllowed() && !!fab && !!splash;
+    const animate = !instant && !midIntro && introAllowed() && !!fab && !!splash && !winMode;
     if (pushed && !fromPop) { pushed = false; skipPop++; try { history.back(); } catch (e) { skipPop = 0; } }
     pushed = false;
     if (animate) { shrinkClose(failed); return; }
@@ -2520,6 +2678,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // replay from the button in the header (does not change the "seen" flag; leaving just returns to the chat)
   async function demoReplay() {
     if (!panel || demoOn || busy || closing) return;
+    if (winMode) setWin(false, false);                          // the walk-through is a full-screen thing
     const L = demoData();
     demoOn = true; const tok = ++demoTok;
     const ov = demoStage(L, false), api = demoApi(ov, L, tok);
@@ -2537,7 +2696,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       // x, y are percentages of the screen (physical left/top), size in px; the speech bubble goes below Uri when Uri is in the upper half, above it otherwise
       place(x, y, size, hero) {
         ov.classList.toggle("hero", !!hero);
-        const wide = innerWidth >= 700, k = wide ? Math.min(1, 900 / innerWidth) : 1, ds = wide ? Math.min(1.55, 1 + (innerWidth - 600) / 1200) : 1;          // a wide screen: Uri stays near the conversation column and is bigger
+        const pw = panel.clientWidth || innerWidth, wide = pw >= 700, k = wide ? Math.min(1, 900 / pw) : 1, ds = wide ? Math.min(1.55, 1 + (pw - 600) / 1200) : 1;          // a wide screen: Uri stays near the conversation column and is bigger
         M.style.setProperty("--mx", 50 + (x - 50) * k); M.style.setProperty("--my", y); M.style.setProperty("--ms", Math.round(size * ds) + "px");
         S.style.top = hero ? "calc(" + y + "% + " + (size / 2 + 20) + "px)" : "";
       },
