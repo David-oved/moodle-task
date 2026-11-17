@@ -198,8 +198,9 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiPgo{margin-top:10px;padding:9px 18px;border-radius:99px;border:0;background:var(--accent);color:var(--on-accent,#fff);font:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s,transform .15s}
 .aiPgo:disabled{opacity:.35;cursor:default}
 .aiPgo:not(:disabled):active{transform:scale(.95)}
-.aiQuick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.aiQuick button{padding:8px 16px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
+.aiQuick{display:flex;flex-wrap:nowrap;gap:7px;margin-top:10px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding:2px 1px 4px}
+.aiQuick::-webkit-scrollbar{display:none}
+.aiQuick button{flex:none;white-space:nowrap;max-width:78vw;overflow:hidden;text-overflow:ellipsis;scroll-snap-align:start;padding:6px 14px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
 .aiQuick button:active{transform:scale(.94)}
 .aiQuick button.on{background:var(--accent);color:var(--on-accent,#fff)}
 .aiUi{display:flex;flex-direction:column;gap:9px;min-width:min(76vw,320px)}
@@ -287,8 +288,13 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHbadge i{width:8px;height:8px;border-radius:50%;background:currentColor}
 .aiHbadge.on{color:#22a55e;background:#22a55e1f}.aiHbadge.on i{animation:aiHsP 1.6s ease-in-out infinite}.aiHbadge.off{color:#e5484d;background:#e5484d1f}
 @keyframes aiHsP{0%,100%{opacity:1}50%{opacity:.35}}
-.aiHrow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed color-mix(in srgb,var(--bc) 28%,var(--line));font-size:14px}.aiHrow:last-child{border-bottom:0}
-.aiHrow b{direction:ltr;font-weight:800;color:var(--bc);white-space:nowrap}
+.aiHtr{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;align-items:start;padding:9px 8px;border-bottom:1px dashed color-mix(in srgb,var(--bc) 26%,var(--line))}.aiHtr:last-child{border-bottom:0}
+.aiHtr.today{background:color-mix(in srgb,var(--bc) 12%,transparent);border-radius:12px;border-bottom-color:transparent}
+.aiHtd{display:flex;flex-direction:column;gap:2px;min-width:44px}.aiHtd b{font-size:14.5px;font-weight:850;white-space:nowrap}
+.aiHtd small{font-size:11.5px;color:var(--muted)}.aiHtd em{font-style:normal;font-size:11px;font-weight:800;color:var(--bc)}
+.aiHtt{display:flex;flex-wrap:wrap;gap:6px}
+.aiHtt i{font-style:normal;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;padding:4px 11px;border-radius:99px;font-size:13.5px;font-weight:800;letter-spacing:.01em;background:color-mix(in srgb,var(--bc) 15%,var(--card));border:1px solid color-mix(in srgb,var(--bc) 32%,var(--line))}
+.aiHtt i.tx{direction:rtl;font-weight:650;font-size:12.5px;letter-spacing:0}
 .aiHw{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .aiHwd{border-radius:11px;padding:6px 1px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);font-size:10px;line-height:1.35;min-height:52px}
 .aiHwd b{display:block;font-size:12.5px;margin-bottom:3px}.aiHwd span{display:block;direction:ltr;font-size:9.5px}.aiHwd.today{background:var(--bc);color:#fff}.aiHwd.none{opacity:.45}
@@ -372,7 +378,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiUi{width:100%;max-width:100%;min-width:0}
 .aiBk{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
 .aiBk *{min-width:0;max-width:100%}
-.aiHrow b,.aiHtab b{white-space:normal}
+.aiHtab b{white-space:nowrap}
 .aiDemo{position:absolute;inset:0;z-index:30;pointer-events:auto;overflow:hidden;background:transparent;transition:background .9s ease}
 .aiDemo.hero{background:#05060d}
 .aiDemo.hero.dim,.aiDemo.dim{background:#05060dc4}
@@ -981,9 +987,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   };
   const uiIc = (n, cls) => '<svg class="aiIc' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + (UI_IC[n] || UI_IC.info) + '"/></svg>';
   const UI_L = {
-    he: { email: "מייל", phone: "חיוג", whatsapp: "וואטסאפ", link: "פתח", address: "ניווט", copy: "העתק", copied: "הועתק", open: "פתוח עכשיו", closed: "סגור כעת", until: "עד ", opens: "נפתח ", waze: "Waze", maps: "מפות", dayN: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"] },
-    en: { email: "Email", phone: "Call", whatsapp: "WhatsApp", link: "Open", address: "Navigate", copy: "Copy", copied: "Copied", open: "Open now", closed: "Closed now", until: "until ", opens: "opens ", waze: "Waze", maps: "Maps", dayN: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
-    fr: { email: "E-mail", phone: "Appeler", whatsapp: "WhatsApp", link: "Ouvrir", address: "Itinéraire", copy: "Copier", copied: "Copié", open: "Ouvert", closed: "Fermé", until: "jusqu'à ", opens: "ouvre ", waze: "Waze", maps: "Maps", dayN: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"] },
+    he: { todayTag: "היום", email: "מייל", phone: "חיוג", whatsapp: "וואטסאפ", link: "פתח", address: "ניווט", copy: "העתק", copied: "הועתק", open: "פתוח עכשיו", closed: "סגור כעת", until: "עד ", opens: "נפתח ", waze: "Waze", maps: "מפות", dayN: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"] },
+    en: { todayTag: "Today", email: "Email", phone: "Call", whatsapp: "WhatsApp", link: "Open", address: "Navigate", copy: "Copy", copied: "Copied", open: "Open now", closed: "Closed now", until: "until ", opens: "opens ", waze: "Waze", maps: "Maps", dayN: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
+    fr: { todayTag: "Aujourd'hui", email: "E-mail", phone: "Appeler", whatsapp: "WhatsApp", link: "Ouvrir", address: "Itinéraire", copy: "Copier", copied: "Copié", open: "Ouvert", closed: "Fermé", until: "jusqu'à ", opens: "ouvre ", waze: "Waze", maps: "Maps", dayN: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"] },
   };
   const ul = () => UI_L[lang()] || UI_L.he;
   const uiCo = b => " c-" + (b.co || "def");
@@ -1039,6 +1045,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     return until !== null ? { open: true, until } : { open: false };
   }
   const uiHM = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+  // "א' - ה'" -> "א׳–ה׳" (one tidy label that never breaks across lines)
+  const uiDayLabel = d => String(d || "").trim().replace(/\s*[-–]\s*/g, "–").replace(/'/g, "׳").replace(/\s*,\s*/g, ", ");
+  // "06:00-09:00, 12:00-14:00 ו-18:00-01:00" -> three chips; anything that is not a plain range ("06:00 עד כניסת שבת") stays a text chip
+  function uiTimeChips(h) {
+    const parts = String(h || "").split(/\s*(?:,|;|\/|\s\+\s|\sו-?(?=\d))\s*/).map(x => x.trim()).filter(Boolean);
+    return (parts.length ? parts : [String(h || "").trim()]).map(x => {
+      const m = x.match(/^(\d{1,2})[:.](\d{2})\s*[-–]\s*(\d{1,2})[:.](\d{2})$/);
+      return m ? { v: m[1].padStart(2, "0") + ":" + m[2] + "–" + m[3].padStart(2, "0") + ":" + m[4] } : { v: x, t: 1 };
+    });
+  }
   function uiHours(b) {
     const L = ul(), st = uiOpenNow(b.it);
     const badge = st ? '<span class="aiHbadge ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed) + "</span>" : "";
@@ -1052,7 +1068,12 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     } else if (b.s === "compact") {
       body = '<div class="aiHc">' + b.it.map(r => "<span><b>" + esc2(r.l || r.d) + "</b> " + esc2(r.h) + "</span>").join("") + "</div>";
     } else {
-      body = '<div class="aiHtab">' + b.it.map(r => '<div class="aiHrow"><span>' + esc2(r.l ? r.l + (r.d ? " · " + r.d : "") : r.d) + "</span><b>" + esc2(r.h) + "</b></div>").join("") + "</div>";
+      const todayN = new Date().getDay();
+      body = '<div class="aiHtab">' + b.it.map(r => {
+        const dayTxt = uiDayLabel(r.d), isToday = !!r.d && uiDays(r.d).has(todayN);
+        const chips = uiTimeChips(r.h).map(c => '<i' + (c.t ? ' class="tx"' : "") + ">" + esc2(c.v) + "</i>").join("");
+        return '<div class="aiHtr' + (isToday ? " today" : "") + '"><span class="aiHtd"><b>' + esc2(dayTxt || r.l || "") + "</b>" + (r.l && dayTxt ? "<small>" + esc2(r.l) + "</small>" : "") + (isToday ? '<em>' + esc2(L.todayTag) + "</em>" : "") + '</span><div class="aiHtt">' + chips + "</div></div>";
+      }).join("") + "</div>";
     }
     return uiBk(b, "aiHours", '<div class="aiHH">' + uiIc(b.ic || "clock") + "<b>" + esc2(b.ti || "") + "</b>" + badge + "</div>" + body + (b.tx ? '<div class="aiNote">' + esc2(b.tx) + "</div>" : ""), false);
   }
