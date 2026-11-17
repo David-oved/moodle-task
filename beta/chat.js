@@ -106,6 +106,7 @@
 #aiFab:hover{box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 55%,transparent),0 0 0 3px color-mix(in srgb,var(--card) 85%,transparent)}
 #aiFab:active{transform:scale(.92)}
 #aiFab:focus-visible{outline:3px solid var(--accent-t,var(--accent));outline-offset:3px}
+#aiFab{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 #aiFab svg{width:38px;height:38px;display:block;overflow:visible}
 .aiFace .aiBub{fill:#fff;fill-opacity:.97}
 .aiFace .aiEye{fill:color-mix(in srgb,var(--accent) 78%,#000)}
@@ -1412,7 +1413,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
     fab = document.createElement("button"); fab.id = "aiFab"; fab.type = "button"; fab.hidden = true;
     fab.innerHTML = FACE + '<span class="aiTag">AI</span>';
-    fab.onclick = () => open();
+    // a short press opens the chat, a long press plays the intro again
+    let fabHold = 0, fabLong = false;
+    const fabCancel = () => { clearTimeout(fabHold); fabHold = 0; };
+    fab.addEventListener("pointerdown", () => {
+      fabLong = false; fabCancel();
+      fabHold = setTimeout(() => { fabHold = 0; fabLong = true; try { navigator.vibrate && navigator.vibrate(15); } catch (e) {} try { runTour(true); } catch (e) {} }, 650);
+    });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(t => fab.addEventListener(t, fabCancel));
+    fab.addEventListener("contextmenu", e => e.preventDefault());
+    fab.onclick = () => { if (fabLong) { fabLong = false; return; } open(); };
     document.body.appendChild(fab);
 
     panel = document.createElement("div"); panel.className = "aiP"; panel.hidden = true; panel.setAttribute("role", "dialog"); panel.setAttribute("aria-modal", "true");
@@ -1656,9 +1666,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   // ---------------------------------------------------------------------------------------------
   // Welcome tour: a short animated "film" that introduces the AI helper. Plays on every app start for now
-  // (TOUR_ONCE = true later makes it play only on the very first start). It can be skipped with the X button.
+  // (plays only on the very first start; a long press on the AI button plays it again). It can be skipped with the X button.
   // ---------------------------------------------------------------------------------------------
-  const TOUR_ONCE = false;
+  const TOUR_ONCE = true;
   const TOUR = {
     he: [
       { t: "היי! אני העוזר החדש שלך", s: "חדש באפליקציה" },
@@ -1749,9 +1759,13 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   };
   const SKIP_LABEL = { he: "דלג על ההסבר", en: "Skip the intro", fr: "Passer l'introduction" };
   let tourState = 0;                                            // 0 = not yet, 1 = running, 2 = done (this page load)
-  function runTour() {
-    if (tourState || !fab || !panel || !panel.hidden) return;
-    if (TOUR_ONCE) { try { if (LS.get("aiTourSeen", "")) return; LS.set("aiTourSeen", "1"); } catch (e) {} }
+  function runTour(force) {
+    if (tourState === 1 || !fab || !panel || !panel.hidden) return;
+    if (!force) {
+      if (tourState) return;
+      if (TOUR_ONCE) { try { if (LS.get("aiTourSeen", "")) return; } catch (e) {} }
+    }
+    try { LS.set("aiTourSeen", "1"); } catch (e) {}
     tourState = 1;
     const scenes = TOUR[lang()] || TOUR.he;
     const st = document.createElement("style"); st.textContent = TOUR_CSS; document.head.appendChild(st);
