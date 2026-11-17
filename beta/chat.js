@@ -291,7 +291,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHr b{direction:ltr;font-weight:800;color:var(--bc);white-space:nowrap}
 .aiHw{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .aiHd{border-radius:11px;padding:6px 1px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);font-size:10px;line-height:1.35;min-height:52px}
-.aiHd b{display:block;font-size:12.5px;margin-bottom:3px}.aiHd.today{background:var(--bc);color:#fff}.aiHd.none{opacity:.45}
+.aiHd b{display:block;font-size:12.5px;margin-bottom:3px}.aiHd span{display:block;direction:ltr;font-size:9.5px}.aiHd.today{background:var(--bc);color:#fff}.aiHd.none{opacity:.45}
 .aiHc{display:flex;flex-wrap:wrap;gap:7px}.aiHc span{padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));font-size:13px}
 .aiSt2 ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;position:relative}
 .aiSt2 li{display:flex;gap:11px;align-items:flex-start;position:relative}
@@ -774,7 +774,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       let b = b64.replace(/-/g, "+").replace(/_/g, "/"); b += "=".repeat((4 - b.length % 4) % 4);
       const bin = atob(b), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
       const o = JSON.parse(new TextDecoder("utf-8").decode(bytes));
-      return o && Array.isArray(o.b) ? o.b.slice(0, 6) : [];
+      return o && Array.isArray(o.b) ? o.b.slice(0, 12) : [];
     } catch (e) { return []; }
   }
   const UI_ICONS = {
@@ -940,7 +940,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const today = new Date().getDay();
       body = '<div class="aiHw">' + L.dayN.map((n, d) => {
         const t = b.it.filter(r => uiDays(r.d).has(d)).map(r => r.h).join("\n");
-        return '<div class="aiHd' + (d === today ? " today" : "") + (t ? "" : " none") + '"><b>' + esc2(n) + "</b><span>" + (t ? esc2(t).replace(/\n/g, "<br>") : "-") + "</span></div>";
+        return '<div class="aiHd' + (d === today ? " today" : "") + (t ? "" : " none") + '"><b>' + esc2(n) + "</b><span>" + (t ? esc2(t).replace(/\n/g, "<br>").replace(/\s*[-–]\s*/g, "<br>") : "-") + "</span></div>";
       }).join("") + "</div>";
     } else if (b.s === "compact") {
       body = '<div class="aiHc">' + b.it.map(r => "<span><b>" + esc2(r.l || r.d) + "</b> " + esc2(r.h) + "</span>").join("") + "</div>";
