@@ -26,7 +26,7 @@
       delAll: "מחק את כל השיחות", delOne: "מחק שיחה", delOk: "מחק", cancel: "ביטול", deleted: "נמחק", histCount: n => n === 1 ? "שיחה אחת" : n + " שיחות",
       delAllQ: "למחוק את כל השיחות הקודמות? אי אפשר לשחזר אותן.", delOneQ: "למחוק את השיחה הזו? אי אפשר לשחזר אותה.",
       dl: "הורד", dling: "מוריד…", fileGone: "הקובץ כבר לא זמין ב-Moodle.", fileBig: "הקובץ גדול מדי להורדה כאן (מעל 25MB). אפשר להוריד אותו ישירות ב-Moodle.", fileErr: "לא הצלחתי להוריד את הקובץ. נסה שוב.", errTitle: "משהו לא תקין",
-      stSend: "שולח את הבקשה", stWait: "ממתין לתשובה מהשרת", stKb: "מחפש במאגר הידע של המכללה", stThink: "מחליט איך לענות לך הכי טוב", stRead: "קורא את השאלה שלך", stFound: t => "מצאתי במאגר: " + t, tl_show_ui: () => "מסדר לך את התשובה בכרטיסים", stWrite: "כותב את התשובה",
+      stSend: "שולח את הבקשה", stWait: "ממתין לתשובה מהשרת", stKb: "בודק במידע של המכללה", stMoodle: "בודק ב-Moodle שלך", stThink: "מחליט איך לענות לך הכי טוב", stRead: "קורא את השאלה שלך", stFound: t => "מצאתי: " + t, tl_show_ui: () => "מסדר לך את התשובה בכרטיסים", stWrite: "כותב את התשובה",
       stMemAdd: "שומר בזיכרון", stMemDel: "מוחק מהזיכרון", tlGeneric: "פונה ל-Moodle", tlVisual: "מסדר לך את זה בצורה ויזואלית",
       tl_get_my_courses: () => "מושך את רשימת הקורסים שלך מ-Moodle", tl_get_course_assignments: a => a ? "בודק מטלות ומועדי הגשה בקורס " + a : "בודק מטלות ומועדי הגשה",
       tl_get_course_grades: a => a ? "בודק את הציונים שלך בקורס " + a : "בודק את הציונים שלך", tl_get_calendar_events: () => "קורא את היומן שלך ב-Moodle",
@@ -52,7 +52,7 @@
       delAll: "Delete all chats", delOne: "Delete chat", delOk: "Delete", cancel: "Cancel", deleted: "Deleted", histCount: n => n + (n === 1 ? " chat" : " chats"),
       delAllQ: "Delete all earlier chats? This can’t be undone.", delOneQ: "Delete this chat? This can’t be undone.",
       dl: "Download", dling: "Downloading…", fileGone: "The file is no longer available in Moodle.", fileBig: "The file is too big to download here (over 25MB). You can download it directly in Moodle.", fileErr: "Couldn’t download the file. Try again.", errTitle: "Something’s not right",
-      stSend: "Sending your request", stWait: "Waiting for the server", stKb: "Searching the college’s knowledge base", stThink: "Deciding how to answer you best", stRead: "Reading your question", stFound: t => "Found in the knowledge base: " + t, tl_show_ui: () => "Laying out the answer as cards", stWrite: "Writing the answer",
+      stSend: "Sending your request", stWait: "Waiting for the server", stKb: "Checking the college’s information", stMoodle: "Checking your Moodle", stThink: "Deciding how to answer you best", stRead: "Reading your question", stFound: t => "Found: " + t, tl_show_ui: () => "Laying out the answer as cards", stWrite: "Writing the answer",
       stMemAdd: "Saving to memory", stMemDel: "Removing from memory", tlGeneric: "Asking Moodle", tlVisual: "Laying it out visually for you",
       tl_get_my_courses: () => "Fetching your course list from Moodle", tl_get_course_assignments: a => a ? "Checking assignments and deadlines in " + a : "Checking assignments and deadlines",
       tl_get_course_grades: a => a ? "Checking your grades in " + a : "Checking your grades", tl_get_calendar_events: () => "Reading your Moodle calendar",
@@ -78,7 +78,7 @@
       delAll: "Supprimer toutes les conversations", delOne: "Supprimer la conversation", delOk: "Supprimer", cancel: "Annuler", deleted: "Supprimé", histCount: n => n + (n === 1 ? " conversation" : " conversations"),
       delAllQ: "Supprimer toutes les conversations précédentes ? Cette action est irréversible.", delOneQ: "Supprimer cette conversation ? Cette action est irréversible.",
       dl: "Télécharger", dling: "Téléchargement…", fileGone: "Le fichier n’est plus disponible dans Moodle.", fileBig: "Le fichier est trop volumineux pour être téléchargé ici (plus de 25 Mo). Vous pouvez le télécharger directement dans Moodle.", fileErr: "Impossible de télécharger le fichier. Réessayez.", errTitle: "Quelque chose ne va pas",
-      stSend: "Envoi de la demande", stWait: "Attente du serveur", stKb: "Recherche dans la base de connaissances du collège", stThink: "Je choisis la meilleure façon de répondre", stRead: "Je lis ta question", stFound: t => "Trouvé dans la base : " + t, tl_show_ui: () => "Je mets la réponse en cartes", stWrite: "Rédaction de la réponse",
+      stSend: "Envoi de la demande", stWait: "Attente du serveur", stKb: "Je consulte les informations du collège", stMoodle: "Je consulte ton Moodle", stThink: "Je choisis la meilleure façon de répondre", stRead: "Je lis ta question", stFound: t => "Trouvé : " + t, tl_show_ui: () => "Je mets la réponse en cartes", stWrite: "Rédaction de la réponse",
       stMemAdd: "Enregistrement en mémoire", stMemDel: "Suppression de la mémoire", tlGeneric: "Question à Moodle", tlVisual: "Je le mets en forme pour toi",
       tl_get_my_courses: () => "Récupération de vos cours sur Moodle", tl_get_course_assignments: a => a ? "Vérification des devoirs et échéances de " + a : "Vérification des devoirs et échéances",
       tl_get_course_grades: a => a ? "Vérification de vos notes en " + a : "Vérification de vos notes", tl_get_calendar_events: () => "Lecture de votre calendrier Moodle",
@@ -1424,6 +1424,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (!e) return;
     if (e.s === "mem") { (ai.mem = ai.mem || []).push(e); return; }                              // the note under the answer says it
     if (e.s === "kb") { setActivity(ai, tx("stKb")); return; }
+    if (e.s === "moodle") { setActivity(ai, tx("stMoodle")); return; }
     if (e.s === "kbdone") { if (e.t) setActivity(ai, tx("stFound", e.t)); return; }
     if (e.s === "tool") { setActivity(ai, toolLabel(e)); return; }                                // every real action, in order
     if (e.s === "write" && ai.status) { setActivity(ai, ""); return; }                           // done: the dots come back
@@ -1889,7 +1890,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     msgs.push({ role: "user", content: text });
     const ai = { role: "assistant", content: "", pending: true }; msgs.push(ai);
     setBusy(true); renderMsgs(); busy = true; curBub = ms.lastElementChild.querySelector(".aiB");
-    setActivity(ai, tx("stKb"));
     const ur = ms.children[msgs.length - 2];
     // the rise starts at the input bar, but never more than 280px below the message (a short chat must not make it fly across the screen)
     if (ur) { ur.style.setProperty("--fy", Math.min(280, Math.max(0, Math.round(from.top - ur.getBoundingClientRect().top))) + "px"); void ur.offsetWidth; ur.classList.add("aiIn"); }
