@@ -248,6 +248,125 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiSp{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:7px}
 .aiSp li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4}
 .aiSp li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--accent);color:var(--on-accent,#fff)}
+.c-def{--bc:var(--accent)}.c-blue{--bc:#3b82f6}.c-green{--bc:#22a55e}.c-orange{--bc:#f08c1a}.c-red{--bc:#e5484d}.c-purple{--bc:#8b5cf6}.c-teal{--bc:#14b8a6}.c-pink{--bc:#ec4899}.c-gray{--bc:#64748b}
+.aiBk{border-radius:16px;padding:12px 13px;background:color-mix(in srgb,var(--bc) 8%,var(--card));border:1px solid color-mix(in srgb,var(--bc) 26%,var(--line));min-width:0}
+.aiBkT{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;margin-bottom:9px}
+.aiBkT .aiIc{color:var(--bc)}
+.aiIc{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.aiBk small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35}
+.aiNote{margin-top:8px;font-size:12.5px;color:var(--muted);line-height:1.4}
+.aiUi.fresh .aiBk.a-fade{animation:aiKFade .5s ease calc(var(--i,0) * 70ms) both}
+.aiUi.fresh .aiBk.a-rise{animation:aiKRise .55s cubic-bezier(.2,.9,.3,1) calc(var(--i,0) * 70ms) both}
+.aiUi.fresh .aiBk.a-pop{animation:aiKPop .55s cubic-bezier(.34,1.56,.64,1) calc(var(--i,0) * 70ms) both}
+.aiUi.fresh .aiBk.a-slide{animation:aiKSlide .55s cubic-bezier(.2,.9,.3,1) calc(var(--i,0) * 70ms) both}
+.aiUi.fresh .aiBk.a-glow{animation:aiKRise .5s ease calc(var(--i,0) * 70ms) both,aiKGlow 1.6s ease calc(var(--i,0) * 70ms + .3s) 1}
+.aiUi.fresh .aiBk li,.aiUi.fresh .aiBk .aiTmI,.aiUi.fresh .aiBk .aiHlI,.aiUi.fresh .aiBk .aiPzI{animation:aiKRise .45s ease calc(var(--i,0) * 70ms + var(--k,0) * 55ms + 150ms) both}
+@keyframes aiKFade{from{opacity:0}to{opacity:1}}
+@keyframes aiKRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes aiKPop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
+@keyframes aiKSlide{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@keyframes aiKGlow{0%,100%{box-shadow:0 0 0 0 transparent}40%{box-shadow:0 0 0 7px color-mix(in srgb,var(--bc) 30%,transparent)}}
+.aiAvt{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:17px;color:#fff;background:linear-gradient(145deg,var(--bc),color-mix(in srgb,var(--bc) 55%,#000))}
+.aiAvt .aiIc{width:21px;height:21px}
+.aiCtH{display:flex;align-items:center;gap:11px}.aiCtH b{font-size:15.5px}.aiCtH small{margin-top:1px}
+.aiCtA{display:flex;flex-direction:column;gap:7px;margin-top:11px}
+.aiAcG{display:flex;gap:6px;min-width:0}
+.aiAc{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;border:1px solid color-mix(in srgb,var(--bc) 38%,var(--line));background:color-mix(in srgb,var(--bc) 13%,var(--card));color:var(--text);font:inherit;cursor:pointer;text-align:start;transition:transform .15s,background .2s,color .2s}
+.aiAc .aiIc{color:var(--bc)}.aiAc span{min-width:0;display:flex;flex-direction:column}
+.aiAc i{font-style:normal;font-weight:750;font-size:13.5px}
+.aiAc em{font-style:normal;font-size:12px;color:var(--muted);direction:ltr;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aiAc:active,.aiAcC:active{transform:scale(.96)}
+.aiAcC{flex:none;width:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:transform .15s,background .2s,color .2s}
+.aiAc.done,.aiAcC.done{background:var(--bc);color:#fff;border-color:var(--bc)}.aiAc.done .aiIc,.aiAc.done em{color:#fff}
+.aiAcT{font-size:13.5px;color:var(--muted)}
+.aiCt.row{display:flex;align-items:center;gap:10px;padding:9px 11px}.aiCt.row .aiCtA{flex-direction:row;margin:0;margin-inline-start:auto;flex:none}
+.aiCt.row .aiAc em,.aiCt.row .aiAc i,.aiCt.row .aiAcC{display:none}.aiCt.row .aiAc{padding:9px;flex:none}.aiCt.row .aiAvt{width:34px;height:34px;font-size:14px}
+.aiCt.big{text-align:center}.aiCt.big .aiCtH{flex-direction:column}.aiCt.big .aiAvt{width:58px;height:58px;font-size:23px}.aiCt.big .aiCtH b{font-size:17px}.aiCt.big .aiAc{padding:13px}
+.aiHH{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px;font-size:14.5px}.aiHH>.aiIc{color:var(--bc)}
+.aiHs{margin-inline-start:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px}
+.aiHs i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.aiHs.on{color:#22a55e;background:#22a55e1f}.aiHs.on i{animation:aiHsP 1.6s ease-in-out infinite}.aiHs.off{color:#e5484d;background:#e5484d1f}
+@keyframes aiHsP{0%,100%{opacity:1}50%{opacity:.35}}
+.aiHr{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed color-mix(in srgb,var(--bc) 28%,var(--line));font-size:14px}.aiHr:last-child{border-bottom:0}
+.aiHr b{direction:ltr;font-weight:800;color:var(--bc);white-space:nowrap}
+.aiHw{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.aiHd{border-radius:11px;padding:6px 1px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);font-size:10px;line-height:1.35;min-height:52px}
+.aiHd b{display:block;font-size:12.5px;margin-bottom:3px}.aiHd.today{background:var(--bc);color:#fff}.aiHd.none{opacity:.45}
+.aiHc{display:flex;flex-wrap:wrap;gap:7px}.aiHc span{padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));font-size:13px}
+.aiSt2 ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;position:relative}
+.aiSt2 li{display:flex;gap:11px;align-items:flex-start;position:relative}
+.aiStN{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff;background:var(--bc);position:relative;z-index:1}
+.aiSt2 li b{font-size:14.5px;line-height:1.35}
+.aiSt2.timeline li:not(:last-child)::before{content:"";position:absolute;inset-inline-start:12px;top:26px;bottom:-12px;width:2px;background:color-mix(in srgb,var(--bc) 35%,transparent)}
+.aiSt2.cards li{padding:10px;border-radius:13px;background:var(--card);border:1px solid var(--line)}
+.aiFaR{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}.aiFaR:last-child{border-bottom:0}
+.aiFaR .aiIc{color:var(--bc)}.aiFaR span{flex:1;color:var(--muted)}.aiFaR b{font-weight:750;text-align:end;overflow-wrap:anywhere}
+.aiFa.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.aiFa.grid>.aiBkT{grid-column:1/-1;margin-bottom:0}
+.aiFa.grid .aiFaR{flex-direction:column;align-items:flex-start;gap:3px;padding:9px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.aiFa.grid .aiFaR b{text-align:start}
+.aiFa.chips{display:flex;flex-wrap:wrap;gap:7px}.aiFa.chips>.aiBkT{flex-basis:100%;margin-bottom:0}
+.aiFa.chips .aiFaR{border:0;padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));font-size:13px}
+.aiHl{display:flex;flex-wrap:wrap;gap:10px}.aiHl>.aiBkT{flex-basis:100%;margin-bottom:0}
+.aiHlI{flex:1;min-width:84px;text-align:center}.aiHlI b{display:block;font-size:32px;line-height:1.05;font-weight:900;color:var(--bc);letter-spacing:-.02em}
+.aiHlI span{display:block;font-weight:700;font-size:13px;margin-top:2px}
+.aiHl.pill .aiHlI{flex:none;display:inline-flex;align-items:baseline;gap:7px;padding:6px 14px;border-radius:99px;background:color-mix(in srgb,var(--bc) 15%,var(--card))}.aiHl.pill .aiHlI b{font-size:18px}
+.aiHl.row .aiHlI{text-align:start}
+.aiPz{display:flex;flex-wrap:wrap;gap:8px}.aiPz>.aiBkT{flex-basis:100%;margin-bottom:0}
+.aiPzI{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.aiPzI span{font-size:13.5px}.aiPzI b{font-weight:850;color:var(--bc);font-size:15px}
+.aiPz.tags .aiPzI{padding:6px 13px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));border:1px solid color-mix(in srgb,var(--bc) 30%,var(--line))}
+.aiPz.rows{flex-direction:column;gap:0}.aiPz.rows .aiPzI{justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line)}.aiPz.rows .aiPzI:last-child{border-bottom:0}
+.aiPz.big .aiPzI{flex:1;min-width:110px;flex-direction:column;align-items:flex-start;gap:2px;padding:10px;border-radius:13px;background:var(--card);border:1px solid var(--line)}.aiPz.big .aiPzI b{font-size:24px}
+.aiCo2,.aiBn{display:flex;gap:10px;align-items:flex-start;line-height:1.45;font-size:14px}.aiCo2>.aiIc,.aiBn>.aiIc{color:var(--bc);margin-top:1px}.aiCo2 b{display:block;margin-bottom:1px}
+.aiBn{padding:9px 12px;border-radius:12px;background:var(--bc);color:#fff;border:0}.aiBn>.aiIc{color:#fff}.aiBn.card{padding:13px;font-size:15px}
+.aiLi ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}.aiLi li{display:flex;gap:10px;align-items:flex-start}
+.aiLi .aiIc{color:var(--bc);margin-top:1px}.aiDot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--bc);margin-top:7px}
+.aiLiN{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;background:var(--bc)}
+.aiLi li b{font-size:14.5px;line-height:1.35;font-weight:650}
+.aiLi.cards li{padding:10px;border-radius:13px;background:var(--card);border:1px solid var(--line)}
+.aiCkI{display:flex;gap:11px;align-items:flex-start;padding:7px 0;cursor:pointer}
+.aiCkI input{position:absolute;opacity:0;pointer-events:none}
+.aiCkI>i{flex:none;width:22px;height:22px;border-radius:7px;border:2px solid color-mix(in srgb,var(--bc) 55%,var(--line));display:grid;place-items:center;transition:background .2s,transform .2s}
+.aiCkI>i .aiIc{width:15px;height:15px;color:#fff;stroke-width:3;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .3s}
+.aiCkI input:checked~i{background:var(--bc);border-color:var(--bc);transform:scale(1.08)}.aiCkI input:checked~i .aiIc{stroke-dashoffset:0}
+.aiCkI input:checked~div b{opacity:.55;text-decoration:line-through}
+.aiCkI b{font-size:14.5px;font-weight:650;line-height:1.35;transition:opacity .2s}
+.aiAcc details{border-bottom:1px solid var(--line)}.aiAcc details:last-child{border-bottom:0}
+.aiAcc summary{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;list-style:none;font-weight:700;font-size:14.5px}
+.aiAcc summary::-webkit-details-marker{display:none}.aiAcc summary span{flex:1}
+.aiAcc summary .aiIc{color:var(--bc);transition:transform .25s}.aiAcc details[open] summary .aiIc{transform:rotate(90deg)}
+.aiAcc details p{margin:0 0 11px;font-size:14px;line-height:1.5;color:var(--text);animation:aiKRise .3s ease both}
+.aiTbH{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.aiTbH button{padding:6px 14px;border-radius:99px;border:1.5px solid color-mix(in srgb,var(--bc) 40%,var(--line));background:transparent;color:var(--text);font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.aiTbH button.on{background:var(--bc);color:#fff;border-color:var(--bc)}
+.aiTbP{display:none;font-size:14px;line-height:1.55;white-space:pre-line}.aiTbP.on{display:block;animation:aiKRise .3s ease both}
+.aiTblW{overflow-x:auto;margin:0 -4px;padding:0 4px}.aiTbl table{border-collapse:collapse;width:100%;font-size:13.5px}
+.aiTbl th,.aiTbl td{padding:8px 9px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}.aiTbl thead th{color:var(--bc);font-weight:800;font-size:12.5px}.aiTbl tbody th{font-weight:700;color:var(--muted)}
+.aiTbl.striped tbody tr:nth-child(odd){background:color-mix(in srgb,var(--bc) 7%,transparent)}
+.aiCmpC{display:flex;flex-wrap:wrap;gap:9px}.aiCmpC>.aiBkT{flex-basis:100%;margin-bottom:0}
+.aiCmpCard{flex:1;min-width:130px;padding:10px;border-radius:13px;background:var(--card);border:1px solid var(--line)}.aiCmpCard>b{display:block;color:var(--bc);margin-bottom:6px}
+.aiCmpCard div{font-size:13.5px;padding:3px 0}.aiCmpCard span{display:block;font-size:11.5px;color:var(--muted)}
+.aiLkI{display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;margin-bottom:6px;border-radius:13px;border:1px solid color-mix(in srgb,var(--bc) 30%,var(--line));background:var(--card);color:var(--text);font:inherit;text-align:start;cursor:pointer;transition:transform .15s,border-color .2s}
+.aiLkI:last-child{margin-bottom:0}.aiLkI:active{transform:scale(.98)}.aiLkI>.aiIc{color:var(--bc)}.aiLkI .go{margin-inline-start:auto;color:var(--muted);transform:scaleX(-1)}
+.aiLkI span{min-width:0;flex:1}.aiLkI b{display:block;font-size:14.5px;font-weight:700}
+.aiLk.chips{display:flex;flex-wrap:wrap;gap:7px}.aiLk.chips>.aiBkT{flex-basis:100%;margin-bottom:0}.aiLk.chips .aiLkI{width:auto;margin:0;padding:6px 13px;border-radius:99px}.aiLk.chips small,.aiLk.chips .go{display:none}
+.aiLk.buttons .aiLkI{background:var(--bc);color:#fff;border-color:var(--bc);justify-content:center}.aiLk.buttons .aiLkI .aiIc{color:#fff}.aiLk.buttons .go,.aiLk.buttons small{display:none}
+.aiLk.buttons .aiLkI span{flex:none}
+.aiTmI{display:flex;gap:11px;position:relative;padding-bottom:12px}.aiTmI:last-child{padding-bottom:0}
+.aiTmI>i{flex:none;width:12px;height:12px;border-radius:50%;background:var(--bc);margin-top:4px;position:relative;z-index:1}
+.aiTm.vertical .aiTmI:not(:last-child)::before{content:"";position:absolute;inset-inline-start:5px;top:16px;bottom:0;width:2px;background:color-mix(in srgb,var(--bc) 32%,transparent)}
+.aiTmI em{font-style:normal;font-weight:800;color:var(--bc);font-size:12.5px;display:block}.aiTmI b{font-size:14.5px;font-weight:650}
+.aiTm.chips{display:flex;flex-wrap:wrap;gap:8px}.aiTm.chips>.aiBkT{flex-basis:100%;margin-bottom:0}
+.aiTm.chips .aiTmI{padding:6px 12px;border-radius:13px;background:var(--card);border:1px solid var(--line);flex-direction:column;gap:0}.aiTm.chips .aiTmI>i,.aiTm.chips small{display:none}
+.aiLocH{display:flex;gap:11px;align-items:flex-start}.aiLocH>.aiIc{width:26px;height:26px;color:var(--bc)}.aiLocH b{font-size:15px}
+.aiLocA{display:flex;gap:7px;margin-top:11px}
+.aiQt.quote{border-inline-start:4px solid var(--bc);border-radius:6px 16px 16px 6px}.aiQt p{margin:0;font-size:15.5px;line-height:1.5;font-weight:600}
+.aiQt small{margin-top:6px}.aiQt.definition>b{display:block;color:var(--bc);font-size:15px;margin-bottom:3px}.aiQt.definition p{font-weight:500;font-size:14.5px}
+.aiSm>b{display:flex;align-items:center;gap:8px;font-size:15.5px;margin-bottom:5px}.aiSm>b .aiIc{color:var(--bc)}.aiSm p{margin:0 0 6px;font-size:14.5px;line-height:1.5}
+.aiSm ul{margin:4px 0 0;padding-inline-start:1.2em}.aiSm li{margin:3px 0;font-size:14px}
+.aiSm.plain{background:none;border:0;padding:2px}.aiSm.glass{background:linear-gradient(135deg,color-mix(in srgb,var(--bc) 22%,transparent),color-mix(in srgb,var(--bc) 6%,transparent));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.aiHg{display:flex;gap:10px;align-items:center;background:none;border:0;padding:2px 2px 0}.aiHg>.aiIc{color:var(--bc);width:22px;height:22px}.aiHg b{font-size:17px;font-weight:850}
+.aiHg.accent{border-inline-start:4px solid var(--bc);padding-inline-start:10px;border-radius:2px}.aiHg.centered{justify-content:center;text-align:center}
+.aiTg{display:flex;flex-wrap:wrap;gap:7px}.aiTg>.aiBkT{flex-basis:100%;margin-bottom:0}.aiTg span{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;background:color-mix(in srgb,var(--bc) 15%,var(--card));font-size:13px;font-weight:650}
+.aiTg .aiIc{width:15px;height:15px;color:var(--bc)}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -294,7 +413,7 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiPb.on i::after{animation:aiTickIn .28s cubic-bezier(.34,1.8,.6,1)}
 @keyframes aiTickIn{from{scale:0}to{scale:1}}
 .aiPb:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line))}
-@media (prefers-reduced-motion:reduce){.aiPeekF,.aiPeekF svg,.aiMn .aiMi,.aiUi.fresh *,.aiHold{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.aiPeekF,.aiPeekF svg,.aiMn .aiMi,.aiUi.fresh *,.aiHold,.aiHs i,.aiAcc details p,.aiTbP.on{animation:none!important}}
 .aiP.aiFocusing .aiMs .aiM:not(.aiHoldRow){filter:blur(6px);opacity:.5;transition:filter .28s,opacity .28s}
 .aiP.aiFocusing > .aiHd,.aiP.aiFocusing > .aiFt{filter:blur(5px);opacity:.6;transition:filter .28s,opacity .28s}
 .aiHasHold [data-it]:not(.aiHold){opacity:.3;filter:blur(3px);transition:opacity .25s,filter .25s}
@@ -710,7 +829,178 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const num = parseFloat(String(it.v).replace(/[^0-9.]/g, "")), ok = isFinite(num), C = 2 * Math.PI * 22, col = ok ? gaugeCol(num) : "var(--muted)";
     return '<div class="aiGg"' + itAttr("g", it) + ' style="--gc:' + col + uiI() + '"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" class="bg"/><circle cx="28" cy="28" r="22" class="fg" stroke-dasharray="' + (ok ? (C * Math.min(1, num / 100)).toFixed(1) : 0) + " " + C.toFixed(1) + '"/></svg><b>' + esc2(it.v) + "</b><small>" + esc2(it.n) + "</small></div>";
   }
+  // =============================================================================================
+  // Display kit for information answers: contact cards with tap-to-call / mail / WhatsApp / copy, opening hours with "open now", steps, facts,
+  // numbers, prices, banners, lists, checklists, FAQ, tabs, tables, links, timelines, places with navigation, quotes, summaries, headings, tags.
+  // The AI picks the kind, style, color, icon and entrance animation; the server already checked every phone, mail and link.
+  // =============================================================================================
+  const UI_IC = {
+    phone: "M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z",
+    mail: "M3 6h18v12H3zM3 7l9 6 9-6",
+    clock: "M12 7v5l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z",
+    pin: "M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
+    book: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6",
+    money: "M3 7h18v10H3zM12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM6 10v4M18 10v4",
+    warning: "M12 4l9 16H3zM12 10v4M12 17v.01",
+    info: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8v.01",
+    user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0",
+    calendar: "M4 6h16v14H4zM4 10h16M8 3v4M16 3v4",
+    file: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4",
+    link: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1",
+    key: "M15 8a4 4 0 1 1-3.9 4.9L4 20v-3l2-2v-2h2l2.2-2.2A4 4 0 0 1 15 8z",
+    shield: "M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6zM9 12l2 2 4-4",
+    heart: "M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z",
+    star: "M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z",
+    school: "M3 9l9-5 9 5-9 5zM7 12v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4",
+    tool: "M14 6a4 4 0 0 0 5 5l-9 9a2.1 2.1 0 0 1-3-3l9-9a4 4 0 0 0-2-2z",
+    chat: "M4 5h16v11H9l-5 4z",
+    check: "M5 12.5l4.5 4.5L19 7.5",
+    bolt: "M13 3L5 14h6l-1 7 8-11h-6z",
+    globe: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18",
+    id: "M3 6h18v12H3zM5.5 16a3 3 0 0 1 5 0M8 9.5v.01M14 10h4M14 14h3",
+    food: "M6 3v8a2 2 0 0 0 2 2v8M10 3v8M6 7h4M17 3c-2 2-2 6 0 8v10",
+    home: "M4 11l8-7 8 7v9H4zM10 20v-6h4v6",
+    bus: "M5 5h14v12H5zM5 11h14M8 20v-3M16 20v-3M8 14.5v.01M16 14.5v.01",
+    wifi: "M3 9a14 14 0 0 1 18 0M6 12.5a9 9 0 0 1 12 0M9 16a4.5 4.5 0 0 1 6 0M12 19.5v.01",
+    print: "M7 8V3h10v5M5 8h14a2 2 0 0 1 2 2v6h-3M7 14h10v7H7z",
+    lock: "M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3",
+    bell: "M6 17V11a6 6 0 0 1 12 0v6l2 2H4zM10 21h4",
+    gift: "M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7C10 3 6 4 8 7M12 7c2-4 6-3 4 0",
+    flag: "M5 21V4M5 4h11l-2 4 2 4H5",
+    copy: "M9 9h11v11H9zM5 15V4h11",
+    nav: "M12 3l7 17-7-4-7 4z",
+    wa: "M4 20l1.3-4.2A8 8 0 1 1 8.2 18.8zM9 9c0 3 3 6 6 6l1.5-1.5-2-1-1 .7c-1-.4-2-1.4-2.4-2.4l.7-1-1-2z",
+    arrow: "M9 6l6 6-6 6",
+  };
+  const uiIc = (n, cls) => '<svg class="aiIc' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + (UI_IC[n] || UI_IC.info) + '"/></svg>';
+  const UI_L = {
+    he: { email: "מייל", phone: "חיוג", whatsapp: "וואטסאפ", link: "פתח", address: "ניווט", copy: "העתק", copied: "הועתק", open: "פתוח עכשיו", closed: "סגור כעת", until: "עד ", opens: "נפתח ", waze: "Waze", maps: "מפות", dayN: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"] },
+    en: { email: "Email", phone: "Call", whatsapp: "WhatsApp", link: "Open", address: "Navigate", copy: "Copy", copied: "Copied", open: "Open now", closed: "Closed now", until: "until ", opens: "opens ", waze: "Waze", maps: "Maps", dayN: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
+    fr: { email: "E-mail", phone: "Appeler", whatsapp: "WhatsApp", link: "Ouvrir", address: "Itinéraire", copy: "Copier", copied: "Copié", open: "Ouvert", closed: "Fermé", until: "jusqu'à ", opens: "ouvre ", waze: "Waze", maps: "Maps", dayN: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"] },
+  };
+  const ul = () => UI_L[lang()] || UI_L.he;
+  const uiCo = b => " c-" + (b.co || "def");
+  const uiAn = b => " a-" + (b.an || "rise");
+  const uiBk = (b, cls, inner, withTitle) => '<div class="aiBk ' + cls + uiCo(b) + uiAn(b) + '" style="--i:' + Math.min(uiN++, 12) + '">' +
+    (withTitle && b.ti ? '<div class="aiBkT">' + (b.ic ? uiIc(b.ic) : "") + "<span>" + esc2(b.ti) + "</span></div>" : "") + inner + "</div>";
+  // one tappable action: call, mail, WhatsApp, open, navigate - plus a small copy button next to the ones that carry a value
+  function uiActBtn(a, big) {
+    const L = ul(), v = esc2(a.v), t = a.t;
+    if (t === "text") return '<span class="aiAcT">' + v + "</span>";
+    const map = { email: ["mail", "mail"], phone: ["phone", "tel"], whatsapp: ["wa", "wa"], link: ["link", "url"], address: ["nav", "maps"] };
+    const m = map[t] || map.link, label = esc2(a.l || L[t] || "");
+    const short = esc2(String(a.v).replace(/^https?:\/\//, "").slice(0, 34));
+    return '<span class="aiAcG ' + (big ? "big" : "") + '"><button type="button" class="aiAc" data-act="' + m[1] + '" data-v="' + v + '">' + uiIc(m[0]) + "<span><i>" + label + "</i><em>" + short + "</em></span></button>" +
+      (t === "address" ? "" : '<button type="button" class="aiAcC" data-act="copy" data-v="' + v + '" aria-label="' + esc2(L.copy) + '">' + uiIc("copy") + "</button>") + "</span>";
+  }
+  function uiAction(el) {
+    const act = el.dataset.act, v = String(el.dataset.v || "");
+    const flash = () => { el.classList.add("done"); setTimeout(() => el.classList.remove("done"), 1100); };
+    const go = u => { try { window.open(u, "_blank", "noopener,noreferrer"); } catch (e) {} };
+    if (act === "copy") { copyText(v).then(ok => { toast(ok ? ul().copied : tx("errGen"), 1500); if (ok) flash(); }); return; }
+    if (act === "tel" && /^[+*#0-9][0-9\-\s()*#+]{2,24}$/.test(v)) { location.href = "tel:" + v.replace(/[^0-9+*#]/g, ""); return; }
+    if (act === "mail" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { location.href = "mailto:" + v; return; }
+    if (act === "wa") { let d = v.replace(/\D/g, ""); if (d.startsWith("0")) d = "972" + d.slice(1); if (d.length >= 9) go("https://wa.me/" + d); return; }
+    if (act === "url" && /^https:\/\/[^\s]+$/.test(v)) { go(v); return; }
+    if (act === "maps" && v) { go("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(v)); return; }
+    if (act === "waze" && v) { go("https://waze.com/ul?q=" + encodeURIComponent(v) + "&navigate=yes"); return; }
+  }
+  // opening hours: "א'-ה'" + "8:15-22:00" -> is it open right now?
+  const HD = { "א": 0, "ב": 1, "ג": 2, "ד": 3, "ה": 4, "ו": 5, "ש": 6 };
+  function uiDays(str) {
+    let s = String(str || "").replace(/ימים|יום/g, " ").replace(/שבת/g, "ש").replace(/שישי/g, "ו").replace(/חמישי/g, "ה").replace(/רביעי/g, "ד").replace(/שלישי/g, "ג").replace(/שני/g, "ב").replace(/ראשון/g, "א");
+    s = s.replace(/(^|[\s,'׳"])ו-\s*(?=[אבגדהש])/g, "$1,");
+    const out = new Set(); s = s.replace(/[אבגדהוש]['׳"]?\s*[-–]\s*[אבגדהוש]['׳"]?/g, m => {
+      const l = m.match(/[אבגדהוש]/g), a = HD[l[0]], b = HD[l[1]]; for (let i = a; ; i = (i + 1) % 7) { out.add(i); if (i === b) break; } return " ";
+    });
+    (s.match(/[אבגדהוש](?=['׳"]|\s|,|$)/g) || []).forEach(l => out.add(HD[l]));
+    return out;
+  }
+  function uiRanges(str) {
+    const out = []; String(str || "").replace(/(\d{1,2})[:.](\d{2})\s*[-–]\s*(\d{1,2})[:.](\d{2})/g, (m, a, b, c, d) => { out.push([+a * 60 + +b, +c * 60 + +d]); return m; });
+    return out;
+  }
+  function uiOpenNow(rows) {
+    const now = new Date(), day = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
+    let known = false, until = null;
+    for (const r of rows) {
+      const days = uiDays(r.d), rg = uiRanges(r.h);
+      if (!rg.length || !days.size) continue; known = true;
+      if (days.has(day)) for (const [a, b] of rg) if (mins >= a && mins < b) until = b;
+    }
+    if (!known) return null;
+    return until !== null ? { open: true, until } : { open: false };
+  }
+  const uiHM = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+  function uiHours(b) {
+    const L = ul(), st = uiOpenNow(b.it);
+    const badge = st ? '<span class="aiHs ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed) + "</span>" : "";
+    let body;
+    if (b.s === "week") {
+      const today = new Date().getDay();
+      body = '<div class="aiHw">' + L.dayN.map((n, d) => {
+        const t = b.it.filter(r => uiDays(r.d).has(d)).map(r => r.h).join("\n");
+        return '<div class="aiHd' + (d === today ? " today" : "") + (t ? "" : " none") + '"><b>' + esc2(n) + "</b><span>" + (t ? esc2(t).replace(/\n/g, "<br>") : "-") + "</span></div>";
+      }).join("") + "</div>";
+    } else if (b.s === "compact") {
+      body = '<div class="aiHc">' + b.it.map(r => "<span><b>" + esc2(r.l || r.d) + "</b> " + esc2(r.h) + "</span>").join("") + "</div>";
+    } else {
+      body = '<div class="aiHt">' + b.it.map(r => '<div class="aiHr"><span>' + esc2(r.l ? r.l + (r.d ? " · " + r.d : "") : r.d) + "</span><b>" + esc2(r.h) + "</b></div>").join("") + "</div>";
+    }
+    return uiBk(b, "aiHours", '<div class="aiHH">' + uiIc(b.ic || "clock") + "<b>" + esc2(b.ti || "") + "</b>" + badge + "</div>" + body + (b.tx ? '<div class="aiNote">' + esc2(b.tx) + "</div>" : ""), false);
+  }
+  function uiContact(b) {
+    const ini = esc2(String(b.ti || "?").trim().charAt(0));
+    const av = '<span class="aiAvt">' + (b.ic ? uiIc(b.ic) : ini) + "</span>";
+    const head = '<div class="aiCtH">' + av + "<div><b>" + esc2(b.ti || "") + "</b>" + (b.su ? "<small>" + esc2(b.su) + "</small>" : "") + "</div></div>";
+    const acts = (b.it || []).map(a => uiActBtn(a, b.s === "big")).join("");
+    return uiBk(b, "aiCt " + (b.s || "card"), head + (b.tx ? '<div class="aiNote">' + esc2(b.tx) + "</div>" : "") + (acts ? '<div class="aiCtA">' + acts + "</div>" : ""), false);
+  }
+  function uiNew(b) {
+    const it = b.it || [];
+    switch (b.k) {
+      case "contact": return uiContact(b);
+      case "hours": return it.length ? uiHours(b) : "";
+      case "steps": {
+        if (!it.length) return "";
+        const st = b.s || "numbered";
+        return uiBk(b, "aiSt2 " + st, "<ol>" + it.map((x, i) => '<li style="--k:' + i + '"><span class="aiStN">' + (i + 1) + "</span><div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></li>").join("") + "</ol>", true);
+      }
+      case "facts": return it.length ? uiBk(b, "aiFa " + (b.s || "list"), it.map(x => '<div class="aiFaR">' + (x.ic ? uiIc(x.ic) : "") + "<span>" + esc2(x.l) + "</span><b>" + esc2(x.v || "") + "</b></div>").join(""), true) : "";
+      case "highlight": return it.length ? uiBk(b, "aiHl " + (b.s || "big"), it.map(x => '<div class="aiHlI"><b>' + esc2(x.v || x.l) + "</b>" + (x.v && x.l ? "<span>" + esc2(x.l) + "</span>" : "") + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div>").join(""), true) : "";
+      case "price": return it.length ? uiBk(b, "aiPz " + (b.s || "tags"), it.map(x => '<div class="aiPzI"><span>' + esc2(x.l) + "</span><b>" + esc2(x.v || "") + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div>").join(""), true) : "";
+      case "callout": case "banner": {
+        const tone = b.tone || "info", ic = b.ic || { warn: "warning", danger: "warning", success: "check", tip: "bolt", info: "info" }[tone] || "info";
+        return uiBk({ ...b, co: b.co || ({ warn: "orange", danger: "red", success: "green", tip: "purple", info: "blue" }[tone]) }, (b.k === "banner" ? "aiBn " : "aiCo2 ") + (b.s || ""), uiIc(ic) + "<div>" + (b.ti ? "<b>" + esc2(b.ti) + "</b>" : "") + "<span>" + esc2(b.tx) + "</span></div>", false);
+      }
+      case "list": return it.length ? uiBk(b, "aiLi " + (b.s || "bullets"), "<ul>" + it.map((x, i) => '<li style="--k:' + i + '">' + (b.s === "icons" || x.ic ? uiIc(x.ic || b.ic || "check") : b.s === "numbers" ? '<span class="aiLiN">' + (i + 1) + "</span>" : '<i class="aiDot"></i>') + "<div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></li>").join("") + "</ul>", true) : "";
+      case "checklist": return it.length ? uiBk(b, "aiCk", it.map(x => '<label class="aiCkI"><input type="checkbox"><i>' + uiIc("check") + "</i><div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></label>").join(""), true) : "";
+      case "accordion": return it.length ? uiBk(b, "aiAcc", it.map(x => '<details><summary><span>' + esc2(x.q) + "</span>" + uiIc("arrow") + "</summary><p>" + esc2(x.a) + "</p></details>").join(""), true) : "";
+      case "tabs": return it.length ? uiBk(b, "aiTb", '<div class="aiTbH" role="tablist">' + it.map((x, i) => '<button type="button" role="tab" data-tab="' + i + '" class="' + (i === 0 ? "on" : "") + '">' + esc2(x.l) + "</button>").join("") + "</div>" + it.map((x, i) => '<div class="aiTbP' + (i === 0 ? " on" : "") + '" data-pane="' + i + '">' + esc2(x.tx) + "</div>").join(""), true) : "";
+      case "table": case "compare": {
+        if (!it.length) return "";
+        const cols = b.col || [];
+        if (b.k === "compare" && b.s === "cards" && cols.length) {
+          return uiBk(b, "aiCmpC", cols.map((c, ci) => '<div class="aiCmpCard"><b>' + esc2(c) + "</b>" + it.map(r => "<div><span>" + esc2(r.l) + "</span>" + esc2((r.c || [])[ci] || "-") + "</div>").join("") + "</div>").join(""), true);
+        }
+        const head = cols.length ? "<thead><tr>" + (it.some(r => r.l) ? "<th></th>" : "") + cols.map(c => "<th>" + esc2(c) + "</th>").join("") + "</tr></thead>" : "";
+        return uiBk(b, "aiTbl " + (b.s === "striped" || b.k === "compare" ? "striped" : ""), '<div class="aiTblW"><table>' + head + "<tbody>" + it.map(r => "<tr>" + (r.l ? "<th>" + esc2(r.l) + "</th>" : "") + (r.c || []).map(c => "<td>" + esc2(c) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>", true);
+      }
+      case "links": return it.length ? uiBk(b, "aiLk " + (b.s || "list"), it.map(x => '<button type="button" class="aiLkI" data-act="url" data-v="' + esc2(x.u) + '">' + uiIc(x.ic || "link") + "<span><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</span>" + uiIc("arrow", "go") + "</button>").join(""), true) : "";
+      case "timeline": return it.length ? uiBk(b, "aiTm " + (b.s || "vertical"), it.map((x, i) => '<div class="aiTmI" style="--k:' + i + '"><i></i><div><em>' + esc2(x.dt) + "</em><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></div>").join(""), true) : "";
+      case "location": {
+        const L = ul(), addr = esc2(b.tx);
+        return uiBk(b, "aiLoc", '<div class="aiLocH">' + uiIc(b.ic || "pin") + "<div><b>" + esc2(b.ti || b.tx) + "</b>" + (b.su ? "<small>" + esc2(b.su) + "</small>" : "") + (b.ti ? "<small>" + addr + "</small>" : "") + '</div></div><div class="aiLocA"><button type="button" class="aiAc" data-act="waze" data-v="' + addr + '">' + uiIc("nav") + "<span><i>" + esc2(L.waze) + '</i></span></button><button type="button" class="aiAc" data-act="maps" data-v="' + addr + '">' + uiIc("pin") + "<span><i>" + esc2(L.maps) + '</i></span></button><button type="button" class="aiAcC" data-act="copy" data-v="' + addr + '" aria-label="' + esc2(L.copy) + '">' + uiIc("copy") + "</button></div>", false);
+      }
+      case "quote": return uiBk(b, "aiQt " + (b.s || "quote"), (b.s === "definition" ? "<b>" + esc2(b.su || b.ti || "") + "</b><p>" + esc2(b.tx) + "</p>" : "<p>" + esc2(b.tx) + "</p>" + (b.su || b.ti ? "<small>" + esc2(b.su || b.ti) + "</small>" : "")), false);
+      case "summary": return uiBk(b, "aiSm " + (b.s || "card"), (b.ti ? "<b>" + (b.ic ? uiIc(b.ic) : "") + esc2(b.ti) + "</b>" : "") + (b.tx ? "<p>" + esc2(b.tx) + "</p>" : "") + (it.length ? "<ul>" + it.map(x => "<li>" + esc2(x.l) + "</li>").join("") + "</ul>" : ""), false);
+      case "heading": return uiBk(b, "aiHg " + (b.s || "plain"), (b.ic ? uiIc(b.ic) : "") + "<div><b>" + esc2(b.ti) + "</b>" + (b.tx ? "<small>" + esc2(b.tx) + "</small>" : "") + "</div>", false);
+      case "tags": return it.length ? uiBk(b, "aiTg", it.map(x => "<span>" + (x.ic ? uiIc(x.ic) : "") + esc2(x.l) + "</span>").join(""), true) : "";
+      default: return null;
+    }
+  }
   function uiBlock(b) {
+    const nb = uiNew(b); if (nb !== null) return nb;
     const head = b.ti ? '<div class="aiUiT">' + esc2(b.ti) + "</div>" : "";
     if (b.k === "deadlines" && b.it && b.it.length) {
       const body = b.s === "timeline" ? uiTimeline(b.it) : b.s === "focus" ? uiFocus(b.it) : b.it.map(uiTicket).join("");
@@ -1524,6 +1814,14 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const mc = e.target.closest(".aiMemChip"); if (mc && !mc.classList.contains("undone")) { openMemory(); return; }
       const f = e.target.closest(".aiFile"); if (f) { downloadFile(f); return; }
       const q = e.target.closest("[data-q]"); if (q) send(q.dataset.q);
+      const ac = e.target.closest("[data-act]"); if (ac) { uiAction(ac); return; }
+      const tbb = e.target.closest("[data-tab]");
+      if (tbb) {
+        const box = tbb.closest(".aiTb"), i = tbb.dataset.tab;
+        box.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("on", x === tbb));
+        box.querySelectorAll("[data-pane]").forEach(x => x.classList.toggle("on", x.dataset.pane === i));
+        return;
+      }
       const qk = e.target.closest("[data-qk]"); if (qk) { if (pollLive(qk)) { lockPoll(qk.closest(".aiQuick"), [qk]); send(qk.dataset.qk); } return; }
       const pb = e.target.closest("[data-po]");
       if (pb) {
