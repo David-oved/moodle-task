@@ -135,9 +135,13 @@ html.aiOn body > *:not(.aiP):not(#toast):not(script):not(style):not(link):not(me
   opacity:0;translate:0 14px;transition:opacity .2s ease,translate .22s ease}
 .aiP[hidden]{display:none}
 .aiP.on{opacity:1;translate:0 0}
+.aiP{--aicol:840px}
+@media (min-width:1280px){.aiP{--aicol:960px}}
+@media (min-width:1700px){.aiP{--aicol:1120px}}
 body.calm .aiP{transition:none}
-@media (min-width:900px){ .aiB{font-size:16px} }            /* big screens: the conversation stays in a centred column (the paddings below) */
-.aiHd{flex:none;display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right),calc((100% - 840px) / 2)) 10px max(10px,env(safe-area-inset-left),calc((100% - 840px) / 2));color:var(--on-accent,#fff);
+@media (min-width:900px){ .aiB{font-size:16px} }
+@media (min-width:1280px){ .aiB{max-width:min(88%,720px)} }            /* big screens: the conversation stays in a centred column (the paddings below) */
+.aiHd{flex:none;display:flex;align-items:center;gap:6px;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right),calc((100% - var(--aicol,840px)) / 2)) 10px max(10px,env(safe-area-inset-left),calc((100% - var(--aicol,840px)) / 2));color:var(--on-accent,#fff);
   background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 50%,#7b5cff))}
 .aiHb{flex:none;width:40px;height:40px;padding:0;border:0;border-radius:12px;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer}
 .aiHb:hover{background:#ffffff29}.aiHb:focus-visible{outline:2px solid #fff;outline-offset:1px}
@@ -179,6 +183,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiSug{display:flex;flex-direction:column;gap:8px;width:100%;max-width:330px;margin-top:8px}
 .aiSug button{padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);text-align:start;font:inherit;font-size:14.5px;cursor:pointer}
 .aiSug button:hover{border-color:var(--accent)}
+@media (min-width:700px){.aiSug{max-width:480px}.aiHi p{max-width:44ch}.aiHi h2{font-size:27px}}
 .aiPoll{margin-top:12px;padding:12px;border-radius:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 7%,var(--card))}
 .aiPq{font-weight:700;font-size:14.5px;margin-bottom:10px}
 .aiPo{display:flex;flex-direction:column;gap:7px}
@@ -478,26 +483,28 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiQuick button:hover{background:color-mix(in srgb,var(--accent) 14%,transparent)}
   .aiTk:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
 }
-@media (min-width:900px){
+@media (min-width:700px){
   .aiQuick{flex-wrap:wrap;overflow:visible;gap:8px}
   .aiQuick button{font-size:14px;padding:7px 16px}
   .aiB{max-width:min(88%,640px)}
-  .aiDmS{padding-left:max(14px,calc((100% - 840px) / 2 + 14px));padding-right:max(14px,calc((100% - 840px) / 2 + 14px));font-size:18px}
+  .aiDmS{padding-left:max(14px,calc((100% - var(--aicol,840px)) / 2 + 14px));padding-right:max(14px,calc((100% - var(--aicol,840px)) / 2 + 14px));font-size:18px}
   .aiDmSt b{font-size:20px}
   .aiDemo.hero .aiDmS{left:50%;right:auto;width:min(700px,90%);padding:0;transform:translateX(-50%);font-size:22px}
   .aiDemo.hero .aiDmSt b{font-size:36px;margin-bottom:8px}
   .aiDmBtns,.aiDmGo{left:max(24px,calc(50% - 190px));right:max(24px,calc(50% - 190px))}
   .aiDmBtns button,.aiDmGo{font-size:17px;padding:16px}
   .aiDmGlow{width:560px;margin:-280px 0 0 -280px}
-  .aiDmX{width:42px;height:42px;inset-inline-start:max(14px,calc((100% - 840px) / 2))}
+  .aiDmX{width:42px;height:42px;inset-inline-start:max(14px,calc((100% - var(--aicol,840px)) / 2))}
 }
+/* answers with cards (every kind of display): the bubble takes the whole row (minus Uri's small face) at ANY width, so the cards are never squeezed to their content;
+   from tablet width up the cards flow into as many columns as fit (each wants about 300px), full-width kinds take a whole row, and the last row stretches */
 @supports selector(:has(a)){
-  @media (min-width:900px){
-    html[dir] .aiM.ai:has(.aiUi){align-self:stretch}
-    .aiM.ai:has(.aiUi) .aiB{flex:1;min-width:0;max-width:100%}
-    .aiUi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;align-items:start;min-width:0}
-    .aiUi>.aiUiT,.aiUi>.aiHero,.aiUi>.aiHg,.aiUi>.aiTg,.aiUi>.aiTbl,.aiUi>.aiAcc,.aiUi>.aiTb,.aiUi>.aiTm,.aiUi>.aiCmpC,.aiUi>.aiQuick,.aiUi>.aiCo,.aiUi>.aiCo2,.aiUi>.aiBn,.aiUi>.aiLk,.aiUi>.aiHl,.aiUi>.aiFoc{grid-column:1/-1}
-    .aiUi>:last-child:nth-child(odd){grid-column:1/-1}
+  html[dir] .aiM.ai:has(.aiUi){align-self:stretch}
+  .aiM.ai:has(.aiUi) .aiB{flex:1;min-width:0;max-width:100%}
+  @media (min-width:600px){
+    .aiUi{display:flex;flex-direction:row;flex-wrap:wrap;gap:11px;align-items:stretch}
+    .aiUi>*{flex:1 1 300px;min-width:0}
+    .aiUi>.aiUiT,.aiUi>.aiHero,.aiUi>.aiHg,.aiUi>.aiTg,.aiUi>.aiTbl,.aiUi>.aiAcc,.aiUi>.aiTb,.aiUi>.aiTm,.aiUi>.aiCmpC,.aiUi>.aiQuick,.aiUi>.aiCo,.aiUi>.aiCo2,.aiUi>.aiBn,.aiUi>.aiLk,.aiUi>.aiHl,.aiUi>.aiFoc,.aiUi>.aiSm,.aiUi>.aiStx{flex-basis:100%}
   }
 }
 .aiWipe{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:18px 0 8px;padding:12px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--err,#e5484d) 55%,transparent);background:color-mix(in srgb,var(--err,#e5484d) 9%,transparent);color:var(--err,#e5484d);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
@@ -511,7 +518,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHr b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.aiHr small{color:var(--muted);font-size:12.5px}
 .aiHr.on{background:var(--accent-soft)}
 .aiHe{margin:auto;color:var(--muted);text-align:center;padding:24px}
-.aiFt{flex:none;padding:8px max(10px,env(safe-area-inset-right),calc((100% - 840px) / 2)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left),calc((100% - 840px) / 2));border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 92%,var(--bg))}
+.aiFt{flex:none;padding:8px max(10px,env(safe-area-inset-right),calc((100% - var(--aicol,840px)) / 2)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left),calc((100% - var(--aicol,840px)) / 2));border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 92%,var(--bg))}
 .aiP.aiKb .aiFt{padding-bottom:8px}                      /* the keyboard covers the home-indicator area: no gap between the input and the keyboard */
 .aiSt{font-size:12.5px;color:var(--muted);text-align:center;padding:0 0 6px}
 .aiIn{display:flex;gap:8px;align-items:flex-end}
@@ -523,7 +530,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiSd .aiStopI{fill:currentColor;stroke:none}
 html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiNt{font-size:11.5px;color:var(--muted);text-align:center;padding-top:6px;line-height:1.4}
-.aiMs,.aiHs{padding-left:max(12px,env(safe-area-inset-left),calc((100% - 840px) / 2));padding-right:max(12px,env(safe-area-inset-right),calc((100% - 840px) / 2))}
+.aiMs,.aiHs{padding-left:max(12px,env(safe-area-inset-left),calc((100% - var(--aicol,840px)) / 2));padding-right:max(12px,env(safe-area-inset-right),calc((100% - var(--aicol,840px)) / 2))}
 
 /* long-press menu on a message */
 .aiMnBg{position:absolute;inset:0;z-index:5;background:transparent}
@@ -2281,7 +2288,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 .atTx b span{display:inline-block;opacity:0;animation:atWord .7s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 .atTx small{display:block;margin-top:10px;font-size:clamp(14px,4vw,17px);color:#ffffffb8;opacity:0;animation:atSub .7s .55s ease-out both}
 .atTx.atGone{animation:atGone .45s ease-in both}
-@media (min-width:900px){.atTx b{font-size:42px}.atTx small{font-size:20px;margin-top:14px}.atSkip{width:46px;height:46px}}
+@media (min-width:700px){.atTx b{font-size:clamp(32px,4.4vw,46px)}.atTx small{font-size:20px;margin-top:14px}.atSkip{width:46px;height:46px}}
 .atChips{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .atChips i{font-style:normal;padding:6px 14px;border-radius:99px;background:#ffffff1f;border:1px solid #ffffff3d;color:#fff;font-size:14px;opacity:0;animation:atChip .6s var(--cd) cubic-bezier(.2,.9,.3,1.4) both}
 .atIcon{margin:16px auto 0;width:44px;height:44px;color:color-mix(in srgb,var(--accent) 55%,#fff);opacity:0;animation:atChip .7s .45s cubic-bezier(.2,.9,.3,1.4) both}
@@ -2349,7 +2356,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const face = root.querySelector(".atFace"), inner = root.querySelector(".atIn"), txEl = root.querySelector(".atTx"), dots = root.querySelectorAll(".atDots i");
     const setFace = (x, y, s, r) => { face.style.setProperty("--fx", x + "px"); face.style.setProperty("--fy", y + "px"); face.style.setProperty("--fs", s); face.style.setProperty("--fr", r + "deg"); };
     // where the face rests in each scene (a little drift and tilt, like it is alive); the last scene flies it onto the real button
-    const ds = vw >= 900 ? 1.4 : 1;                          // a wide screen: Uri is bigger and roams a central area, near the words
+    const ds = vw >= 700 ? Math.min(1.5, 1 + (vw - 600) / 1200) : 1;                          // a wide screen: Uri is bigger and roams a central area, near the words
     const hh = vh / 2, ww = Math.min(vw, 620) / 2;
     const lay = [
       { f: [0, -hh * .26, 1, 0], top: "calc(50% + 100px)", dx: 0 },
@@ -2533,7 +2540,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       // x, y are percentages of the screen (physical left/top), size in px; the speech bubble goes below Uri when Uri is in the upper half, above it otherwise
       place(x, y, size, hero) {
         ov.classList.toggle("hero", !!hero);
-        const wide = innerWidth >= 900, k = wide ? Math.min(1, 900 / innerWidth) : 1, ds = wide ? 1.45 : 1;          // a wide screen: Uri stays near the conversation column and is bigger
+        const wide = innerWidth >= 700, k = wide ? Math.min(1, 900 / innerWidth) : 1, ds = wide ? Math.min(1.55, 1 + (innerWidth - 600) / 1200) : 1;          // a wide screen: Uri stays near the conversation column and is bigger
         M.style.setProperty("--mx", 50 + (x - 50) * k); M.style.setProperty("--my", y); M.style.setProperty("--ms", Math.round(size * ds) + "px");
         S.style.top = hero ? "calc(" + y + "% + " + (size / 2 + 20) + "px)" : "";
       },
