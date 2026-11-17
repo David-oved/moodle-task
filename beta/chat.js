@@ -1100,7 +1100,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       case "heading": return uiBk(b, "aiHg " + (b.s || "plain"), (b.ic ? uiIc(b.ic) : "") + "<div><b>" + esc2(b.ti) + "</b>" + (b.tx ? "<small>" + esc2(b.tx) + "</small>" : "") + "</div>", false);
       case "hero": return b.ti ? uiBk(b, "aiHero " + (b.s || "gradient"), '<span class="aiHeroI">' + uiIc(b.ic || "star") + '</span><div class="aiHeroT"><b>' + esc2(b.ti) + "</b>" + (b.su ? "<em>" + esc2(b.su) + "</em>" : "") + (b.tx ? "<small>" + esc2(b.tx) + "</small>" : "") + "</div>" +
         (it.length ? '<div class="aiHeroS">' + it.map((x, i) => '<div style="--k:' + i + '"><b>' + esc2(x.v) + "</b><small>" + esc2(x.l) + "</small></div>").join("") + "</div>" : ""), false) : "";
-      case "routes": return it.length ? uiBk(b, "aiRt " + (b.s || "badges"), it.map((x, i) => '<div class="aiRtI" style="--k:' + i + ";--rc:hsl(" + dlHue(x.b || x.l) + ' 70% 48%)">' + (x.b ? "<i>" + esc2(x.b) + "</i>" : '<i class="dot"></i>') + "<div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></div>").join(""), true) : "";
+      case "routes": return it.length ? uiBk(b, "aiRt " + (b.s || "badges"), it.map((x, i) => '<div class="aiRtI" style="--k:' + i + ";--rc:hsl(" + ((i * 57 + 212) % 360) + ' 66% 50%)">' + (x.b ? "<i>" + esc2(x.b) + "</i>" : '<i class="dot"></i>') + "<div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></div>").join(""), true) : "";
       case "tags": return it.length ? uiBk(b, "aiTg", it.map(x => "<span>" + (x.ic ? uiIc(x.ic) : "") + esc2(x.l) + "</span>").join(""), true) : "";
       default: return null;
     }
@@ -2411,7 +2411,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ov.innerHTML = '<div class="aiDmGlow"></div><button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"><span class="aiDmSa">' + FACE + '</span><span class="aiDmSt"></span><span class="aiDmSn"></span><i class="aiDmPb"></i></div>' +
       (withGate ? '<div class="aiDmBtns"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div>" : "");
     panel.appendChild(ov);
-    try { const hd = panel.querySelector(".aiHd"); if (hd) { const cs = getComputedStyle(hd); ov.style.setProperty("--caph", Math.round(hd.getBoundingClientRect().bottom - panel.getBoundingClientRect().top) + "px"); ov.style.setProperty("--capbg", cs.backgroundImage && cs.backgroundImage !== "none" ? cs.backgroundImage : cs.backgroundColor); } } catch (e) {}
+    try { const hd = panel.querySelector(".aiHd"); if (hd) { const cs = getComputedStyle(hd); const hh = Math.round(hd.getBoundingClientRect().bottom - panel.getBoundingClientRect().top); if (hh > 24) ov.style.setProperty("--caph", hh + "px"); ov.style.setProperty("--capbg", cs.backgroundImage && cs.backgroundImage !== "none" ? cs.backgroundImage : cs.backgroundColor); } } catch (e) {}
     return ov;
   }
 
