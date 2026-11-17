@@ -389,13 +389,11 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiDmMi{width:100%;height:100%;transform-origin:50% 80%;animation:aiDmIdle 3.6s ease-in-out infinite}
 .aiDmMi svg{width:100%;height:100%;display:block;overflow:visible}
 @keyframes aiDmIdle{0%,100%{transform:translate(0,0) rotate(-2deg)}30%{transform:translate(6px,-7px) rotate(3deg)}65%{transform:translate(-6px,-3px) rotate(-3deg)}}
-.aiDmS{position:absolute;left:14px;right:14px;z-index:2;padding:11px 15px;border-radius:18px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 62%,#7b5cff));color:var(--on-accent,#fff);font-size:15px;font-weight:650;line-height:1.45;box-shadow:0 10px 26px -8px #000a;pointer-events:none;text-align:center;
-  transition:top 1.15s cubic-bezier(.34,1.35,.5,1),bottom 1.15s cubic-bezier(.34,1.35,.5,1)}
-.aiDmS b{font-size:17px;font-weight:850}
-.aiDmS::after{content:"";position:absolute;left:clamp(16px,calc(var(--tx, 50) * 1% - 21px),calc(100% - 30px));width:14px;height:14px;background:inherit;transform:rotate(45deg);border-radius:3px;z-index:-1}
-.aiDmS.below::after{top:-6px}.aiDmS.above::after{bottom:-6px}
-.aiDmS.on{animation:aiKPop .45s cubic-bezier(.34,1.56,.64,1) both}
-.aiDemo.hero .aiDmS{left:22px;right:22px;font-size:16.5px}
+.aiDmS{position:absolute;left:12px;right:12px;top:var(--cap,64px);z-index:2;padding:8px 13px;border-radius:14px;background:#0a0c18d9;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid #ffffff1f;border-inline-start:3px solid var(--accent);color:#fff;font-size:14px;font-weight:600;line-height:1.4;box-shadow:0 8px 22px -10px #000c;pointer-events:none;text-align:start;opacity:0;transition:opacity .3s ease,top .5s ease}
+.aiDmS b{font-size:16px;font-weight:800}
+.aiDmS.on{opacity:1}
+.aiDemo.hero .aiDmS{left:26px;right:26px;padding:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;text-align:center;font-size:17px;font-weight:600;line-height:1.55;color:#ffffffe6;text-shadow:0 2px 14px #000}
+.aiDemo.hero .aiDmS b{display:block;margin-bottom:4px;font-size:25px;font-weight:850;color:#fff}
 .aiDmS i{font-style:normal;display:inline-block;opacity:0;animation:aiDmWord .4s var(--wd) cubic-bezier(.2,.9,.3,1) both}
 @keyframes aiDmWord{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
 .aiDmMi.jump{animation:aiDmJump .75s cubic-bezier(.3,1.6,.5,1)}
@@ -430,7 +428,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 @keyframes aiDmPart{0%{opacity:0;transform:translate(0,0) scale(.3)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1) rotate(40deg)}}
 .aiSd.aiDmPress{transform:scale(.8)!important;box-shadow:0 0 0 9px color-mix(in srgb,var(--accent) 38%,transparent)}
 .aiIn.aiDmFocus textarea{outline:2px solid var(--accent);border-color:transparent;box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}
-@media (prefers-reduced-motion:reduce){.aiDmMi,.aiDmS.on,.aiDmS i,.aiDmTap,.aiDmGo,.aiDmGlow,.aiDmP,.aiDmBtns button{animation:none!important}.aiDmS i{opacity:1}}
+@media (prefers-reduced-motion:reduce){.aiDmMi,.aiDmS i,.aiDmTap,.aiDmGo,.aiDmGlow,.aiDmP,.aiDmBtns button{animation:none!important}.aiDmS i{opacity:1}}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -2342,7 +2340,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     try { closeMenu(); } catch (e) {}
     if (input) { input.readOnly = false; input.value = ""; const w = input.closest(".aiIn"); if (w) w.classList.remove("aiDmFocus"); }
     if (sendBtn) sendBtn.classList.remove("aiDmPress");
-    if (ms) ms.style.paddingBottom = "";
+    if (ms) { ms.style.paddingBottom = ""; ms.style.paddingTop = ""; }
     if (restore) { try { renderMsgs(); } catch (e) {} }
   }
 
@@ -2352,6 +2350,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ov.innerHTML = '<div class="aiDmGlow"></div><button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"></div>' +
       (withGate ? '<div class="aiDmBtns"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div>" : "");
     panel.appendChild(ov);
+    try { const hd = panel.querySelector(".aiHd"); if (hd) ov.style.setProperty("--cap", Math.round(hd.getBoundingClientRect().bottom - panel.getBoundingClientRect().top + 8) + "px"); } catch (e) {}
     return ov;
   }
 
@@ -2394,10 +2393,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       place(x, y, size, hero) {
         ov.classList.toggle("hero", !!hero);
         M.style.setProperty("--mx", x); M.style.setProperty("--my", y); M.style.setProperty("--ms", size + "px");
-        const gap = size / 2 + 16;
-        if (y < 52) { S.style.top = "calc(" + y + "% + " + gap + "px)"; S.style.bottom = "auto"; S.classList.add("below"); S.classList.remove("above"); }
-        else { S.style.bottom = "calc(" + (100 - y) + "% + " + gap + "px)"; S.style.top = "auto"; S.classList.add("above"); S.classList.remove("below"); }
-        S.style.setProperty("--tx", x);
+        S.style.top = hero ? "calc(" + y + "% + " + (size / 2 + 20) + "px)" : "";
       },
       say(t, html) {
         S.innerHTML = html ? "<span>" + t + "</span>" : "<span>" + String(t).split(" ").map((w, k) => '<i style="--wd:' + (k * 0.05).toFixed(2) + 's">' + esc2(w) + "</i>").join(" ") + "</span>";
@@ -2434,16 +2430,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const a = bubble("assistant", "", { pending: true }); a.row.classList.add("aiIn", "aiPend"); ms.appendChild(a.row); scrollEnd(true);
       await dw(550);
       a.row.classList.remove("aiPend"); a.b.innerHTML = md(demoUi(blocks)); a.b.classList.remove("aiFill"); void a.b.offsetWidth; a.b.classList.add("aiFill");
-      try { ms.scrollTo({ top: Math.max(0, a.row.offsetTop - 10), behavior: "smooth" }); } catch (e) { ms.scrollTop = a.row.offsetTop; }
+      try { ms.scrollTo({ top: Math.max(0, a.row.offsetTop - 84), behavior: "smooth" }); } catch (e) { ms.scrollTop = a.row.offsetTop; }
       return a;
     };
     // every part lasts exactly DEMO_PART: the scene runs, then waits for whatever time is left
     const part = async fn => { const t0 = Date.now(); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
     try {
-      ms.innerHTML = ""; ms.style.paddingBottom = "190px";
+      ms.innerHTML = ""; ms.style.paddingBottom = "190px"; ms.style.paddingTop = "74px";
       // part 1: hello (big, in the middle, on the black stage)
       await part(async () => { act("wave"); burst("stars"); say(L.hi); await dw(1200); });
-      ov.classList.remove("hero");
+      ov.classList.remove("hero"); S.style.top = "";
       // part 2: write and send; Uri stands by the input and then runs up to the answer
       await part(async () => {
         place(18, 72, 70); act("jump"); say(L.s1); await dw(1700);
