@@ -519,15 +519,16 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 /* ---- the WIDE designs (a computer, an iPad): not the phone cards stretched, but each display laid out for a big screen. They apply by the chat's own width, so the small floating window gets the phone design. */
 @container aip (min-width:760px){
   .aiM.ai:has(.aiUi) .aiB{padding:16px 18px}
+  .aiUi{align-items:flex-start}
   .aiBk{padding:18px 20px;border-radius:20px}
   .aiBkT{font-size:16.5px;margin-bottom:13px;gap:10px}.aiBkT .aiIc{width:22px;height:22px}
   .aiBk small{font-size:13.5px}
   .aiUiT{font-size:17px}
   /* opening card: icon + title on one side, the big numbers on the other */
-  .aiBk.aiHero{padding:24px 28px;gap:24px;flex-wrap:nowrap;align-items:center}
+  .aiBk.aiHero{padding:24px 28px;gap:24px;flex-wrap:wrap;align-items:center}
   .aiHeroI{width:68px;height:68px;border-radius:20px}.aiHeroI .aiIc{width:36px;height:36px}
   .aiHeroT b{font-size:29px}.aiHeroT em{font-size:16px}.aiBk.aiHero .aiHeroT small{font-size:14.5px}
-  .aiHeroS{flex:none;flex-basis:auto;margin-inline-start:auto;gap:12px}.aiHeroS>div{min-width:140px;padding:14px 18px;border-radius:16px}.aiHeroS b{font-size:30px}.aiBk.aiHero .aiHeroS small{font-size:13px}
+  .aiHeroS{flex:1 1 auto;flex-basis:auto;margin-inline-start:auto;gap:12px;justify-content:flex-end}.aiHeroS>div{min-width:140px;padding:14px 18px;border-radius:16px}.aiHeroS b{font-size:30px}.aiBk.aiHero .aiHeroS small{font-size:13px}
   /* deadlines, grades, courses */
   .aiTk{padding:15px 18px;border-radius:16px;gap:16px}.aiTkB b{font-size:16.5px}.aiTkB em{font-size:13.5px}.aiTkB small{font-size:13px}.aiTkP{font-size:13.5px;padding:6px 14px}
   .aiGgs{grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:14px}
@@ -575,7 +576,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiLk>.aiBkT{grid-column:1/-1;margin-bottom:3px}
   .aiLoc{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px}.aiLocH{flex:1 1 260px}.aiLocA{flex:1 1 300px}
   /* routes: one tile per line / option */
-  .aiRt.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .aiRt.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px}
   .aiRt.badges>.aiBkT{grid-column:1/-1;margin-bottom:0}
   .aiRt.badges .aiRtI{flex-direction:column;align-items:flex-start;gap:12px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
   .aiRt.badges .aiRtI+.aiRtI{border-top:1px solid var(--line)}
@@ -584,7 +585,8 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 }
 @container aip (min-width:1000px){
   .aiUi>*{flex-basis:360px}
-  .aiBk.aiHero{padding:28px 34px}.aiHeroT b{font-size:32px}.aiHeroS b{font-size:34px}
+  .aiBk.aiHero{padding:28px 34px;flex-wrap:nowrap}
+  .aiHeroS{flex:none}.aiHeroT b{font-size:32px}.aiHeroS b{font-size:34px}
 }
 .aiWipe{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:18px 0 8px;padding:12px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--err,#e5484d) 55%,transparent);background:color-mix(in srgb,var(--err,#e5484d) 9%,transparent);color:var(--err,#e5484d);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .aiWipe svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
