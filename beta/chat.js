@@ -738,9 +738,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 /* ---- what the bot is doing: a small list of steps in the waiting bubble ---- */
 .aiAct{display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:200px;font-size:14px;line-height:1.35}
 .aiStp{display:flex;align-items:center;gap:9px;max-width:100%}.aiStp.now{animation:aiActIn .28s ease-out}
-.aiStp.done{opacity:.55;font-size:12.5px}.aiStp.done span{text-decoration:none}
-.aiCk{flex:none;position:relative;width:16px;height:16px;border-radius:50%;background:color-mix(in srgb,var(--accent) 80%,transparent)}
-.aiCk::after{content:"";position:absolute;left:5px;top:3px;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .aiAct.out{animation:aiActOut .17s ease-in forwards}
 .aiAct .aiSi{flex:none;width:16px;height:16px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--accent) 22%,transparent);border-top-color:var(--accent);animation:aiSpin .8s linear infinite}
 .aiAct span{min-width:0;overflow-wrap:anywhere}
