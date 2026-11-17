@@ -4145,7 +4145,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.4";
+const APP_VERSION = "1.8.5";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -6685,7 +6685,7 @@ function setTheme(th) {
   P.theme = th; applyTheme(th); savePrefs();
   $$(".thsw").forEach(b => { const on = b.dataset.th === thCur(); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
   $$(".thcur").forEach(e => e.textContent = thCur() === "custom" ? t("thCustom") : thName(THEMES.find(p => p.id === thCur()) || THEMES[0]));
-  if (!$("#thSheet").hidden) { $("#thCustomOn").hidden = thCur() !== "custom"; if (thCur() !== "custom") { const cc = thEffective(); $$("#thEdit [data-thf]").forEach(i => i.value = cc[i.dataset.thf]); } }
+  if ($("#thEdit").offsetParent) { $("#thCustomOn").hidden = thCur() !== "custom"; if (thCur() !== "custom") { const cc = thEffective(); $$("#thEdit [data-thf]").forEach(i => i.value = cc[i.dataset.thf]); } }
 }
 { const box = document.querySelector("#thSheet .box"), into = $("#thInline");
   if (box && into) for (const n of [...box.children]) if (n.tagName !== "H3") into.appendChild(n); }
@@ -6973,6 +6973,7 @@ $("#thSheet").addEventListener("click", e => {
   const b = e.target.closest("[data-th]"); if (b) setTheme({ id: b.dataset.th });
 });
 const thCustom = () => { const c = {}; $$("#thEdit [data-thf]").forEach(i => c[i.dataset.thf] = i.value.toLowerCase()); return { id: "custom", c }; };
+$("#thInline").addEventListener("click", e => { const b = e.target.closest("[data-th]"); if (b) setTheme({ id: b.dataset.th }); });   // the swatches live in Settings → Look now
 $("#thEdit").addEventListener("input", e => { if (e.target.dataset.thf) applyTheme(thCustom()); });     // live while dragging
 $("#thEdit").addEventListener("change", e => { if (e.target.dataset.thf) setTheme(thCustom()); });
 $("#thReset").onclick = () => { setTheme({ id: "auto" }); renderThemes(); };

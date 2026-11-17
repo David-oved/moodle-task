@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.0-beta.3";
+const SOC_V = "1.9.0-beta.4";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
