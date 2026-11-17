@@ -280,6 +280,8 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiMi{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;font-size:15px;text-align:start;cursor:pointer}
 .aiMi:hover,.aiMi:focus-visible{background:var(--accent-soft);outline:none}
 .aiMi svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--accent-t,var(--accent))}
+.aiHoldRow{position:relative;z-index:6}
+.aiHasHold [data-it]:not(.aiHold){opacity:.3;filter:blur(1.5px);transition:opacity .2s,filter .2s}
 .aiHold{position:relative;z-index:6;transform:scale(1.045);box-shadow:0 14px 34px -8px #000a,0 0 0 2px color-mix(in srgb,var(--accent) 70%,transparent);transition:transform .22s cubic-bezier(.34,1.5,.64,1),box-shadow .22s}
 @media (hover:none){ .aiP{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} .aiP textarea,.aiP input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default} .aiB{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none} }
 .aiB.aiSel{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
@@ -1109,6 +1111,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (menuEl) { menuEl.remove(); menuEl = null; }
     if (menuBg) { menuBg.remove(); menuBg = null; }
     if (menuFor) { menuFor.classList.remove("aiHold"); menuFor = null; }
+    document.querySelectorAll(".aiHoldRow").forEach(x => x.classList.remove("aiHoldRow"));
+    document.querySelectorAll(".aiHasHold").forEach(x => x.classList.remove("aiHasHold"));
   }
 
   async function copyText(t) {
@@ -1137,6 +1141,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       else if (e.key === "ArrowUp") { e.preventDefault(); btns[(i - 1 + btns.length) % btns.length].focus(); }
     });
     panel.append(menuBg, menuEl); menuFor = b; b.classList.add("aiHold");
+    // the message row is its own layer (it animates), so the row is what must rise above the blur; the other cards in the same bubble fade back
+    const rowEl = b.closest(".aiM"); if (rowEl) rowEl.classList.add("aiHoldRow");
+    const bub = b.closest(".aiB"); if (bub && bub !== b) bub.classList.add("aiHasHold");
 
     // the menu sits next to the pressed thing: below it if there is room, else above it, else in the middle; always inside the screen
     const P = panel.getBoundingClientRect(), B = b.getBoundingClientRect(), mw = menuEl.offsetWidth, mh = menuEl.offsetHeight, gap = 8;
