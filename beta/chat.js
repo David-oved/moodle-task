@@ -496,7 +496,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
     html[dir] .aiM.ai:has(.aiUi){align-self:stretch}
     .aiM.ai:has(.aiUi) .aiB{flex:1;min-width:0;max-width:100%}
     .aiUi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;align-items:start;min-width:0}
-    .aiUi>.aiUiT,.aiUi>.aiHero,.aiUi>.aiHg,.aiUi>.aiTg,.aiUi>.aiTbl,.aiUi>.aiAcc,.aiUi>.aiTb,.aiUi>.aiTm,.aiUi>.aiCmpC,.aiUi>.aiQuick,.aiUi>.aiCo,.aiUi>.aiBn,.aiUi>.aiLk,.aiUi>.aiHl,.aiUi>.aiFoc{grid-column:1/-1}
+    .aiUi>.aiUiT,.aiUi>.aiHero,.aiUi>.aiHg,.aiUi>.aiTg,.aiUi>.aiTbl,.aiUi>.aiAcc,.aiUi>.aiTb,.aiUi>.aiTm,.aiUi>.aiCmpC,.aiUi>.aiQuick,.aiUi>.aiCo,.aiUi>.aiCo2,.aiUi>.aiBn,.aiUi>.aiLk,.aiUi>.aiHl,.aiUi>.aiFoc{grid-column:1/-1}
     .aiUi>:last-child:nth-child(odd){grid-column:1/-1}
   }
 }
