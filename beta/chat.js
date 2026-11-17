@@ -612,7 +612,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // ---------------------------------------------------------------------------------------------
   const UI_RE = /\[\[ui:([A-Za-z0-9_-]{4,24000})\]\]/g;
   const DLT = {
-    he: { n: (k) => k === 1 ? "מטלה אחת ממתינה" : k + " מטלות ממתינות", urgent: "הדחופה", today: "היום", week: "השבוע", later: "אחר כך", over: "באיחור", was: "היה אמור ב", mtg: "מפגש", ago: "לפני ", in: "בעוד ", min: " דק'", hr: " שעות", day: " ימים",
+    he: { n: (k) => k === 1 ? "מטלה אחת ממתינה" : k + " מטלות ממתינות", urgent: "הדחופה", today: "היום", week: "השבוע", later: "אחר כך", over: "באיחור", was: "היה אמור: ", mtg: "מפגש", ago: "לפני ", in: "בעוד ", min: " דק'", hr: " שעות", day: " ימים",
       tm: "מחר ", td: "היום ", days: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"], all: "הכול", loc: "he-IL" },
     en: { n: (k) => k === 1 ? "1 task waiting" : k + " tasks waiting", urgent: "Most urgent", today: "Today", week: "This week", later: "Later", over: "Late", was: "was due ", mtg: "Meeting", ago: "", in: "in ", min: " min", hr: " h", day: " days",
       tm: "Tomorrow ", td: "Today ", days: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"], all: "All", loc: "en-GB" },
@@ -668,8 +668,13 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // "Wed 18.11 · 21:00" - the exact moment, always shown
   const dlFull = t => { const d = new Date(t * 1000); return dlt().days[d.getDay()] + " " + String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0") + " · " + dlTime(t); };
   const dlAgo = t => {
-    const T = dlt(), ms = Date.now() - t * 1000, mins = Math.round(ms / 60000);
-    const x = mins < 60 ? Math.max(1, mins) + T.min : ms < 86400000 ? Math.round(mins / 60) + T.hr : Math.round(ms / 86400000) + T.day;
+    const T = dlt(), ms = Date.now() - t * 1000, mins = Math.round(ms / 60000), hrs = Math.round(mins / 60), dd = Math.round(ms / 86400000);
+    if (lang() === "he") {
+      if (mins < 60) return "לפני " + Math.max(1, mins) + " דק'";
+      if (ms < 86400000) return hrs === 1 ? "לפני שעה" : hrs === 2 ? "לפני שעתיים" : "לפני " + hrs + " שעות";
+      return dd === 1 ? "אתמול" : dd === 2 ? "לפני יומיים" : "לפני " + dd + " ימים";
+    }
+    const x = mins < 60 ? Math.max(1, mins) + T.min : ms < 86400000 ? hrs + T.hr : dd + T.day;
     return lang() === "en" ? x.trim() + " ago" : T.ago + x.trim();
   };
   let uiN = 0;
