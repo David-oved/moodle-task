@@ -36,7 +36,7 @@
       tl_get_completion_status: a => a ? "בודק מה כבר השלמת בקורס " + a : "בודק מה כבר השלמת", tl_remember_about_student: () => "שומר בזיכרון", tl_forget_about_student: () => "מוחק מהזיכרון",
       memBtn: "זיכרון", memTitle: "מה אני זוכר עליך", memIntro: "אלה דברים שסיפרת לי, כדי שאוכל לעזור לך יותר טוב. הם נשמרים רק אצלך ואפשר למחוק כל אחד.",
       memEmpty: "עדיין לא זכרתי שום דבר עליך. אפשר לספר לי, למשל ״עזבתי את הקורס אלגברה״.", memSaved: "נשמר בזיכרון", memGone: "נמחק מהזיכרון", memUndo: "בטל", memUndone: "בוטל",
-      memDelAll: "מחק את כל הזיכרון", memDelAllQ: "למחוק את כל מה שאני זוכר עליך? אי אפשר לשחזר.", memLeft: "עזבת", memDelOne: "מחק", memCount: n => n === 1 ? "דבר אחד" : n + " דברים",
+      wipeBtn: "מחק את כל המידע שלי", wipeQ1: "למחוק את כל מה שיש עליך אצלנו? השיחות, הזיכרון והחשבון שלך יימחקו, ואי אפשר לשחזר.", wipeQ2: "בטוח? אחרי המחיקה זה כאילו מעולם לא פתחת את הצ'אט.", wipeOk: "המשך", wipeOk2: "מחק הכול", wiped: "כל המידע שלך נמחק", memDelAll: "מחק את כל הזיכרון", memDelAllQ: "למחוק את כל מה שאני זוכר עליך? אי אפשר לשחזר.", memLeft: "עזבת", memDelOne: "מחק", memCount: n => n === 1 ? "דבר אחד" : n + " דברים",
       fileHint: "הקש להורדה", dlDone: "הורד", dlProg: (p, a, b) => p + "% · " + a + " מתוך " + b,
     },
     en: {
@@ -62,7 +62,7 @@
       tl_get_completion_status: a => a ? "Checking what you completed in " + a : "Checking what you completed", tl_remember_about_student: () => "Saving to memory", tl_forget_about_student: () => "Removing from memory",
       memBtn: "Memory", memTitle: "What I remember about you", memIntro: "These are things you told me, so I can help you better. They are kept only for you and you can delete any of them.",
       memEmpty: "I haven’t remembered anything about you yet. You can tell me, for example “I left the Algebra course”.", memSaved: "Saved to memory", memGone: "Removed from memory", memUndo: "Undo", memUndone: "Undone",
-      memDelAll: "Delete all memory", memDelAllQ: "Delete everything I remember about you? This can’t be undone.", memLeft: "Left", memDelOne: "Delete", memCount: n => n === 1 ? "1 item" : n + " items",
+      wipeBtn: "Delete all my data", wipeQ1: "Delete everything we hold about you? Your chats, memory and account will be erased and this can’t be undone.", wipeQ2: "Are you sure? Afterwards it is as if you never opened the chat.", wipeOk: "Continue", wipeOk2: "Delete everything", wiped: "All your data was deleted", memDelAll: "Delete all memory", memDelAllQ: "Delete everything I remember about you? This can’t be undone.", memLeft: "Left", memDelOne: "Delete", memCount: n => n === 1 ? "1 item" : n + " items",
       fileHint: "Tap to download", dlDone: "Downloaded", dlProg: (p, a, b) => p + "% · " + a + " of " + b,
     },
     fr: {
@@ -88,7 +88,7 @@
       tl_get_completion_status: a => a ? "Vérification de ce que vous avez terminé dans " + a : "Vérification de ce que vous avez terminé", tl_remember_about_student: () => "Enregistrement en mémoire", tl_forget_about_student: () => "Suppression de la mémoire",
       memBtn: "Mémoire", memTitle: "Ce dont je me souviens", memIntro: "Ce sont des choses que vous m’avez dites, pour mieux vous aider. Elles ne sont gardées que pour vous et vous pouvez en supprimer.",
       memEmpty: "Je ne me souviens encore de rien à votre sujet. Vous pouvez me dire, par exemple « j’ai quitté le cours d’algèbre ».", memSaved: "Enregistré en mémoire", memGone: "Supprimé de la mémoire", memUndo: "Annuler", memUndone: "Annulé",
-      memDelAll: "Supprimer toute la mémoire", memDelAllQ: "Supprimer tout ce dont je me souviens ? Cette action est irréversible.", memLeft: "Quitté", memDelOne: "Supprimer", memCount: n => n === 1 ? "1 élément" : n + " éléments",
+      wipeBtn: "Supprimer toutes mes données", wipeQ1: "Supprimer tout ce que nous avons sur toi ? Tes conversations, ta mémoire et ton compte seront effacés, de façon irréversible.", wipeQ2: "Sûr ? Ensuite, c’est comme si tu n’avais jamais ouvert le chat.", wipeOk: "Continuer", wipeOk2: "Tout supprimer", wiped: "Toutes tes données ont été supprimées", memDelAll: "Supprimer toute la mémoire", memDelAllQ: "Supprimer tout ce dont je me souviens ? Cette action est irréversible.", memLeft: "Quitté", memDelOne: "Supprimer", memCount: n => n === 1 ? "1 élément" : n + " éléments",
       fileHint: "Touchez pour télécharger", dlDone: "Téléchargé", dlProg: (p, a, b) => p + " % · " + a + " sur " + b,
     },
   };
@@ -465,6 +465,10 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiRtI>div{min-width:0;flex:1}.aiRtI b{display:block;font-size:14.5px;line-height:1.25}
 .aiRt.pills .aiRtI{display:inline-flex;margin:0 6px 6px 0;padding:5px 12px 5px 6px;border:1px solid color-mix(in srgb,var(--rc) 40%,var(--line));border-radius:99px;background:color-mix(in srgb,var(--rc) 12%,var(--card))}.aiRt.pills .aiRtI+.aiRtI{border-top:1px solid color-mix(in srgb,var(--rc) 40%,var(--line))}
 .aiRt.pills .aiRtI>i{min-width:30px;height:28px;border-radius:99px;font-size:14px}.aiRt.pills .aiRtI small{display:none}
+.aiWipe{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:18px 0 8px;padding:12px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--err,#e5484d) 55%,transparent);background:color-mix(in srgb,var(--err,#e5484d) 9%,transparent);color:var(--err,#e5484d);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.aiWipe svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.aiWipe:active{transform:scale(.98)}
+.aiDemo.must .aiDmX{display:none}
 .aiLocked{opacity:.6}
 .aiLocked button{cursor:default}
 .aiHs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px}
@@ -1217,6 +1221,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (!res.ok) throw new AiErr(res.status >= 500 ? "net" : "gen");
       const j = await res.json();
       const mid = j.moodle && j.moodle.userid != null ? String(j.moodle.userid) : "";
+      if (j.new_user) { try { LS.del("aiDemoSeen"); LS.del("aiTourSeen"); LS.set("aiTourPending", "1"); } catch (e) {} }          // the first time we ever see this student: both introductions are due
       const s = { token: j.token, mid, name: j.display_name || firstWord(j.moodle && j.moodle.fullname) };
       if (s0 && String(s0.mid) !== mid) { LS.del("aiConv"); LS.del("aiLeft"); }   // a different student on this phone
       LS.set("aiSess", s);
@@ -1481,11 +1486,24 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
           row.appendChild(d); wrap.appendChild(row);
         });
       }
+      const wipe = document.createElement("button"); wipe.type = "button"; wipe.className = "aiWipe"; wipe.innerHTML = I_TRASH + "<span>" + esc2(tx("wipeBtn")) + "</span>"; wipe.onclick = () => deleteMyData();
+      wrap.appendChild(wipe);
       ms.appendChild(wrap); swapAnim();
     } catch (e) {
       if (my !== gen) return;
       ms.innerHTML = '<div class="aiHe">' + esc2(e instanceof AiErr ? errText(e) : tx("errLoad")) + "</div>";
     }
+  }
+
+  // erase EVERYTHING we hold about this student (account, chats, memory) and forget it on this phone too: the next time is a first time again
+  async function deleteMyData() {
+    if (!(await confirmDlg(tx("wipeQ1"), tx("wipeOk")))) return;
+    if (!(await confirmDlg(tx("wipeQ2"), tx("wipeOk2")))) return;
+    try { const res = await call("/api/me", { method: "DELETE" }); if (!res.ok) throw new AiErr(errKind(res)); }
+    catch (e) { toast(errText(e), 3500); return; }
+    dropCurrent(); ["aiSess", "aiConv", "aiLeft", "aiDemoSeen", "aiTourSeen", "aiTourPending"].forEach(k => { try { LS.del(k); } catch (e) {} });
+    toast(tx("wiped"), 3500);
+    await wait(900); try { close(); } catch (e) {}
   }
 
   async function deleteMem(id, row) {
@@ -2251,13 +2269,18 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   };
   const SKIP_LABEL = { he: "דלג על ההסבר", en: "Skip the intro", fr: "Passer l'introduction" };
   let tourState = 0;                                            // 0 = not yet, 1 = running, 2 = done (this page load)
+  // is this student new to our server? (the connection tells us) - if so the home-screen tour plays
+  async function welcome() {
+    try { await ensureSession(false); } catch (e) {}
+    try { runTour(); } catch (e) { tourState = 2; const t = document.getElementById("aiTour"); if (t) t.remove(); if (fab) fab.style.visibility = ""; }
+  }
   function runTour(force) {
     if (tourState === 1 || !fab || !panel || !panel.hidden) return;
     if (!force) {
       if (tourState) return;
-      if (TOUR_ONCE) { try { if (LS.get("aiTourSeen", "")) return; } catch (e) {} }
+      try { if (!LS.get("aiTourPending", "") || LS.get("aiTourSeen", "")) return; } catch (e) { return; }          // only for a student who is new to our server
     }
-    try { LS.set("aiTourSeen", "1"); } catch (e) {}
+    try { LS.set("aiTourSeen", "1"); LS.del("aiTourPending"); } catch (e) {}
     tourState = 1;
     const scenes = TOUR[lang()] || TOUR.he;
     const st = document.createElement("style"); st.textContent = TOUR_CSS; document.head.appendChild(st);
@@ -2353,8 +2376,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const demoData = () => {
     const now = Math.floor(Date.now() / 1000), H = 3600;
     const he = {
-      gateT: "אורי מתחיל הסבר קצר", gateS: "כדי להתחיל לשוחח איתי צריך לצפות בהסבר, זה לוקח כדקה. אפשר עכשיו או בפעם אחרת, ובינתיים הצ'אט נעול.",
-      now: "לצפות עכשיו", later: "בפעם אחרת", go: "יאללה, מתחילים", exit: "יציאה", replay: "הסבר מאורי (סרטון)",
+      gateT: "אורי מתחיל הסבר קצר", gateS: "כדי להתחיל לשוחח איתי צריך לצפות בהסבר קצר, זה לוקח כדקה.",
+      now: "מתחילים את ההסבר", later: "בפעם אחרת", go: "יאללה, מתחילים", exit: "יציאה", replay: "הסבר מאורי (סרטון)",
       hi: "היי, אני אורי! בדקה אראה לך איך הכול עובד. זו הדגמה, אף שאלה לא נשלחת באמת.",
       s1: "כותבים לי שאלה, בדיוק כמו לחבר", s1b: "ושולחים. אני עונה תוך רגע, עם כפתורים ללחיצה",
       s2: "אני מכיר את כל המידע על המרכז האקדמי לב, לא רק את Moodle", s2b: "מעונות, שכר לימוד, שעות, אנשי קשר, לוח שנה ומפות. הכול מהאתר הרשמי",
@@ -2374,8 +2397,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         { k: "hours", s: "compact", ti: "שעות קבלה", co: "blue", it: [{ d: "א', ג'", h: "13:00-16:30", l: "" }, { d: "ב', ד', ה'", h: "13:00-15:00", l: "" }] }],
     };
     const en = {
-      gateT: "Uri is starting a short walk-through", gateS: "To start chatting with me you need to watch it, it takes about a minute. Now or another time - until then the chat is locked.",
-      now: "Watch now", later: "Another time", go: "Let's start", exit: "Exit", replay: "Watch Uri's walk-through",
+      gateT: "Uri is starting a short walk-through", gateS: "To start chatting with me you need to watch a short walk-through first, it takes about a minute.",
+      now: "Start the walk-through", later: "Another time", go: "Let's start", exit: "Exit", replay: "Watch Uri's walk-through",
       hi: "Hi, I'm Uri! In a minute I'll show you how everything works. This is a demo, no question is really sent.",
       s1: "You write me a question, just like to a friend", s1b: "and send it. I answer in a moment, with buttons you can tap",
       s2: "I know all the information about the Lev Academic Center, not only Moodle", s2b: "Dorms, tuition, hours, contacts, calendar and maps. All from the official site",
@@ -2411,9 +2434,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   // builds the black stage with Uri on it; used both for the first-time gate and for the replay
   function demoStage(L, withGate) {
-    const ov = document.createElement("div"); ov.className = "aiDemo hero" + (withGate ? " gate" : "");
+    const ov = document.createElement("div"); ov.className = "aiDemo hero" + (withGate ? " gate must" : "");
     ov.innerHTML = '<div class="aiDmGlow"></div><button type="button" class="aiDmX" aria-label="' + esc2(L.exit) + '"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="aiDmM"><div class="aiDmMi">' + FACE + '</div></div><div class="aiDmS"><span class="aiDmSa">' + FACE + '</span><span class="aiDmSt"></span><span class="aiDmSn"></span><i class="aiDmPb"></i></div>' +
-      (withGate ? '<div class="aiDmBtns"><button type="button" class="aiDmNow">' + esc2(L.now) + '</button><button type="button" class="aiDmLater">' + esc2(L.later) + "</button></div>" : "");
+      (withGate ? '<div class="aiDmBtns"><button type="button" class="aiDmNow">' + esc2(L.now) + "</button></div>" : "");
     panel.appendChild(ov);
     try { const hd = panel.querySelector(".aiHd"); if (hd) { const cs = getComputedStyle(hd); const hh = Math.round(hd.getBoundingClientRect().bottom - panel.getBoundingClientRect().top); if (hh > 24) ov.style.setProperty("--caph", hh + "px"); ov.style.setProperty("--capbg", cs.backgroundImage && cs.backgroundImage !== "none" ? cs.backgroundImage : cs.backgroundColor); } } catch (e) {}
     return ov;
@@ -2428,7 +2451,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       api.place(50, 34, 124, true);
       api.say('<b>' + esc2(L.gateT) + "</b><br>" + esc2(L.gateS), true);
       api.act("wave");
-      ov.querySelector(".aiDmLater").onclick = () => { demoStop(false); res(false); };
       ov.querySelector(".aiDmNow").onclick = async () => {
         ov.classList.remove("gate"); const b = ov.querySelector(".aiDmBtns"); if (b) { b.classList.add("out"); setTimeout(() => b.remove(), 350); }
         const ok = await demoRun(L, tok, ov, api, () => res(false));
@@ -2554,7 +2576,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   window.AIChat = {
-    show() { build(); warmUp(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; try { runTour(); } catch (e) { tourState = 2; const t = document.getElementById("aiTour"); if (t) t.remove(); fab.style.visibility = ""; } },
+    show() { build(); warmUp(); const l = tx("title"); fab.setAttribute("aria-label", l); fab.title = l; if (panel.hidden) fab.hidden = false; welcome(); },
     hide() { if (fab) fab.hidden = true; if (panel && !panel.hidden) close(false, true); },
     open,
     // for tests only: pretend the visible area is something else (a keyboard of a given size), then re-measure
