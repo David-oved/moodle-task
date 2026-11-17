@@ -204,31 +204,23 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiQuick button.on{background:var(--accent);color:var(--on-accent,#fff)}
 .aiUi{display:flex;flex-direction:column;gap:9px;min-width:min(76vw,320px)}
 .aiUiT{font-weight:800;font-size:15px;margin:2px 2px -2px}
-.aiTk{display:flex;align-items:stretch;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--line);position:relative}
-.aiTkS{flex:none;width:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0;color:var(--dc);background:color-mix(in srgb,var(--dc) 13%,transparent);
-  border-inline-end:2px dashed color-mix(in srgb,var(--dc) 40%,transparent);position:relative}
-.aiTkS b{font-size:25px;line-height:1;font-weight:850}.aiTkS small{font-size:11px;font-weight:700;opacity:.85}
-.aiTkS::before,.aiTkS::after{content:"";position:absolute;inset-inline-end:-7px;width:12px;height:12px;border-radius:50%;background:var(--card);border:1px solid var(--line)}
-.aiTkS::before{top:-7px}.aiTkS::after{bottom:-7px}
-.aiTkB{flex:1;min-width:0;padding:9px 12px;display:flex;flex-direction:column;gap:2px}
-.aiTkB b{font-size:14.5px;line-height:1.3;font-weight:700;overflow-wrap:anywhere}.aiTkB em{font-style:normal;font-size:12px;color:var(--muted)}
-.aiTkT{display:flex;align-items:center;gap:10px;margin-top:5px}
-.aiTkT span{flex:none;font-size:12.5px;font-weight:800;color:var(--dc)}
-.aiTkBar{flex:1;height:5px;border-radius:99px;background:color-mix(in srgb,var(--dc) 16%,transparent);overflow:hidden;display:block}
-.aiTkBar u{display:block;height:100%;width:calc(var(--u) * 100%);border-radius:inherit;background:var(--dc);text-decoration:none}
-.aiTk.hot{border-color:color-mix(in srgb,var(--dc) 55%,var(--line))}
-.aiTk.late{border-color:#e5484d88}
-.aiTk.late .aiTkS{background:#e5484d;color:#fff;border-inline-end-color:#fff8}
-.aiTk.hot .aiTkS{background:var(--dc);color:#fff;border-inline-end-color:#fff8}
+.aiTk{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;background:var(--card);border:1px solid var(--line);border-inline-start:4px solid var(--dc)}
+.aiTkB{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.aiTkB b{font-size:15px;line-height:1.3;font-weight:700;overflow-wrap:anywhere}
+.aiTkB em{font-style:normal;font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.aiTkP{flex:none;max-width:44%;text-align:center;padding:5px 11px;border-radius:99px;font-size:12.5px;line-height:1.25;font-weight:800;color:var(--muted);background:color-mix(in srgb,var(--text) 8%,transparent)}
+.aiTkP.soon{color:#e8a000;background:#e8a00024}
+.aiTkP.hot{color:#e8590c;background:#e8590c24}
+.aiTkP.late{color:#fff;background:#e5484d}
 .aiTl{position:relative;padding-inline-start:20px}
 .aiTl::before{content:"";position:absolute;inset-inline-start:5px;top:8px;bottom:8px;width:2px;border-radius:2px;background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 15%,transparent))}
 .aiTlD{margin-bottom:10px}
 .aiTlH{position:relative;font-size:12.5px;font-weight:800;color:var(--accent-t,var(--accent));margin-bottom:5px}
 .aiTlH i{position:absolute;inset-inline-start:-20px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--card);border:3px solid var(--accent)}
-.aiTlR{display:grid;grid-template-columns:1fr auto;gap:0 10px;align-items:baseline;padding:7px 10px;margin-bottom:5px;border-radius:12px;background:color-mix(in srgb,var(--dc) 9%,var(--card));border-inline-start:3px solid var(--dc)}
+.aiTlR{display:grid;grid-template-columns:1fr auto;gap:0 10px;align-items:baseline;padding:6px 10px;margin-bottom:4px;border-inline-start:3px solid var(--dc)}
 .aiTlR b{font-size:14px;line-height:1.3;font-weight:650;overflow-wrap:anywhere}.aiTlR small{grid-column:1;font-size:11.5px;color:var(--muted)}
 .aiTlR span{grid-row:1/3;grid-column:2;font-size:13px;font-weight:800;color:var(--dc)}
-.aiFc{display:flex;align-items:center;gap:14px;padding:14px;border-radius:20px;color:var(--text);background:linear-gradient(135deg,color-mix(in srgb,var(--dc) 24%,var(--card)),var(--card));border:1px solid color-mix(in srgb,var(--dc) 50%,var(--line))}
+.aiFc{display:flex;align-items:center;gap:14px;padding:14px;border-radius:20px;color:var(--text);background:color-mix(in srgb,var(--dc) 12%,var(--card));border:1px solid color-mix(in srgb,var(--dc) 30%,var(--line))}
 .aiFcN{flex:none;min-width:64px;text-align:center;color:var(--dc)}.aiFcN b{display:block;font-size:44px;line-height:.95;font-weight:900;letter-spacing:-.02em}.aiFcN small{font-size:12px;font-weight:800}
 .aiFcX{min-width:0;display:flex;flex-direction:column;gap:2px}.aiFcX b{font-size:16px;line-height:1.3;overflow-wrap:anywhere}.aiFcX em{font-style:normal;font-size:12px;color:var(--muted)}.aiFcX span{font-size:13px;font-weight:800;color:var(--dc)}
 .aiGgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
@@ -656,9 +648,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const uiUrgency = t => Math.max(0.05, Math.min(1, 1 - (t * 1000 - Date.now()) / (5 * 86400000)));
   const itAttr = (k, it) => ' data-it="' + esc2(JSON.stringify({ k, n: it.n || "", c: it.c || "", v: it.v || "", t: it.t || 0, d: it.d || "", u: it.u || "", o: it.o ? 1 : 0 })) + '"';
   function uiTicket(it) {
-    const o = ordDay(it.t), left = it.t * 1000 - Date.now(), late = left < 0, hot = left < 86400000, col = late ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)";
-    return '<div class="aiTk' + (late ? " late" : hot ? " hot" : "") + '"' + itAttr("d", it) + ' style="--dc:' + col + ';--u:' + uiUrgency(it.t).toFixed(2) + '"><div class="aiTkS"><small>' + esc2(o.wd) + "</small><b>" + o.day + "</b><small>" + esc2(o.mon) + '</small></div>' +
-      '<div class="aiTkB"><b>' + esc2(it.n) + "</b><em>" + esc2(it.c) + '</em><div class="aiTkT"><span data-due="' + it.t + '">' + esc2(dlRel(it.t, false)) + '</span><i class="aiTkBar"><u></u></i></div></div></div>';
+    const left = it.t * 1000 - Date.now(), late = left < 0, hot = left < 86400000, soon = left < 3 * 86400000;
+    const col = late ? "#e5484d" : "hsl(" + dlHue(it.c) + " 72% 58%)";
+    const cls = late ? "late" : hot ? "hot" : soon ? "soon" : "";
+    return '<div class="aiTk"' + itAttr("d", it) + ' style="--dc:' + col + '"><div class="aiTkB"><b>' + esc2(it.n) + "</b><em>" + esc2(it.c) + '</em></div>' +
+      '<span class="aiTkP ' + cls + '" data-due="' + it.t + '"' + (hot ? ' data-long="1"' : "") + ">" + esc2(dlRel(it.t, hot)) + "</span></div>";
   }
   function uiTimeline(items) {
     const days = []; items.forEach(it => { const k = dayStart(it.t * 1000); let g = days.find(x => x.k === k); if (!g) days.push(g = { k, t: it.t, list: [] }); g.list.push(it); });
