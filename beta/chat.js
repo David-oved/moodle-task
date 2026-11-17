@@ -2204,7 +2204,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       { t: "אני מכיר את כל המרכז האקדמי לב", s: "לא רק את Moodle: מעונות, שכר לימוד, שעות ואנשי קשר", chips: ["מעונות", "שכר לימוד", "שעות", "מפת הקמפוס"] },
       { t: "אני גם שולח לך קבצים", s: "תרגילים והרצאות מהקורסים, ישר לצ'אט", icon: "file" },
       { t: "זוכר מה שחשוב לך", s: "והשיחות שלך נשארות רק שלך", icon: "shield" },
-      { t: "לפתיחה, לוחצים על העיגול הזה", s: "תמיד כאן בשבילך", last: true },
+      { t: "לפתיחה, לוחצים על העיגול הזה", s: "תמיד כאן בשבילך · לחיצה ארוכה עליי מפעילה את ההסבר שוב", last: true },
     ],
     en: [
       { t: "Hi! I'm Uri, your new assistant", s: "New in the app" },
@@ -2212,7 +2212,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       { t: "I know the whole Lev Academic Center", s: "Not just Moodle: dorms, tuition, hours and contacts", chips: ["Dorms", "Tuition", "Hours", "Campus map"] },
       { t: "I can send you files too", s: "Exercises and lectures from your courses, right in the chat", icon: "file" },
       { t: "I remember what matters to you", s: "And your chats stay yours alone", icon: "shield" },
-      { t: "To open me, tap this circle", s: "Always here for you", last: true },
+      { t: "To open me, tap this circle", s: "Always here for you · press and hold me to watch this again", last: true },
     ],
     fr: [
       { t: "Salut ! Je suis Uri, ton nouvel assistant", s: "Nouveau dans l'appli" },
@@ -2220,7 +2220,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       { t: "Je connais tout le Centre académique Lev", s: "Pas seulement Moodle : résidences, frais, horaires et contacts", chips: ["Résidences", "Frais", "Horaires", "Plan du campus"] },
       { t: "Je t'envoie aussi des fichiers", s: "Exercices et cours, directement dans le chat", icon: "file" },
       { t: "Je retiens ce qui compte pour toi", s: "Et tes conversations restent privées", icon: "shield" },
-      { t: "Pour m'ouvrir, touche ce cercle", s: "Toujours là pour toi", last: true },
+      { t: "Pour m'ouvrir, touche ce cercle", s: "Toujours là pour toi · appui long pour revoir cette présentation", last: true },
     ],
   };
   const TOUR_CSS = `
@@ -2301,7 +2301,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (tourState) return;
       try { if (!LS.get("aiTourPending", "") || LS.get("aiTourSeen", "")) return; } catch (e) { return; }          // only for a student who is new to our server
     }
-    try { LS.set("aiTourSeen", "1"); LS.del("aiTourPending"); } catch (e) {}
+    const mustWatch = !force;                       // first time: no skip button; a long press on the chat button plays it again whenever
+    if (force) { try { LS.set("aiTourSeen", "1"); } catch (e) {} }
     tourState = 1;
     const scenes = TOUR[lang()] || TOUR.he;
     const st = document.createElement("style"); st.textContent = TOUR_CSS; document.head.appendChild(st);
@@ -2313,7 +2314,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const root = document.createElement("div"); root.id = "aiTour"; root.setAttribute("role", "status"); root.setAttribute("aria-live", "polite");
     let stars = "";
     for (let i = 0; i < 26; i++) stars += '<span class="atStar" style="--x:' + (Math.random() * 100).toFixed(1) + '%;--y:' + (Math.random() * 100).toFixed(1) + '%;--sz:' + (1 + Math.random() * 2.4).toFixed(1) + 'px;--d:' + (2.4 + Math.random() * 3).toFixed(1) + 's;--dl:' + (Math.random() * 3).toFixed(1) + 's"></span>';
-    root.innerHTML = '<div class="atBg"></div>' + stars + '<div class="atFace" style="--fx:' + fabX + 'px;--fy:' + fabY + 'px;--fs:' + fabS + ';--fr:0deg"><div class="atIn w1">' + FACE + '<i class="atRing"></i><i class="atRing r2"></i><div class="atOrb"><i></i></div><div class="atOrb o2"><i></i></div></div></div><div class="atTx"></div><div class="atDots">' + scenes.map(() => "<i></i>").join("") + '</div><button type="button" class="atSkip" aria-label="' + (SKIP_LABEL[lang()] || SKIP_LABEL.he) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+    root.innerHTML = '<div class="atBg"></div>' + stars + '<div class="atFace" style="--fx:' + fabX + 'px;--fy:' + fabY + 'px;--fs:' + fabS + ';--fr:0deg"><div class="atIn w1">' + FACE + '<i class="atRing"></i><i class="atRing r2"></i><div class="atOrb"><i></i></div><div class="atOrb o2"><i></i></div></div></div><div class="atTx"></div><div class="atDots">' + scenes.map(() => "<i></i>").join("") + '</div>' + (mustWatch ? "" : '<button type="button" class="atSkip" aria-label="' + (SKIP_LABEL[lang()] || SKIP_LABEL.he) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>');
     document.body.appendChild(root);
     const face = root.querySelector(".atFace"), inner = root.querySelector(".atIn"), txEl = root.querySelector(".atTx"), dots = root.querySelectorAll(".atDots i");
     const setFace = (x, y, s, r) => { face.style.setProperty("--fx", x + "px"); face.style.setProperty("--fy", y + "px"); face.style.setProperty("--fs", s); face.style.setProperty("--fr", r + "deg"); };
@@ -2363,6 +2364,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     }
     function finish() {
       if (finished) return; finished = true;
+      if (mustWatch) { try { LS.set("aiTourSeen", "1"); LS.del("aiTourPending"); } catch (e) {} }
       timers.forEach(clearTimeout);
       root.classList.add("atOut");
       setTimeout(() => {
@@ -2371,7 +2373,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         tourState = 2;
       }, 720);
     }
-    root.querySelector(".atSkip").addEventListener("click", e => { e.stopPropagation(); finish(); });
+    const skipBtn = root.querySelector(".atSkip"); if (skipBtn) skipBtn.addEventListener("click", e => { e.stopPropagation(); finish(); });
     // timeline: the face grows out of the circle into the middle of the screen, then the scenes follow one another
     later(() => { setFace(0, -vh / 2 * .26, 1, 0); face.classList.add("atBreathe"); }, 350);
     later(burst, 1000);
