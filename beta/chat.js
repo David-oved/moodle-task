@@ -1253,20 +1253,25 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   /* ------------------------------------------------------------ rendering */
   // what the bot is doing: only the real actions (Moodle, memory), as one line that spins; when it is done the line goes and the next one comes
   const DOTS = '<span class="aiDots" aria-label="…"><i></i><i></i><i></i></span>';
-  const activityHTML = (status, done) => status ? '<div class="aiAct" role="status">' + (done || []).slice(-3).map(l => '<div class="aiStp done"><i class="aiCk"></i><span>' + esc2(l) + "</span></div>").join("") +
+  const activityHTML = (status, done) => status ? '<div class="aiAct" role="status">' + 
     '<div class="aiStp now"><i class="aiSi"></i><span>' + esc2(status) + "…</span></div></div>" : DOTS;
   // what the bot remembered or forgot in this answer
   const chipsHTML = mem => (mem || []).map((e, i) => '<div class="aiMemChip' + (e.op === "del" ? " del" : "") + (e.undone ? " undone" : "") + '"><span class="aiMemI">' + I_BRAIN + '</span><span class="aiMemT">' +
     esc2((e.op === "del" ? tx("memGone") : tx("memSaved")) + ": " + (e.text || "")) + "</span>" + (e.op === "add" && !e.undone ? '<button type="button" data-undo="' + esc2(e.id || "") + '">' + esc2(tx("memUndo")) + "</button>" : e.undone ? "<span>" + esc2(tx("memUndone")) + "</span>" : "") + "</div>").join("");
   const toolLabel = e => { const k = "tl_" + e.name; return (TX[lang()][k] || TX.he[k]) ? tx(k, e.arg) : tx("tlGeneric"); };
   // the steps queue up and each one stays at least 0.7s, so the student can read what Uri is doing; the answer's first words cut it short
-  function paintAct(ai) { if (curBub && !ai.content) { curBub.innerHTML = activityHTML(ai.status, ai.steps); scrollEnd(false); } }
+  function paintAct(ai) {
+    if (!curBub || ai.content) return;
+    const old = curBub.querySelector(".aiAct");
+    const draw = () => { if (curBub && !ai.content) { curBub.innerHTML = activityHTML(ai.status); scrollEnd(false); } };
+    if (old && ai.status) { old.classList.add("out"); clearTimeout(ai.swapT); ai.swapT = setTimeout(draw, 170); }       // the finished step fades away completely, then the next one comes
+    else draw();
+  }
   function pumpAct(ai) {
     if (ai.stepTm) return;
     const next = (ai.stepQ || []).shift(); if (next === undefined) return;
-    if (ai.status && next !== ai.status) (ai.steps = ai.steps || []).push(ai.status);
     ai.status = next; paintAct(ai);
-    ai.stepTm = setTimeout(() => { ai.stepTm = 0; pumpAct(ai); }, 700);
+    ai.stepTm = setTimeout(() => { ai.stepTm = 0; pumpAct(ai); }, 900);
   }
   function setActivity(ai, label) {
     if (!label) { ai.stepQ = []; clearTimeout(ai.stepTm); ai.stepTm = 0; ai.status = ""; paintAct(ai); return; }       // writing: the dots come back
@@ -1279,8 +1284,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (!e) return;
     if (e.s === "mem") { (ai.mem = ai.mem || []).push(e); return; }                              // the note under the answer says it
     if (e.s === "kb") { setActivity(ai, tx("stKb")); return; }
-    if (e.s === "kbdone") { setActivity(ai, e.t ? tx("stFound", e.t) : tx("stThink")); return; }
-    if (e.s === "think") { setActivity(ai, tx("stThink")); return; }
+    if (e.s === "kbdone") { if (e.t) setActivity(ai, tx("stFound", e.t)); return; }
     if (e.s === "tool") { setActivity(ai, toolLabel(e)); return; }                                // every real action, in order
     if (e.s === "write" && ai.status) { setActivity(ai, ""); return; }                           // done: the dots come back
     if (e.s === "visual") {                                                                     // the iron rule: the text so far is being redrawn as cards
@@ -1732,7 +1736,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     msgs.push({ role: "user", content: text });
     const ai = { role: "assistant", content: "", pending: true }; msgs.push(ai);
     setBusy(true); renderMsgs(); busy = true; curBub = ms.lastElementChild.querySelector(".aiB");
-    setActivity(ai, tx("stRead"));
+    setActivity(ai, tx("stKb"));
     const ur = ms.children[msgs.length - 2];
     // the rise starts at the input bar, but never more than 280px below the message (a short chat must not make it fly across the screen)
     if (ur) { ur.style.setProperty("--fy", Math.min(280, Math.max(0, Math.round(from.top - ur.getBoundingClientRect().top))) + "px"); void ur.offsetWidth; ur.classList.add("aiIn"); }
