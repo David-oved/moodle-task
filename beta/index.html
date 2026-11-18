@@ -256,7 +256,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 /* ---------- tablet & computer: the extra tabs and their pages ---------- */
 @media (min-width:600px){
   .tabbar .xtab:not([hidden]){display:flex!important}
-  .tabbar .home{order:1}.tabbar [data-v=tasks]{order:2}.tabbar [data-v=tt]{order:3}.tabbar [data-v=exams]{order:4}.tabbar [data-v=grades]{order:5}.tabbar [data-v=courses]{order:6}.tabbar [data-v=news]{order:7}.tabbar [data-v=chat]{order:8}.tabbar .sbset{order:9}
+  .tabbar .home{order:1}.tabbar [data-v=tasks]{order:2}.tabbar [data-v=tt]{order:3}.tabbar [data-v=exams]{order:4}.tabbar [data-v=grades]{order:5}.tabbar [data-v=courses]{order:6}.tabbar [data-v=news]{order:7}.tabbar [data-v=chat]{order:8}.tabbar [data-v=more]{order:9}.tabbar .sbset{order:10}
 }
 @media (min-width:600px) and (max-width:999px){
   .tabbar{width:min(880px,calc(100% - 24px));gap:2px;padding:5px}
@@ -310,6 +310,15 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .pgold .chip{display:inline-flex;align-items:center;gap:6px}
 .pgexg{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
 .pgexg .er{margin:0}
+.pgmg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.pgmi{display:flex;align-items:center;gap:12px;text-align:start;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer;transition:background .15s,border-color .15s}
+.pgmi:hover{border-color:color-mix(in srgb,var(--mc) 45%,var(--line));background:color-mix(in srgb,var(--mc) 6%,var(--card))}
+.pgmi .mi{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--mc);color:#fff}
+.pgmi .mi .i{width:21px;height:21px}
+.pgmi .mt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pgmi .mt b{font-size:15px;font-weight:700}.pgmi .mt small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.pgst{flex:none;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--muted)}
+.pgst.on{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
 .pgsem{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .pgsem .wbar{flex:1;min-width:160px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
 .pgsem .wbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
@@ -1390,7 +1399,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
   .tabbar .home.on{color:var(--accent-t)}
   .tabbar .home:not(.on) .ti{background:color-mix(in srgb,var(--accent) 82%,var(--card))!important}
 }
-@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=tt]{order:3} body.app .tabbar [data-v=exams]{order:4} body.app .tabbar [data-v=grades]{order:5} body.app .tabbar [data-v=courses]{order:6} body.app .tabbar [data-v=news]{order:7} body.app .tabbar [data-v=chat]{order:8} body.app .tabbar .sbset{order:9} }
+@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=tt]{order:3} body.app .tabbar [data-v=exams]{order:4} body.app .tabbar [data-v=grades]{order:5} body.app .tabbar [data-v=courses]{order:6} body.app .tabbar [data-v=news]{order:7} body.app .tabbar [data-v=chat]{order:8} body.app .tabbar [data-v=more]{order:9} body.app .tabbar .sbset{order:10} }
 @media (max-width:999px){ .tabbar .sbset.has-dot::after{top:4px;inset-inline-end:calc(50% - 22px)} }
 @media (min-width:600px) and (max-width:999px){ .tabbar button{font-size:13.5px;padding:8px 4px} }
 /* X instead of "סגירה" */
@@ -1653,6 +1662,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
   <button data-v="grades" class="b xtab"><span class="ti"><svg class="i"><use href="#i-award"/></svg><i class="badge" id="xbGrades" hidden></i></span><b data-i18n="tabGrades"></b></button>
   <button data-v="courses" class="b xtab"><span class="ti"><svg class="i"><use href="#i-book-open"/></svg></span><b data-i18n="tabCourses"></b></button>
   <button data-v="news" class="b xtab"><span class="ti"><svg class="i"><use href="#i-megaphone"/></svg><i class="badge" id="xbNews" hidden></i></span><b data-i18n="tabNews"></b></button>
+  <button data-v="more" class="b xtab"><span class="ti"><svg class="i"><use href="#i-layout-grid"/></svg></span><b data-i18n="tabMore"></b></button>
   <button class="b sbset" id="bNavSet"><span class="ti"><svg class="i"><use href="#i-settings"/></svg></span><b data-i18n="settings"></b></button>
 </nav>
 
@@ -2282,6 +2292,7 @@ const I18N = {
     pctSem: n => n + "% מהסמסטר", examsLbl: "📝 מבחנים",
     semDates: "תאריכי הסמסטר", semHint: "לפי לוח השנה האקדמי של המוסד. מה שתזין כאן גובר על ברירת המחדל.", semStart: "תחילת הסמסטר", semEnd: "יום הלימודים האחרון",
     exStart: "תחילת המבחנים", exEnd: "סוף המבחנים", semAuto: "↺ מחק את מה שהזנתי",
+    tabMore: "עוד", tabMoreT: "עוד דברים", mrSub: "קיצורי דרך לדפים שימושיים שלא צריך כל יום", mrOn: "פועל", mrOff: "כבוי", mrg_study: "לימודים", mrg_alerts: "תזכורות ויומן", mrg_soc: "קהילה", mrg_app: "האפליקציה", mr_mine: "משימה אישית", mrd_mine: "להוסיף משימה משלך, עם תאריך, לצד המטלות מהמודל", mr_ai: "שליחה ל-AI", mrd_ai: "כל המטלות, המבחנים והמערכת כטקסט ל-ChatGPT, Gemini, Claude", mr_levnet: "מועדים מלב נט", mrd_levnet: "איך להביא את מועדי המבחנים הרשמיים מלב נט", mr_sem: "תאריכי הסמסטר", mrd_sem: "מתי הסמסטר מתחיל ונגמר ומתי המבחנים", mr_filter: "מה מוצג ברשימה", mrd_filter: "סוגי מטלות, ישנות, מוסתרות ומיון", mr_rem: "תזכורות", mrd_rem: "התראה לפני הגשה, מבחן או שיעור", mr_cal: "סנכרון ליומן", mrd_cal: "המטלות והמבחנים ביומן של גוגל או אפל, מתעדכן לבד", mr_join: "הצטרפות לקהילה", mrd_join: "צ׳אט לכל קורס ומטלה, סיכומים, נקודות ודירוג", mr_board: "טבלת הדירוג", mrd_board: "מי עזר הכי הרבה, כללית ולכל קורס", mr_mypts: "הנקודות והדרגה שלי", mrd_mypts: "יומן הנקודות, הדרגה ומה חסר לבאה", mr_wa: "קבוצות וואטסאפ וקהילה", mrd_wa: "הקבוצות של הקורסים, משתמשים מושתקים והגדרות", mr_dash: "עריכת הסקירה", mrd_dash: "אילו כרטיסים מופיעים, בכמה גודל ובאיזה סדר", mr_look: "מראה וצבעים", mrd_look: "ערכת נושא, צבעים משלך ולוגו", mr_inst: "התקנה כאפליקציה", mrd_inst: "אייקון במסך הבית או בשולחן העבודה", mr_acct: "חשבון וסנכרון", mrd_acct: "סנכרון בין המכשירים, גיבוי והתנתקות", mr_wn: "מה חדש", mrd_wn: "מה השתנה בגרסאות האחרונות", mr_tour: "סיור באפליקציה", mrd_tour: "הסבר קצר מההתחלה", mr_fb: "רעיון או באג", mrd_fb: "לשלוח למאיר הצעה, בעיה או מחמאה", mr_help: "עזרה", mrd_help: "שאלות נפוצות ופתרון בעיות",
     tabExams: "מבחנים", tabGrades: "ציונים", tabCourses: "קורסים", tabNews: "הודעות", pgGrOn: "להפעיל את הציונים", pgNew: n => n + " חדש", pgChat: "צ׳אט", pgCrsN: n => n + " קורסים פעילים", pgCrsOld: n => "קורסים קודמים (" + n + ")", pgCrsHid: n => n === 1 ? "קורס אחד מוסתר." : n + " קורסים מוסתרים.", pgManage: "ניהול הקורסים", pgAll: "הכל", pgAnn: "הודעות מהמרצים", pgFresh: "חדש בקורסים (שבוע אחרון)", pgFreshNone: "אין משהו חדש בשבוע האחרון", pgExAdd: "בוחן או מבחן", pgExEdit: "מועדי המבחנים",
     newsTitle: "הודעות מהקורסים", newsNone: "אין הודעות ב-45 הימים האחרונים", newsOff: "לא הצלחתי לטעון הודעות", markAllRead: "סמן הכל כנקרא", newsOpen: "פתח בפורום ↗",
     newsMore: n => "עוד " + n + " הודעות", newsLess: "הצג פחות", newsLoading: "טוען הודעות…",
@@ -2525,6 +2536,7 @@ const I18N = {
     pctSem: n => n + "% of the semester", examsLbl: "📝 Exams",
     semDates: "Semester dates", semHint: "From your institution’s academic calendar. What you enter here overrides the default.", semStart: "Semester start", semEnd: "Last day of classes",
     exStart: "Exams start", exEnd: "Exams end", semAuto: "↺ Clear what I entered",
+    tabMore: "More", tabMoreT: "More", mrSub: "Shortcuts to useful pages you don’t need every day", mrOn: "On", mrOff: "Off", mrg_study: "Studies", mrg_alerts: "Reminders & calendar", mrg_soc: "Community", mrg_app: "The app", mr_mine: "My own task", mrd_mine: "Add a task of your own, with a date, next to Moodle’s", mr_ai: "Send to AI", mrd_ai: "All tasks, exams and timetable as text for ChatGPT, Gemini, Claude", mr_levnet: "Dates from LevNet", mrd_levnet: "How to bring in the official exam dates from LevNet", mr_sem: "Semester dates", mrd_sem: "When the semester starts and ends, and the exams", mr_filter: "What the list shows", mrd_filter: "Task types, old and hidden items, sorting", mr_rem: "Reminders", mrd_rem: "A heads-up before a deadline, exam or class", mr_cal: "Calendar sync", mrd_cal: "Tasks and exams in Google or Apple Calendar, kept up to date", mr_join: "Join the community", mrd_join: "A chat for every course and task, summaries, points and boards", mr_board: "Leaderboard", mrd_board: "Who helped most, overall and per course", mr_mypts: "My points & rank", mrd_mypts: "Your points log, rank and what’s left to the next", mr_wa: "WhatsApp groups & community", mrd_wa: "Course groups, muted users and settings", mr_dash: "Edit the overview", mrd_dash: "Which cards show, their size and order", mr_look: "Look & colours", mrd_look: "Theme, your own colours and logo", mr_inst: "Install the app", mrd_inst: "An icon on your home screen or desktop", mr_acct: "Account & sync", mrd_acct: "Sync between devices, backup and sign out", mr_wn: "What’s new", mrd_wn: "What changed in recent versions", mr_tour: "App tour", mrd_tour: "A short walk-through from the start", mr_fb: "Idea or bug", mrd_fb: "Send Meir a suggestion, a problem or a compliment", mr_help: "Help", mrd_help: "Common questions and fixes",
     tabExams: "Exams", tabGrades: "Grades", tabCourses: "Courses", tabNews: "News", pgGrOn: "Turn grades on", pgNew: n => n + " new", pgChat: "Chat", pgCrsN: n => n + " active courses", pgCrsOld: n => "Earlier courses (" + n + ")", pgCrsHid: n => n === 1 ? "1 course is hidden." : n + " courses are hidden.", pgManage: "Manage courses", pgAll: "All", pgAnn: "From the lecturers", pgFresh: "New in your courses (last week)", pgFreshNone: "Nothing new in the last week", pgExAdd: "Quiz or exam", pgExEdit: "Exam dates",
     newsTitle: "Course announcements", newsNone: "No announcements in the last 45 days", newsOff: "Couldn’t load announcements", markAllRead: "Mark all read", newsOpen: "Open in forum ↗",
     newsMore: n => n + " more", newsLess: "Show less", newsLoading: "Loading announcements…",
@@ -2768,6 +2780,7 @@ const I18N = {
     pctSem: n => n + " % du semestre", examsLbl: "📝 Examens",
     semDates: "Dates du semestre", semHint: "Selon le calendrier académique de l’établissement. Ce que vous saisissez ici remplace la valeur par défaut.", semStart: "Début du semestre", semEnd: "Dernier jour de cours",
     exStart: "Début des examens", exEnd: "Fin des examens", semAuto: "↺ Effacer mes dates",
+    tabMore: "Plus", tabMoreT: "Plus", mrSub: "Des raccourcis vers des pages utiles dont on n’a pas besoin chaque jour", mrOn: "Activé", mrOff: "Désactivé", mrg_study: "Études", mrg_alerts: "Rappels et agenda", mrg_soc: "Communauté", mrg_app: "L’application", mr_mine: "Tâche perso", mrd_mine: "Ajouter votre propre tâche, avec une date, à côté de Moodle", mr_ai: "Envoyer à l’IA", mrd_ai: "Devoirs, examens et emploi du temps en texte pour ChatGPT, Gemini, Claude", mr_levnet: "Dates de LevNet", mrd_levnet: "Comment importer les dates d’examen officielles de LevNet", mr_sem: "Dates du semestre", mrd_sem: "Début et fin du semestre, et les examens", mr_filter: "Ce que montre la liste", mrd_filter: "Types de devoirs, anciens et masqués, tri", mr_rem: "Rappels", mrd_rem: "Une alerte avant une échéance, un examen ou un cours", mr_cal: "Synchro agenda", mrd_cal: "Devoirs et examens dans Google ou Apple Agenda, à jour", mr_join: "Rejoindre la communauté", mrd_join: "Un chat par cours et devoir, résumés, points et classements", mr_board: "Classement", mrd_board: "Qui a le plus aidé, général et par cours", mr_mypts: "Mes points et rang", mrd_mypts: "Journal des points, rang et ce qui manque", mr_wa: "Groupes WhatsApp et communauté", mrd_wa: "Groupes des cours, utilisateurs masqués, réglages", mr_dash: "Modifier l’aperçu", mrd_dash: "Quelles cartes, leur taille et leur ordre", mr_look: "Apparence et couleurs", mrd_look: "Thème, vos couleurs et logo", mr_inst: "Installer l’app", mrd_inst: "Une icône sur l’écran d’accueil ou le bureau", mr_acct: "Compte et synchro", mrd_acct: "Synchro entre appareils, sauvegarde et déconnexion", mr_wn: "Nouveautés", mrd_wn: "Ce qui a changé récemment", mr_tour: "Visite de l’app", mrd_tour: "Une courte présentation depuis le début", mr_fb: "Idée ou bug", mrd_fb: "Envoyer à Meir une idée, un problème ou un compliment", mr_help: "Aide", mrd_help: "Questions fréquentes et solutions",
     tabExams: "Examens", tabGrades: "Notes", tabCourses: "Cours", tabNews: "Annonces", pgGrOn: "Activer les notes", pgNew: n => n + " nouv.", pgChat: "Chat", pgCrsN: n => n + " cours actifs", pgCrsOld: n => "Cours précédents (" + n + ")", pgCrsHid: n => n === 1 ? "1 cours masqué." : n + " cours masqués.", pgManage: "Gérer les cours", pgAll: "Tout", pgAnn: "Des enseignants", pgFresh: "Nouveau dans vos cours (7 jours)", pgFreshNone: "Rien de nouveau cette semaine", pgExAdd: "Contrôle ou examen", pgExEdit: "Dates d’examen",
     newsTitle: "Annonces des cours", newsNone: "Aucune annonce depuis 45 jours", newsOff: "Impossible de charger les annonces", markAllRead: "Tout marquer comme lu", newsOpen: "Ouvrir dans le forum ↗",
     newsMore: n => n + " de plus", newsLess: "Afficher moins", newsLoading: "Chargement des annonces…",
@@ -4228,7 +4241,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.0-beta.5";
+const APP_VERSION = "1.9.0-beta.6";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4674,7 +4687,7 @@ function setView(v, fromHistory) {
   if (XTABS.includes(V.view) && V.view !== prev) { PG.enter = 1; if (V.view === "grades" && V.data && grOn() && Date.now() - (grAll().at || 0) > 5 * 60e3) gradeScan(V.data, true); }
 }
 /* ---------- tablet & computer: more tabs. There's room for them, so grades, courses, announcements and exams – which on a phone are windows – get a page each ---------- */
-const XTABS = ["exams", "grades", "courses", "news"], XT_T = { exams: "tabExams", grades: "tabGrades", courses: "tabCourses", news: "tabNews" };
+const XTABS = ["exams", "grades", "courses", "news", "more"], XT_T = { exams: "tabExams", grades: "tabGrades", courses: "tabCourses", news: "tabNews", more: "tabMore" };
 const xtabsOn = () => document.body.classList.contains("app") && matchMedia("(min-width:600px)").matches;
 const PG = { nc: 0, old: false, enter: 0 };
 function goGrades(cid) {
@@ -4695,7 +4708,7 @@ const pgHead = (icn, title, sub, act) => '<div class="pghd"><h2>' + ic(icn) + es
 function renderPage() {
   const el = $("#pgv"), d = V.data; if (!el || !d || !XTABS.includes(V.view)) return;
   const now = nowS(), v = V.view;
-  const h = v === "grades" ? pgGrades() : v === "courses" ? pgCourses(d, now) : v === "news" ? pgNews(d) : pgExams(now);
+  const h = v === "grades" ? pgGrades() : v === "courses" ? pgCourses(d, now) : v === "news" ? pgNews(d) : v === "more" ? pgMore() : pgExams(now);
   el.innerHTML = h; el.dataset.v = v; PG.enter = 0;
 }
 function pgGrades() {
@@ -4723,7 +4736,7 @@ function pgCourses(d, now) {
   };
   let h = pgHead("book-open", t("dcCourses"), esc(t("pgCrsN", cs.length)), "");
   h += cs.length ? '<div class="pgcrsg">' + cs.map(card).join("") + "</div>" : '<p class="hint">' + esc(t("crsNone")) + "</p>";
-  if (past.length) h += '<div class="pgsec"><button class="link" data-pgold>' + ic(PG.old ? "chevron-up" : "chevron-down") + " " + esc(t("pgCrsOld", past.length)) + "</button></div>" +
+  if (past.length) h += '<div class="pgsec"><button class="link" data-pgold>' + ic("history") + " " + esc(t("pgCrsOld", past.length)) + "</button></div>" +
     (PG.old ? '<div class="pgold">' + past.map(c => '<button class="chip on" data-crs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><bdi>' + esc(shortName(c.name)) + "</bdi></button>").join("") + "</div>" : "");
   if (hid) h += '<p class="hint" style="margin-top:14px">' + esc(t("pgCrsHid", hid)) + ' <button class="link" data-pgset="courses">' + esc(t("pgManage")) + "</button></p>";
   return h;
@@ -4735,11 +4748,48 @@ function pgNews(d) {
   const L = all.filter(n => !PG.nc || n.cid === PG.nc), F = fr.filter(x => !PG.nc || x.cid === PG.nc);
   const nNew = all.filter(isNewNews).length + fr.filter(x => !x.seen).length;
   const cnt = cid => all.filter(n => n.cid === cid && isNewNews(n)).length + fr.filter(x => x.cid === cid && !x.seen).length;
-  let h = pgHead("megaphone", t("newsTitle"), d.news ? "" : esc(V.loading || V.newsLoading ? t("newsLoading") : t("newsOff")), nNew ? '<button class="btn" data-pgread>' + ic("check-check") + " " + esc(t("markAllRead")) + "</button>" : "");
+  let h = pgHead("megaphone", t("newsTitle"), d.news ? "" : esc(V.loading || V.newsLoading ? t("newsLoading") : t("newsOff")), nNew ? '<button class="btn" data-pgread>' + ic("check") + " " + esc(t("markAllRead")) + "</button>" : "");
   if (cs.length > 1) h += '<div class="pgchips"><button class="chip' + (!PG.nc ? " on" : "") + '" data-pgnc="0">' + esc(t("pgAll")) + "</button>" +
     cs.map(c => { const n = cnt(c.id); return '<button class="chip' + (PG.nc === c.id ? " on" : "") + '" data-pgnc="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="cd0"></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? '<span class="pgn">' + n + "</span>" : "") + "</button>"; }).join("") + "</div>";
   h += '<div class="pgnews"><div><div class="pgsec">' + ic("megaphone") + esc(t("pgAnn")) + "</div>" + (L.length ? L.map(n => newsItemHTML(n, d)).join("") : '<p class="hint">' + esc(t("newsNone")) + "</p>") + "</div>";
   h += '<div><div class="pgsec">' + ic("sparkles") + esc(t("pgFresh")) + '</div><div class="frl">' + (F.length ? F.map(freshItemHTML).join("") : '<p class="hint">' + esc(t("pgFreshNone")) + "</p>") + "</div></div></div>";
+  return h;
+}
+/* "More": the useful pages people rarely find (they were only in Settings or behind a card), as clear shortcuts in groups */
+const MORE = [
+  ["study", [
+    { id: "mine", ic: "plus", c: "#34c759", go: () => openMine() },
+    { id: "ai", ic: "bot", c: "#5856d6", go: () => openAi() },
+    { id: "levnet", ic: "graduation-cap", c: "#af52de", go: () => openLevnet() },
+    { id: "sem", ic: "calendar-range", c: "#ff9500", go: () => openSetPage("sem") },
+    { id: "filter", ic: "sliders-horizontal", c: "#8e8e93", go: () => openSetPage("filter") } ]],
+  ["alerts", [
+    { id: "rem", ic: "bell", c: "#ff3b30", go: () => openRem(false), st: () => !!(P.rem && P.rem.on) },
+    { id: "cal", ic: "calendar-plus", c: "#007aff", go: () => openCal(), st: () => feedOn() } ]],
+  ["soc", [
+    { id: "join", ic: "users", c: "#5856d6", go: () => socEnsure(() => SOC.intro(true)), on: () => !socOn() },
+    { id: "board", ic: "trophy", c: "#ff9f0a", go: () => socEnsure(() => SOC.openBoard()), on: () => socOn() },
+    { id: "mypts", ic: "award", c: "#34c759", go: () => socEnsure(() => SOC.openUser(P.soc_id.uid)), on: () => socOn() && !!(P.soc_id && P.soc_id.uid) },
+    { id: "wa", ic: "message-circle", c: "#25a35a", go: () => openSetPage("soc"), on: () => socOn() } ]],
+  ["app", [
+    { id: "dash", ic: "layout-dashboard", c: "#007aff", go: () => { setView("dash"); render(); setTimeout(() => openDashArr(), 50); } },
+    { id: "look", ic: "palette", c: "#af52de", go: () => openThemes() },
+    { id: "inst", ic: "download", c: "#007aff", go: () => openInstall(), on: () => !isStandalone() },
+    { id: "acct", ic: "cloud", c: "#5ac8fa", go: () => openSetPage("acct") },
+    { id: "wn", ic: "sparkles", c: "#ff9500", go: () => whatsNew(true) },
+    { id: "tour", ic: "compass", c: "#34c759", go: () => openTour() },
+    { id: "fb", ic: "lightbulb", c: "#ffcc00", go: () => openFb() },
+    { id: "help", ic: "life-buoy", c: "#ff3b30", go: () => openSetPage("help") } ]]];
+function pgMore() {
+  let h = pgHead("layout-grid", t("tabMoreT"), esc(t("mrSub")), "");
+  for (const [g, L] of MORE) {
+    const items = L.filter(x => !x.on || x.on()); if (!items.length) continue;
+    h += '<div class="pgsec">' + esc(t("mrg_" + g)) + '</div><div class="pgmg">' + items.map(x => {
+      const st = x.st ? x.st() : null;
+      return '<button class="pgmi" data-pgmore="' + x.id + '" style="--mc:' + x.c + '"><span class="mi">' + ic(x.ic) + '</span><span class="mt"><b>' + esc(t("mr_" + x.id)) + "</b><small>" + esc(t("mrd_" + x.id)) + "</small></span>" +
+        (st === null ? "" : '<span class="pgst' + (st ? " on" : "") + '">' + esc(t(st ? "mrOn" : "mrOff")) + "</span>") + "</button>";
+    }).join("") + "</div>";
+  }
   return h;
 }
 function pgExams(now) {
@@ -4765,6 +4815,7 @@ $("#pgv").addEventListener("click", e => {
   { const b = g("[data-pgnc]"); if (b) { PG.nc = Number(b.dataset.pgnc); useHit("pgNewsCrs"); return renderPage(); } }
   if (g("[data-pgread]")) { markRead(((V.data && V.data.news) || []).map(n => n.id)); freshSeen(null); return render(); }
   if (g("[data-pgexadd]")) return openExams(true);
+  { const b = g("[data-pgmore]"); if (b) { const x = MORE.flatMap(m => m[1]).find(y => y.id === b.dataset.pgmore); useHit("more_" + b.dataset.pgmore); if (x) x.go(); return; } }
   if (g("[data-exedit]")) return openExams();
   { const xe = g("[data-xqedit]"); if (xe) { openExams(); xqFill((P.xq || []).find(q => q.id === xe.dataset.xqedit)); return; } }
   { const it = g("[data-frid]"); if (it) { freshSeen([it.dataset.frid]); useHit("freshOpen");

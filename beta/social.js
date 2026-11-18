@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.0-beta.5";
+const SOC_V = "1.9.0-beta.6";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -47,7 +47,7 @@ Object.assign(I18N.he, {
   lgAdd: (f, r) => f + " הוסיף אצלו את ״" + r + "״", lgTime: r => "דיווח זמן על ״" + r + "״", lgWa: "קישור לקבוצת הוואטסאפ", lgSomeone: "מישהו",
   socMute: "השתק משתמש זה 🔇", socUnmute: "בטל השתקה", socMuted: n => n + " הושתק. לא תראה יותר את מה שהוא משתף.", socUnmuted: "ההשתקה בוטלה",
   socOnLbl: "הקהילה פעילה", socOnHint: "כשכבוי – אין שום חיבור לשרת הקהילה ושום דבר מזה לא מוצג.", socProfT: "הפרופיל שלי", socWaT: "קבוצות וואטסאפ לפי קורס",
-  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
+  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socPtsU: "נק׳", socHere: "את/ה כאן", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
   shT: "נוסף ללוח שלך ✓", shBig: "שתף עם כל הסטודנטים בקורס", shBigSub: "כולם יוכלו להוסיף לעצמם בלחיצה אחת · \u2066+3\u2069 נק׳ על כל מי שמוסיף", shAuto: "לשתף אוטומטית כל בוחן ומשימה שאוסיף לקורס",
   shAutoOn: "שיתוף אוטומטי פעיל ✓", shLater: "לא עכשיו", shBtn: "שתף", shShared: "משותף", shUnshare: "הסר שיתוף", shNoCourse: "אפשר לשתף רק פריט ששייך לקורס",
   shTaskT: "המשימה נשמרה ✓", shMineArea: "שיתוף עם הקורס", shAutoT: "שיתוף אוטומטי",
@@ -95,7 +95,7 @@ Object.assign(I18N.en, {
   lgAdd: (f, r) => f + " added “" + r + "” to theirs", lgTime: r => "Time report on “" + r + "”", lgWa: "WhatsApp group link", lgSomeone: "Someone",
   socMute: "Mute this user 🔇", socUnmute: "Unmute", socMuted: n => n + " is muted. You won’t see what they share.", socUnmuted: "Unmuted",
   socOnLbl: "Community on", socOnHint: "When off, nothing connects to the community server and none of this is shown.", socProfT: "My profile", socWaT: "WhatsApp groups by course",
-  socMuteT: "Muted users", socMuteNone: "None", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
+  socMuteT: "Muted users", socMuteNone: "None", socPtsU: "pts", socHere: "You’re here", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
   shT: "Added to your board ✓", shBig: "Share with everyone in the course", shBigSub: "They can add it in one tap · +3 pts for each one who does", shAuto: "Share every quiz and task I add to a course automatically",
   shAutoOn: "Auto-share is on ✓", shLater: "Not now", shBtn: "Share", shShared: "Shared", shUnshare: "Stop sharing", shNoCourse: "Only items that belong to a course can be shared",
   shTaskT: "Task saved ✓", shMineArea: "Share with the course", shAutoT: "Auto-share",
@@ -143,7 +143,7 @@ Object.assign(I18N.fr, {
   lgAdd: (f, r) => f + " a ajouté « " + r + " » chez lui", lgTime: r => "Durée indiquée pour « " + r + " »", lgWa: "Lien du groupe WhatsApp", lgSomeone: "Quelqu’un",
   socMute: "Masquer cet utilisateur 🔇", socUnmute: "Ne plus masquer", socMuted: n => n + " est masqué. Vous ne verrez plus ses partages.", socUnmuted: "Plus masqué",
   socOnLbl: "Communauté activée", socOnHint: "Désactivée : aucune connexion au serveur de la communauté, et rien de tout cela n’est affiché.", socProfT: "Mon profil", socWaT: "Groupes WhatsApp par cours",
-  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
+  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socPtsU: "pts", socHere: "Vous êtes ici", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
   shT: "Ajouté à votre tableau ✓", shBig: "Partager avec tout le cours", shBigSub: "Chacun peut l’ajouter en un geste · +3 pts par ajout", shAuto: "Partager automatiquement chaque quiz et devoir que j’ajoute à un cours",
   shAutoOn: "Partage automatique activé ✓", shLater: "Pas maintenant", shBtn: "Partager", shShared: "Partagé", shUnshare: "Ne plus partager", shNoCourse: "Seuls les éléments liés à un cours peuvent être partagés",
   shTaskT: "Devoir enregistré ✓", shMineArea: "Partager avec le cours", shAutoT: "Partage automatique",
@@ -757,9 +757,18 @@ async function openUser(uid) {
 function meBar() {
   const pts = (ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0), sem = (ST.ov && ST.ov.me && ST.ov.me.sem) || 0, n = myName();
   return '<div class="chme"><div class="chme1"><span class="sav">' + esc((n || "?").charAt(0)) + '</span><div class="sw"><div>' + rankTag(pts) + ' <span class="spts">' + esc(t("socPts", pts)) + "</span>" +
-    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + '<details class="ptsh"><summary>' + esc(t("ft_points")) + "?</summary><p>" + esc(t("fd_points")) + "</p></details></div></div>" +
+    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + '<details class="ptsh"' + (ST.ptsOpen ? " open" : "") + "><summary>" + esc(t("ft_points")) + "?</summary>" + howPts(pts) + "</details></div></div>" +
     '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + "</span></button></div></div>";
 }
+/* how to earn points + every rank, with "you are here" – the chats page shows it, not only settings */
+function rankLadder(pts) {
+  const r = rankOf(pts || 0);
+  return '<div class="rklad">' + RANKS.map((x, i) => '<div class="rkl' + (i < r.i ? " done" : i === r.i ? " cur" : "") + '"><span class="srk r' + i + '">' + x[1] + " " + esc(t(x[2])) + "</span><small>\u2066" + x[0] + "+\u2069 " + esc(t("socPtsU")) + "</small>" +
+    (i === r.i ? '<b class="rkhere">' + esc(t("socHere")) + "</b>" : i < r.i ? '<span class="rkok">✓</span>' : "") + "</div>").join("") + "</div>";
+}
+const howPts = pts => '<div class="ptsb"><div class="stitle">' + esc(t("socHowT")) + '</div><ul class="show">' + t("socHow").map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>" +
+  '<div class="stitle">' + esc(t("socRanksT")) + "</div>" + rankLadder(pts) + "</div>";
+document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("ptsh")) ST.ptsOpen = e.target.open; }, true);
 function progress(pts) {
   const r = rankOf(pts); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
   const lo = RANKS[r.i][0], hi = r.next[0], p = Math.round((pts - lo) / (hi - lo) * 100);
@@ -839,8 +848,7 @@ function page() {
         return '<div class="swarow" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (cd.wa ? '<a class="swa sm" href="' + esc(cd.wa) + '" target="_blank" rel="noopener noreferrer">' + ic("message-circle") + "</a>" : '<small class="hint">' + esc(t("waNone")) + "</small>") +
           '<button class="link" data-socwa="' + c.id + '">' + esc(t(cd.wa ? "waEdit" : "waAdd")) + "</button></div>"; }).join("") || '<div class="hint">' + esc(t("noCourses")) + "</div>") + "</div>" +
       '<div class="stitle">' + esc(t("socMuteT")) + "</div>" + ((P.soc_mute || []).length ? P.soc_mute.map(m => '<div class="swarow"><bdi>' + esc(m.name) + '</bdi><button class="link" data-socmute="' + esc(m.uid) + '" data-n="' + esc(m.name) + '">' + esc(t("socUnmute")) + "</button></div>").join("") : '<div class="hint">' + esc(t("socMuteNone")) + "</div>") +
-      '<div class="stitle">' + esc(t("socHowT")) + '</div><ul class="show">' + t("socHow").map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>" +
-      '<div class="stitle">' + esc(t("socRanksT")) + '</div><div class="sranks">' + RANKS.map((r, i) => '<span class="srk r' + i + '">' + r[1] + " " + esc(t(r[2])) + " · \u2066" + r[0] + "+\u2069</span>").join("") + "</div>" +
+      howPts((ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0)) +
       (ST.err ? '<div class="hint">' + esc(t("socNet")) + "</div>" : "") + '<div class="hint" style="margin-top:10px">' + esc(t("socPriv")) + "</div>"
       : '<button class="primary" data-socjoin style="width:100%;margin-top:10px">' + esc(t("socJoinBtn")) + "</button>");
   $("#socOnBox").onchange = e => { if (e.target.checked) { e.target.checked = false; intro(true); } else { P.soc_on = false; savePrefs(); render(); page(); renderSheet(); } };
@@ -987,6 +995,12 @@ css.textContent = `
 .ptsh{margin-top:4px;font-size:12.5px;color:var(--muted)}
 .ptsh summary{cursor:pointer;color:var(--accent-t);font-weight:600}
 .ptsh p{margin:4px 0 0;line-height:1.5}
+.ptsb{margin-top:6px;color:var(--text);font-size:13px}.ptsb .stitle{margin:10px 0 4px}.ptsb ul.show{margin:0;padding-inline-start:18px;line-height:1.65}
+.rklad{display:flex;flex-direction:column;gap:2px;max-width:380px}
+.rkl{display:flex;align-items:center;gap:8px;padding:2px 6px;border-radius:10px;opacity:.55}
+.rkl.done{opacity:.85}.rkl.cur{opacity:1;background:var(--accent-soft)}
+.rkl .srk{margin:2px 0}.rkl small{color:var(--muted);font-size:12px}
+.rkhere{margin-inline-start:auto;font-size:12px;color:var(--accent-t)}.rkok{margin-inline-start:auto;color:var(--ok);font-weight:700}
 .rkbar{height:6px;border-radius:99px;background:var(--track);overflow:hidden;margin:8px 0 3px}
 .rkbar i{display:block;height:100%;background:linear-gradient(90deg,#5856d6,#af52de);border-radius:99px}
 .sbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
