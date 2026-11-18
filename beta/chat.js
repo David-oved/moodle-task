@@ -385,6 +385,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiM .aiB{min-width:0}
 .aiUi{width:100%;max-width:100%;min-width:0}
 .aiBk{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+.aiXc .aiXi{width:1.2em;height:1.2em;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .aiBk *{min-width:0;max-width:100%}
 .aiHtab b{white-space:nowrap}
 .aiDemo{position:absolute;inset:0;z-index:30;pointer-events:auto;overflow:hidden;background:transparent;transition:background .9s ease}
@@ -1262,7 +1263,13 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       default: return null;
     }
   }
+  // a design made in the admin app: the server sends finished, sanitized HTML plus CSS already scoped to the design's own class - one renderer for any number of new designs
+  function uiX(b) {
+    const h = String(b.h || "").replace(/<i data-ic="([a-z]+)"><\/i>/g, (m, n) => uiIc(n, "aiXi"));
+    return (b.css ? "<style>" + String(b.css).replace(/<\/?style/gi, "") + "</style>" : "") + uiBk(b, "aiXc " + String(b.cl || "").replace(/[^A-Za-z0-9_]/g, ""), h, false);
+  }
   function uiBlock(b) {
+    if (b.k === "x" && b.h) return uiX(b);
     const nb = uiNew(b); if (nb !== null) return nb;
     const head = b.ti ? '<div class="aiUiT">' + esc2(b.ti) + "</div>" : "";
     if (b.k === "deadlines" && b.it && b.it.length) {
@@ -2910,6 +2917,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
     _fit() { fit(true); },
     _md(src) { return md(src); },
+    _preview(src) { build(); return md(src); },                // for the admin app's design gallery: the same drawing code the students get
     _demo() { return demoGate(); },                      // for tests only: render a message text the way the chat does
   };
 })();

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>UI preview</title>
+<style>
+:root{--bg:#f4f6fb;--card:#ffffff;--text:#1d2433;--muted:#667085;--line:#e4e8f1;--accent:#3b5bdb;--accent-t:#3b5bdb;--accent-d:#2f4ac0;--accent-soft:#e8edff;--on-accent:#fff;--ok:#22a55e;--warn:#f08c1a;--err:#e5484d;--row:#f7f8fc;--track:#e9ecf5}
+:root[data-theme=dark]{--bg:#12151d;--card:#1a1f2b;--text:#e7eaf2;--muted:#98a2b3;--line:#2a3141;--accent:#7c93ff;--accent-t:#9db0ff;--accent-d:#7c93ff;--accent-soft:#232b4a;--on-accent:#0b1020;--row:#1f2533;--track:#2a3141}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+#out{display:flex;flex-direction:column;gap:18px;padding:12px;box-sizing:border-box;max-width:420px;margin:0 auto}
+.pvItem>.pvName{font:700 12px system-ui;color:var(--muted);margin:0 2px 6px}
+.aiUi{display:flex;flex-direction:column;gap:10px}
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script src="chat.js"></script>
+<script>
+/* Draws the bot's display blocks with the very same code the students' app uses. Only the admin app (on the server's own origin) may send blocks here. */
+const ALLOWED = ["https://college-chat-lwdu.onrender.com"];
+const out = document.getElementById("out");
+const send = () => { try { parent.postMessage({ t: "h", h: document.documentElement.scrollHeight }, "*"); } catch (e) {} };
+addEventListener("message", e => {
+  if (!ALLOWED.includes(e.origin) || !e.data) return;
+  if (e.data.t === "theme") { document.documentElement.dataset.theme = e.data.dark ? "dark" : "light"; send(); return; }
+  if (e.data.t !== "render" || !Array.isArray(e.data.items) || !window.AIChat) return;
+  out.innerHTML = "";
+  for (const it of e.data.items.slice(0, 60)) {
+    const box = document.createElement("div"); box.className = "pvItem";
+    if (it.name) { const n = document.createElement("div"); n.className = "pvName"; n.textContent = it.name; box.appendChild(n); }
+    const body = document.createElement("div"); body.innerHTML = window.AIChat._preview(String(it.marker || "")); box.appendChild(body);
+    out.appendChild(box);
+  }
+  setTimeout(send, 60); setTimeout(send, 600);
+});
+document.addEventListener("click", e => {                         // the pieces that need a click to change (tabs); links and actions do nothing here
+  const t = e.target.closest("[data-tab]");
+  if (t) { const box = t.closest(".aiTb"), i = t.dataset.tab; box.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("on", x === t)); box.querySelectorAll("[data-pane]").forEach(x => x.classList.toggle("on", x.dataset.pane === i)); send(); }
+});
+document.addEventListener("toggle", send, true);
+addEventListener("load", () => { try { parent.postMessage({ t: "ready" }, "*"); } catch (e) {} });
+</script>
+</body>
+</html>
