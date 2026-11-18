@@ -665,6 +665,13 @@ body.dashed main{padding-bottom:150px}
 .gnote{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5}
 .gnote code{direction:ltr;unicode-bidi:isolate;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:0 5px;font-size:12.5px}
 .gnote.warn{color:var(--text)}
+/* "the Moodle app opened with 'site URL not valid'" – people who have the official Moodle app installed (it grabs the link before it can be copied) */
+.gfix{margin-top:10px;border:1px solid color-mix(in srgb,var(--warn) 45%,var(--line));background:color-mix(in srgb,var(--warn) 8%,var(--card));border-radius:12px;padding:0 12px;font-size:14px;line-height:1.55}
+.gfix summary{cursor:pointer;padding:11px 0;font-weight:700;list-style-position:inside}
+.gfix[open] summary{border-bottom:1px solid var(--line);margin-bottom:8px}
+.gfix p{margin:0 0 6px}.gfix ol{margin:0 0 12px;padding-inline-start:20px;display:grid;gap:7px}
+.gfixp{margin-top:4px;color:var(--muted);font-size:13.5px}
+.gfix.flash{animation:fl 1.2s ease 2}
 .gtabs{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:6px 0 10px;background:var(--card)}
 .gtabs button{border:0;border-radius:0;padding:7px 12px;font-size:14px;background:none}
 .gtabs button.on{background:var(--accent);color:var(--on-accent);font-weight:600}
@@ -1535,6 +1542,18 @@ html.kb .schc{padding-bottom:8px}
         <div class="gh"><span class="gn">1</span><b data-i18n="g1Title"></b></div>
         <a class="btn primary" id="bGet" target="_blank" rel="noopener noreferrer" data-i18n="getToken"></a>
         <div class="hint" data-i18n="g1Hint"></div>
+        <details class="gfix" id="gFix">
+          <summary data-i18n="mfT"></summary>
+          <p data-i18n-html="mfWhy"></p>
+          <ol>
+            <li data-i18n-html="mf1"></li>
+            <li><span data-i18n-html="mf2"></span>
+              <div class="gfixp">🤖 <span data-i18n-html="mfAnd"></span></div>
+              <div class="gfixp">🍎 <span data-i18n-html="mfIos"></span></div></li>
+            <li data-i18n-html="mf3"></li>
+            <li data-i18n-html="mf4"></li>
+          </ol>
+        </details>
       </li>
       <li class="gstep" id="gStep2">
         <div class="gh"><span class="gn">2</span><b data-i18n="g2Title"></b></div>
@@ -1555,7 +1574,6 @@ html.kb .schc{padding-bottom:8px}
         </div>
         <p class="gp gdo" id="gDo"></p>
         <div class="gnote">🔑 <span data-i18n-html="g2Looks"></span></div>
-        <div class="gnote warn">⚠️ <span data-i18n="step2hint"></span></div>
       </li>
       <li class="gstep">
         <div class="gh"><span class="gn">3</span><b data-i18n="g3Title"></b></div>
@@ -2265,6 +2283,14 @@ const I18N = {
     doPc: "👉 קליק ימני על הקישור הכחול, ובתפריט: ״העתקת כתובת הקישור״",
     errLinkText: "העתקת את הטקסט של הקישור ולא את הכתובת שלו. בתפריט של הלחיצה הארוכה בוחרים ״העתקת כתובת הקישור״ (ראה את הציור בשלב 2).",
     errPageUrl: "זו הכתובת של העמוד עצמו. צריך את הכתובת של הקישור הכחול שבתוך העמוד: לחיצה ארוכה עליו ← ״העתקת כתובת הקישור״.",
+    mfT: "😕 נפתחה אפליקציית Moodle עם ״כתובת האתר אינה תקינה״?",
+    mfWhy: "זה קורה כשאפליקציית Moodle הרשמית מותקנת אצלך: היא <b>תופסת את הקישור לפני שאפשר להעתיק אותו</b>. אפשר לפתור את זה לבד:",
+    mf1: "<b>קודם נסו ככה:</b> סוגרים את אפליקציית Moodle וחוזרים לדפדפן. אם העמוד עם הקישור הכחול עדיין שם, ממשיכים לשלב 2.",
+    mf2: "<b>עדיין נפתחת אפליקציית Moodle?</b> מסירים אותה לרגע:",
+    mfAnd: "אנדרואיד: לחיצה ארוכה על האייקון של <bdi>Moodle</bdi> ← <b>הסרה</b>. אם יש אפשרות <b>ארכיון</b>, עדיף אותה: היא שומרת את הנתונים.",
+    mfIos: "אייפון: הגדרות ← כללי ← <bdi>אחסון iPhone</bdi> ← <bdi>Moodle</bdi> ← <b><bdi>Offload App</bdi></b>. זה מסיר את היישום ושומר את הנתונים שלו.",
+    mf3: "חוזרים לכאן ועושים שוב את שלבים 1–3. הפעם ייפתח העמוד עם הקישור הכחול.",
+    mf4: "אחרי שהתחברתם, מתקינים את Moodle בחזרה. <b>MoodlePro נשאר מחובר.</b>",
     step1: "לחץ כאן והתחבר ל-Moodle אם יבקשו:", getToken: "פתח את Moodle לקבלת טוקן ↗",
     step2: "בעמוד שנפתח יש קישור אחד (״לחץ כאן לפתיחת היישומון״ / Click here to launch the app). <b>לחיצה ארוכה</b> עליו ← <b>העתק כתובת קישור</b>.",
     step2hint: "אם נפתחה אפליקציית Moodle או הודעה כמו \u201cURL not valid\u201d, זה בסדר: חזור לדפדפן ועשה את הלחיצה הארוכה.",
@@ -2510,6 +2536,14 @@ const I18N = {
     doPc: "👉 Right-click the blue link, then choose “Copy link address”",
     errLinkText: "You copied the link’s text, not its address. In the long-press menu choose “Copy link address” (see the drawing in step 2).",
     errPageUrl: "That’s the address of the page itself. You need the address of the blue link inside the page: long-press it → “Copy link address”.",
+    mfT: "😕 Did the Moodle app open with “Site URL not valid”?",
+    mfWhy: "This happens when the official Moodle app is installed: it <b>grabs the link before you can copy it</b>. You can fix it yourself:",
+    mf1: "<b>First try this:</b> close the Moodle app and go back to the browser. If the page with the blue link is still there, go on to step 2.",
+    mf2: "<b>Does the Moodle app still open?</b> Remove it for a moment:",
+    mfAnd: "Android: long-press the Moodle icon → <b>Uninstall</b>. If there’s an <b>Archive</b> option, use that instead: it keeps the app’s data.",
+    mfIos: "iPhone: Settings → General → iPhone Storage → Moodle → <b>Offload App</b>. This removes the app but keeps its data.",
+    mf3: "Come back here and do steps 1–3 again. This time the page with the blue link opens.",
+    mf4: "Once you’re connected, install Moodle again. <b>MoodlePro stays connected.</b>",
     step1: "Tap here and sign in to Moodle if asked:", getToken: "Open Moodle to get a token ↗",
     step2: "The page that opens has one link (“Click here to launch the app”). <b>Long-press</b> it → <b>Copy link address</b>.",
     step2hint: "If the Moodle app opens or a message like “URL not valid” appears, that’s fine: go back to the browser and do the long-press.",
@@ -2755,6 +2789,14 @@ const I18N = {
     doPc: "👉 Clic droit sur le lien bleu, puis « Copier l’adresse du lien »",
     errLinkText: "Vous avez copié le texte du lien, pas son adresse. Dans le menu de l’appui long, choisissez « Copier l’adresse du lien » (voir le dessin à l’étape 2).",
     errPageUrl: "C’est l’adresse de la page elle-même. Il faut l’adresse du lien bleu dans la page : appui long dessus → « Copier l’adresse du lien ».",
+    mfT: "😕 L’application Moodle s’est ouverte avec « URL du site non valide » ?",
+    mfWhy: "Cela arrive quand l’application Moodle officielle est installée : elle <b>intercepte le lien avant qu’on puisse le copier</b>. Vous pouvez régler ça vous-même :",
+    mf1: "<b>Essayez d’abord :</b> fermez l’application Moodle et revenez au navigateur. Si la page avec le lien bleu est toujours là, passez à l’étape 2.",
+    mf2: "<b>L’application Moodle s’ouvre encore ?</b> Retirez-la un instant :",
+    mfAnd: "Android : appui long sur l’icône Moodle → <b>Désinstaller</b>. S’il y a une option <b>Archiver</b>, préférez-la : elle garde les données.",
+    mfIos: "iPhone : Réglages → Général → Stockage iPhone → Moodle → <b>Décharger l’app</b>. L’app est retirée mais ses données sont gardées.",
+    mf3: "Revenez ici et refaites les étapes 1 à 3. Cette fois la page avec le lien bleu s’ouvre.",
+    mf4: "Une fois connecté, réinstallez Moodle. <b>MoodlePro reste connecté.</b>",
     step1: "Appuyez ici et connectez-vous à Moodle si demandé :", getToken: "Ouvrir Moodle pour obtenir un jeton ↗",
     step2: "La page qui s’ouvre contient un seul lien (« Click here to launch the app » ou son équivalent). <b>Appui long</b> dessus → <b>Copier l’adresse du lien</b>.",
     step2hint: "Si l’application Moodle s’ouvre ou qu’un message comme « URL not valid » apparaît, c’est normal : revenez au navigateur et faites l’appui long.",
@@ -4288,7 +4330,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.0";
+const APP_VERSION = "1.9.1";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -7238,7 +7280,7 @@ function importFromHash() {
 
 async function connectWith(raw) {
   let tok; try { tok = extractToken(raw); } catch (e) { $("#setupErr").textContent = e.message; return; }
-  if (!tok) { $("#setupErr").textContent = t("missingToken"); return; }
+  if (!tok) { $("#setupErr").textContent = t("missingToken"); fixOpen(); return; }
   if (!/^[A-Za-z0-9]{10,}$/.test(tok)) {
     const r = String(raw || "");
     if (/launch\.php|admin\/tool\/mobile/i.test(r)) return guideError(t("errPageUrl"));                 // copied the page's own address
@@ -7318,6 +7360,10 @@ function navInit() {
   });
 }
 $("#tok").addEventListener("keydown", e => { if (e.key === "Enter") connectWith($("#tok").value); });
+const fixOpen = () => { const d = $("#gFix"); if (!d) return; d.open = true; d.classList.remove("flash"); void d.offsetWidth; d.classList.add("flash"); d.scrollIntoView({ block: "center", behavior: "smooth" }); useHit("loginFix"); };
+let getTaps = 0;
+$("#bGet").addEventListener("click", () => { if (++getTaps === 2) setTimeout(fixOpen, 400); });   // a second tap = the first one didn't give the link (usually the Moodle app took it)
+$("#gFix").addEventListener("toggle", e => { if (e.target.open) useHit("loginFixOpen"); });
 $("#bPaste").onclick = async () => {
   let txt = "";
   try { txt = await navigator.clipboard.readText(); } catch (e) {}
