@@ -9,38 +9,103 @@
 :root{--bg:#f4f6fb;--card:#ffffff;--text:#1d2433;--muted:#667085;--line:#e4e8f1;--accent:#3b5bdb;--accent-t:#3b5bdb;--accent-d:#2f4ac0;--accent-soft:#e8edff;--on-accent:#fff;--ok:#22a55e;--warn:#f08c1a;--err:#e5484d;--row:#f7f8fc;--track:#e9ecf5}
 :root[data-theme=dark]{--bg:#12151d;--card:#1a1f2b;--text:#e7eaf2;--muted:#98a2b3;--line:#2a3141;--accent:#7c93ff;--accent-t:#9db0ff;--accent-d:#7c93ff;--accent-soft:#232b4a;--on-accent:#0b1020;--row:#1f2533;--track:#2a3141}
 html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
-#out{display:flex;flex-direction:column;gap:18px;padding:12px;box-sizing:border-box;max-width:420px;margin:0 auto}
-.pvItem>.pvName{font:700 12px system-ui;color:var(--muted);margin:0 2px 6px}
-.aiUi{display:flex;flex-direction:column;gap:10px}
+#out{display:flex;flex-direction:column;gap:18px;padding:12px 8px;box-sizing:border-box}
+.pvItem>.pvName{font:700 12px system-ui;color:var(--muted);margin:0 4px 6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pvItem .pvBad{font:700 11px system-ui;color:#b42318;background:#fee4e2;border-radius:99px;padding:1px 8px}
+.pvItem .pvOk{font:700 11px system-ui;color:#067647;background:#d1fadf;border-radius:99px;padding:1px 8px}
+.pvFrame{overflow:hidden;border-radius:12px;background:var(--bg);outline:1px dashed color-mix(in srgb,var(--muted) 35%,transparent)}
 </style>
 </head>
 <body>
 <div id="out"></div>
 <script src="chat.js"></script>
 <script>
-/* Draws the bot's display blocks with the very same code the students' app uses. Only the admin app (on the server's own origin) may send blocks here. */
+/* Draws the bot's display blocks with the very same code and the very same message structure the students' app uses (a bubble with the avatar inside a chat panel
+   of a chosen width), so the narrow-phone, tablet and desktop layouts really switch the way they do in the app. Only the admin app (on the server's own origin)
+   may send blocks here. After drawing, each card is checked: does anything stick out of the bubble, is a time cut in two. */
 const ALLOWED = ["https://college-chat-lwdu.onrender.com"];
+const WIDTHS = { phone_s: 320, phone: 390, tablet: 768, desktop: 1280 };
 const out = document.getElementById("out");
-const send = () => { try { parent.postMessage({ t: "h", h: document.documentElement.scrollHeight }, "*"); } catch (e) {} };
+const send = (m) => { try { parent.postMessage(m, "*"); } catch (e) {} };
+const sendH = () => send({ t: "h", h: document.documentElement.scrollHeight });
+
+function inScroller(e, root) { for (let n = e; n && n !== root; n = n.parentElement) { const o = getComputedStyle(n).overflowX; if (o === "auto" || o === "scroll") return true; } return false; }
+function check(frame) {
+  const warns = new Set(), bub = frame.querySelector(".aiB"); if (!bub) return [];
+  const R = bub.getBoundingClientRect();
+  bub.querySelectorAll("*").forEach(e => {
+    const r = e.getBoundingClientRect();
+    if (r.width && r.height && (r.right > R.right + 2 || r.left < R.left - 2) && !inScroller(e, bub)) warns.add("חלק מהכרטיס יוצא מהבועה");
+    const cs = getComputedStyle(e), clips = ["hidden", "clip"].includes(cs.overflowX) || ["hidden", "clip"].includes(cs.overflowY);
+    if (clips) {                                              // a box that clips: is some of its TEXT outside it (decoration outside is fine)?
+      const er = e.getBoundingClientRect(), tw = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+      while (tw.nextNode()) {
+        const n = tw.currentNode; if (!n.nodeValue.trim()) continue;
+        const rg = document.createRange(); rg.selectNodeContents(n); const t = rg.getBoundingClientRect();
+        if (t.width && (t.right > er.right + 2 || t.left < er.left - 2 || t.bottom > er.bottom + 2 || t.top < er.top - 2)) { warns.add("טקסט נחתך"); break; }
+      }
+    } else if (e.clientWidth > 0 && e.scrollWidth > e.clientWidth + 3 && !inScroller(e, bub) && e.textContent.trim()) warns.add("תוכן יוצא מהמסגרת");
+  });
+  const w = document.createTreeWalker(bub, NodeFilter.SHOW_TEXT);
+  while (w.nextNode()) {
+    const n = w.currentNode, t = n.nodeValue.trim();
+    if (/^\d{1,2}:\d{2}$/.test(t)) { const rg = document.createRange(); rg.selectNodeContents(n); if (rg.getClientRects().length > 1) warns.add("שעה שנשברה לשתי שורות"); }
+  }
+  return [...warns];
+}
+
+function frameFor(html, width, noZoom) {
+  const vw = document.documentElement.clientWidth - 16, zoom = noZoom ? 1 : Math.min(1, vw / width);
+  const box = document.createElement("div"); box.className = "pvFrame"; box.style.width = Math.round(width * zoom) + "px";
+  const P = document.createElement("div"); P.className = "aiP";
+  P.style.cssText = "position:relative;left:auto;right:auto;top:auto;height:auto;transform:none;opacity:1;translate:none;display:block;contain:none;overflow:visible;background:transparent;width:" + width + "px;" + (zoom < 1 ? "zoom:" + zoom + ";" : "");
+  const Ms = document.createElement("div"); Ms.className = "aiMs"; Ms.style.cssText = "overflow:visible;flex:none;min-height:0";
+  const M = document.createElement("div"); M.className = "aiM ai";
+  const av = document.createElement("div"); av.className = "aiAv"; const B = document.createElement("div"); B.className = "aiB"; B.dir = "auto"; B.innerHTML = html;
+  M.appendChild(av); M.appendChild(B); Ms.appendChild(M); P.appendChild(Ms); box.appendChild(P);
+  return box;
+}
+
 addEventListener("message", e => {
   if (!ALLOWED.includes(e.origin) || !e.data) return;
-  if (e.data.t === "theme") { document.documentElement.dataset.theme = e.data.dark ? "dark" : "light"; send(); return; }
+  if (e.data.t === "theme") { document.documentElement.dataset.theme = e.data.dark ? "dark" : "light"; sendH(); return; }
   if (e.data.t !== "render" || !Array.isArray(e.data.items) || !window.AIChat) return;
+  const widths = e.data.width === "all" ? [320, 390, 768, 1280] : [Math.max(280, Math.min(1920, Number(e.data.width) || 390))];
   out.innerHTML = "";
+  let hidden = document.getElementById("hid"); if (!hidden) { hidden = document.createElement("div"); hidden.id = "hid"; hidden.style.cssText = "position:absolute;left:-30000px;top:0;visibility:hidden;pointer-events:none"; document.body.appendChild(hidden); }
+  hidden.innerHTML = "";
+  const jobs = [];
   for (const it of e.data.items.slice(0, 60)) {
     const box = document.createElement("div"); box.className = "pvItem";
-    if (it.name) { const n = document.createElement("div"); n.className = "pvName"; n.textContent = it.name; box.appendChild(n); }
-    const body = document.createElement("div"); body.innerHTML = window.AIChat._preview(String(it.marker || "")); box.appendChild(body);
+    const html = window.AIChat._preview(String(it.marker || ""));
+    for (const w of widths) {
+      const nm = document.createElement("div"); nm.className = "pvName"; nm.textContent = (it.name ? it.name + " · " : "") + w + "px";
+      box.appendChild(nm);
+      const fr = frameFor(html, w); box.appendChild(fr); jobs.push({ nm, fr, name: it.name || "", w });
+    }
     out.appendChild(box);
+    for (const w of [320, 390, 768, 1280]) {                // the check always covers every width, even the ones not shown: drawn off screen, at real size
+      if (widths.includes(w)) continue;
+      const fr = frameFor(html, w, true); hidden.appendChild(fr); jobs.push({ nm: null, fr, name: it.name || "", w });
+    }
   }
-  setTimeout(send, 60); setTimeout(send, 600);
+  setTimeout(() => {                                         // after layout and fonts: look for problems
+    const results = [];
+    document.querySelectorAll(".aiUi.fresh").forEach(x => x.classList.remove("fresh"));
+    document.querySelectorAll(".aiBk").forEach(x => { x.style.animation = "none"; x.style.opacity = 1; x.style.transform = "none"; });
+    jobs.forEach(j => { const warns = check(j.fr); results.push({ name: j.name, width: j.w, warns });
+      if (!j.nm) return;
+      const tag = document.createElement("span"); tag.className = warns.length ? "pvBad" : "pvOk"; tag.textContent = warns.length ? warns.join(" · ") : "תקין"; j.nm.appendChild(tag); });
+    send({ t: "check", results }); sendH();
+  }, 900);
+  setTimeout(sendH, 60);
 });
 document.addEventListener("click", e => {                         // the pieces that need a click to change (tabs); links and actions do nothing here
   const t = e.target.closest("[data-tab]");
-  if (t) { const box = t.closest(".aiTb"), i = t.dataset.tab; box.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("on", x === t)); box.querySelectorAll("[data-pane]").forEach(x => x.classList.toggle("on", x.dataset.pane === i)); send(); }
+  if (t) { const box = t.closest(".aiTb"), i = t.dataset.tab; box.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("on", x === t)); box.querySelectorAll("[data-pane]").forEach(x => x.classList.toggle("on", x.dataset.pane === i)); sendH(); }
 });
-document.addEventListener("toggle", send, true);
-addEventListener("load", () => { try { parent.postMessage({ t: "ready" }, "*"); } catch (e) {} });
+document.addEventListener("toggle", sendH, true);
+addEventListener("load", () => send({ t: "ready" }));
 </script>
 </body>
 </html>

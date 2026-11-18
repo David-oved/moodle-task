@@ -296,25 +296,37 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHbadge i{width:8px;height:8px;border-radius:50%;background:currentColor}
 .aiHbadge.on{color:#22a55e;background:#22a55e1f}.aiHbadge.on i{animation:aiHsP 1.6s ease-in-out infinite}.aiHbadge.off{color:#e5484d;background:#e5484d1f}
 @keyframes aiHsP{0%,100%{opacity:1}50%{opacity:.35}}
-.aiHr,.aiHbars{display:flex;flex-direction:column}
-.aiHrow{display:grid;grid-template-columns:minmax(48px,auto) minmax(0,1fr);gap:6px 12px;align-items:center;padding:9px 8px;border-radius:12px}
-.aiHrow+.aiHrow{border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
-.aiHrow.today{background:color-mix(in srgb,var(--bc) 11%,transparent);border-top-color:transparent}.aiHrow.today+.aiHrow{border-top-color:transparent}
-.aiHrow .d b{display:block;font-size:14.5px;font-weight:850;white-space:nowrap}.aiHrow .d em{display:block;font-style:normal;font-size:10.5px;font-weight:800;color:var(--bc)}
-.aiHchips{display:flex;flex-wrap:wrap;gap:6px}
-.aiHchip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:13px;line-height:1.35;background:color-mix(in srgb,var(--hc,var(--bc)) 14%,var(--card));border:1px solid color-mix(in srgb,var(--hc,var(--bc)) 34%,var(--line))}
-.aiHchip em{font-style:normal;font-weight:800;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}.aiHchip.tx em{direction:rtl;font-weight:650}
-.aiHchip small{font-size:11.5px;font-weight:700;opacity:.85}.aiHchip i{width:7px;height:7px;border-radius:50%;background:var(--hc,var(--bc));flex:none}
-.aiHrow.off .aiHchip{opacity:.5}
-.aiHbar{position:relative;height:8px;margin-top:7px;border-radius:99px;background:color-mix(in srgb,var(--text) 8%,transparent);overflow:hidden;direction:ltr}
-.aiHbar b{position:absolute;top:0;bottom:0;border-radius:99px;background:var(--hc,var(--bc))}.aiHbar u{position:absolute;top:0;bottom:0;width:2px;background:var(--text);opacity:.75;text-decoration:none}
-.aiHaxis{display:flex;justify-content:space-between;direction:ltr;margin:4px 8px 0 8px;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
-.aiHleg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:9px;font-size:12px;font-weight:700;color:var(--muted)}.aiHleg span{display:inline-flex;align-items:center;gap:6px}.aiHleg i{width:9px;height:9px;border-radius:3px;background:var(--hc,var(--bc))}
-.aiHwk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
-.aiHwk .c{border-radius:11px;padding:6px 2px 7px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);min-height:58px}
-.aiHwk .c b{display:block;font-size:12.5px;margin-bottom:3px}
-.aiHwk .s{display:block;direction:ltr;font-size:9.5px;line-height:1.3;font-variant-numeric:tabular-nums;border-top:2px solid var(--hc,var(--bc));margin:4px 4px 0;padding-top:2px}.aiHwk .s.z{border-top-color:transparent}
-.aiHwk .c.today{background:var(--bc);color:#fff}.aiHwk .c.today .s{border-top-color:#ffffffb3}.aiHwk .c.none{opacity:.45}
+.aiHoR,.aiHoBars{display:flex;flex-direction:column}
+.aiHoRow{display:grid;grid-template-columns:minmax(48px,auto) minmax(0,1fr);gap:6px 12px;align-items:center;padding:9px 8px;border-radius:12px}
+.aiHoRow+.aiHoRow{border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.aiHoRow.today{background:color-mix(in srgb,var(--bc) 11%,transparent);border-top-color:transparent}.aiHoRow.today+.aiHoRow{border-top-color:transparent}
+.aiHoRow .d b{display:block;font-size:14.5px;font-weight:850;white-space:nowrap}.aiHoRow .d em{display:block;font-style:normal;font-size:10.5px;font-weight:800;color:var(--bc)}
+.aiHoChips{display:flex;flex-wrap:wrap;gap:6px}
+.aiHoChip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:13px;line-height:1.35;background:color-mix(in srgb,var(--hc,var(--bc)) 14%,var(--card));border:1px solid color-mix(in srgb,var(--hc,var(--bc)) 34%,var(--line))}
+.aiHoChip em{font-style:normal;font-weight:800;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;white-space:nowrap}.aiHoChip.tx em{direction:rtl;font-weight:650}
+.aiHoChip small{font-size:11.5px;font-weight:700;opacity:.85}.aiHoChip i{width:7px;height:7px;border-radius:50%;background:var(--hc,var(--bc));flex:none}
+.aiHoRow.off .aiHoChip{opacity:.5}
+.aiHoBar{position:relative;height:8px;margin-top:7px;border-radius:99px;background:color-mix(in srgb,var(--text) 8%,transparent);overflow:hidden;direction:ltr}
+.aiHoBar b{position:absolute;top:0;bottom:0;border-radius:99px;background:var(--hc,var(--bc))}.aiHoBar u{position:absolute;top:0;bottom:0;width:2px;background:var(--text);opacity:.75;text-decoration:none}
+.aiHoAxis{display:flex;justify-content:space-between;direction:ltr;margin:4px 8px 0 8px;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.aiHoLeg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:9px;font-size:12px;font-weight:700;color:var(--muted)}.aiHoLeg span{display:inline-flex;align-items:center;gap:6px}.aiHoLeg i{width:9px;height:9px;border-radius:3px;background:var(--hc,var(--bc))}
+/* week: on a narrow screen each day is a row (day, then its ranges); once there is room (a container of 600px or more) it becomes seven tiles */
+.aiHoWk{display:flex;flex-direction:column;gap:5px}
+.aiHoWk .c{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;border-radius:12px;padding:8px 11px;background:color-mix(in srgb,var(--text) 5%,transparent)}
+.aiHoWk .c b{flex:0 0 34px;font-size:14px;font-weight:850}
+.aiHoWk .s{display:inline-flex;align-items:center;gap:3px;direction:ltr;white-space:nowrap;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--hc,var(--bc)) 14%,var(--card));border:1px solid color-mix(in srgb,var(--hc,var(--bc)) 34%,var(--line))}
+.aiHoWk .s em{font-style:normal}.aiHoWk .s em+em::before{content:"–";margin-inline-end:3px;opacity:.7}
+.aiHoWk .s.z{background:none;border-color:transparent;opacity:.6}
+.aiHoWk .c.today{background:var(--bc);color:#fff}.aiHoWk .c.today .s{background:#ffffff26;border-color:#ffffff55}.aiHoWk .c.none{opacity:.5}
+@container aip (min-width:600px){
+  .aiHoWk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .aiHoWk .c{display:block;text-align:center;padding:6px 2px 7px;min-height:58px}
+  .aiHoWk .c b{display:block;margin-bottom:3px;font-size:12.5px}
+  .aiHoWk .s{display:block;border:0;border-top:2px solid var(--hc,var(--bc));border-radius:0;background:none;padding:2px 0 0;margin:4px 3px 0;font-size:9.5px;line-height:1.3}
+  .aiHoWk .s em{display:block}.aiHoWk .s em+em::before{content:none}
+  .aiHoWk .c.today .s{background:none;border-top-color:#ffffffb3}
+}
+@container aip (max-width:420px){.aiHoRow{grid-template-columns:minmax(0,1fr);gap:5px}.aiHoRow .d{display:flex;align-items:baseline;gap:8px}.aiHoRow .d em{display:inline}}
 .aiHc{display:flex;flex-wrap:wrap;gap:7px}.aiHc span{padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));font-size:13px}
 .aiSt2 ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;position:relative}
 .aiSt2 li{display:flex;gap:11px;align-items:flex-start;position:relative}
@@ -554,8 +566,8 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiAvt{width:52px;height:52px;font-size:21px}.aiCtH b{font-size:17px}
   .aiAc{padding:11px 15px}.aiAc i{font-size:14.5px}.aiAc em{font-size:12.5px}
   /* hours */
-  .aiHrow{padding:12px 14px;gap:6px 24px}.aiHrow .d b{font-size:15.5px}.aiHchips{gap:8px}.aiHchip{padding:5px 13px;font-size:14px}.aiHchip small{font-size:12.5px}.aiHbar{height:10px}
-  .aiHwk{gap:9px}.aiHwk .c{min-height:96px;padding:14px 6px;border-radius:15px}.aiHwk .c b{font-size:16px;margin-bottom:6px}.aiHwk .s{font-size:13px;margin-top:6px;padding-top:4px}
+  .aiHoRow{padding:12px 14px;gap:6px 24px}.aiHoRow .d b{font-size:15.5px}.aiHoChips{gap:8px}.aiHoChip{padding:5px 13px;font-size:14px}.aiHoChip small{font-size:12.5px}.aiHoBar{height:10px}
+  .aiHoWk{gap:9px}.aiHoWk .c{min-height:96px;padding:14px 6px;border-radius:15px}.aiHoWk .c b{font-size:16px;margin-bottom:6px}.aiHoWk .s{font-size:13px;margin-top:6px;padding-top:4px}.aiHoWk .s em{white-space:nowrap}
   .aiHc span{padding:7px 15px;font-size:14px}
   /* steps: numbered tiles instead of a thin vertical line */
   .aiSt2 ol{flex-direction:row;flex-wrap:wrap;gap:12px}
@@ -1218,8 +1230,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const badge = st ? '<span class="aiHbadge ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed) + "</span>" : "";
     const notes = []; b.it.forEach(r => uiTimeChips(r.h).forEach(c => { const n = c.n || r.l || ""; if (n && !notes.includes(n)) notes.push(n); }));
     const colOf = n => HOURS_COL[n ? notes.indexOf(n) % HOURS_COL.length : 0];
-    const chip = c => '<span class="aiHchip' + (c.t ? " tx" : "") + '" style="--hc:' + colOf(c.n) + '">' + (c.n ? "<i></i>" : "") + "<em>" + esc2(c.v) + "</em>" + (c.n ? "<small>" + esc2(c.n) + "</small>" : "") + "</span>";
-    const legend = notes.length ? '<div class="aiHleg">' + notes.map(n => '<span style="--hc:' + colOf(n) + '"><i></i>' + esc2(n) + "</span>").join("") + "</div>" : "";
+    const chip = c => '<span class="aiHoChip' + (c.t ? " tx" : "") + '" style="--hc:' + colOf(c.n) + '">' + (c.n ? "<i></i>" : "") + "<em>" + esc2(c.v) + "</em>" + (c.n ? "<small>" + esc2(c.n) + "</small>" : "") + "</span>";
+    const legend = notes.length ? '<div class="aiHoLeg">' + notes.map(n => '<span style="--hc:' + colOf(n) + '"><i></i>' + esc2(n) + "</span>").join("") + "</div>" : "";
     const hasDays = b.it.some(r => uiDays(r.d).size);
     const groups = hasDays ? uiHoursGroups(b.it, L)
       : b.it.map(r => ({ days: [], label: uiDayLabel(r.d) || r.l || "", slots: uiTimeChips(r.h).map(c => ({ ...c, n: c.n || (r.d ? r.l || "" : "") })) }));
@@ -1227,26 +1239,26 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (b.s === "compact") {                                                   // an older answer that was saved in the earlier "compact" style
       body = '<div class="aiHc">' + b.it.map(r => "<span><b>" + esc2(r.l || r.d) + "</b> " + esc2(r.h) + "</span>").join("") + "</div>";
     } else if (b.s === "week") {
-      body = '<div class="aiHwk">' + L.dayN.map((n, d) => {
+      body = '<div class="aiHoWk">' + L.dayN.map((n, d) => {
         const sl = b.it.filter(r => uiDays(r.d).has(d)).flatMap(r => uiTimeChips(r.h).map(c => ({ ...c, n: c.n || r.l || "" })));
         return '<div class="c' + (d === todayN ? " today" : "") + (sl.length ? "" : " none") + '"><b>' + esc2(n) + "</b>" +
-          (sl.length ? sl.map(c => '<span class="s" style="--hc:' + colOf(c.n) + '">' + (c.t ? esc2(c.v) : esc2(c.v.split("–")[0]) + "<br>" + esc2(c.v.split("–")[1])) + "</span>").join("") : '<span class="s z">-</span>') + "</div>";
+          (sl.length ? sl.map(c => '<span class="s" style="--hc:' + colOf(c.n) + '">' + (c.t ? "<em>" + esc2(c.v) + "</em>" : "<em>" + esc2(c.v.split("–")[0]) + "</em><em>" + esc2(c.v.split("–")[1]) + "</em>") + "</span>").join("") : '<span class="s z">-</span>') + "</div>";
       }).join("") + "</div>" + legend;
     } else if (b.s === "bars") {
       const all = groups.flatMap(g => g.slots.map(c => uiMins(c.v)).filter(Boolean));
       const lo = all.length ? Math.floor(Math.min(...all.map(x => x[0])) / 60) * 60 : 480, hi = all.length ? Math.max(lo + 60, Math.ceil(Math.max(...all.map(x => x[1])) / 60) * 60) : 1080;
       const nowM = new Date().getHours() * 60 + new Date().getMinutes();
-      body = '<div class="aiHbars">' + groups.map(g => {
+      body = '<div class="aiHoBars">' + groups.map(g => {
         const isToday = g.days.includes(todayN), segs = g.slots.map(c => { const m = uiMins(c.v); return m ? '<b style="--hc:' + colOf(c.n) + ";left:" + ((m[0] - lo) / (hi - lo) * 100).toFixed(2) + "%;width:" + Math.max(1.5, (m[1] - m[0]) / (hi - lo) * 100).toFixed(2) + '%"></b>' : ""; }).join("");
         const nowMark = isToday && nowM >= lo && nowM <= hi ? '<u style="left:' + ((nowM - lo) / (hi - lo) * 100).toFixed(2) + '%"></u>' : "";
-        return '<div class="aiHrow' + (isToday ? " today" : "") + (g.slots.length ? "" : " off") + '"><span class="d"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + "</span><div>" +
-          (g.slots.length ? '<div class="aiHchips">' + g.slots.map(chip).join("") + '</div><div class="aiHbar">' + segs + nowMark + "</div>" : '<div class="aiHchips"><span class="aiHchip tx"><em>' + esc2(L.shut) + "</em></span></div>") + "</div></div>";
-      }).join("") + '</div><div class="aiHaxis"><span>' + uiHM(lo) + "</span><span>" + uiHM(hi % 1440) + "</span></div>" + legend;
+        return '<div class="aiHoRow' + (isToday ? " today" : "") + (g.slots.length ? "" : " off") + '"><span class="d"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + "</span><div>" +
+          (g.slots.length ? '<div class="aiHoChips">' + g.slots.map(chip).join("") + '</div><div class="aiHoBar">' + segs + nowMark + "</div>" : '<div class="aiHoChips"><span class="aiHoChip tx"><em>' + esc2(L.shut) + "</em></span></div>") + "</div></div>";
+      }).join("") + '</div><div class="aiHoAxis"><span>' + uiHM(lo) + "</span><span>" + uiHM(hi % 1440) + "</span></div>" + legend;
     } else {
-      body = '<div class="aiHr">' + groups.map(g => {
+      body = '<div class="aiHoR">' + groups.map(g => {
         const isToday = g.days.includes(todayN);
-        return '<div class="aiHrow' + (isToday ? " today" : "") + (g.slots.length ? "" : " off") + '"><span class="d"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + '</span><div class="aiHchips">' +
-          (g.slots.length ? g.slots.map(chip).join("") : '<span class="aiHchip tx"><em>' + esc2(L.shut) + "</em></span>") + "</div></div>";
+        return '<div class="aiHoRow' + (isToday ? " today" : "") + (g.slots.length ? "" : " off") + '"><span class="d"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + '</span><div class="aiHoChips">' +
+          (g.slots.length ? g.slots.map(chip).join("") : '<span class="aiHoChip tx"><em>' + esc2(L.shut) + "</em></span>") + "</div></div>";
       }).join("") + "</div>";
     }
     return uiBk(b, "aiHours", '<div class="aiHH">' + uiIc(b.ic || "clock") + "<b>" + esc2(b.ti || "") + "</b>" + badge + "</div>" + body + (b.tx ? '<div class="aiNote">' + esc2(b.tx) + "</div>" : ""), false);
