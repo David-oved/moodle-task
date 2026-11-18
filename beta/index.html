@@ -1495,6 +1495,15 @@ body.app:not([data-view=dash]) .dfoot{display:none}
   .dcard,.task,.hero{border-radius:24px}
   .mrow .mi{border-radius:11px}
 }
+/* iPhone and the keyboard (David, 18.11: "when I type the screen grows and isn't locked; fit the typing line to the keyboard"):
+   1) iPhone zooms the page into any field under 16px when it's tapped – fields are 16px there.
+   2) iPhone doesn't shrink the page for the keyboard, so a window's bottom (the message box) hid behind it and the page slid around.
+      While the keyboard is open (html.kb, set from visualViewport below) every window fits exactly the part of the screen above it. */
+@supports (-webkit-touch-callout:none){ input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),textarea,select{font-size:max(16px,1em)!important} }
+html.kb .sheet{top:var(--vvt,0px);bottom:auto;height:var(--vvh,100%)}
+html.kb .sheet > .box{max-height:var(--vvh,100%)!important}
+html.kb .sheet.chat > .box{height:var(--vvh,100%)!important}
+html.kb .schc{padding-bottom:8px}
 </style>
 </head>
 <body>
@@ -4279,7 +4288,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.0-beta.10";
+const APP_VERSION = "1.9.0";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -5359,11 +5368,56 @@ function launchUrl(site) {
   return normUrl(site) + "/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=" + Math.floor(Math.random() * 1e9) + "&urlscheme=moodlemobile&confirmed=1";
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
+/* the keyboard: --vvh / --vvt = the visible part of the screen, html.kb while a keyboard covers part of it (see the CSS above) */
+(() => {
+  const vv = window.visualViewport, de = document.documentElement; if (!vv) return;
+  let raf = 0, was = false;
+  const fit = () => {
+    raf = 0;
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement && document.activeElement.tagName) || "") || (document.activeElement && document.activeElement.isContentEditable);
+    const kb = !!typing && de.clientHeight - vv.height > 120;
+    if (kb) { de.style.setProperty("--vvh", Math.round(vv.height) + "px"); de.style.setProperty("--vvt", Math.round(vv.offsetTop) + "px"); }
+    if (kb !== was) {
+      const l = document.querySelector(".sheet.chat:not([hidden]) .schl"), end = l && l.scrollHeight - l.scrollTop - l.clientHeight < 160;   // measured before the window shrinks
+      de.classList.toggle("kb", kb); was = kb;
+      if (end) { l.scrollTop = l.scrollHeight; requestAnimationFrame(() => { l.scrollTop = l.scrollHeight; }); }   // a chat that was at its newest message stays there
+      if (!kb && window.scrollY && document.querySelector(".sheet:not([hidden])")) window.scrollTo(0, 0);   // iPhone leaves the page slid up after the keyboard
+    }
+  };
+  const go = () => { if (!raf) raf = requestAnimationFrame(fit); };
+  vv.addEventListener("resize", go); vv.addEventListener("scroll", go);
+  document.addEventListener("focusin", go); document.addEventListener("focusout", () => setTimeout(go, 60));
+  window.kbFit = fit;
+})();
 const CHANGES = [
-  { v: "1.9.0", at: "2026-11-16 12:00", th: ["מיכאל", "יואל", "רוני", "איתן"],
-    he: ["📚 סיכומים ופתרונות בצ׳אטים של הקהילה: ב-📎 ליד תיבת ההודעה מצרפים PDF, תמונה, Word, PowerPoint או Excel עד 10 MB, ומסמנים אם זה סיכום או פתרון. כל הקבצים של קורס נמצאים במקום אחד: ״📚 סיכומים ופתרונות״ בצ׳אט ובדף הקורס", "✓ מה שקראת ב״הודעות מהקורסים״ נחשב נקרא בכל המכשירים שלך", "📞 בפידבק: אם לא השארת טלפון, נשאל פעם אחת איך לחזור אליך (ואפשר לשלוח גם בלי)", "🕳 בתצוגה ״נקייה״ נשאר בסקירה חור גדול במקום כרטיסים שהיא מסתירה. עכשיו אין חור"],
-    en: ["📚 Summaries and solutions in the community chats: the 📎 next to the message box attaches a PDF, picture, Word, PowerPoint or Excel file up to 10 MB, marked as a summary or a solution. All of a course’s files are in one place: “📚 Summaries & solutions” in the chat and on the course page", "✓ What you read in “Messages from your courses” counts as read on all your devices", "📞 Feedback: if you left no phone number, we ask once how to get back to you (sending without one still works)", "🕳 In the “clean” display the overview left a big hole where the cards it hides would be. Not any more"],
-    fr: ["📚 Résumés et solutions dans les chats de la communauté : le 📎 à côté de la zone de message joint un PDF, une image, un Word, un PowerPoint ou un Excel jusqu’à 10 Mo, marqué résumé ou solution. Tous les fichiers d’un cours sont au même endroit : « 📚 Résumés et solutions » dans le chat et sur la page du cours", "✓ Ce que vous avez lu dans « Messages des cours » est lu sur tous vos appareils", "📞 Commentaires : sans numéro de téléphone, on vous demande une fois comment vous répondre (on peut envoyer sans)", "🕳 En affichage « épuré », l’aperçu laissait un grand trou à la place des cartes masquées. C’est corrigé"] },
+  { v: "1.9.0", at: "2026-11-18 13:40", th: ["מיכאל", "יואל", "רוני", "איתן", "יעל", "מוריה", "דוד"],
+    he: ["🗂 טאבים חדשים בטאבלט ובמחשב: מבחנים, ציונים, קורסים, הודעות, ו״עוד״ עם קיצורי דרך לכל השאר (במחשב גם מקשים 1–9)",
+      "📚 סיכומים ופתרונות בצ׳אטים: ב-📎 ליד תיבת ההודעה מצרפים PDF, תמונה, Word, PowerPoint או Excel. כל הקבצים של קורס במקום אחד",
+      "🕐 זמני השיעורים ישר בסקירה: ״השיעורים היום״ עם התחלה וסוף, ״נגמר בעוד…״ ו״בעוד…״. ו״הבא בתור״ חזר למראה שאהבתם",
+      "🔖 שמירת הודעות ופתקים: ״השמורים שלי״ – הודעות חשובות מכל הצ׳אטים ופתקים לעצמך, בכל המכשירים",
+      "↻ שיעור כל שבועיים: בעריכת שיעור בוחרים ״כל שבועיים״ ואם הוא השבוע או בשבוע הבא (למשל תגבור)",
+      "🏆 דרגות בלשון שלך: בוחרים קמפוס פעם אחת, ו״איך מרוויחים נקודות?״ בצ׳אטים מראה את כל הדרגות וכמה אנשים בכל אחת",
+      "🌐 ציונים בשפה שלך: תרגילים בשפה אחרת מזו שאת/ה לומד/ת בה כבר לא נספרים כאילו לא הוגשו",
+      "✓ ״נקרא״ בכל המכשירים: מה שקראת ב״הודעות מהקורסים״ נחשב נקרא בכל המכשירים, ובפידבק אפשר לצרף עד 4 צילומי מסך",
+      "📱 הקלדה נוחה באייפון: בצ׳אט המסך לא מתקרב ולא קופץ – החלון מתאים את עצמו לגובה המקלדת"],
+    en: ["🗂 New tabs on tablets and computers: Exams, Grades, Courses, Messages, and More with shortcuts to everything else (keys 1–9 on a computer)",
+      "📚 Summaries and solutions in the chats: the 📎 next to the message box attaches a PDF, picture, Word, PowerPoint or Excel file. All of a course’s files in one place",
+      "🕐 Class times right on the overview: “Today’s classes” with start and end, “ends in…” and “in…”. And “Next up” is back to the look you liked",
+      "🔖 Save messages and notes: “Saved” keeps important messages from every chat and notes to yourself, on all your devices",
+      "↻ Every-other-week classes: when editing a class choose “every two weeks” and whether it’s this week or next (e.g. a review session)",
+      "🏆 Ranks in your form: choose your campus once (Hebrew masculine/feminine), and “How do I earn points?” in the chats shows every rank and how many people are at each",
+      "🌐 Grades in your language: exercises in another language than the one you take the course in no longer count as not submitted",
+      "✓ “Read” on every device: what you read in “Messages from your courses” is read on all your devices, and feedback takes up to 4 screenshots",
+      "📱 Easier typing on iPhone: in a chat the screen no longer zooms or jumps – the window fits above the keyboard"],
+    fr: ["🗂 Nouveaux onglets sur tablette et ordinateur : Examens, Notes, Cours, Messages, et Plus avec des raccourcis vers tout le reste (touches 1–9 sur ordinateur)",
+      "📚 Résumés et solutions dans les chats : le 📎 à côté de la zone de message joint un PDF, une image, un Word, un PowerPoint ou un Excel. Tous les fichiers d’un cours au même endroit",
+      "🕐 Les horaires des cours sur l’aperçu : « Cours du jour » avec début et fin, « se termine dans… » et « dans… ». Et « À suivre » retrouve l’apparence que vous aimiez",
+      "🔖 Enregistrer messages et notes : « Enregistrés » garde les messages importants de tous les chats et vos notes, sur tous vos appareils",
+      "↻ Cours une semaine sur deux : en modifiant un cours, choisissez « toutes les deux semaines » et si c’est cette semaine ou la suivante (p. ex. un renfort)",
+      "🏆 Les rangs à votre forme : choisissez votre campus une fois (masculin/féminin en hébreu), et « Comment gagner des points ? » dans les chats montre tous les rangs et combien de personnes à chacun",
+      "🌐 Les notes dans votre langue : les exercices dans une autre langue que celle de votre cours ne comptent plus comme non rendus",
+      "✓ « Lu » sur tous les appareils : ce que vous avez lu dans « Messages des cours » est lu partout, et les commentaires acceptent jusqu’à 4 captures",
+      "📱 Écrire plus facilement sur iPhone : dans un chat l’écran ne zoome plus et ne saute plus – la fenêtre s’adapte au-dessus du clavier"] },
   { v: "1.8.0", at: "2026-11-16 02:00", th: ["מנדי", "נועם", "פנינה", "יעל", "אבינועם", "יהושע", "אלעזר", "דוד"],
     he: ["🧩 סקירה בסגנון מסך הבית: כל אריח בגודל שתבחר (1×1 עד 4×4), ובכל גודל הוא נראה כמו וידג׳ט – קטן ותמציתי או גדול ומפורט. ״עריכה״ למעלה או לחיצה ארוכה כדי לסדר, ״🪄 סידור בלי רווחים״ ממלא חורים, ולטלפון, לטאבלט ולמחשב יש סידור נפרד", "🗓 מערכת שעות ברורה: בכל קוביה שם השיעור ואז השעות, שיעור/תרגול ומקום, בלי טקסט חתוך. ב״תצוגה וסדר״ בוחרים גודל וסדר שורות, במחשב העכבר על שיעור מראה את כל הפרטים, ואפשר להוסיף כמה שיעורים בבת אחת", "📅 לחיצה על יום: בלוח החודש או בשבוע רואים מה יש בו – מבחנים ובחנים, הגשות והלוח האקדמי", "📈 התקדמות והערות: ״כמה כבר עשיתי״ (25%–75%) בדף המטלה עם פס דק על הכרטיס, והערות לעצמך בדף כל מטלה וכל קורס (אפשר גם לשתף עם הקורס)", "🔎 חיפוש בהגדרות: כותבים ״להסתיר קורס״, ״לוגו״ או ״ציונים״ ומגיעים ישר למקום. ובטופס הפידבק – ״אולי זה כבר קיים?״", "📱 נוח יותר בטלפון: כל חלון במסך מלא, הכותרת מתכווצת בגלילה, פחות חלונות קופצים (אחד לכל כניסה), חזרה לסקירה אחרי היעדרות, ומה שקראת בצ׳אטים מסונכרן בין המכשירים", "💻 במחשב: פריסה רחבה, צ׳אטים בפיצול מסך וגרירה לסידור הסקירה", "🎨 מראה: ״מראה, צבעים ולוגו״ במקום אחד, ארבעה לוגואים חדשים, ⋯ ליד כל קורס להסתרה מהירה, ומה שהוגש נראה שקט יותר", "🌐 שפות: מטלה שיש לה כמה העתקים מוצגת בשפה שלך, ופס הסמסטר נקי עם ״אתה כאן״", "🔒 פרטיות ושקיפות: עמוד חדש בהגדרות – מה האפליקציה רואה, מה נשאר במכשיר ומה נשלח", "🛠 יציבות: בדיקה מעמיקה על נתונים אמיתיים ותיקון של הרבה באגים – בין היתר ״הבנתי״ שלא תמיד נקלט ובזבז סוללה, ״לא הצלחתי לעדכן״ שלא הופיע בסקירה, טקסט שנמחק כשחוזרים לאפליקציה וכפתורים באייפון שלא הגיבו"],
     en: ["🧩 An overview like your home screen: each card gets the size you choose (1×1 to 4×4) and looks like a widget at every size – small and to the point, or big and detailed. “Edit” at the top or a long press to arrange, “🪄 Fill the gaps” closes holes, and phone, tablet and computer each keep their own layout", "🗓 A clearer timetable: each block shows the class name, then its times, lecture/exercise and place, with no text cut off. “Display” lets you pick the size and the order of the lines, on a computer the mouse on a class shows all its details, and you can add several classes at once", "📅 Tap a day: in the month or week view you see what’s on – exams and quizzes, deadlines and the academic calendar", "📈 Progress and notes: “how far I got” (25%–75%) on a task page with a thin bar on the card, and notes to yourself on every task and course page (you can share them with the course too)", "🔎 Search in settings: type “hide course”, “logo” or “grades” and go straight there. And in the feedback form – “maybe it’s already there?”", "📱 Easier on phones: every window full screen, a top bar that shrinks as you scroll, fewer pop-ups (one per visit), back to the overview after a while away, and what you’ve read in chats syncs between devices", "💻 On a computer: a wide layout, chats side by side and drag to arrange the overview", "🎨 Look: “Look, colours & logo” in one place, four new logos, ⋯ next to each course to hide it fast, and submitted tasks look calmer", "🌐 Languages: a task with copies in several languages shows the one in yours, and the semester bar is clean with “You are here”", "🔒 Privacy & transparency: a new page in settings – what the app sees, what stays on the device and what is sent", "🛠 Stability: a deep check on real data and many bugs fixed – among them “Got it” not always registering and draining the battery, “Couldn’t update” missing from the overview, text lost when coming back to the app, and iPhone buttons that didn’t respond"],

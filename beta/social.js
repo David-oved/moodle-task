@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.0-beta.10";
+const SOC_V = "1.9.0";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -1181,7 +1181,7 @@ html[dir=rtl] .sm{border-radius:16px 16px 4px 16px}html[dir=rtl] .sm.me{border-r
 .schc{border-top:1px solid var(--line);padding:8px 0 calc(10px + env(safe-area-inset-bottom));background:inherit}
 .schrep{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);padding:0 4px 6px}
 .schin{display:flex;gap:8px;align-items:flex-end}
-.schin textarea{flex:1;resize:none;min-height:42px;max-height:120px;padding:10px 12px;border-radius:14px;font:inherit;font-size:15px}
+.schin textarea{flex:1;resize:none;min-height:42px;max-height:120px;padding:10px 12px;border-radius:14px;font:inherit;font-size:16px}
 .schin .primary{width:44px;height:44px;border-radius:50%;padding:0;display:grid;place-items:center;flex:none}.schin .primary .i{width:20px;height:20px}
 html[dir=rtl] .schin .primary .i{transform:scaleX(-1)}
 .schin .sattb{width:40px;height:44px;flex:none;color:var(--accent-t);border-radius:12px}.schin .sattb .i{width:22px;height:22px}.schin .sattb:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
