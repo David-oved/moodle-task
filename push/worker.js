@@ -204,6 +204,35 @@ const okCid = c => (typeof c === "string" || typeof c === "number") && /^[0-9]{1
 const okWa = u => typeof u === "string" && /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{10,40}$/.test(u);
 // the semester a moment belongs to: Sep–Feb = A (of the year it started), Mar–Aug = B
 function semKey(ms) { const d = new Date(ms), y = d.getUTCFullYear(), m = d.getUTCMonth() + 1; return m >= 9 ? y + "A" : m <= 2 ? (y - 1) + "A" : (y - 1) + "B"; }
+/* ---------- passkeys (WebAuthn) for community management: the device keeps the private key behind Face ID / fingerprint; the server keeps only the
+   public key and checks each signature, the challenge it gave, the site (origin + rpId) and that the person was verified (UV) ---------- */
+const hex = u => [...new Uint8Array(u)].map(x => x.toString(16).padStart(2, "0")).join("");
+function cbor(u8) {                       // just enough CBOR for an attestation object and a COSE key
+  let i = 0; const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength), need = n => { if (i + n > u8.length) throw new Error("cbor"); };
+  const len = ai => { if (ai < 24) return ai; if (ai === 24) { need(1); return u8[i++]; } if (ai === 25) { need(2); i += 2; return dv.getUint16(i - 2); } if (ai === 26) { need(4); i += 4; return dv.getUint32(i - 4); } throw new Error("cbor"); };
+  const item = depth => { if (depth > 8) throw new Error("cbor"); need(1); const b = u8[i++], mt = b >> 5, ai = b & 31;
+    if (mt === 7) { if (ai === 20) return false; if (ai === 21) return true; if (ai === 22) return null; throw new Error("cbor"); }
+    const n = len(ai);
+    if (mt === 0) return n; if (mt === 1) return -1 - n;
+    if (mt === 2 || mt === 3) { need(n); const v = u8.slice(i, i + n); i += n; return mt === 2 ? v : new TextDecoder().decode(v); }
+    if (mt === 4) { if (n > 64) throw new Error("cbor"); const a = []; for (let k = 0; k < n; k++) a.push(item(depth + 1)); return a; }
+    if (mt === 5) { if (n > 64) throw new Error("cbor"); const m = new Map(); for (let k = 0; k < n; k++) { const key = item(depth + 1); m.set(key, item(depth + 1)); } return m; }
+    throw new Error("cbor"); };
+  const v = item(0); return [v, i];
+}
+function der2raw(d) {                     // ECDSA signature: DER → r||s (what WebCrypto wants)
+  let p = 2; if (d[0] !== 0x30) throw new Error("sig"); if (d[1] & 0x80) p = 2 + (d[1] & 0x7f);
+  const rd = () => { if (d[p++] !== 2) throw new Error("sig"); const l = d[p++]; let v = d.slice(p, p + l); p += l; while (v.length > 32 && v[0] === 0) v = v.slice(1); if (v.length > 32) throw new Error("sig"); const o = new Uint8Array(32); o.set(v, 32 - v.length); return o; };
+  const o = new Uint8Array(64); o.set(rd()); o.set(rd(), 32); return o;
+}
+const PK_ALG = { [-7]: { imp: { name: "ECDSA", namedCurve: "P-256" }, ver: { name: "ECDSA", hash: "SHA-256" } }, [-257]: { imp: { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, ver: { name: "RSASSA-PKCS1-v1_5" } } };
+function coseJwk(m) {
+  const kty = m.get(1), alg = m.get(3);
+  if (kty === 2 && alg === -7 && m.get(-1) === 1) return [alg, { kty: "EC", crv: "P-256", x: b64u(m.get(-2)), y: b64u(m.get(-3)), ext: true }];
+  if (kty === 3 && alg === -257) return [alg, { kty: "RSA", n: b64u(m.get(-1)), e: b64u(m.get(-2)), alg: "RS256", ext: true }];
+  throw new Error("alg");
+}
+
 export class Community extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
@@ -227,6 +256,9 @@ export class Community extends DurableObject {
       CREATE TABLE IF NOT EXISTS reacts (mid INTEGER, uid TEXT, emo TEXT, PRIMARY KEY (mid, uid, emo));
       CREATE TABLE IF NOT EXISTS stars (mid INTEGER, uid TEXT, PRIMARY KEY (mid, uid));`);
     this.sql.exec("CREATE TABLE IF NOT EXISTS imgs (id TEXT PRIMARY KEY, type TEXT, data BLOB, at INTEGER)");
+    // community management: who is an admin (claimed once with a one-time code whose hash is in the config), and everything an admin does
+    this.sql.exec("CREATE TABLE IF NOT EXISTS admins (uid TEXT PRIMARY KEY, at INTEGER); CREATE TABLE IF NOT EXISTS adclaims (h TEXT PRIMARY KEY, uid TEXT, at INTEGER); CREATE TABLE IF NOT EXISTS adlog (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT, act TEXT, d TEXT, at INTEGER); CREATE TABLE IF NOT EXISTS adtries (uid TEXT, at INTEGER); CREATE TABLE IF NOT EXISTS adkeys (cid TEXT PRIMARY KEY, uid TEXT, alg INTEGER, jwk TEXT, cnt INTEGER, at INTEGER); CREATE TABLE IF NOT EXISTS adch (uid TEXT PRIMARY KEY, ch TEXT, adding INTEGER, at INTEGER); CREATE TABLE IF NOT EXISTS adsess (h TEXT PRIMARY KEY, uid TEXT, exp INTEGER)");
+    this.env = env;
     // what happened to me that I'll want to hear about when I open the app (for now: someone starred my message)
     this.sql.exec("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT, kind TEXT, from_uid TEXT, cid TEXT, tk TEXT, mid INTEGER, body TEXT, at INTEGER)");
     this.sql.exec("CREATE INDEX IF NOT EXISTS notes_u ON notes (uid, at)");
@@ -344,6 +376,8 @@ export class Community extends DurableObject {
     for (const [c, p] of [["", "all"], ["", sem], [cid || "", "all"], [cid || "", sem]].filter((x, i) => i < 2 || cid))
       this.sql.exec("INSERT INTO tot (uid, cid, per, pts) VALUES (?, ?, ?, ?) ON CONFLICT (uid, cid, per) DO UPDATE SET pts = pts + excluded.pts", uid, c, p, pts);
   }
+  isAdmin(uid) { return !!this.one("SELECT uid FROM admins WHERE uid = ?", uid); }
+  adlog(uid, act, d) { this.sql.exec("INSERT INTO adlog (uid, act, d, at) VALUES (?, ?, ?, ?)", uid, act, d || "", Date.now()); }
   pts(uid) { const r = this.q("SELECT per, pts FROM tot WHERE uid = ? AND cid = ''", uid), sem = semKey(Date.now()); return { all: (r.find(x => x.per === "all") || {}).pts || 0, sem: (r.find(x => x.per === sem) || {}).pts || 0 }; }
   pub(cid) {                                                // a course's shared part, cached until it changes
     if (this.cc.has(cid)) return this.cc.get(cid);
@@ -372,7 +406,7 @@ export class Community extends DurableObject {
       const since = Math.max(Number(b.ns) || 0, now - 14 * 86400e3);
       const notes = this.q(`SELECT n.id, n.kind, n.cid, n.tk, n.mid, n.body, n.at, u.name, t.ref FROM notes n LEFT JOIN users u ON u.uid = n.from_uid LEFT JOIN thr t ON t.cid = n.cid AND t.tk = n.tk
         WHERE n.uid = ? AND n.at > ? ORDER BY n.at DESC LIMIT 20`, me.uid, since).map(r => ({ id: r.id, kind: r.kind, cid: r.cid, tk: r.tk, mid: r.mid, body: r.body || "", at: r.at, name: r.name || "", ref: r.ref || "" }));
-      return [200, { me: { uid: me.uid, ...this.pts(me.uid) }, c: out, mine, added, notes, merged }];
+      return [200, { me: { uid: me.uid, ...this.pts(me.uid), ...(this.isAdmin(me.uid) ? { admin: true } : {}) }, c: out, mine, added, notes, merged }];
     }
     const cid = okCid(b.cid) ? String(b.cid) : "";
     if (op === "time") {
@@ -512,6 +546,120 @@ export class Community extends DurableObject {
       const cn = cid ? this.one("SELECT name FROM courses WHERE cid = ?", cid) : null;
       return [200, { rows: rows.map(r => ({ uid: r.uid, pts: r.pts, total: r.total || 0, name: r.name, deg: r.deg, yr: r.yr })), me: { pts: mine ? mine.pts : 0, pos }, cname: cn ? cn.name : "" }];
     }
+    /* ---------- community management (admins only; every call is checked here, on the server) ---------- */
+    if (op === "admin/claim") {
+      // a one-time code: only its SHA-256 is in the config, it works once, and 5 wrong tries a day per account are allowed
+      const tries = this.one("SELECT COUNT(*) AS n FROM adtries WHERE uid = ? AND at > ?", me.uid, now - 864e5).n;
+      if (tries >= 5) return [429, { error: "tries" }];
+      const want = String((this.env && this.env.ADMIN_CLAIM_H) || ""), h = [...new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode("admin:" + clip(b.code, 100))))].map(x => x.toString(16).padStart(2, "0")).join("");
+      if (!/^[0-9a-f]{64}$/.test(want) || h !== want || this.one("SELECT h FROM adclaims WHERE h = ?", h)) { this.sql.exec("INSERT INTO adtries (uid, at) VALUES (?, ?)", me.uid, now); return [403, { error: "code" }]; }
+      this.sql.exec("INSERT INTO adclaims (h, uid, at) VALUES (?, ?, ?)", h, me.uid, now);
+      this.sql.exec("INSERT OR IGNORE INTO admins (uid, at) VALUES (?, ?)", me.uid, now);
+      this.sql.exec("DELETE FROM adkeys WHERE uid = ?", me.uid); this.sql.exec("DELETE FROM adsess WHERE uid = ?", me.uid);   // a new code from the owner also starts the passkeys over (recovery)
+      this.adlog(me.uid, "claim", "");
+      return [200, { admin: true }];
+    }
+    if (op.startsWith("admin/")) {
+      if (!this.isAdmin(me.uid)) return [403, { error: "not admin" }];
+      /* a passkey session is needed for everything below; these three make one */
+      const origin = String(b.__o || ""), rp = /^https?:\/\/[^/]+$/.test(origin) ? new URL(origin).hostname : "";
+      const sess = async () => { const h = hex(await crypto.subtle.digest("SHA-256", enc.encode("s:" + clip(b.at, 100)))); const r = b.at ? this.one("SELECT uid FROM adsess WHERE h = ? AND exp > ?", h, now) : null; return !!r && r.uid === me.uid; };
+      const newSess = async () => { const at = b64u(crypto.getRandomValues(new Uint8Array(32))), ttl = 30 * 60e3;
+        this.sql.exec("DELETE FROM adsess WHERE exp < ?", now); this.sql.exec("INSERT INTO adsess (h, uid, exp) VALUES (?, ?, ?)", hex(await crypto.subtle.digest("SHA-256", enc.encode("s:" + at))), me.uid, now + ttl); return [200, { at, ttl }]; };
+      const fail = () => { this.sql.exec("INSERT INTO adtries (uid, at) VALUES (?, ?)", me.uid, now); return [403, { error: "passkey" }]; };
+      const keys = () => this.q("SELECT cid FROM adkeys WHERE uid = ?", me.uid).map(r => r.cid);
+      if (op === "admin/pk/begin" || op === "admin/pk/reg" || op === "admin/pk/auth") {
+        if (!rp) return [403, { error: "origin" }];
+        if (this.one("SELECT COUNT(*) AS n FROM adtries WHERE uid = ? AND at > ?", me.uid, now - 864e5).n >= 10) return [429, { error: "tries" }];
+        if (op === "admin/pk/begin") {
+          const ch = b64u(crypto.getRandomValues(new Uint8Array(32))), ids = keys();
+          this.sql.exec("INSERT OR REPLACE INTO adch (uid, ch, adding, at) VALUES (?, ?, ?, ?)", me.uid, ch, ids.length && (await sess()) ? 1 : 0, now);
+          return [200, { ch, has: ids.length > 0, ids, rp, uh: b64u((await crypto.subtle.digest("SHA-256", enc.encode("adm:" + me.uid))).slice(0, 16)) }];
+        }
+        const c = this.one("SELECT ch, adding, at FROM adch WHERE uid = ?", me.uid); this.sql.exec("DELETE FROM adch WHERE uid = ?", me.uid);   // a challenge works once, for 3 minutes
+        if (!c || now - c.at > 3 * 60e3) return fail();
+        let cd; try { cd = JSON.parse(new TextDecoder().decode(unb64u(clip(b.cd, 4000)))); } catch (e) { return fail(); }
+        if (!cd || cd.challenge !== c.ch || cd.origin !== origin || cd.type !== (op === "admin/pk/reg" ? "webauthn.create" : "webauthn.get")) return fail();
+        const rph = new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(rp)));
+        const okAd = (ad, flagsNeed) => ad.length >= 37 && rph.every((x, k) => ad[k] === x) && (ad[32] & flagsNeed) === flagsNeed;   // the site's hash, UP (0x01) + UV (0x04)
+        try {
+          if (op === "admin/pk/reg") {
+            const have = keys(); if (have.length && !c.adding) return fail();            // the first key needs only the admin account; any more need a passkey session
+            if (have.length >= 6) return [400, { error: "too many keys" }];
+            const [ao] = cbor(unb64u(clip(b.ao, 6000))), ad = ao instanceof Map ? ao.get("authData") : null;
+            if (!(ad instanceof Uint8Array) || !okAd(ad, 0x45)) return fail();          // + AT (0x40): it carries the new key
+            const dv = new DataView(ad.buffer, ad.byteOffset, ad.byteLength), n = dv.getUint16(53), cid = b64u(ad.slice(55, 55 + n));
+            if (!n || n > 1023) return fail();
+            const [cose] = cbor(ad.slice(55 + n)), [alg, jwk] = coseJwk(cose);
+            await crypto.subtle.importKey("jwk", jwk, PK_ALG[alg].imp, false, ["verify"]);
+            if (this.one("SELECT cid FROM adkeys WHERE cid = ?", cid)) return fail();
+            this.sql.exec("INSERT INTO adkeys (cid, uid, alg, jwk, cnt, at) VALUES (?, ?, ?, ?, ?, ?)", cid, me.uid, alg, JSON.stringify(jwk), dv.getUint32(33), now);
+            this.adlog(me.uid, "pkadd", "");
+            return await newSess();
+          }
+          const k = this.one("SELECT * FROM adkeys WHERE cid = ? AND uid = ?", clip(b.id, 1400), me.uid); if (!k) return fail();
+          const ad = unb64u(clip(b.ad, 2000)); if (!okAd(ad, 0x05)) return fail();
+          const data = new Uint8Array(ad.length + 32); data.set(ad); data.set(new Uint8Array(await crypto.subtle.digest("SHA-256", unb64u(clip(b.cd, 4000)))), ad.length);
+          const key = await crypto.subtle.importKey("jwk", JSON.parse(k.jwk), PK_ALG[k.alg].imp, false, ["verify"]);
+          let sig = unb64u(clip(b.sig, 1200)); if (k.alg === -7) sig = der2raw(sig);
+          if (!(await crypto.subtle.verify(PK_ALG[k.alg].ver, key, sig, data))) return fail();
+          const cnt = new DataView(ad.buffer, ad.byteOffset, ad.byteLength).getUint32(33);
+          if ((cnt || k.cnt) && cnt <= k.cnt) return fail();                              // a counter that went back = a cloned key
+          this.sql.exec("UPDATE adkeys SET cnt = ? WHERE cid = ?", cnt, k.cid);
+          this.adlog(me.uid, "pkin", "");
+          return await newSess();
+        } catch (e) { return fail(); }
+      }
+      if (!(await sess())) return [401, { error: "pk" }];
+      const D = 864e5, nm = uid => (this.one("SELECT name FROM users WHERE uid = ?", uid) || {}).name || "";
+      const cname = cid => (this.one("SELECT name FROM courses WHERE cid = ?", cid) || {}).name || "";
+      const tname = (cid, tk) => tk === "c" ? "" : ((this.one("SELECT ref FROM thr WHERE cid = ? AND tk = ?", cid, tk) || {}).ref || tk);
+      const msg = m => ({ id: m.id, cid: m.cid, cn: m.cname || cname(m.cid), tk: m.tk, tn: tname(m.cid, m.tk), uid: m.uid, name: m.name || nm(m.uid), body: m.del ? "" : m.body, del: !!m.del, at: m.at, stars: m.stars || 0 });
+      if (op === "admin/ov") {
+        const n = (sql, ...a) => this.one(sql, ...a).n || 0;
+        const days = []; for (let i = 13; i >= 0; i--) { const a = new Date(now - i * D); a.setUTCHours(0, 0, 0, 0); const s0 = a.getTime(); days.push({ d: new Date(s0).toISOString().slice(0, 10), n: n("SELECT COUNT(*) AS n FROM msgs WHERE at >= ? AND at < ?", s0, s0 + D) }); }
+        const courses = this.q(`SELECT m.cid, c.name, COUNT(*) AS msgs, MAX(m.at) AS last, COUNT(DISTINCT m.uid) AS people, SUM(CASE WHEN m.at > ? THEN 1 ELSE 0 END) AS week
+          FROM msgs m LEFT JOIN courses c ON c.cid = m.cid WHERE m.del = 0 GROUP BY m.cid ORDER BY last DESC LIMIT 200`, now - 7 * D);
+        const recent = this.q("SELECT m.*, u.name, c.name AS cname FROM msgs m LEFT JOIN users u ON u.uid = m.uid LEFT JOIN courses c ON c.cid = m.cid ORDER BY m.id DESC LIMIT 80").map(msg);
+        const top = this.q("SELECT t.uid, t.pts, u.name, u.deg, u.yr FROM tot t JOIN users u ON u.uid = t.uid WHERE t.cid = '' AND t.per = 'all' ORDER BY t.pts DESC LIMIT 15");
+        return [200, { stats: { users: n("SELECT COUNT(*) AS n FROM users"), active7: n("SELECT COUNT(*) AS n FROM users WHERE seen > ?", now - 7 * D), active1: n("SELECT COUNT(*) AS n FROM users WHERE seen > ?", now - D),
+          msgs: n("SELECT COUNT(*) AS n FROM msgs WHERE del = 0"), msgs1: n("SELECT COUNT(*) AS n FROM msgs WHERE at > ?", now - D), msgs7: n("SELECT COUNT(*) AS n FROM msgs WHERE at > ?", now - 7 * D),
+          posters7: n("SELECT COUNT(DISTINCT uid) AS n FROM msgs WHERE at > ?", now - 7 * D), files: n("SELECT COUNT(*) AS n FROM files WHERE ok = 1 AND del = 0"), shares: n("SELECT COUNT(*) AS n FROM shares WHERE del = 0"),
+          times: n("SELECT COUNT(*) AS n FROM times"), stars: n("SELECT COUNT(*) AS n FROM stars") }, days, courses, recent, top }];
+      }
+      if (op === "admin/course") {          // a course's threads, newest first
+        const cid = clip(b.cid, 20);
+        return [200, { cid, name: cname(cid), thr: this.q("SELECT tk, n, last, ref FROM thr WHERE cid = ? ORDER BY last DESC LIMIT 100", cid) }];
+      }
+      if (op === "admin/thread") {
+        const cid = clip(b.cid, 20), tk = clip(b.tk, 60);
+        const L = this.q("SELECT m.*, u.name FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? ORDER BY m.id DESC LIMIT 300", cid, tk).reverse();
+        return [200, { cid, tk, name: cname(cid), tn: tname(cid, tk), msgs: L.map(msg) }];
+      }
+      if (op === "admin/users") {
+        const q = clip(b.q, 40).trim();
+        const L = this.q(`SELECT u.uid, u.name, u.deg, u.yr, u.seen, (SELECT pts FROM tot t WHERE t.uid = u.uid AND t.cid = '' AND t.per = 'all') AS pts,
+          (SELECT COUNT(*) FROM msgs m WHERE m.uid = u.uid) AS msgs FROM users u ${q ? "WHERE u.name LIKE ?" : ""} ORDER BY u.seen DESC LIMIT 60`, ...(q ? ["%" + q.replace(/[%_]/g, "") + "%"] : []));
+        return [200, { users: L.map(u => ({ ...u, pts: u.pts || 0, admin: this.isAdmin(u.uid) })) }];
+      }
+      if (op === "admin/grant") {         // points by hand (beta testers, steady feedback givers): a reason, -500..500, shown in their points log
+        const to = okId(b.to) ? b.to : "", pts = Math.trunc(Number(b.pts)), why = clip(b.why, 80).trim();
+        if (!to || !this.one("SELECT uid FROM users WHERE uid = ?", to)) return [404, { error: "no such user" }];
+        if (!pts || Math.abs(pts) > 500 || why.length < 2) return [400, { error: "bad grant" }];
+        if (this.one("SELECT COUNT(*) AS n FROM adlog WHERE uid = ? AND act = 'grant' AND at > ?", me.uid, now - 60e3).n >= 20) return [429, { error: "slow down" }];
+        this.award(to, pts, "admin", me.uid, "", why);
+        this.adlog(me.uid, "grant", JSON.stringify({ to, name: nm(to), pts, why }));
+        return [200, { ok: true, total: this.pts(to) }];
+      }
+      if (op === "admin/log") return [200, { log: this.q("SELECT a.*, u.name FROM adlog a LEFT JOIN users u ON u.uid = a.uid ORDER BY a.id DESC LIMIT 100") }];
+      return [404, { error: "not found" }];
+    }
+    if (op === "ranks") {            // how many people are at each rank (all-time points; the thresholds match RANKS in social.js)
+      const th = [0, 30, 80, 150, 350, 800, 2000], all = this.one("SELECT COUNT(*) AS n FROM users").n || 0;
+      const n = th.map((lo, i) => i === 0 ? 0 : this.one("SELECT COUNT(*) AS n FROM tot WHERE cid = '' AND per = 'all' AND pts >= ?" + (i < th.length - 1 ? " AND pts < ?" : ""), lo, ...(i < th.length - 1 ? [th[i + 1]] : [])).n);
+      n[0] = Math.max(0, all - n.reduce((a, x) => a + x, 0));
+      return [200, { n, all }];
+    }
     if (op === "user") {
       const who = okId(b.who) ? b.who : me.uid, u = this.one("SELECT uid, name, deg, yr FROM users WHERE uid = ?", who);
       if (!u) return [404, { error: "no such user" }];
@@ -592,7 +740,7 @@ export default {
     }
     if (path.startsWith("/social/")) {
       if (raw.length > 64 * 1024) return out({ error: "too big" }, 413);
-      const [st, o] = await community(env).handle(path.slice(8), b);
+      const [st, o] = await community(env).handle(path.slice(8), Object.assign(b && typeof b === "object" ? b : {}, { __o: origin }));   // the real Origin (checked above), for passkeys
       return out(o, st);
     }
     const ep = b && (b.sub ? b.sub.endpoint : b.endpoint);

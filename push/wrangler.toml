@@ -4,6 +4,11 @@ main = "worker.js"
 compatibility_date = "2025-09-01"
 workers_dev = true
 
+# community management: the SHA-256 of a one-time code ("admin:" + code). Only the hash is here; the code was given to the owner once, works once,
+# and every admin call is still checked on the server against the admins table. A new code = a new hash here.
+[vars]
+ADMIN_CLAIM_H = "3cfc5ec989bf12aeb80183e13b6ce08c016765bb78a5790c1f098aae798209ae"
+
 [[durable_objects.bindings]]
 name = "DEVICES"
 class_name = "Device"
