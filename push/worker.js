@@ -227,6 +227,9 @@ export class Community extends DurableObject {
       CREATE TABLE IF NOT EXISTS reacts (mid INTEGER, uid TEXT, emo TEXT, PRIMARY KEY (mid, uid, emo));
       CREATE TABLE IF NOT EXISTS stars (mid INTEGER, uid TEXT, PRIMARY KEY (mid, uid));`);
     this.sql.exec("CREATE TABLE IF NOT EXISTS imgs (id TEXT PRIMARY KEY, type TEXT, data BLOB, at INTEGER)");
+    // community management: who is an admin (claimed once with a one-time code whose hash is in the config), and everything an admin does
+    this.sql.exec("CREATE TABLE IF NOT EXISTS admins (uid TEXT PRIMARY KEY, at INTEGER); CREATE TABLE IF NOT EXISTS adclaims (h TEXT PRIMARY KEY, uid TEXT, at INTEGER); CREATE TABLE IF NOT EXISTS adlog (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT, act TEXT, d TEXT, at INTEGER); CREATE TABLE IF NOT EXISTS adtries (uid TEXT, at INTEGER)");
+    this.env = env;
     // what happened to me that I'll want to hear about when I open the app (for now: someone starred my message)
     this.sql.exec("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT, kind TEXT, from_uid TEXT, cid TEXT, tk TEXT, mid INTEGER, body TEXT, at INTEGER)");
     this.sql.exec("CREATE INDEX IF NOT EXISTS notes_u ON notes (uid, at)");
@@ -344,6 +347,8 @@ export class Community extends DurableObject {
     for (const [c, p] of [["", "all"], ["", sem], [cid || "", "all"], [cid || "", sem]].filter((x, i) => i < 2 || cid))
       this.sql.exec("INSERT INTO tot (uid, cid, per, pts) VALUES (?, ?, ?, ?) ON CONFLICT (uid, cid, per) DO UPDATE SET pts = pts + excluded.pts", uid, c, p, pts);
   }
+  isAdmin(uid) { return !!this.one("SELECT uid FROM admins WHERE uid = ?", uid); }
+  adlog(uid, act, d) { this.sql.exec("INSERT INTO adlog (uid, act, d, at) VALUES (?, ?, ?, ?)", uid, act, d || "", Date.now()); }
   pts(uid) { const r = this.q("SELECT per, pts FROM tot WHERE uid = ? AND cid = ''", uid), sem = semKey(Date.now()); return { all: (r.find(x => x.per === "all") || {}).pts || 0, sem: (r.find(x => x.per === sem) || {}).pts || 0 }; }
   pub(cid) {                                                // a course's shared part, cached until it changes
     if (this.cc.has(cid)) return this.cc.get(cid);
@@ -372,7 +377,7 @@ export class Community extends DurableObject {
       const since = Math.max(Number(b.ns) || 0, now - 14 * 86400e3);
       const notes = this.q(`SELECT n.id, n.kind, n.cid, n.tk, n.mid, n.body, n.at, u.name, t.ref FROM notes n LEFT JOIN users u ON u.uid = n.from_uid LEFT JOIN thr t ON t.cid = n.cid AND t.tk = n.tk
         WHERE n.uid = ? AND n.at > ? ORDER BY n.at DESC LIMIT 20`, me.uid, since).map(r => ({ id: r.id, kind: r.kind, cid: r.cid, tk: r.tk, mid: r.mid, body: r.body || "", at: r.at, name: r.name || "", ref: r.ref || "" }));
-      return [200, { me: { uid: me.uid, ...this.pts(me.uid) }, c: out, mine, added, notes, merged }];
+      return [200, { me: { uid: me.uid, ...this.pts(me.uid), ...(this.isAdmin(me.uid) ? { admin: true } : {}) }, c: out, mine, added, notes, merged }];
     }
     const cid = okCid(b.cid) ? String(b.cid) : "";
     if (op === "time") {
@@ -511,6 +516,63 @@ export class Community extends DurableObject {
       const pos = mine && mine.pts > 0 ? this.one(`SELECT COUNT(*) AS n FROM tot t ${deg ? "JOIN users u ON u.uid = t.uid" : ""} WHERE t.cid = ? AND t.per = ? AND t.pts > ? ${deg ? "AND u.deg = ?" : ""}`, cid, per, mine.pts, ...(deg ? [deg] : [])).n + 1 : 0;
       const cn = cid ? this.one("SELECT name FROM courses WHERE cid = ?", cid) : null;
       return [200, { rows: rows.map(r => ({ uid: r.uid, pts: r.pts, total: r.total || 0, name: r.name, deg: r.deg, yr: r.yr })), me: { pts: mine ? mine.pts : 0, pos }, cname: cn ? cn.name : "" }];
+    }
+    /* ---------- community management (admins only; every call is checked here, on the server) ---------- */
+    if (op === "admin/claim") {
+      // a one-time code: only its SHA-256 is in the config, it works once, and 5 wrong tries a day per account are allowed
+      const tries = this.one("SELECT COUNT(*) AS n FROM adtries WHERE uid = ? AND at > ?", me.uid, now - 864e5).n;
+      if (tries >= 5) return [429, { error: "tries" }];
+      const want = String((this.env && this.env.ADMIN_CLAIM_H) || ""), h = [...new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode("admin:" + clip(b.code, 100))))].map(x => x.toString(16).padStart(2, "0")).join("");
+      if (!/^[0-9a-f]{64}$/.test(want) || h !== want || this.one("SELECT h FROM adclaims WHERE h = ?", h)) { this.sql.exec("INSERT INTO adtries (uid, at) VALUES (?, ?)", me.uid, now); return [403, { error: "code" }]; }
+      this.sql.exec("INSERT INTO adclaims (h, uid, at) VALUES (?, ?, ?)", h, me.uid, now);
+      this.sql.exec("INSERT OR IGNORE INTO admins (uid, at) VALUES (?, ?)", me.uid, now);
+      this.adlog(me.uid, "claim", "");
+      return [200, { admin: true }];
+    }
+    if (op.startsWith("admin/")) {
+      if (!this.isAdmin(me.uid)) return [403, { error: "not admin" }];
+      const D = 864e5, nm = uid => (this.one("SELECT name FROM users WHERE uid = ?", uid) || {}).name || "";
+      const cname = cid => (this.one("SELECT name FROM courses WHERE cid = ?", cid) || {}).name || "";
+      const tname = (cid, tk) => tk === "c" ? "" : ((this.one("SELECT ref FROM thr WHERE cid = ? AND tk = ?", cid, tk) || {}).ref || tk);
+      const msg = m => ({ id: m.id, cid: m.cid, cn: m.cname || cname(m.cid), tk: m.tk, tn: tname(m.cid, m.tk), uid: m.uid, name: m.name || nm(m.uid), body: m.del ? "" : m.body, del: !!m.del, at: m.at, stars: m.stars || 0 });
+      if (op === "admin/ov") {
+        const n = (sql, ...a) => this.one(sql, ...a).n || 0;
+        const days = []; for (let i = 13; i >= 0; i--) { const a = new Date(now - i * D); a.setUTCHours(0, 0, 0, 0); const s0 = a.getTime(); days.push({ d: new Date(s0).toISOString().slice(0, 10), n: n("SELECT COUNT(*) AS n FROM msgs WHERE at >= ? AND at < ?", s0, s0 + D) }); }
+        const courses = this.q(`SELECT m.cid, c.name, COUNT(*) AS msgs, MAX(m.at) AS last, COUNT(DISTINCT m.uid) AS people, SUM(CASE WHEN m.at > ? THEN 1 ELSE 0 END) AS week
+          FROM msgs m LEFT JOIN courses c ON c.cid = m.cid WHERE m.del = 0 GROUP BY m.cid ORDER BY last DESC LIMIT 200`, now - 7 * D);
+        const recent = this.q("SELECT m.*, u.name, c.name AS cname FROM msgs m LEFT JOIN users u ON u.uid = m.uid LEFT JOIN courses c ON c.cid = m.cid ORDER BY m.id DESC LIMIT 80").map(msg);
+        const top = this.q("SELECT t.uid, t.pts, u.name, u.deg, u.yr FROM tot t JOIN users u ON u.uid = t.uid WHERE t.cid = '' AND t.per = 'all' ORDER BY t.pts DESC LIMIT 15");
+        return [200, { stats: { users: n("SELECT COUNT(*) AS n FROM users"), active7: n("SELECT COUNT(*) AS n FROM users WHERE seen > ?", now - 7 * D), active1: n("SELECT COUNT(*) AS n FROM users WHERE seen > ?", now - D),
+          msgs: n("SELECT COUNT(*) AS n FROM msgs WHERE del = 0"), msgs1: n("SELECT COUNT(*) AS n FROM msgs WHERE at > ?", now - D), msgs7: n("SELECT COUNT(*) AS n FROM msgs WHERE at > ?", now - 7 * D),
+          posters7: n("SELECT COUNT(DISTINCT uid) AS n FROM msgs WHERE at > ?", now - 7 * D), files: n("SELECT COUNT(*) AS n FROM files WHERE ok = 1 AND del = 0"), shares: n("SELECT COUNT(*) AS n FROM shares WHERE del = 0"),
+          times: n("SELECT COUNT(*) AS n FROM times"), stars: n("SELECT COUNT(*) AS n FROM stars") }, days, courses, recent, top }];
+      }
+      if (op === "admin/course") {          // a course's threads, newest first
+        const cid = clip(b.cid, 20);
+        return [200, { cid, name: cname(cid), thr: this.q("SELECT tk, n, last, ref FROM thr WHERE cid = ? ORDER BY last DESC LIMIT 100", cid) }];
+      }
+      if (op === "admin/thread") {
+        const cid = clip(b.cid, 20), tk = clip(b.tk, 60);
+        const L = this.q("SELECT m.*, u.name FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? ORDER BY m.id DESC LIMIT 300", cid, tk).reverse();
+        return [200, { cid, tk, name: cname(cid), tn: tname(cid, tk), msgs: L.map(msg) }];
+      }
+      if (op === "admin/users") {
+        const q = clip(b.q, 40).trim();
+        const L = this.q(`SELECT u.uid, u.name, u.deg, u.yr, u.seen, (SELECT pts FROM tot t WHERE t.uid = u.uid AND t.cid = '' AND t.per = 'all') AS pts,
+          (SELECT COUNT(*) FROM msgs m WHERE m.uid = u.uid) AS msgs FROM users u ${q ? "WHERE u.name LIKE ?" : ""} ORDER BY u.seen DESC LIMIT 60`, ...(q ? ["%" + q.replace(/[%_]/g, "") + "%"] : []));
+        return [200, { users: L.map(u => ({ ...u, pts: u.pts || 0, admin: this.isAdmin(u.uid) })) }];
+      }
+      if (op === "admin/grant") {         // points by hand (beta testers, steady feedback givers): a reason, -500..500, shown in their points log
+        const to = okId(b.to) ? b.to : "", pts = Math.trunc(Number(b.pts)), why = clip(b.why, 80).trim();
+        if (!to || !this.one("SELECT uid FROM users WHERE uid = ?", to)) return [404, { error: "no such user" }];
+        if (!pts || Math.abs(pts) > 500 || why.length < 2) return [400, { error: "bad grant" }];
+        if (this.one("SELECT COUNT(*) AS n FROM adlog WHERE uid = ? AND act = 'grant' AND at > ?", me.uid, now - 60e3).n >= 20) return [429, { error: "slow down" }];
+        this.award(to, pts, "admin", me.uid, "", why);
+        this.adlog(me.uid, "grant", JSON.stringify({ to, name: nm(to), pts, why }));
+        return [200, { ok: true, total: this.pts(to) }];
+      }
+      if (op === "admin/log") return [200, { log: this.q("SELECT a.*, u.name FROM adlog a LEFT JOIN users u ON u.uid = a.uid ORDER BY a.id DESC LIMIT 100") }];
+      return [404, { error: "not found" }];
     }
     if (op === "ranks") {            // how many people are at each rank (all-time points; the thresholds match RANKS in social.js)
       const th = [0, 30, 80, 150, 350, 800, 2000], all = this.one("SELECT COUNT(*) AS n FROM users").n || 0;

@@ -372,13 +372,15 @@ body.dashed .dedit2{display:none}
 #dash > .hero.ovf > .dmore{color:#fff;background:linear-gradient(transparent,color-mix(in srgb,var(--c,var(--accent)) 60%,#000) 60%)}
 #dash > .stats.ovf > .dmore{background:linear-gradient(transparent,var(--bg) 55%)}
 /* small heights: each card drops its least important lines first */
-@container (max-height:250px){ #hero .gr,#hero .when,#hero .lbl{display:none} #hero .nm{font-size:17px;margin-top:0} #hero .big{margin-top:6px;font-size:20px} #hero button{margin-top:8px;padding:6px 12px;font-size:13px} }
+@container (max-height:205px){ #hero .gr,#hero .when,#hero .lbl{display:none} #hero .nm{font-size:17px;margin-top:0} #hero .big{margin-top:6px;font-size:20px} #hero button{margin-top:8px;padding:6px 12px;font-size:13px} }
 @container (max-height:440px){ #monthCard .md{min-height:0;padding:2px 1px;gap:1px;border-radius:8px} #monthCard .md .d{width:20px;height:20px;font-size:12px} #monthCard .month{gap:3px} #monthCard .ch{margin-bottom:6px} }
 @container (max-height:250px){ #semCard .guess,#semCard .slbl{display:none} #weekCard .wlg,#monthCard .wlg{display:none} }
 
 /* Meir (14.11): the card itself at every size – smaller is the same view, just more minimal – and it fills its cells: no dead space under it */
 #dash > .dcard[data-mode=full]:not(.dexp){display:flex;flex-direction:column}
 #dash > .dcard[data-mode=full]:not(.dexp) > *{flex:none}
+/* "next up" looks like it did up to 1.7 (people missed it): the course and time chips and the button keep their own width instead of stretching across */
+#dash > #hero[data-mode=full] > :is(span,button,a){align-self:flex-start;max-width:100%}
 #dash > .dcard[data-mode=full]:not(.dexp) > .dxx,#dash > .dcard[data-mode=full]:not(.dexp) > .dmore{position:absolute}
 /* the main part takes what's left, and its rows grow into it (to a point) */
 #dash > #monthCard[data-mode=full]:not(.dexp) > .month{flex:1 0 auto;grid-template-rows:auto;grid-auto-rows:minmax(0,1fr)}
@@ -966,7 +968,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .task .ck .i{width:16px;height:16px}
 body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 
-.task .tc .crsl{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 40%,transparent);text-underline-offset:3px;cursor:pointer}
+.task .tc .crsl{display:inline;border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 40%,transparent);text-underline-offset:3px;cursor:pointer}
 .crsw{position:relative;border-bottom:1px solid var(--line)}
 .crsw:last-child{border-bottom:0}
 .crsw .crsrow{border-bottom:0!important}
@@ -1021,7 +1023,7 @@ body.calm *,body.calm *::before,body.calm *::after{animation:none!important;tran
 .task .tname{cursor:pointer}
 .task .xp{position:absolute;inset-block-start:4px;inset-inline-end:42px;width:40px;height:40px;padding:0;border:0;background:none;color:var(--muted);display:grid;place-items:center}.task .xp .i{width:17px;height:17px}
 .task .tl{padding-inline-end:74px}
-.crshead{position:sticky;top:0;z-index:2;margin:0 -18px 10px;padding:14px 18px 10px;background:linear-gradient(color-mix(in srgb,var(--c) 18%,var(--card)),var(--card));border-bottom:1px solid var(--line)}
+.crshead{position:sticky;top:0;z-index:2;margin:0 -18px 10px;padding:14px 18px 10px;background:var(--card);background:linear-gradient(color-mix(in srgb,var(--c,var(--accent)) 18%,var(--card)),var(--card));border-bottom:1px solid var(--line)}
 .crsht{display:flex;align-items:center;gap:10px}.crsht h3{flex:1;margin:0;font-size:20px}.crsht .dot{width:14px;height:14px;border-radius:50%;background:var(--c);flex:none}
 .crstiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 10px}
 .crst{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:14px;border:1px solid var(--line);background:var(--card)}
@@ -3280,7 +3282,7 @@ function card(x, now, g) {
     '<button class="xp" data-tk="' + esc(x.key) + '" aria-label="' + esc(t("tkExpand")) + '" title="' + esc(t("tkExpand")) + '">' + ic("maximize-2") + "</button>" +
     (st === "submitted" ? '<span class="ck on" title="' + esc(t("stSubmitted")) + '">' + ic("check") + "</span>"
       : st === "na" ? "" : '<button class="ck' + (man ? " on" : "") + '" data-done="' + esc(x.key) + '" aria-pressed="' + man + '" aria-label="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '" title="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '">' + ic("check") + "</button>") +
-    '<div class="tl"><span class="tname" data-tk="' + esc(x.key) + '" role="button" tabindex="0"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(typeLabel(x)) + " · " + (x.cid > 0 ? '<button class="crsl" data-crs="' + x.cid + '"><bdi>' + esc(shortName(x.course)) + "</bdi></button>" : "<bdi>" + esc(shortName(x.course)) + "</bdi>") + "</span>" + S("badge", x) + "</div>" +
+    '<div class="tl"><span class="tname" data-tk="' + esc(x.key) + '" role="button" tabindex="0"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + (x.cid > 0 ? '<span class="crsl" data-crs="' + x.cid + '" role="button" tabindex="0"><bdi>' + esc(shortName(x.course)) + "</bdi></span>" : "<bdi>" + esc(shortName(x.course)) + "</bdi>") + " · " + esc(typeLabel(x)) + "</span>" + S("badge", x) + "</div>" +
     '<div class="due">' + due + "</div>" + extra + cardGrade(x) + files + relHtml + body + (acts.length ? '<div class="act">' + acts.join("") + "</div>" : "") +
     (!dn && progOf(x) ? '<div class="tprog" title="' + esc(t("progLbl") + " " + progOf(x) + "%") + '"><i style="width:' + progOf(x) + '%"></i></div>' : "") + "</div>";
 }
@@ -4145,7 +4147,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.5";
+const APP_VERSION = "1.8.6";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -5868,7 +5870,7 @@ const szWH = sz => String(sz).split("x").map(Number);
 /* the sizes each card offers – only ones that mean something for it, and each looks its own way (like phone widgets):
    w = a widget view drawn for that size (fills it, text fits itself), f = the whole card. A tap on a widget opens the whole card */
 const CARD_SZ = {
-  hero:        { "2x1": "w", "4x1": "w", "2x2": "w", "4x2": "f" },
+  hero:        { "2x1": "w", "4x1": "w", "2x2": "w", "4x2": "f", "4x3": "f" },
   stats:       { "2x1": "f", "4x1": "f", "2x2": "f", "4x2": "f" },
   todayCard:   { "1x1": "w", "2x1": "w", "4x1": "w", "2x2": "w", "4x2": "w", "4x3": "f" },
   examCard:    { "1x1": "w", "2x1": "w", "4x1": "w", "2x2": "w", "4x2": "w", "4x3": "f" },
@@ -6029,7 +6031,7 @@ function openSzPick(id) {
   pk.innerHTML = "<h4><span>" + esc(t("deSize")) + " · " + esc(noEmo(t(card.k))) + '</span><button class="xbtn" data-szx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button></h4>" +
     '<div class="szg">' + szAllowed(id).map(sz => { const [w, h] = szWH(sz), cells = [];
       for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) cells.push("<i" + (x < w && y < h ? ' class="f"' : "") + "></i>");
-      return '<button class="szo' + (sz === cur ? " on" : "") + '" data-szset="' + sz + '"><span class="pv">' + cells.join("") + "</span>" + szTxt(sz) + (sz === DASH_SZ0[id] ? " ★" : "") +
+      return '<button class="szo' + (sz === cur ? " on" : "") + '" data-szset="' + sz + '"><span class="pv">' + cells.join("") + "</span>" + szTxt(sz) + (sz === (id === "hero" && DK() === "dash" ? "4x3" : DASH_SZ0[id]) ? " ★" : "") +
         "<small>" + esc(t(isFull(id, w, h) ? "szFull" : "szShort")) + "</small></button>"; }).join("") + "</div>";
   pk.hidden = false;
 }
@@ -6360,7 +6362,7 @@ function tryAskDash() {
 }
 function dashCfg() {
   const ids = DASH_CARDS.map(c => c.id), v = P[DK()] || (DK() === "dash_t" && P.dash_w) || {}, order = (Array.isArray(v.order) ? v.order : []).filter(x => ids.includes(x));
-  const sz = {}; for (const id of ids) { const n = v.sz && v.sz[id]; sz[id] = typeof n === "string" && szAllowed(id).includes(n) ? n : DASH_SZ0[id]; }
+  const sz = {}; for (const id of ids) { const n = v.sz && v.sz[id]; sz[id] = typeof n === "string" && szAllowed(id).includes(n) ? n : id === "hero" && DK() === "dash" ? "4x3" : DASH_SZ0[id]; }   // a phone's "next up" is one row taller, so it fits the greeting, label and date like before
   return { order: order.concat(ids.filter(x => !order.includes(x))), off: (Array.isArray(v.off) ? v.off : []).filter(x => ids.includes(x) && x !== "hero"), sz };
 }
 let daLast = "";
@@ -7099,6 +7101,7 @@ $("#list").addEventListener("click", e => {
   const tk = e.target.closest(".task[data-key]");
   if (tk && !e.target.closest("a,button,input,select,textarea,summary,details,label")) openTask(tk.dataset.key);
 });
+document.addEventListener("keydown", e => { const c = e.target.closest && e.target.closest('span.crsl[data-crs]'); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openCourse(Number(c.dataset.crs)); } });
 $("#list").addEventListener("keydown", e => { const n = e.target.closest && e.target.closest(".tname[data-tk]"); if (n && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openTask(n.dataset.tk); } });
 function toggleDone(k, hit) {
   const was = P.manual.includes(k); P.manual = was ? P.manual.filter(y => y !== k) : [...P.manual, k]; savePrefs(); render(); useHit(hit);
