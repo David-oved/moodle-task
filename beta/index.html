@@ -3221,6 +3221,7 @@ const CAMPUS_WORDS = { lev: ["טל", "תבונה"], tal: ["לב"] };
    The choice in community settings wins; then the campus filter; then the courses' names; else as before */
 window.rkFem = () => {
   if (P.rkg === "f") return true; if (P.rkg === "m") return false;
+  const cp = P.soc_prof && P.soc_prof.camp; if (cp) return cp !== "lev";          // the campus chosen in the community (lev = men; tal / tvuna / lustig = women)
   if (P.campus === "tal") return true; if (P.campus === "lev") return false;
   const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id)), n = re => cs.filter(c => re.test(c.name || "")).length;
   return n(/(^|[^\p{L}])(טל|תבונה|לוסטיג)([^\p{L}]|$)/u) > n(/(^|[^\p{L}])לב([^\p{L}]|$)/u);
@@ -4116,7 +4117,7 @@ function cleanKey(k, v) {
     case "soc_on": case "soc_auto": return v === true;
     case "soc_old": return Array.isArray(v) ? v.filter(x => obj(x) && /^[a-f0-9]{32}$/.test(x.uid || "") && /^[a-f0-9]{48}$/.test(x.sec || "")).map(x => ({ uid: x.uid, sec: x.sec })).slice(-8) : [];
     case "soc_id": return obj(v) && /^[a-f0-9]{32}$/.test(v.uid || "") && /^[a-f0-9]{48}$/.test(v.sec || "") ? { uid: v.uid, sec: v.sec } : null;
-    case "soc_prof": return obj(v) ? { deg: typeof v.deg === "string" ? v.deg.slice(0, 80) : "", yr: /^[1-7]?$/.test(v.yr || "") ? v.yr || "" : "" } : null;
+    case "soc_prof": return obj(v) ? { deg: typeof v.deg === "string" ? v.deg.slice(0, 80) : "", yr: /^[1-7]?$/.test(v.yr || "") ? v.yr || "" : "", camp: ["lev", "tal", "tvuna", "lustig"].includes(v.camp) ? v.camp : "" } : null;
     case "soc_mute": return Array.isArray(v) ? v.filter(x => obj(x) && /^[a-f0-9]{32}$/.test(x.uid || "")).map(x => ({ uid: x.uid, name: typeof x.name === "string" ? x.name.slice(0, 60) : "" })).slice(0, 200) : [];
     case "soc_ign": return Array.isArray(v) ? v.filter(x => Number.isInteger(x) && x > 0).slice(-500) : [];
     case "soc_asked": return Array.isArray(v) ? v.filter(x => typeof x === "string" && x.length < 60).slice(-400) : [];
@@ -4278,7 +4279,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.0-beta.9";
+const APP_VERSION = "1.9.0-beta.10";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4355,7 +4356,7 @@ function usageStats() {
     exams: Object.keys(P.exams || {}).length, sem: !!(P.sem && P.sem.s), hidden: P.hidden.length, off: P.off.length, manual: P.manual.length,
     colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days,
     dens: P.density || "detailed", xq: (P.xq || []).length, kw: (P.kw || []).length, campus: P.campus || "", zl: P.zl, cdx: P.cdx ? 1 : 0, oldHide: P.old_hide ? 1 : 0, tour: LS.get("tourDone", false) === true,
-    calm: P.calm ? 1 : 0, logo: P.logo || "", away: AWAY_OPTS.includes(P.away) ? P.away : 5, soc: socOn() ? 1 : 0, socDeg: socOn() && P.soc_prof ? P.soc_prof.deg || "" : "", socYr: socOn() && P.soc_prof ? P.soc_prof.yr || "" : "", socPts: socOn() ? LS.get("socPts", 0) : 0, socTimes: socOn() ? (P.soc_asked || []).length : 0, socAuto: socOn() && P.soc_auto ? 1 : 0, socMute: socOn() ? (P.soc_mute || []).length : 0,
+    calm: P.calm ? 1 : 0, logo: P.logo || "", away: AWAY_OPTS.includes(P.away) ? P.away : 5, soc: socOn() ? 1 : 0, socDeg: socOn() && P.soc_prof ? P.soc_prof.deg || "" : "", socYr: socOn() && P.soc_prof ? P.soc_prof.yr || "" : "", socCamp: socOn() && P.soc_prof ? P.soc_prof.camp || "" : "", socPts: socOn() ? LS.get("socPts", 0) : 0, socTimes: socOn() ? (P.soc_asked || []).length : 0, socAuto: socOn() && P.soc_auto ? 1 : 0, socMute: socOn() ? (P.soc_mute || []).length : 0,
     n: LS.get("useCnt", {}),
   };
 }

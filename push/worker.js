@@ -18,6 +18,7 @@ const cat = (...a) => { const out = new Uint8Array(a.reduce((n, x) => n + x.leng
 const sha256 = async s => b64u(await crypto.subtle.digest("SHA-256", enc.encode(s)));
 const hmac = async (key, data) => new Uint8Array(await crypto.subtle.sign("HMAC", await crypto.subtle.importKey("raw", key, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]), data));
 const clip = (s, n) => String(s == null ? "" : s).slice(0, n);
+const CAMPS = ["lev", "tal", "tvuna", "lustig"], okCamp = c => CAMPS.includes(c) ? c : "";
 
 function okEndpoint(ep, env) {
   let u; try { u = new URL(ep); } catch (e) { return false; }
@@ -266,7 +267,8 @@ export class Community extends DurableObject {
       CREATE INDEX IF NOT EXISTS files_u ON files (uid, at);
       CREATE INDEX IF NOT EXISTS files_c ON files (cid, del, at);
       CREATE TABLE IF NOT EXISTS fsum (k TEXT PRIMARY KEY, v INTEGER);`);
-    try { this.sql.exec("ALTER TABLE msgs ADD COLUMN att TEXT"); } catch (e) {}   // a file attached to a message (JSON: id, name, size, type, kind)
+    try { this.sql.exec("ALTER TABLE msgs ADD COLUMN att TEXT"); } catch (e) {}
+    try { this.sql.exec("ALTER TABLE users ADD COLUMN camp TEXT"); } catch (e) {}   // campus (lev / tal / tvuna / lustig): rank names are feminine for the women's campuses   // a file attached to a message (JSON: id, name, size, type, kind)
     for (const col of ["lb TEXT", "lt TEXT"]) try { this.sql.exec("ALTER TABLE thr ADD COLUMN " + col); } catch (e) {}   // the last message of a thread (who, what) for the chats list
   }
   /* a screenshot attached to a feedback message: kept 120 days, at most 3000, behind a link nobody can guess */
@@ -317,11 +319,11 @@ export class Community extends DurableObject {
   one(sql, ...a) { return this.q(sql, ...a)[0] || null; }
   async auth(b) {
     if (!b || !okId(b.uid) || !okSec(b.sec)) return null;
-    const h = await sha256("soc:" + b.sec), u = this.one("SELECT uid, sech, name, deg, yr FROM users WHERE uid = ?", b.uid);
+    const h = await sha256("soc:" + b.sec), u = this.one("SELECT uid, sech, name, deg, yr, camp FROM users WHERE uid = ?", b.uid);
     if (u) return u.sech === h ? u : null;
     const name = clip(b.name, 60).trim(); if (!name) return null;
-    this.sql.exec("INSERT INTO users (uid, sech, name, deg, yr, seen) VALUES (?, ?, ?, ?, ?, ?)", b.uid, h, name, clip(b.deg, 60), clip(b.yr, 20), Date.now());
-    return { uid: b.uid, sech: h, name, deg: clip(b.deg, 60), yr: clip(b.yr, 20) };
+    this.sql.exec("INSERT INTO users (uid, sech, name, deg, yr, camp, seen) VALUES (?, ?, ?, ?, ?, ?, ?)", b.uid, h, name, clip(b.deg, 60), clip(b.yr, 20), okCamp(b.camp), Date.now());
+    return { uid: b.uid, sech: h, name, deg: clip(b.deg, 60), yr: clip(b.yr, 20), camp: okCamp(b.camp) };
   }
   /* the same person under an earlier id (another device made its own before the two met through sync): they still hold its secret, so its points,
      log, time reports, messages and shares move to the id in use. Nothing is ever deleted except the empty old account. */
@@ -383,9 +385,9 @@ export class Community extends DurableObject {
     if (this.cc.has(cid)) return this.cc.get(cid);
     const c = this.one("SELECT wa, wa_by FROM courses WHERE cid = ?", cid) || {}, t = {};
     for (const r of this.q("SELECT aid, sum, n FROM agg WHERE cid = ?", cid)) t[r.aid] = [Math.round(r.sum / r.n * 10) / 10, r.n];
-    const sh = this.q(`SELECT s.id, s.uid, s.kind, s.d, s.at, s.adds, u.name, u.deg, u.yr FROM shares s LEFT JOIN users u ON u.uid = s.uid
+    const sh = this.q(`SELECT s.id, s.uid, s.kind, s.d, s.at, s.adds, u.name, u.deg, u.yr, u.camp FROM shares s LEFT JOIN users u ON u.uid = s.uid
       WHERE s.cid = ? AND s.del = 0 AND s.at > ? ORDER BY s.at LIMIT 40`, cid, Math.floor(Date.now() / 1000) - 86400)
-      .map(r => ({ id: r.id, uid: r.uid, kind: r.kind, d: JSON.parse(r.d || "{}"), at: r.at, adds: r.adds, name: r.name || "", deg: r.deg || "", yr: r.yr || "" }));
+      .map(r => ({ id: r.id, uid: r.uid, kind: r.kind, d: JSON.parse(r.d || "{}"), at: r.at, adds: r.adds, name: r.name || "", deg: r.deg || "", yr: r.yr || "", camp: r.camp || "" }));
     const wb = c.wa_by ? this.one("SELECT name FROM users WHERE uid = ?", c.wa_by) : null, th = {};
     for (const r of this.q("SELECT tk, n, last, ref, lb, lt FROM thr WHERE cid = ? AND n > 0", cid)) th[r.tk] = [r.n, r.last, r.ref || "", r.lb || "", r.lt || ""];
     const v = { wa: c.wa || "", waBy: wb ? wb.name : "", t, sh, th };
@@ -396,8 +398,8 @@ export class Community extends DurableObject {
     const me = await this.auth(b); if (!me) return [403, { error: "auth" }];
     const now = Date.now();
     if (op === "overview") {
-      const name = clip(b.name, 60).trim(), deg = b.deg === undefined ? me.deg || "" : clip(b.deg, 60), yr = b.yr === undefined ? me.yr || "" : clip(b.yr, 20);
-      if ((name && name !== me.name) || deg !== (me.deg || "") || yr !== (me.yr || "")) this.sql.exec("UPDATE users SET name = ?, deg = ?, yr = ?, seen = ? WHERE uid = ?", name || me.name, deg, yr, now, me.uid);
+      const name = clip(b.name, 60).trim(), deg = b.deg === undefined ? me.deg || "" : clip(b.deg, 60), yr = b.yr === undefined ? me.yr || "" : clip(b.yr, 20), camp = b.camp === undefined ? me.camp || "" : okCamp(b.camp);
+      if ((name && name !== me.name) || deg !== (me.deg || "") || yr !== (me.yr || "") || camp !== (me.camp || "")) this.sql.exec("UPDATE users SET name = ?, deg = ?, yr = ?, camp = ?, seen = ? WHERE uid = ?", name || me.name, deg, yr, camp, now, me.uid);
       const merged = Array.isArray(b.old) && b.old.length ? await this.mergeInto(me, b.old) : [];
       const cs = (Array.isArray(b.courses) ? b.courses : []).filter(c => c && okCid(c.id)).slice(0, 40), out = {};
       for (const c of cs) { const cid = String(c.id); this.course(cid, c.name); out[cid] = this.pub(cid); }
@@ -423,8 +425,8 @@ export class Community extends DurableObject {
     }
     if (op === "times") {                                   // who reported how long a task took (names, degree, year, the answer, when)
       const aid = clip(b.aid, 40); if (!cid || !aid) return [400, { error: "bad" }];
-      const rows = this.q(`SELECT t.uid, t.h, t.at, u.name, u.deg, u.yr FROM times t LEFT JOIN users u ON u.uid = t.uid WHERE t.cid = ? AND t.aid = ? ORDER BY t.at DESC LIMIT 200`, cid, aid);
-      return [200, { rows: rows.map(r => ({ uid: r.uid, h: r.h, at: r.at, name: r.name || "", deg: r.deg || "", yr: r.yr || "" })) }];
+      const rows = this.q(`SELECT t.uid, t.h, t.at, u.name, u.deg, u.yr, u.camp FROM times t LEFT JOIN users u ON u.uid = t.uid WHERE t.cid = ? AND t.aid = ? ORDER BY t.at DESC LIMIT 200`, cid, aid);
+      return [200, { rows: rows.map(r => ({ uid: r.uid, h: r.h, at: r.at, name: r.name || "", deg: r.deg || "", yr: r.yr || "", camp: r.camp || "" })) }];
     }
     if (op === "wa") {
       const url = String(b.url || "").trim();
@@ -468,7 +470,7 @@ export class Community extends DurableObject {
       const tk = b.tk; if (!cid || !okTk(tk)) return [400, { error: "bad" }];
       const th = this.one("SELECT ver FROM thr WHERE cid = ? AND tk = ?", cid, tk), ver = th ? th.ver : 0;
       if (b.ver !== undefined && Number(b.ver) === ver) return [200, { same: true, ver }];
-      const ms = this.q(`SELECT m.id, m.uid, m.body, m.reply, m.at, m.del, m.stars, m.att, u.name, u.deg, u.yr, (SELECT pts FROM tot a WHERE a.uid = m.uid AND a.cid = '' AND a.per = 'all') AS total
+      const ms = this.q(`SELECT m.id, m.uid, m.body, m.reply, m.at, m.del, m.stars, m.att, u.name, u.deg, u.yr, u.camp, (SELECT pts FROM tot a WHERE a.uid = m.uid AND a.cid = '' AND a.per = 'all') AS total
         FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? ORDER BY m.id DESC LIMIT 150`, cid, tk).reverse();
       const ids = ms.map(m => m.id), re = {}, mine = new Set(), sb = {};
       if (ids.length) {
@@ -483,7 +485,7 @@ export class Community extends DurableObject {
           for (const r of this.q("SELECT s.mid, u.name FROM stars s LEFT JOIN users u ON u.uid = s.uid WHERE s.mid >= ? AND s.mid <= ?", lo, hi))
             if (here.has(r.mid) && ms.find(m => m.id === r.mid).uid === me.uid) (sb[r.mid] = sb[r.mid] || []).length < 20 && sb[r.mid].push(r.name || "");
       }
-      return [200, { ver, msgs: ms.map(m => ({ id: m.id, uid: m.uid, name: m.name || "", deg: m.deg || "", yr: m.yr || "", total: m.total || 0, body: m.del ? "" : m.body, del: !!m.del,
+      return [200, { ver, msgs: ms.map(m => ({ id: m.id, uid: m.uid, name: m.name || "", deg: m.deg || "", yr: m.yr || "", camp: m.camp || "", total: m.total || 0, body: m.del ? "" : m.body, del: !!m.del,
         reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), sb: sb[m.id] || [], re: re[m.id] || [], att: m.del || !m.att ? null : JSON.parse(m.att) })) }];
     }
     if (op === "post") {
@@ -539,12 +541,12 @@ export class Community extends DurableObject {
     }
     if (op === "board") {
       const per = b.per === "sem" ? semKey(now) : "all", deg = clip(b.deg, 60);
-      const rows = this.q(`SELECT t.uid, t.pts, u.name, u.deg, u.yr, (SELECT pts FROM tot a WHERE a.uid = t.uid AND a.cid = '' AND a.per = 'all') AS total
+      const rows = this.q(`SELECT t.uid, t.pts, u.name, u.deg, u.yr, u.camp, (SELECT pts FROM tot a WHERE a.uid = t.uid AND a.cid = '' AND a.per = 'all') AS total
         FROM tot t JOIN users u ON u.uid = t.uid WHERE t.cid = ? AND t.per = ? AND t.pts > 0 ${deg ? "AND u.deg = ?" : ""} ORDER BY t.pts DESC, t.uid LIMIT 20`, cid, per, ...(deg ? [deg] : []));
       const mine = this.one("SELECT pts FROM tot WHERE uid = ? AND cid = ? AND per = ?", me.uid, cid, per);
       const pos = mine && mine.pts > 0 ? this.one(`SELECT COUNT(*) AS n FROM tot t ${deg ? "JOIN users u ON u.uid = t.uid" : ""} WHERE t.cid = ? AND t.per = ? AND t.pts > ? ${deg ? "AND u.deg = ?" : ""}`, cid, per, mine.pts, ...(deg ? [deg] : [])).n + 1 : 0;
       const cn = cid ? this.one("SELECT name FROM courses WHERE cid = ?", cid) : null;
-      return [200, { rows: rows.map(r => ({ uid: r.uid, pts: r.pts, total: r.total || 0, name: r.name, deg: r.deg, yr: r.yr })), me: { pts: mine ? mine.pts : 0, pos }, cname: cn ? cn.name : "" }];
+      return [200, { rows: rows.map(r => ({ uid: r.uid, pts: r.pts, total: r.total || 0, name: r.name, deg: r.deg, yr: r.yr, camp: r.camp || "" })), me: { pts: mine ? mine.pts : 0, pos }, cname: cn ? cn.name : "" }];
     }
     /* ---------- community management (admins only; every call is checked here, on the server) ---------- */
     if (op === "admin/claim") {
@@ -621,7 +623,7 @@ export class Community extends DurableObject {
         const courses = this.q(`SELECT m.cid, c.name, COUNT(*) AS msgs, MAX(m.at) AS last, COUNT(DISTINCT m.uid) AS people, SUM(CASE WHEN m.at > ? THEN 1 ELSE 0 END) AS week
           FROM msgs m LEFT JOIN courses c ON c.cid = m.cid WHERE m.del = 0 GROUP BY m.cid ORDER BY last DESC LIMIT 200`, now - 7 * D);
         const recent = this.q("SELECT m.*, u.name, c.name AS cname FROM msgs m LEFT JOIN users u ON u.uid = m.uid LEFT JOIN courses c ON c.cid = m.cid ORDER BY m.id DESC LIMIT 80").map(msg);
-        const top = this.q("SELECT t.uid, t.pts, u.name, u.deg, u.yr FROM tot t JOIN users u ON u.uid = t.uid WHERE t.cid = '' AND t.per = 'all' ORDER BY t.pts DESC LIMIT 15");
+        const top = this.q("SELECT t.uid, t.pts, u.name, u.deg, u.yr, u.camp FROM tot t JOIN users u ON u.uid = t.uid WHERE t.cid = '' AND t.per = 'all' ORDER BY t.pts DESC LIMIT 15");
         return [200, { stats: { users: n("SELECT COUNT(*) AS n FROM users"), active7: n("SELECT COUNT(*) AS n FROM users WHERE seen > ?", now - 7 * D), active1: n("SELECT COUNT(*) AS n FROM users WHERE seen > ?", now - D),
           msgs: n("SELECT COUNT(*) AS n FROM msgs WHERE del = 0"), msgs1: n("SELECT COUNT(*) AS n FROM msgs WHERE at > ?", now - D), msgs7: n("SELECT COUNT(*) AS n FROM msgs WHERE at > ?", now - 7 * D),
           posters7: n("SELECT COUNT(DISTINCT uid) AS n FROM msgs WHERE at > ?", now - 7 * D), files: n("SELECT COUNT(*) AS n FROM files WHERE ok = 1 AND del = 0"), shares: n("SELECT COUNT(*) AS n FROM shares WHERE del = 0"),
@@ -638,7 +640,7 @@ export class Community extends DurableObject {
       }
       if (op === "admin/users") {
         const q = clip(b.q, 40).trim();
-        const L = this.q(`SELECT u.uid, u.name, u.deg, u.yr, u.seen, (SELECT pts FROM tot t WHERE t.uid = u.uid AND t.cid = '' AND t.per = 'all') AS pts,
+        const L = this.q(`SELECT u.uid, u.name, u.deg, u.yr, u.camp, u.seen, (SELECT pts FROM tot t WHERE t.uid = u.uid AND t.cid = '' AND t.per = 'all') AS pts,
           (SELECT COUNT(*) FROM msgs m WHERE m.uid = u.uid) AS msgs FROM users u ${q ? "WHERE u.name LIKE ?" : ""} ORDER BY u.seen DESC LIMIT 60`, ...(q ? ["%" + q.replace(/[%_]/g, "") + "%"] : []));
         return [200, { users: L.map(u => ({ ...u, pts: u.pts || 0, admin: this.isAdmin(u.uid) })) }];
       }
@@ -661,14 +663,14 @@ export class Community extends DurableObject {
       return [200, { n, all }];
     }
     if (op === "user") {
-      const who = okId(b.who) ? b.who : me.uid, u = this.one("SELECT uid, name, deg, yr FROM users WHERE uid = ?", who);
+      const who = okId(b.who) ? b.who : me.uid, u = this.one("SELECT uid, name, deg, yr, camp FROM users WHERE uid = ?", who);
       if (!u) return [404, { error: "no such user" }];
       const p = this.pts(who), pos = p.all > 0 ? this.one("SELECT COUNT(*) AS n FROM tot WHERE cid = '' AND per = 'all' AND pts > ?", p.all).n + 1 : 0;
       const log = this.q(`SELECT l.pts, l.kind, l.ref, l.at, l.cid, f.name AS fname, f.uid AS fuid, c.name AS cname FROM ledger l LEFT JOIN users f ON f.uid = l.from_uid AND l.from_uid != ''
         LEFT JOIN courses c ON c.cid = l.cid WHERE l.uid = ? ORDER BY l.at DESC LIMIT 100`, who);
       const by = this.q("SELECT cid, pts FROM tot WHERE uid = ? AND cid != '' AND per = 'all' ORDER BY pts DESC LIMIT 12", who)
         .map(r => ({ cid: r.cid, pts: r.pts, name: (this.one("SELECT name FROM courses WHERE cid = ?", r.cid) || {}).name || "" }));
-      return [200, { u: { uid: u.uid, name: u.name, deg: u.deg, yr: u.yr, ...p, pos }, log, by }];
+      return [200, { u: { uid: u.uid, name: u.name, deg: u.deg, yr: u.yr, camp: u.camp || "", ...p, pos }, log, by }];
     }
     return [404, { error: "not found" }];
   }

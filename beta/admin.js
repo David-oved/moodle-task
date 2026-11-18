@@ -4,7 +4,7 @@
 window.SOC_ADMIN = K => {
 "use strict";
 delete window.SOC_ADMIN;
-const { api, ST, sheet, xbtn, overview, msgTime, linkify, rankTag, degLabel, close } = K;
+const { api, ST, sheet, xbtn, overview, msgTime, linkify, rankTag, degLabel, close, femOf } = K;
 Object.assign(I18N.he, {
   adCancel: "ביטול",
   adOv: "סקירה",
@@ -229,14 +229,14 @@ function adDraw() {
       '<div class="stitle">' + esc(t("adDays")) + '</div><div class="addays">' + o.days.map(d => '<i title="' + esc(d.d + ": " + d.n) + '" style="height:' + Math.max(2, Math.round(60 * d.n / mx)) + 'px"></i>').join("") + "</div>" +
       '<div class="stitle">' + esc(t("adCourses")) + "</div>" + (o.courses.length ? o.courses.map(c => '<button class="adrow" data-adcrs="' + esc(c.cid) + '" style="--c:' + colorOf(Number(c.cid)) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name || c.cid)) + "</bdi></b><small>" +
         esc(t("adCrsLine", c.msgs, c.week, c.people) + " · " + msgTime(c.last)) + "</small></span>" + ic("chevron-left") + "</button>").join("") : '<p class="hint">' + esc(t("chatEmpty")) + "</p>") +
-      '<div class="stitle">' + esc(t("adTop")) + "</div>" + o.top.map((u, i) => '<div class="adrow st"><span class="sw"><b>' + (i + 1) + ". <bdi>" + esc(u.name) + "</bdi></b><small>" + esc(t("socPts", u.pts)) + "</small></span>" + rankTag(u.pts) + "</div>").join("");
+      '<div class="stitle">' + esc(t("adTop")) + "</div>" + o.top.map((u, i) => '<div class="adrow st"><span class="sw"><b>' + (i + 1) + ". <bdi>" + esc(u.name) + "</bdi></b><small>" + esc(t("socPts", u.pts)) + "</small></span>" + rankTag(u.pts, femOf(u.uid, u.camp)) + "</div>").join("");
     return;
   }
   if (AD.tab === "users") {
     const o = AD.users;
     el.innerHTML = '<input type="search" id="adQ" placeholder="' + esc(t("adSearch")) + '" value="' + esc(AD.q) + '">' + (!o ? '<div class="hint">' + esc(t("socLoading")) + "</div>" : o.err ? '<p class="hint">' + esc(o.err) + "</p>" :
       o.users.map(u => '<div class="aduser"><div class="adrow st"><span class="sw"><b><bdi>' + esc(u.name) + "</bdi>" + (u.admin ? " 🛡" : "") + "</b><small>" + esc([t("socPts", u.pts), u.deg ? degLabel(u.deg) : "", u.yr ? yrTxt(u.yr) : "", t("adNMsgs", u.msgs), u.seen ? t("adSeen", msgTime(u.seen)) : ""].filter(Boolean).join(" · ")) + "</small></span>" +
-        rankTag(u.pts) + '<button class="btn sm" data-adgive="' + esc(u.uid) + '">' + esc(t("adGive")) + "</button></div>" + (AD.grantTo === u.uid ? adGrantForm(u) : "") + "</div>").join("") || '<p class="hint">' + esc(t("adNone")) + "</p>");
+        rankTag(u.pts, femOf(u.uid, u.camp)) + '<button class="btn sm" data-adgive="' + esc(u.uid) + '">' + esc(t("adGive")) + "</button></div>" + (AD.grantTo === u.uid ? adGrantForm(u) : "") + "</div>").join("") || '<p class="hint">' + esc(t("adNone")) + "</p>");
     const q = $("#adQ"); if (q) { q.oninput = () => { AD.q = q.value; clearTimeout(AD.qt); AD.qt = setTimeout(() => adLoad("admin/users", { q: AD.q }, "users"), 350); }; if (document.activeElement !== q && AD.qFocus) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
     return;
   }

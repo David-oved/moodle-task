@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.0-beta.9";
+const SOC_V = "1.9.0-beta.10";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -214,7 +214,7 @@ async function api(op, body) {
   const pr = prof(), ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 12000);
   try {
     const r = await fetch(pushUrl() + "/social/" + op, { method: "POST", signal: ctl.signal, headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(Object.assign({ uid: id.uid, sec: id.sec, name: myName() || "?", deg: pr.deg, yr: pr.yr }, body || {})) });
+      body: JSON.stringify(Object.assign({ uid: id.uid, sec: id.sec, name: myName() || "?", deg: pr.deg, yr: pr.yr }, pr.camp ? { camp: pr.camp } : {}, body || {})) });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) { const e = new Error(j.error || "http " + r.status); e.status = r.status; throw e; }
     return j;
@@ -234,21 +234,32 @@ async function overview(force) {
         P.soc_old = (P.soc_old || []).filter(x => !o.merged.includes(x.uid)); savePrefs(); useHit("socMerged");
         if (o.me && o.me.all) toast(t("socMergedT"));
       }
-      ST.ov = o; ST.err = false; LS.set("socOv", o); LS.set("socPts", (o.me && o.me.all) || 0); render(); if (!$("#sheet").hidden) SOC.card(); notesCheck(o.notes); return o; })
+      ST.ov = o; ST.err = false; LS.set("socOv", o); LS.set("socPts", (o.me && o.me.all) || 0); render(); if (!$("#sheet").hidden) SOC.card(); notesCheck(o.notes); setTimeout(campAsk, 1500); return o; })
     .catch(e => { ST.err = true; return null; }).finally(() => { ST.busy = null; });
   return ST.busy;
 }
 const cdata = cid => (ST.ov && ST.ov.c && ST.ov.c[String(cid)]) || null;
 const muted = uid => (P.soc_mute || []).some(m => m.uid === uid);
 const isMe = uid => P.soc_id && P.soc_id.uid === uid;
+/* campus → rank names: Machon Lev is men; Tal, Tevuna and Lustig are women. Asked when joining (and once from those who joined before), sent to the
+   server with the profile, so everyone sees each person's rank in that person's form. Unknown campus: the viewer's own form (the campuses study apart) */
+const CAMPS = ["lev", "tal", "tvuna", "lustig"], CAMPL = { lev: "cmLev", tal: "cmTal", tvuna: "cmTvuna", lustig: "cmLustig" };
+const selfFem = () => !!(window.rkFem && window.rkFem());
+const femOf = (uid, camp) => isMe(uid) ? selfFem() : camp ? camp !== "lev" : selfFem();
+Object.assign(I18N.he, { cmT: "קמפוס", cmPick: "בחר/י קמפוס", cmLev: "מכון לב", cmTal: "מכון טל", cmTvuna: "מכון תבונה", cmLustig: "מכון לוסטיג", cmNeed: "צריך לבחור קמפוס",
+  cmAskT: "באיזה קמפוס את/ה לומד/ת?", cmAskP: "כדי ששמות הדרגות יופיעו נכון – ״שורדת סמסטר״ או ״שורד סמסטר״ – אצלך וגם אצל כל מי שרואה אותך בצ׳אטים ובטבלאות. אפשר לשנות בהגדרות ← קהילה.", cmLater: "אחר כך", cmSaved: "נשמר ✓" });
+Object.assign(I18N.en, { cmT: "Campus", cmPick: "Choose your campus", cmLev: "Machon Lev", cmTal: "Machon Tal", cmTvuna: "Machon Tevuna", cmLustig: "Machon Lustig", cmNeed: "Please choose your campus",
+  cmAskT: "Which campus do you study at?", cmAskP: "So rank names show in the right form (Hebrew has masculine and feminine) – for you and for everyone who sees you in chats and leaderboards. You can change it in Settings → Community.", cmLater: "Later", cmSaved: "Saved ✓" });
+Object.assign(I18N.fr, { cmT: "Campus", cmPick: "Choisissez votre campus", cmLev: "Machon Lev", cmTal: "Machon Tal", cmTvuna: "Machon Tevouna", cmLustig: "Machon Lustig", cmNeed: "Choisissez votre campus",
+  cmAskT: "Dans quel campus étudiez-vous ?", cmAskP: "Pour que les noms de rangs s’affichent à la bonne forme (masculin ou féminin en hébreu) – pour vous et pour ceux qui vous voient dans les discussions et les classements. Modifiable dans Réglages → Communauté.", cmLater: "Plus tard", cmSaved: "Enregistré ✓" });
 const isMeName = n => !!n && n === myName();
 
 /* ---------- labels ---------- */
 const degLabel = d => !d ? "" : d.startsWith("x:") ? d.slice(2) : I18N.he["dg_" + d] ? t("dg_" + d) : d;
 const profLine = (deg, yr) => [degLabel(deg), yr ? t("yr" + yr) : ""].filter(Boolean).join(" · ");
-const rkName = i => { const k = RANKS[i][2]; return window.rkFem && window.rkFem() && I18N[LANG] && I18N[LANG][k + "f"] ? t(k + "f") : t(k); };
-function rankOf(pts) { let i = 0; RANKS.forEach((r, k) => { if (pts >= r[0]) i = k; }); return { i, emo: RANKS[i][1], name: rkName(i), next: RANKS[i + 1] || null }; }
-const rankTag = pts => { const r = rankOf(pts || 0); return '<span class="srk r' + r.i + '">' + r.emo + " " + esc(r.name) + "</span>"; };
+const rkName = (i, fem = selfFem()) => { const k = RANKS[i][2]; return fem && I18N[LANG] && I18N[LANG][k + "f"] ? t(k + "f") : t(k); };
+function rankOf(pts, fem) { let i = 0; RANKS.forEach((r, k) => { if (pts >= r[0]) i = k; }); return { i, emo: RANKS[i][1], name: rkName(i, fem), next: RANKS[i + 1] || null }; }
+const rankTag = (pts, fem) => { const r = rankOf(pts || 0, fem); return '<span class="srk r' + r.i + '">' + r.emo + " " + esc(r.name) + "</span>"; };
 const fmtH = h => String(Math.round(h * 10) / 10).replace(/\.0$/, "");
 const nameBtn = (uid, name) => '<button class="sname" data-socu="' + esc(uid) + '"><bdi>' + esc(name || t("lgSomeone")) + "</bdi></button>";
 const shortDate = ts => { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric" }); } catch (e) { return ymd(ts); } };
@@ -561,7 +572,7 @@ function drawChat() {
   const L = ch.msgs.filter(m => !muted(m.uid));
   el.innerHTML = L.length ? L.map(m => {
     const mine = isMe(m.uid), rp = m.reply && byId[m.reply];
-    return '<div class="sm' + (mine ? " me" : "") + '" id="sm' + m.id + '"><div class="smh">' + (mine ? "<b>" + esc(t("chatYou")) + "</b>" : nameBtn(m.uid, m.name)) + rankTag(m.total) + '<small>' + esc(msgTime(m.at)) + "</small></div>" +
+    return '<div class="sm' + (mine ? " me" : "") + '" id="sm' + m.id + '"><div class="smh">' + (mine ? "<b>" + esc(t("chatYou")) + "</b>" : nameBtn(m.uid, m.name)) + rankTag(m.total, femOf(m.uid, m.camp)) + '<small>' + esc(msgTime(m.at)) + "</small></div>" +
       (rp ? '<div class="sq"><b><bdi>' + esc(rp.name) + "</bdi></b> " + esc(rp.del ? t("chatDel") : (rp.body || (rp.att ? "📎 " + rp.att.n : "")).slice(0, 90)) + "</div>" : "") +
       (m.att && !m.del ? attHTML(m.att) : "") + (m.body || m.del ? '<div class="smb' + (m.del ? " del" : "") + '">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body))) + "</div>" : "") +
       (m.del ? "" : '<div class="smf">' + m.re.map(r => '<button class="sre' + (r[2] ? " on" : "") + '" data-socemo="' + m.id + "|" + r[0] + '">' + r[0] + " " + r[1] + "</button>").join("") +
@@ -748,12 +759,12 @@ function chatRow(cid, tk, title) {
 async function openUser(uid) {
   sheet("socUser", "<h3><span>" + esc(t("socLoading")) + "</span>" + xbtn() + "</h3>");
   let r; try { r = await api("user", { who: uid }); } catch (e) { $("#socUser .box").innerHTML = "<h3><span></span>" + xbtn() + '</h3><div class="hint">' + esc(t("socNet")) + "</div>"; return; }
-  const u = r.u, me = isMe(u.uid), rk = rankOf(u.all);
+  const u = r.u, me = isMe(u.uid), uf = femOf(u.uid, u.camp), rk = rankOf(u.all, uf);
   const desc = l => l.kind === "add" ? t("lgAdd", l.fname || t("lgSomeone"), l.ref) : l.kind === "time" ? t("lgTime", l.ref) : l.kind === "wa" ? t("lgWa") : l.kind === "star" ? t("lgStar", l.fname || t("lgSomeone"), l.ref) : l.kind === "admin" ? t("lgAdmin", l.ref) : l.kind;
   const day = ms => { try { return new Date(ms).toLocaleString(t("locale"), { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } };
   $("#socUser .box").innerHTML = "<h3><span><bdi>" + esc(u.name) + "</bdi>" + (me ? " (" + esc(t("socYou")) + ")" : "") + "</span>" + xbtn() + "</h3>" +
-    '<div class="sprofcard"><div class="sav">' + esc((u.name || "?").trim().charAt(0)) + '</div><div><div class="hint">' + esc(profLine(u.deg, u.yr)) + "</div>" + rankTag(u.all) +
-    '<div class="spts"><b>' + esc(t("socPts", u.all)) + "</b>" + (u.pos ? " · " + esc(t("socPos", u.pos)) : "") + " · " + esc(t("socSem")) + ": " + esc(t("socPts", u.sem)) + "</div>" + progress(u.all) + "</div></div>" +
+    '<div class="sprofcard"><div class="sav">' + esc((u.name || "?").trim().charAt(0)) + '</div><div><div class="hint">' + esc(profLine(u.deg, u.yr)) + "</div>" + rankTag(u.all, uf) +
+    '<div class="spts"><b>' + esc(t("socPts", u.all)) + "</b>" + (u.pos ? " · " + esc(t("socPos", u.pos)) : "") + " · " + esc(t("socSem")) + ": " + esc(t("socPts", u.sem)) + "</div>" + progress(u.all, uf) + "</div></div>" +
     (r.by.length ? '<div class="stitle">' + esc(t("socByCourse")) + '</div><div class="sbyc">' + r.by.map(b => '<span class="chip on" role="button" tabindex="0" data-socboard="' + Number(b.cid) + '" style="--c:' + colorOf(Number(b.cid)) + '"><i></i><bdi>' + esc(b.name) + '</bdi> <span class="n">' + b.pts + "</span></span>").join("") + "</div>" : "") +
     '<div class="stitle">' + esc(t("socLogT")) + "</div>" +
     (r.log.length ? '<div class="slog">' + r.log.map(l => '<div class="sl"><b class="sp" dir="ltr">' + (l.pts > 0 ? "+" : "") + l.pts + '</b><div><div><bdi>' + esc(desc(l)) + '</bdi></div><small class="hint">' + (l.cname ? "<bdi>" + esc(l.cname) + "</bdi> · " : "") + esc(day(l.at)) + "</small></div></div>").join("") + "</div>"
@@ -779,10 +790,10 @@ const howPts = pts => '<div class="ptsb"><div class="stitle">' + esc(t("socHowT"
   '<div class="stitle">' + esc(t("socRanksT")) + "</div>" + rankLadder(pts) + "</div>";
 document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("ptsh")) ST.ptsOpen = e.target.open; }, true);
 document.addEventListener("change", e => { if (e.target.id !== "socRkG") return; P.rkg = e.target.value; savePrefs(); useHit("rkg_" + (P.rkg || "auto")); page(); render(); });
-function progress(pts) {
-  const r = rankOf(pts); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
+function progress(pts, fem) {
+  const r = rankOf(pts, fem); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
   const lo = RANKS[r.i][0], hi = r.next[0], p = Math.round((pts - lo) / (hi - lo) * 100);
-  return '<div class="rkbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + rkName(r.i + 1))) + "</div>";
+  return '<div class="rkbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + rkName(r.i + 1, fem))) + "</div>";
 }
 function toggleMute(uid, name) {
   if (muted(uid)) { P.soc_mute = P.soc_mute.filter(m => m.uid !== uid); toast(t("socUnmuted")); }
@@ -813,7 +824,7 @@ async function loadBoard() {
   if (ST.board !== b || $("#socBl") !== el) return;
   const rows = r.rows.filter(x => !muted(x.uid));
   el.innerHTML = (rows.length ? rows.map((x, i) => '<button class="sbr' + (isMe(x.uid) ? " me" : "") + '" data-socu="' + esc(x.uid) + '"><span class="sn">' + (i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1) + '</span><span class="sw"><b><bdi>' + esc(x.name) + "</bdi>" + (isMe(x.uid) ? " (" + esc(t("socYou")) + ")" : "") +
-      "</b><small>" + esc(profLine(x.deg, x.yr)) + "</small>" + rankTag(x.total) + '</span><span class="sv">' + x.pts + "</span></button>").join("") : '<div class="hint">' + esc(t("socEmpty")) + "</div>") +
+      "</b><small>" + esc(profLine(x.deg, x.yr)) + "</small>" + rankTag(x.total, femOf(x.uid, x.camp)) + '</span><span class="sv">' + x.pts + "</span></button>").join("") : '<div class="hint">' + esc(t("socEmpty")) + "</div>") +
     '<div class="hint sme">' + esc(r.me.pos ? t("socYourPos", r.me.pos, r.me.pts) : t("socNoPos")) + "</div>";
 }
 
@@ -833,20 +844,21 @@ function degOptions(cur, any) {
     '<optgroup label="' + esc(t("socGrpM")) + '">' + DEGS.m.map(d => o(d, t("dg_" + d))).join("") + "</optgroup>" + (any ? (other ? o(cur, cur.slice(2)) : "") : o("x", t("socOther")) + (other ? o(cur, cur.slice(2)) : ""));
 }
 const yrOptions = cur => '<option value="">' + esc(t("socPickYr")) + "</option>" + YEARS.map(y => '<option value="' + y + '"' + (y === cur ? " selected" : "") + ">" + esc(t("yr" + y)) + "</option>").join("");
+const campOptions = cur => '<option value="">' + esc(t("cmPick")) + "</option>" + CAMPS.map(c => '<option value="' + c + '"' + (c === cur ? " selected" : "") + ">" + esc(t(CAMPL[c])) + "</option>").join("");
 function profFields(pfx) {
   const pr = prof(), other = pr.deg && pr.deg.startsWith("x:");
-  return '<div class="sprofrow"><label class="fld"><span>' + esc(t("socYourDeg")) + '</span><select id="' + pfx + 'Deg">' + degOptions(pr.deg, false) + "</select></label>" +
+  return '<label class="fld scamp"><span>' + esc(t("cmT")) + '</span><select id="' + pfx + 'Camp">' + campOptions(pr.camp || "") + "</select></label>" + '<div class="sprofrow"><label class="fld"><span>' + esc(t("socYourDeg")) + '</span><select id="' + pfx + 'Deg">' + degOptions(pr.deg, false) + "</select></label>" +
     '<label class="fld sy"><span>' + esc(t("socYourYr")) + '</span><select id="' + pfx + 'Yr">' + yrOptions(pr.yr) + "</select></label></div>" +
     '<input type="text" id="' + pfx + 'Other" maxlength="60" placeholder="' + esc(t("socOtherDeg")) + '" value="' + esc(other ? pr.deg.slice(2) : "") + '"' + (other ? "" : " hidden") + ' style="width:100%;margin-bottom:8px">';
 }
 function wireProf(pfx, onChange) {
   const sel = $("#" + pfx + "Deg"), oth = $("#" + pfx + "Other"), yr = $("#" + pfx + "Yr");
   sel.onchange = () => { oth.hidden = !(sel.value === "x" || sel.value.startsWith("x:")); if (sel.value === "x") oth.focus(); if (onChange) onChange(); };
-  if (onChange) { yr.onchange = onChange; oth.onchange = onChange; }
+  if (onChange) { yr.onchange = onChange; oth.onchange = onChange; $("#" + pfx + "Camp").onchange = onChange; }
 }
 function readProf(pfx) {
   const sel = $("#" + pfx + "Deg").value, oth = ($("#" + pfx + "Other").value || "").trim().slice(0, 60);
-  return { deg: sel === "x" || sel.startsWith("x:") ? (oth ? "x:" + oth : "") : sel, yr: $("#" + pfx + "Yr").value };
+  return { deg: sel === "x" || sel.startsWith("x:") ? (oth ? "x:" + oth : "") : sel, yr: $("#" + pfx + "Yr").value, camp: $("#" + pfx + "Camp").value };
 }
 function page() {
   const el = $("#socPage"); if (!el) return;
@@ -865,10 +877,23 @@ function page() {
       : '<button class="primary" data-socjoin style="width:100%;margin-top:10px">' + esc(t("socJoinBtn")) + "</button>");
   $("#socOnBox").onchange = e => { if (e.target.checked) { e.target.checked = false; intro(true); } else { P.soc_on = false; savePrefs(); render(); page(); renderSheet(); } };
   if (on) $("#socAutoPg").onchange = e => setAuto(e.target.checked);
-  if (on) wireProf("socP", () => { const p = readProf("socP"); if (p.deg === "" && $("#socPDeg").value === "x") return; P.soc_prof = p; savePrefs(); overview(true); });
+  if (on) wireProf("socP", () => { const p = readProf("socP"); if (p.deg === "" && $("#socPDeg").value === "x") return; const cc = p.camp !== (prof().camp || ""); P.soc_prof = p; savePrefs(); overview(true); if (cc) { useHit("socCampSet"); page(); } });
 }
 
 /* ---------- the invitation (after the update, or from settings) ---------- */
+function campAsk() {
+  if (!socOn() || !P.soc_id || prof().camp) return;
+  if (Date.now() - (Number(LS.get("socCampAsk", 0)) || 0) < 20 * 3600e3) return;
+  if (!$("#tour").hidden || $$(".sheet").some(x => !x.hidden)) return;
+  LS.set("socCampAsk", Date.now()); useHit("socCampAsk");
+  sheet("socCamp", "<h3><span>" + esc(t("cmAskT")) + "</span>" + xbtn() + '</h3><div class="hint">' + esc(t("cmAskP")) + '</div><div class="scamps">' +
+    CAMPS.map(c => '<button class="btn" data-soccamp="' + c + '">' + esc(t(CAMPL[c])) + "</button>").join("") + '</div><button class="link" data-socx style="width:100%;margin-top:6px">' + esc(t("cmLater")) + "</button>");
+}
+function setCamp(c) {
+  if (!CAMPS.includes(c)) return;
+  P.soc_prof = Object.assign({ deg: "", yr: "" }, prof(), { camp: c }); savePrefs(); useHit("socCampSet"); close("socCamp"); toast(t("cmSaved"));
+  Promise.resolve(overview(true)).then(() => { renderTop(nowS()); if (V.view === "chat") chatView(); if (ST.chat && !$("#socChat").hidden) drawChat(); if (!$("#sheet").hidden && V.spage === "soc") page(); });
+}
 function intro(manual) {
   sheet("socIntro", "<h3><span>" + esc(t("socIntroT")) + "</span>" + xbtn() + '</h3><div class="hint">' + esc(t("socIntroP")) + '</div><ul class="sintro">' +
     ["socB1", "socB2", "socB3", "socB4"].map(k => "<li>" + esc(t(k)) + "</li>").join("") + "</ul>" + profFields("socI") +
@@ -877,7 +902,9 @@ function intro(manual) {
   LS.set("socIntro", true); useHit("socIntro");
 }
 async function join() {
-  const p = readProf("socI"), btn = $("[data-socjoinnow]"); if (btn) btn.disabled = true;
+  const p = readProf("socI"), btn = $("[data-socjoinnow]");
+  if (!p.camp) { toast(t("cmNeed")); const c = $("#socICamp"); if (c) { c.focus(); c.classList.add("need"); } return; }
+  if (btn) btn.disabled = true;
   // joined already on another device? take that id (and its points) instead of making a second one
   if (!P.soc_id && syncOnNow() && M.token) {
     const t0 = Date.now(); try { await Promise.race([syncNow(), new Promise(r => setTimeout(r, 12000))]); } catch (e) {}
@@ -933,7 +960,7 @@ const isAdmin = () => !!(ST.ov && ST.ov.me && ST.ov.me.admin);
 let ADM = null;
 const admLoad = () => ADM || (ADM = new Promise((ok, no) => {
   const s = document.createElement("script"); s.src = "admin.js?v=" + encodeURIComponent(SOC_V);
-  s.onload = () => window.SOC_ADMIN ? ok(window.SOC_ADMIN({ api, ST, sheet, xbtn, overview, msgTime, linkify, rankTag, degLabel, close })) : no(new Error("admin.js"));
+  s.onload = () => window.SOC_ADMIN ? ok(window.SOC_ADMIN({ api, ST, sheet, xbtn, overview, msgTime, linkify, rankTag, degLabel, close, femOf })) : no(new Error("admin.js"));
   s.onerror = () => no(new Error("admin.js")); document.head.appendChild(s);
 }).catch(e => { ADM = null; throw e; }));
 function openAdmin(tab) { if (!isAdmin()) return; admLoad().then(a => a.open(tab), () => toast(t("socNet"))); }
@@ -974,6 +1001,7 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socsave]"))) return toggleSave(Number(b.dataset.socsave));
   if ((b = g("[data-socsaved]"))) return openSaved();
   if ((b = g("[data-socadmin]"))) return openAdmin();
+  if ((b = g("[data-soccamp]"))) return setCamp(b.dataset.soccamp);
   if ((b = g("[data-socsvadd]"))) return addNote();
   if ((b = g("[data-socsvdel]"))) return delSaved(b.dataset.socsvdel);
   if ((b = g("[data-socchat]"))) { e.preventDefault(); close("socNote"); close("socFiles"); close("socSaved"); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
@@ -1093,6 +1121,8 @@ css.textContent = `
 .sswitch span{display:flex;flex-direction:column}
 .sswitch input{width:22px;height:22px;accent-color:var(--accent);flex:none}
 .sprofrow{display:flex;gap:8px}
+.fld.scamp{display:block;margin-bottom:8px}.fld.scamp select{width:100%}.fld.scamp select.need{outline:2px solid var(--red,#e03131)}
+.scamps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 4px}.scamps .btn{padding:14px 8px;font-weight:700}
 .sprofrow .fld{flex:1;min-width:0}
 .sprofrow .fld.sy{flex:0 0 34%}
 .sprofrow select{width:100%}
