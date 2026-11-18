@@ -111,26 +111,84 @@
 #aiFab:focus-visible{outline:3px solid var(--accent-t,var(--accent));outline-offset:3px}
 #aiFab{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 #aiFab svg{width:38px;height:38px;display:block;overflow:visible}
-.aiFace .aiBub{fill:var(--uri-body,#fff);fill-opacity:.97}
-.aiFace .aiEye{fill:color-mix(in srgb,var(--accent) 78%,#000)}
-.aiFace .aiSmile{fill:none;stroke:color-mix(in srgb,var(--accent) 78%,#000);stroke-width:2.1;stroke-linecap:round}
+.aiFace .aiBub{fill:var(--uri-body,#fff);fill-opacity:.97;stroke:var(--uri-line,none);stroke-width:var(--uri-lw,0);stroke-linejoin:round}
+.aiFace .aiEye{fill:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000))}
+.aiFace .aiSmile{fill:none;stroke:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000));stroke-width:2.1;stroke-linecap:round}
+.aiFace[data-aura]{filter:drop-shadow(0 0 var(--uri-ar,0px) var(--uri-ac,transparent))}
 .aiFace .aiSpark{fill:#ffd166;transform-box:fill-box;transform-origin:center}
 /* Uri v2: cheeks, shiny eyes, moods, outfits, reactions (see the "Uri" block in the script) */
 .aiFace .aiCheek{fill:var(--uri-cheek,#ff8fb1);opacity:.62;transform-box:fill-box;transform-origin:center;transition:opacity .2s,transform .25s}
-.aiFace .aiShine{fill:#fff}.aiFace .aiHeartEye{fill:#ff4f81}.aiFace .aiMouthF{fill:color-mix(in srgb,var(--accent) 78%,#000)}.aiFace .aiTng{fill:#ff7a93}
-.aiFace .aiLid{fill:none;stroke:color-mix(in srgb,var(--accent) 78%,#000);stroke-width:1.9;stroke-linecap:round}
+.aiFace .aiShine{fill:#fff}.aiFace .aiHeartEye{fill:#ff4f81}.aiFace .aiMouthF{fill:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000))}.aiFace .aiTng{fill:#ff7a93}
+.aiFace .aiLid{fill:none;stroke:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000));stroke-width:1.9;stroke-linecap:round}
+.aiFace .aiLidC{fill:none;stroke:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000));stroke-width:1.3}
 .aiFace .aiZ{fill:none;stroke:#8aa0ff;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 .aiFace .aiEyes{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform .14s ease-out}
 .aiFace[data-blink] .aiEyes .aiEye{transform-box:fill-box;transform-origin:center}
 @media (prefers-reduced-motion:no-preference){body:not(.calm) .aiFace[data-blink] .aiEyes .aiEye{animation:aiBlink 4.6s var(--bd,1.2s) infinite}}
 .aiFace{transform-box:fill-box;transform-origin:50% 88%}
-.aiFace.aiRx-jump{animation:aiUriJump .7s cubic-bezier(.3,1.4,.5,1)}.aiFace.aiRx-spin{animation:aiUriSpin .8s ease-in-out}
-.aiFace.aiRx-squish{animation:aiUriSquish .6s ease-out}.aiFace.aiRx-wiggle{animation:aiUriWig .7s ease-in-out}
-.aiFace.aiRx-blush .aiCheek{opacity:1;transform:scale(1.55)}
+.aiFace .aiEyes .aiEye{transform-box:fill-box;transform-origin:center}
+/* the animation library: every duration is multiplied by --ud (set from the admin's speed) */
+.aiFace.aiRx-jump{animation:aiUriJump calc(.7s*var(--ud,1)) cubic-bezier(.3,1.4,.5,1)}
+.aiFace.aiRx-bounce{animation:aiUriBounce calc(1.1s*var(--ud,1)) ease-out}
+.aiFace.aiRx-backflip{animation:aiUriFlip calc(.9s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-spin{animation:aiUriSpin calc(.8s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-squish{animation:aiUriSquish calc(.6s*var(--ud,1)) ease-out}
+.aiFace.aiRx-wiggle{animation:aiUriWig calc(.7s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-shake{animation:aiUriShake calc(.6s*var(--ud,1)) linear}
+.aiFace.aiRx-nod{animation:aiUriNod calc(.8s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-no{animation:aiUriNo calc(.8s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-pulse{animation:aiUriPulse calc(1s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-zoom{animation:aiUriZoom calc(.8s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-peekaboo{animation:aiUriPeek calc(1.4s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-tilt{animation:aiUriTilt calc(1.2s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-wobble{animation:aiUriWob calc(.9s*var(--ud,1)) ease-in-out 2}
+.aiFace.aiRx-dizzy{animation:aiUriDizzy calc(1.6s*var(--ud,1)) cubic-bezier(.2,.8,.3,1)}
+.aiFace.aiRx-blush .aiCheek,.aiFace.aiRx-kiss .aiCheek{opacity:1;transform:scale(1.55)}
+.aiFace.aiRx-blush{animation:aiUriSquish calc(.6s*var(--ud,1)) ease-out}
+.aiFace.aiRx-kiss{animation:aiUriKiss calc(.9s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-laugh{animation:aiUriLaugh calc(.9s*var(--ud,1)) linear}
+.aiFace.aiRx-sneeze{animation:aiUriSneeze calc(.9s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-yawn{animation:aiUriYawn calc(1.8s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-sparkle{animation:aiUriSparkle calc(.9s*var(--ud,1)) ease-in-out}.aiFace.aiRx-sparkle .aiSpark{animation:aiUriSpinS calc(.9s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-confetti{animation:aiUriJump calc(.7s*var(--ud,1)) cubic-bezier(.3,1.4,.5,1)}
+.aiFace.aiRx-tada{animation:aiUriTada calc(1.1s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-glitch{animation:aiUriGlitch calc(.6s*var(--ud,1)) steps(1,end)}
+.aiFace.aiRx-float{animation:aiUriFloat calc(2.4s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-lookaround .aiEyes{animation:aiUriLook calc(2s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-lookaround{animation:aiUriTiltS calc(2s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-wink .aiEyeR{animation:aiUriWinkE calc(.7s*var(--ud,1)) ease-in-out}.aiFace.aiRx-wink{animation:aiUriTiltS calc(.7s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-rainbow{animation:aiUriRainbow calc(1.8s*var(--ud,1)) linear}
+.aiFace.aiRx-party{animation:aiUriTada calc(1.1s*var(--ud,1)) ease-in-out,aiUriBounce calc(1.1s*var(--ud,1)) calc(1.1s*var(--ud,1)) ease-out,aiUriRainbow calc(2.2s*var(--ud,1)) linear 1.1s}
 @keyframes aiUriJump{0%{transform:none}35%{transform:translateY(-22%) scale(.94,1.08)}60%{transform:translateY(0) scale(1.1,.88)}80%{transform:scale(.97,1.04)}100%{transform:none}}
+@keyframes aiUriBounce{0%,100%{transform:none}15%{transform:translateY(-26%) scale(.95,1.06)}30%{transform:scale(1.08,.9)}45%{transform:translateY(-14%)}60%{transform:scale(1.05,.95)}75%{transform:translateY(-6%)}90%{transform:none}}
+@keyframes aiUriFlip{0%{transform:none}40%{transform:translateY(-34%) rotate(-180deg)}100%{transform:rotate(-360deg)}}
 @keyframes aiUriSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 @keyframes aiUriSquish{0%{transform:none}30%{transform:scale(1.2,.8)}60%{transform:scale(.9,1.12)}100%{transform:none}}
 @keyframes aiUriWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg)}45%{transform:rotate(10deg)}70%{transform:rotate(-6deg)}}
+@keyframes aiUriShake{0%,100%{transform:translateX(0)}10%{transform:translateX(-7%)}20%{transform:translateX(7%)}30%{transform:translateX(-6%)}40%{transform:translateX(6%)}50%{transform:translateX(-4%)}60%{transform:translateX(4%)}70%{transform:translateX(-2%)}}
+@keyframes aiUriNod{0%,100%{transform:none}25%{transform:translateY(8%) scale(1.03,.94)}50%{transform:none}75%{transform:translateY(8%) scale(1.03,.94)}}
+@keyframes aiUriNo{0%,100%{transform:rotate(0)}15%{transform:rotate(-14deg)}35%{transform:rotate(12deg)}55%{transform:rotate(-10deg)}75%{transform:rotate(6deg)}}
+@keyframes aiUriPulse{0%,100%{transform:none}15%{transform:scale(1.18)}30%{transform:none}45%{transform:scale(1.14)}60%{transform:none}}
+@keyframes aiUriZoom{0%{transform:none}40%{transform:scale(1.4) rotate(-4deg)}60%{transform:scale(1.34) rotate(3deg)}100%{transform:none}}
+@keyframes aiUriPeek{0%{transform:none}30%{transform:translateY(70%)}55%{transform:translateY(70%)}80%{transform:translateY(-8%)}100%{transform:none}}
+@keyframes aiUriTilt{0%,100%{transform:none}30%,70%{transform:rotate(14deg) translateY(-2%)}}
+@keyframes aiUriTiltS{0%,100%{transform:none}25%,75%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes aiUriWob{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+@keyframes aiUriDizzy{0%{transform:rotate(0)}70%{transform:rotate(700deg)}85%{transform:rotate(725deg)}100%{transform:rotate(720deg)}}
+@keyframes aiUriKiss{0%,100%{transform:none}30%{transform:scale(1.12,.9) translateY(4%)}50%{transform:scale(.96,1.06)}}
+@keyframes aiUriLaugh{0%,100%{transform:none}10%{transform:translate(-3%,-3%) rotate(-4deg)}20%{transform:translate(3%,0) rotate(4deg)}30%{transform:translate(-3%,-3%) rotate(-4deg)}40%{transform:translate(3%,0) rotate(4deg)}50%{transform:translate(-3%,-3%) rotate(-4deg)}60%{transform:translate(3%,0) rotate(4deg)}}
+@keyframes aiUriSneeze{0%{transform:none}35%{transform:translate(-4%,-6%) scale(1.1,1.12)}55%{transform:translateX(8%) scale(.9,.88)}75%{transform:translateX(-2%)}100%{transform:none}}
+@keyframes aiUriYawn{0%,100%{transform:none}50%{transform:scale(1.12,1.18) translateY(-3%)}}
+@keyframes aiUriSparkle{0%,100%{transform:none}50%{transform:scale(1.1) rotate(8deg)}}
+@keyframes aiUriSpinS{0%{rotate:0deg;scale:1}50%{rotate:180deg;scale:1.7}100%{rotate:360deg;scale:1}}
+@keyframes aiUriTada{0%{transform:scale(.9)}30%{transform:scale(1.25) rotate(-12deg)}50%{transform:scale(1.2) rotate(10deg)}70%{transform:rotate(-5deg)}100%{transform:none}}
+@keyframes aiUriGlitch{0%,100%{transform:none;filter:none}10%{transform:translateX(-5%) skewX(10deg);filter:hue-rotate(70deg)}20%{transform:translate(5%,2%);filter:none}30%{transform:translateX(-3%) skewX(-8deg);filter:hue-rotate(-60deg) saturate(2)}50%{transform:translateX(4%);filter:none}70%{transform:translateX(-2%) skewX(5deg);filter:hue-rotate(120deg)}}
+@keyframes aiUriFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12%) rotate(2deg)}}
+@keyframes aiUriLook{0%,100%{translate:0 0}20%,45%{translate:-1.7px 0}55%,80%{translate:1.7px 0}}
+@keyframes aiUriWinkE{0%,100%{transform:scaleY(1)}30%,70%{transform:scaleY(.08)}}
+@keyframes aiUriRainbow{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+#aiFab{background:linear-gradient(145deg,var(--uri-fab1,var(--accent)),var(--uri-fab2,color-mix(in srgb,var(--accent) 45%,#7b5cff)));scale:var(--uri-fs,1)}
+.aiM .aiAv{background:linear-gradient(145deg,var(--uri-fab1,var(--accent)),var(--uri-fab2,color-mix(in srgb,var(--accent) 45%,#7b5cff)))}
 .aiUriP{position:absolute;width:13px;height:13px;pointer-events:none;left:50%;top:50%;margin:-6px 0 0 -6px;animation:aiUriFly .9s ease-out forwards;z-index:3;overflow:visible}
 @keyframes aiUriFly{0%{opacity:1;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.2) rotate(var(--dr))}}
 .aiUriSay{position:absolute;z-index:30;max-width:72%;padding:7px 13px;border-radius:14px;background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:0 8px 22px -8px #0007;font-size:13.5px;font-weight:650;animation:aiUriSayIn .22s ease-out;pointer-events:none}
@@ -146,6 +204,8 @@
 .aiUpMoods{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .aiUpMoods button{padding:7px 13px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .aiUpMoods button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
+.aiUpTricks{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.aiUpTricks button{padding:6px 11px;border-radius:99px;border:1.5px dashed var(--line);background:var(--card);color:var(--text);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.aiUpTricks button:active{background:var(--accent);color:var(--on-accent,#fff);border-style:solid}
 .aiUpWard{display:grid;gap:12px}.aiUpItems{display:flex;flex-wrap:wrap;gap:8px}
 .aiUpItem{position:relative;width:66px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 5px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:11px;font-weight:700;cursor:pointer}
 .aiUpItem svg{width:42px;height:42px;overflow:visible;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));border-radius:50%;padding:3px;box-sizing:border-box}
@@ -963,16 +1023,36 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   /* ------------------------------------------------------------ small pieces */
   /* ------------------------------------------------------------ Uri, the face of the AI part: ONE renderer, settings from the server (backend/mascot.py).
      Every place he appears (the floating button, chat avatars, the welcome screen, the guided tour, the demo video, the play corner) is drawn from this, so a change in
-     the admin app changes all of them. A new accessory SHAPE is the one thing that needs an app update; colours, outfits, seasons, behaviour need none. */
+     the admin app changes all of them: look, outfit, which animation plays WHEN, how often he talks and WHAT he says. A new accessory or animation SHAPE is the one thing
+     that needs an app update; the choices, colours, texts and timing need none. */
   const uls = { get(k, d) { try { return typeof LS !== "undefined" ? LS.get(k, d) : d; } catch (e) { return d; } }, set(k, v) { try { if (typeof LS !== "undefined") LS.set(k, v); } catch (e) {} } };
   const URI_SLOTS = { hat: ["gradcap", "partyhat", "crown", "sprout", "bow", "headphones", "ears"], face: ["glasses", "sunglasses"], neck: ["scarf"] };
+  const URI_ANIM_IDS = ["jump", "bounce", "backflip", "spin", "squish", "wiggle", "shake", "nod", "no", "pulse", "zoom", "peekaboo", "tilt", "wobble", "dizzy", "blush", "kiss", "laugh", "sneeze", "yawn", "sparkle", "confetti", "tada", "glitch", "float", "lookaround", "wink", "rainbow", "party"];
   const URI_DEF = {
     shape: "bubble", body: "#ffffff", cheek: "#ff8fb1", eyes: "big", cheeks: true, spark: true, outfit: { hat: "", face: "", neck: "" }, seasons: [], wardrobe: true,
     available: ["gradcap", "glasses", "sunglasses", "bow", "headphones", "partyhat", "crown", "sprout", "ears", "scarf"], unlocks: { sunglasses: 10, crown: 25 },
     behavior: { blink: true, look: true, bounce: true, react: true, play: true, sleepy: true },
-    phrases: ["הי, זה דגדג!", "אני כאן אם צריך עזרה", "עוד פעם? אני לא מתלונן", "יש שאלה? אני מוכן", "אל תשכח ללמוד, וגם לנוח", "מה נשמע?", "בא לך לשאול משהו?", "תלבישו לי משהו יפה"],
+    anim: { enabled: URI_ANIM_IDS, speed: 1, particles: true, amount: 6 },
+    triggers: { tap: ["jump", "squish", "wiggle", "blush", "spin", "zoom", "tilt", "wink", "kiss", "laugh", "nod", "backflip", "pulse", "bounce"], open: ["peekaboo", "jump", "zoom", "wiggle"], send: ["nod", "wink", "tilt"], think: ["lookaround", "tilt", "wobble", "float"],
+      done: ["jump", "sparkle", "nod", "laugh", "pulse"], error: ["shake", "dizzy", "no"], idle: ["jump", "wiggle", "squish", "lookaround", "yawn", "float", "wink", "glitch", "sneeze", "rainbow"], party: ["party"] },
+    talk: { tap: 100, open: 80, send: 10, think: 55, done: 25, error: 100, idle: 60, party: 100 },
+    idle: { min: 18, max: 40 },
+    phrases: {
+      tap: ["הי, זה דגדג!", "אני כאן אם צריך עזרה", "עוד פעם? אני לא מתלונן", "יש שאלה? אני מוכן", "אל תשכח ללמוד, וגם לנוח", "מה נשמע?", "בא לך לשאול משהו?", "תלבישו לי משהו יפה", "הו, איזה פינוק"],
+      open: ["היי! באת לשאול משהו?", "שמח לראות אותך", "אני מקשיב"], open_morning: ["בוקר טוב! מוכן לשאלות", "בוקר אור, מה בתוכנית היום?", "קמת מוקדם, כל הכבוד"],
+      open_noon: ["צהריים טובים! איך היום עובר?", "הפסקת צהריים? אני כאן"], open_evening: ["ערב טוב! עוד יום מאחוריך", "ערב נעים, במה אפשר לעזור?"], open_night: ["מאוחר... אל תשכח לישון", "ערנות לילית? גם אני כאן"],
+      send: ["קיבלתי!", "רגע, בודק", "שאלה טובה"], think: ["עוד רגע...", "אני על זה", "מחפש את התשובה", "כמעט שם"], done: ["הנה!", "מקווה שזה עוזר", "יש עוד שאלה?", "בכיף"],
+      error: ["אופס, משהו השתבש", "נסה שוב? אני כאן", "תקלה קטנה, זה יסתדר"], idle: ["אני כאן אם צריך", "הכול בסדר?", "אפשר לגעת בי, אני לא נושך", "יש מבחן קרוב? אפשר לשאול אותי", "מה חדש?"], party: ["מסיבה!", "יאללה, מרקידים!", "וואו כמה אנרגיה"],
+    },
+    look: { eye: "", outline: "", outlineW: 0, aura: "", auraSize: 0, fab1: "", fab2: "", fabScale: 1, tag: "AI" },
   };
-  const uriMerge = c => { c = c && typeof c === "object" ? c : {}; return { ...URI_DEF, ...c, outfit: { ...URI_DEF.outfit, ...(c.outfit || {}) }, behavior: { ...URI_DEF.behavior, ...(c.behavior || {}) }, unlocks: c.unlocks || URI_DEF.unlocks, available: c.available || URI_DEF.available, seasons: c.seasons || [], phrases: (c.phrases && c.phrases.length) ? c.phrases : URI_DEF.phrases }; };
+  const uriMerge = c => {
+    c = c && typeof c === "object" ? c : {}; const D = URI_DEF;
+    const ph = Array.isArray(c.phrases) ? { tap: c.phrases } : (c.phrases && typeof c.phrases === "object" ? c.phrases : {}), phrases = {};
+    Object.keys(D.phrases).forEach(k => { phrases[k] = Array.isArray(ph[k]) && ph[k].length ? ph[k] : D.phrases[k]; });
+    return { ...D, ...c, outfit: { ...D.outfit, ...(c.outfit || {}) }, behavior: { ...D.behavior, ...(c.behavior || {}) }, unlocks: c.unlocks || D.unlocks, available: c.available || D.available, seasons: c.seasons || [],
+      anim: { ...D.anim, ...(c.anim || {}) }, triggers: { ...D.triggers, ...(c.triggers || {}) }, talk: { ...D.talk, ...(c.talk || {}) }, idle: { ...D.idle, ...(c.idle || {}) }, look: { ...D.look, ...(c.look || {}) }, phrases };
+  };
   let URI_CFG = uriMerge(uls.get("uriCfg", null));
   const URI_BUB = "M10 9h20a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H21l-6.2 5.1a.8.8 0 0 1-1.3-.6V31H10a6 6 0 0 1-6-6V15a6 6 0 0 1 6-6z";
   const URI_BLOB = "M20 8.5c9.4 0 16 5.6 16 13s-6.6 12-16 12S4 29 4 21.5 10.6 8.5 20 8.5z";
@@ -992,6 +1072,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function uriEyes(c, mood) {
     if (mood === "sleep") return '<g class="aiEyes"><path class="aiLid" d="M12.4 19.4q2.4 2.7 4.8 0M22.8 19.4q2.4 2.7 4.8 0"/></g>';
     if (mood === "love") return '<g class="aiEyes">' + URI_HEART(14.8, 16.6) + URI_HEART(25.2, 16.6) + "</g>";
+    if (mood === "dizzy") return '<g class="aiEyes"><circle class="aiLidC" cx="14.8" cy="19" r="3.3"/><circle class="aiLidC" cx="14.8" cy="19" r="1.5"/><circle class="aiLidC" cx="25.2" cy="19" r="3.3"/><circle class="aiLidC" cx="25.2" cy="19" r="1.5"/></g>';
     if (mood === "grin" || c.eyes === "happy") return '<g class="aiEyes"><path class="aiLid" d="M12.4 20.2q2.4-3.8 4.8 0M22.8 20.2q2.4-3.8 4.8 0"/></g>';
     const st = mood === "think" ? ' style="--ex:1.1px;--ey:-1.1px"' : "";
     if (c.eyes === "oval") return '<g class="aiEyes"' + st + '><ellipse class="aiEye aiEyeL" cx="14.8" cy="19" rx="2.1" ry="2.7"/><ellipse class="aiEye aiEyeR" cx="25.2" cy="19" rx="2.1" ry="2.7"/></g>';
@@ -1002,7 +1083,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function uriMouth(mood) {
     if (mood === "grin") return '<path class="aiMouthF" d="M15.2 24h9.6a4.8 4.8 0 0 1-9.6 0z"/><path class="aiTng" d="M17.6 27.4q2.4-1.8 4.8 0a3 2.2 0 0 1-4.8 0z"/>';
     if (mood === "wow") return '<ellipse class="aiMouthF" cx="20" cy="26.3" rx="1.9" ry="2.5"/>';
-    if (mood === "think") return '<path class="aiSmile" d="M16.2 26.2q1.9-1.6 3.8 0t3.8 0"/>';
+    if (mood === "think" || mood === "dizzy") return '<path class="aiSmile" d="M16.2 26.2q1.9-1.6 3.8 0t3.8 0"/>';
     if (mood === "sleep") return '<path class="aiSmile" d="M18.2 25.6q1.8 1.4 3.6 0"/>';
     return '<path class="aiSmile" d="M15.3 24.4q4.7 3.8 9.4 0"/>';
   }
@@ -1018,12 +1099,17 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const uriPokes = () => Number(uls.get("uriPokes", 0)) || 0;
   const uriUnlocked = (c, k) => !(c.unlocks && c.unlocks[k]) || uriPokes() >= c.unlocks[k];
   const uriNight = () => { const h = new Date().getHours(); return h >= 0 && h < 5; };
+  const uriHex = v => (/^#[0-9a-fA-F]{6}$/.test(String(v || "")) ? v : "");
   // the whole picture. o: { mood, outfit, dead, kind }. Pure: it only reads the settings it is given.
   function uriSVG(cfg, o) {
-    const c = uriMerge(cfg), opt = o || {}, mood = opt.mood || "happy", out = opt.outfit || uriOutfit(c), dead = !!opt.dead;
+    const c = uriMerge(cfg), opt = o || {}, mood = opt.mood || "happy", out = opt.outfit || uriOutfit(c), dead = !!opt.dead, L = c.look || {};
     const acc = k => (k && URI_ACC[k] ? URI_ACC[k](c) : "");
-    let x = '<svg class="aiFace' + (dead ? " aiDeadFace" : "") + '" viewBox="0 0 40 40" aria-hidden="true" focusable="false" data-uri="' + (opt.kind || "main") + '"' + (c.behavior.blink && !dead ? " data-blink" : "") +
-      ' style="--uri-body:' + c.body + ";--uri-cheek:" + c.cheek + ";--bd:" + ((Math.random() * 3.5 + 0.6).toFixed(1)) + 's">';
+    let st = "--uri-body:" + uriHex(c.body) + ";--uri-cheek:" + (uriHex(c.cheek) || "#ff8fb1") + ";--bd:" + ((Math.random() * 3.5 + 0.6).toFixed(1)) + "s";
+    if (uriHex(L.eye)) st += ";--uri-eye:" + L.eye;
+    if (uriHex(L.outline) && Number(L.outlineW) > 0) st += ";--uri-line:" + L.outline + ";--uri-lw:" + Math.min(3, Number(L.outlineW));
+    const aura = uriHex(L.aura) && Number(L.auraSize) > 0;
+    if (aura) st += ";--uri-ac:" + L.aura + ";--uri-ar:" + Math.min(24, Number(L.auraSize)) + "px";
+    let x = '<svg class="aiFace' + (dead ? " aiDeadFace" : "") + '" viewBox="0 0 40 40" aria-hidden="true" focusable="false" data-uri="' + (opt.kind || "main") + '"' + (c.behavior.blink && !dead ? " data-blink" : "") + (aura ? " data-aura" : "") + ' style="' + st + '">';
     if (out.hat === "ears") x += acc("ears");
     x += '<path class="aiBub" d="' + (c.shape === "blob" ? URI_BLOB : URI_BUB) + '"/>';
     if (dead) {
@@ -1043,9 +1129,19 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     FACE_FAB = uriSVG(URI_CFG, { kind: "fab", mood: URI_CFG.behavior.sleepy && uriNight() ? "sleep" : "happy" });
   }
   uriBuild();
+  // global look: animation speed, the floating button's colours and size, the small tag
+  function uriApplyLook(cfg) {
+    const c = uriMerge(cfg || URI_CFG), r = document.documentElement.style, L = c.look || {};
+    r.setProperty("--ud", String(+(1 / Math.max(0.5, Math.min(2, Number(c.anim.speed) || 1))).toFixed(3)));
+    uriHex(L.fab1) ? r.setProperty("--uri-fab1", L.fab1) : r.removeProperty("--uri-fab1");
+    uriHex(L.fab2) ? r.setProperty("--uri-fab2", L.fab2) : r.removeProperty("--uri-fab2");
+    r.setProperty("--uri-fs", String(Math.max(0.8, Math.min(1.5, Number(L.fabScale) || 1))));
+    document.querySelectorAll(".aiTag").forEach(t => { if (L.tag) { t.textContent = String(L.tag).slice(0, 4); t.hidden = false; } else t.hidden = true; });
+  }
+  uriApplyLook(URI_CFG);
   // after the settings changed (or the student dressed him): every Uri already on the screen is redrawn
   function uriRefresh() {
-    uriBuild();
+    uriBuild(); uriApplyLook(URI_CFG);
     document.querySelectorAll("svg.aiFace[data-uri]").forEach(sv => {
       const k = sv.dataset.uri, t = document.createElement("template");
       t.innerHTML = k === "dead" ? FACE_DEAD : k === "fab" ? FACE_FAB : k === "main" ? FACE : "";
@@ -1061,34 +1157,107 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (JSON.stringify(c) !== JSON.stringify(URI_CFG)) { URI_CFG = c; uriRefresh(); }
     } catch (e) {}
   }
-  // little reactions: a hop, a spin, a squish, a wiggle, a blush; hearts or stars fly out
-  const URI_RX = ["jump", "spin", "squish", "wiggle", "blush"];
-  function uriParticles(host, shape) {
-    const path = shape === "heart" ? "M5 9C-1 5.4-1 1.6 1.4.8 3 .3 4.4 1.3 5 2.6 5.6 1.3 7 .3 8.6.8 11 1.6 11 5.4 5 9z" : "M5 0l1.3 3.4L10 5 6.3 6.6 5 10 3.7 6.6 0 5l3.7-1.6z";
-    for (let i = 0; i < 6; i++) {
+  /* ---- movement. Each animation is a CSS class (aiRx-NAME); some also swap his face for a moment (a mood) and throw particles */
+  const URI_ANIMS = {
+    jump: { ms: 700 }, bounce: { ms: 1100 }, backflip: { ms: 900 }, spin: { ms: 800 }, squish: { ms: 600 }, wiggle: { ms: 700 }, shake: { ms: 600, mood: "wow" }, nod: { ms: 800 }, no: { ms: 800 },
+    pulse: { ms: 1000, mood: "love", p: "heart" }, zoom: { ms: 800, mood: "wow" }, peekaboo: { ms: 1400 }, tilt: { ms: 1200, mood: "think" }, wobble: { ms: 1800 }, dizzy: { ms: 1600, mood: "dizzy" },
+    blush: { ms: 900, p: "heart" }, kiss: { ms: 900, mood: "love", p: "heart" }, laugh: { ms: 900, mood: "grin", p: "star" }, sneeze: { ms: 900, mood: "wow", p: "drop" }, yawn: { ms: 1800, mood: "wow", p: "zz" },
+    sparkle: { ms: 900, p: "star" }, confetti: { ms: 1000, mood: "grin", p: "confetti" }, tada: { ms: 1100, mood: "grin", p: "confetti" }, glitch: { ms: 600 }, float: { ms: 2400 },
+    lookaround: { ms: 2000 }, wink: { ms: 700 }, rainbow: { ms: 1800 }, party: { ms: 3300, mood: "grin", p: "confetti", again: 1100 },
+  };
+  const URI_PART = {
+    star: { d: "M5 0l1.3 3.4L10 5 6.3 6.6 5 10 3.7 6.6 0 5l3.7-1.6z", fill: "#ffd166" },
+    heart: { d: "M5 9C-1 5.4-1 1.6 1.4.8 3 .3 4.4 1.3 5 2.6 5.6 1.3 7 .3 8.6.8 11 1.6 11 5.4 5 9z", fill: "#ff6fa5" },
+    confetti: { d: "M1 3h8v4H1z", fill: "multi" },
+    zz: { d: "M1.5 2h6L1.5 8h6", fill: "none", stroke: "#8aa0ff" },
+    drop: { d: "M5 0C5 0 1 4.6 1 7a4 4 0 0 0 8 0C9 4.6 5 0 5 0z", fill: "#6cc4ff" },
+  };
+  const URI_CONF = ["#ff6fa5", "#ffd166", "#4cc27a", "#6cc4ff", "#a78bfa", "#ff7a59"];
+  function uriParticles(host, shape, n) {
+    const P = URI_PART[shape] || URI_PART.star; n = Math.max(2, Math.min(14, Number(n) || 6));
+    if (getComputedStyle(host).position === "static") host.style.position = "relative";
+    for (let i = 0; i < n; i++) {
       const sv = document.createElementNS("http://www.w3.org/2000/svg", "svg"); sv.setAttribute("viewBox", "0 0 10 10"); sv.setAttribute("class", "aiUriP");
-      const ang = (i / 6) * Math.PI * 2 + Math.random() * 0.7, d = 30 + Math.random() * 26;
-      sv.style.cssText = "--dx:" + Math.round(Math.cos(ang) * d) + "px;--dy:" + Math.round(Math.sin(ang) * d - 14) + "px;--dr:" + Math.round(Math.random() * 120 - 60) + "deg;fill:" + (shape === "heart" ? "#ff6fa5" : "#ffd166") + ";animation-delay:" + i * 30 + "ms";
-      const pa = document.createElementNS("http://www.w3.org/2000/svg", "path"); pa.setAttribute("d", path); sv.appendChild(pa); host.appendChild(sv);
-      setTimeout(() => sv.remove(), 1100);
+      const ang = (i / n) * Math.PI * 2 + Math.random() * 0.7, d = 30 + Math.random() * 28, fill = P.fill === "multi" ? URI_CONF[i % URI_CONF.length] : P.fill;
+      sv.style.cssText = "--dx:" + Math.round(Math.cos(ang) * d) + "px;--dy:" + Math.round(Math.sin(ang) * d - 14) + "px;--dr:" + Math.round(Math.random() * 240 - 120) + "deg;animation-delay:" + i * 28 + "ms";
+      const pa = document.createElementNS("http://www.w3.org/2000/svg", "path"); pa.setAttribute("d", P.d); pa.setAttribute("fill", fill);
+      if (P.stroke) { pa.setAttribute("stroke", P.stroke); pa.setAttribute("stroke-width", "1.4"); pa.setAttribute("stroke-linecap", "round"); pa.setAttribute("stroke-linejoin", "round"); }
+      sv.appendChild(pa); host.appendChild(sv); setTimeout(() => sv.remove(), 1200);
     }
   }
-  function uriReact(host, kind) {
-    const sv = host && host.querySelector("svg.aiFace:not(.aiDeadFace)"); if (!sv) return;
-    kind = kind || URI_RX[Math.floor(Math.random() * URI_RX.length)];
-    URI_RX.forEach(k => sv.classList.remove("aiRx-" + k)); void sv.getBoundingClientRect(); sv.classList.add("aiRx-" + kind);
-    setTimeout(() => sv.classList.remove("aiRx-" + kind), 900);
-    if (getComputedStyle(host).position === "static") host.style.position = "relative";
-    uriParticles(host, kind === "blush" ? "heart" : "star");
+  const uriStill = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
+  // plays one animation on the Uri inside host. cfg/outfit are optional (the admin's preview passes its own)
+  function uriPlay(host, id, cfg, outfit) {
+    const def = URI_ANIMS[id]; if (!def || !host || uriStill()) return false;
+    const C = cfg ? uriMerge(cfg) : URI_CFG;
+    let sv = host.querySelector("svg.aiFace:not(.aiDeadFace)"); if (!sv) return false;
+    if (sv._orig) { clearTimeout(sv._rxT); const o = sv._orig; sv.replaceWith(o); sv = o; } else if (sv._rxT) { clearTimeout(sv._rxT); sv.className.baseVal = sv.className.baseVal.replace(/\baiRx-\S+/g, "").trim(); }
+    const orig = sv; let cur = sv;
+    if (def.mood) { const t = document.createElement("template"); t.innerHTML = uriSVG(C, { mood: def.mood, kind: sv.dataset.uri || "main", outfit: outfit || undefined }); const n = t.content.firstChild; if (n) { sv.replaceWith(n); cur = n; cur._orig = orig; } }
+    void cur.getBoundingClientRect(); cur.classList.add("aiRx-" + id);
+    if (def.p && C.anim.particles !== false) { uriParticles(host, def.p, C.anim.amount); if (def.again) setTimeout(() => uriParticles(host, def.p, C.anim.amount), def.again * (1 / Math.max(0.5, Math.min(2, Number(C.anim.speed) || 1)))); }
+    const ms = def.ms / Math.max(0.5, Math.min(2, Number(C.anim.speed) || 1)) + 60;
+    cur._rxT = setTimeout(() => { cur.classList.remove("aiRx-" + id); if (cur._orig && cur.isConnected) cur.replaceWith(cur._orig); cur._orig = null; }, ms);
+    return true;
   }
+  // the speech bubble: inside the chat panel when he is in it, otherwise above or below the floating button
   function uriSay(host, text) {
-    if (!panel || !host) return;
-    panel.querySelectorAll(".aiUriSay").forEach(n => n.remove());
-    const b = document.createElement("div"); b.className = "aiUriSay"; b.textContent = text; panel.appendChild(b);
-    const r = host.getBoundingClientRect(), pr = panel.getBoundingClientRect();
-    b.style.top = Math.max(8, r.bottom - pr.top + 8) + "px";
-    b.style.left = Math.max(8, Math.min(pr.width - b.offsetWidth - 8, r.left - pr.left + r.width / 2 - b.offsetWidth / 2)) + "px";
-    setTimeout(() => b.remove(), 2200);
+    if (!host || !text) return;
+    const inPanel = !!(panel && panel.contains(host)), box = inPanel ? panel : document.body;
+    document.querySelectorAll(".aiUriSay").forEach(n => n.remove());
+    const b = document.createElement("div"); b.className = "aiUriSay"; b.textContent = text; if (!inPanel) b.style.position = "fixed"; box.appendChild(b);
+    const r = host.getBoundingClientRect(), pr = inPanel ? panel.getBoundingClientRect() : { left: 0, top: 0, width: innerWidth, height: innerHeight };
+    const left = r.left - pr.left + r.width / 2 - b.offsetWidth / 2;
+    b.style.left = Math.max(8, Math.min(pr.width - b.offsetWidth - 8, left)) + "px";
+    const below = r.bottom - pr.top + 8, above = r.top - pr.top - b.offsetHeight - 8;
+    b.style.top = (inPanel || above < 8 ? Math.max(8, below) : above) + "px";
+    setTimeout(() => b.remove(), 2600);
+  }
+  const uriPick = a => (a && a.length ? a[Math.floor(Math.random() * a.length)] : "");
+  function uriPhrase(cat) {
+    const P = URI_CFG.phrases || {}; let key = cat;
+    if (cat === "open") { const h = new Date().getHours(); key = h >= 5 && h < 11 ? "open_morning" : h >= 11 && h < 17 ? "open_noon" : h >= 17 && h < 22 ? "open_evening" : "open_night"; return uriPick(P[key] && P[key].length ? P[key] : P.open); }
+    return uriPick(P[key] && P[key].length ? P[key] : P.tap);
+  }
+  function uriHost() {
+    if (!panel) return fab && !fab.hidden ? fab : null;
+    if (!panel.hidden && panel.classList.contains("on")) return panel.querySelector(".aiUriPlay .aiUpFace") || panel.querySelector(".aiTt .aiAv");
+    return fab && !fab.hidden ? fab : null;
+  }
+  // a MOMENT (tap, open, send, think, done, error, idle, party): pick one of the animations the admin allowed for it, and maybe say a line. user = the student did it by touching him.
+  const uriEvAt = {};
+  function uriEvent(name, host, user) {
+    const B = URI_CFG.behavior; if (!user && !B.react) return;
+    if (document.hidden || document.body.classList.contains("calm")) return;
+    const now = Date.now(); if (!user && now - (uriEvAt[name] || 0) < 3000) return; uriEvAt[name] = now;
+    host = host || uriHost(); if (!host) return;
+    const ok = (URI_CFG.triggers[name] || []).filter(id => (URI_CFG.anim.enabled || []).includes(id) && URI_ANIMS[id]);
+    if (ok.length) uriPlay(host, uriPick(ok));
+    const p = Number(URI_CFG.talk[name]);
+    if (Math.random() * 100 < (isNaN(p) ? 0 : p)) { const t = uriPhrase(name); if (t) uriSay(host, t); }
+  }
+  // seven quick taps start a party
+  let uriTaps = [];
+  function uriTap(host) {
+    const now = Date.now(); uriTaps = uriTaps.filter(t => now - t < 3000); uriTaps.push(now);
+    if (uriTaps.length >= 7) { uriTaps = []; uriEvent("party", host, true); return; }
+    uriEvent("tap", host, true);
+  }
+  // while an answer is awaited he looks around, tilts his head, says "just a moment"
+  let uriThinkT = 0;
+  function uriBusy(b) {
+    clearTimeout(uriThinkT);
+    if (b) { const loop = () => { uriEvent("think"); uriThinkT = setTimeout(loop, 6500); }; uriThinkT = setTimeout(loop, 3800); }
+  }
+  // now and then he does something on his own
+  let uriIdleT = 0;
+  function uriIdle() {
+    if (uriIdleT) return;
+    const tick = () => {
+      const I = URI_CFG.idle || {}, ms = ((Number(I.min) || 18) + Math.random() * Math.max(0, (Number(I.max) || 40) - (Number(I.min) || 18))) * 1000;
+      uriIdleT = setTimeout(() => { if (URI_CFG.behavior.bounce) uriEvent("idle"); tick(); }, ms);
+    };
+    tick();
   }
   // his eyes follow the finger or the mouse (only the faces that are big enough to notice)
   let uriLookRaf = 0, uriLookT = 0;
@@ -1105,39 +1274,28 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       clearTimeout(uriLookT); uriLookT = setTimeout(() => document.querySelectorAll(".aiFace").forEach(f => { f.style.removeProperty("--ex"); f.style.removeProperty("--ey"); }), 2600);
     });
   }
-  // now and then he does something on his own (a hop, a wiggle, a squish) so he feels alive: on the floating button while the chat is closed, on the avatar while it is open
-  let uriIdleT = 0;
-  function uriIdle() {
-    if (uriIdleT) return;
-    uriIdleT = setInterval(() => {
-      if (!URI_CFG.behavior.bounce || document.hidden || document.body.classList.contains("calm") || Math.random() < 0.35) return;
-      const open = panel && !panel.hidden && panel.classList.contains("on");
-      const host = open ? panel.querySelector(".aiTt .aiAv") : (fab && !fab.hidden ? fab : null);
-      const sv = host && host.querySelector("svg.aiFace"); if (!sv) return;
-      const k = ["jump", "wiggle", "squish"][Math.floor(Math.random() * 3)];
-      sv.classList.remove("aiRx-" + k); void sv.getBoundingClientRect(); sv.classList.add("aiRx-" + k); setTimeout(() => sv.classList.remove("aiRx-" + k), 900);
-    }, 22000);
-  }
   const URI_TX = {
-    he: { title: "פינת אורי", poke: "תגעו באורי", moods: { happy: "שמח", grin: "צוחק", wow: "מופתע", think: "חושב", love: "אוהב", sleep: "ישן" }, ward: "לבוש", slots: { hat: "כובע", face: "פנים", neck: "צוואר" }, none: "ללא",
+    he: { title: "פינת אורי", poke: "תגעו באורי", moods: { happy: "שמח", grin: "צוחק", wow: "מופתע", think: "חושב", love: "אוהב", sleep: "ישן", dizzy: "מסוחרר" }, ward: "לבוש", tricks: "טריקים", slots: { hat: "כובע", face: "פנים", neck: "צוואר" }, none: "ללא",
       pokes: n => "נגיעות: " + n, next: (nm, n) => "עוד " + n + " נגיעות ו" + nm + " נפתח", got: nm => nm + " נפתח!", season: l => "היום אורי לובש: " + l, reset: "איפוס לבוש", close: "סגור",
-      items: { gradcap: "כובע בוגרים", partyhat: "כובע מסיבה", crown: "כתר", sprout: "נבט", bow: "פפיון", headphones: "אוזניות", ears: "אוזני חתול", glasses: "משקפיים", sunglasses: "משקפי שמש", scarf: "צעיף" } },
-    en: { title: "Uri's corner", poke: "Poke Uri", moods: { happy: "Happy", grin: "Laughing", wow: "Surprised", think: "Thinking", love: "In love", sleep: "Sleepy" }, ward: "Outfit", slots: { hat: "Hat", face: "Face", neck: "Neck" }, none: "None",
+      items: { gradcap: "כובע בוגרים", partyhat: "כובע מסיבה", crown: "כתר", sprout: "נבט", bow: "פפיון", headphones: "אוזניות", ears: "אוזני חתול", glasses: "משקפיים", sunglasses: "משקפי שמש", scarf: "צעיף" },
+      anims: { jump: "קפיצה", bounce: "קפיצות", backflip: "סלטה", spin: "סיבוב", squish: "מעיכה", wiggle: "ניענוע", shake: "רעד", nod: "הנהון", no: "לא לא", pulse: "פעימת לב", zoom: "התקרבות", peekaboo: "קוקו", tilt: "הטיית ראש", wobble: "נדנוד", dizzy: "סחרחורת", blush: "מבוכה", kiss: "נשיקה", laugh: "צחוק", sneeze: "התעטשות", yawn: "פיהוק", sparkle: "נצנוץ", confetti: "קונפטי", tada: "טה-דה", glitch: "גליץ'", float: "ריחוף", lookaround: "מסתכל סביב", wink: "קריצה", rainbow: "קשת", party: "מסיבה" } },
+    en: { title: "Uri's corner", poke: "Poke Uri", moods: { happy: "Happy", grin: "Laughing", wow: "Surprised", think: "Thinking", love: "In love", sleep: "Sleepy", dizzy: "Dizzy" }, ward: "Outfit", tricks: "Tricks", slots: { hat: "Hat", face: "Face", neck: "Neck" }, none: "None",
       pokes: n => "Pokes: " + n, next: (nm, n) => n + " more pokes to unlock " + nm, got: nm => nm + " unlocked!", season: l => "Today Uri wears: " + l, reset: "Reset outfit", close: "Close",
-      items: { gradcap: "Graduation cap", partyhat: "Party hat", crown: "Crown", sprout: "Sprout", bow: "Bow", headphones: "Headphones", ears: "Cat ears", glasses: "Glasses", sunglasses: "Sunglasses", scarf: "Scarf" } },
-    fr: { title: "Le coin d’Uri", poke: "Touchez Uri", moods: { happy: "Content", grin: "Rieur", wow: "Surpris", think: "Pensif", love: "Amoureux", sleep: "Endormi" }, ward: "Tenue", slots: { hat: "Chapeau", face: "Visage", neck: "Cou" }, none: "Aucun",
+      items: { gradcap: "Graduation cap", partyhat: "Party hat", crown: "Crown", sprout: "Sprout", bow: "Bow", headphones: "Headphones", ears: "Cat ears", glasses: "Glasses", sunglasses: "Sunglasses", scarf: "Scarf" },
+      anims: { jump: "Jump", bounce: "Bounce", backflip: "Backflip", spin: "Spin", squish: "Squish", wiggle: "Wiggle", shake: "Shake", nod: "Nod", no: "No no", pulse: "Heartbeat", zoom: "Zoom", peekaboo: "Peekaboo", tilt: "Tilt", wobble: "Wobble", dizzy: "Dizzy", blush: "Blush", kiss: "Kiss", laugh: "Laugh", sneeze: "Sneeze", yawn: "Yawn", sparkle: "Sparkle", confetti: "Confetti", tada: "Ta-da", glitch: "Glitch", float: "Float", lookaround: "Look around", wink: "Wink", rainbow: "Rainbow", party: "Party" } },
+    fr: { title: "Le coin d’Uri", poke: "Touchez Uri", moods: { happy: "Content", grin: "Rieur", wow: "Surpris", think: "Pensif", love: "Amoureux", sleep: "Endormi", dizzy: "Étourdi" }, ward: "Tenue", tricks: "Tours", slots: { hat: "Chapeau", face: "Visage", neck: "Cou" }, none: "Aucun",
       pokes: n => "Touches : " + n, next: (nm, n) => n + " touches de plus pour débloquer " + nm, got: nm => nm + " débloqué !", season: l => "Aujourd’hui Uri porte : " + l, reset: "Réinitialiser", close: "Fermer",
       items: { gradcap: "Toque", partyhat: "Chapeau de fête", crown: "Couronne", sprout: "Pousse", bow: "Nœud", headphones: "Casque", ears: "Oreilles de chat", glasses: "Lunettes", sunglasses: "Lunettes de soleil", scarf: "Écharpe" } },
   };
-  const utx = () => URI_TX[lang()] || URI_TX.he;
-  // the play corner: a big Uri to poke, moods to try, a wardrobe (some items open only after enough pokes)
+  const utx = () => { const t = URI_TX[lang()] || URI_TX.he; return t.anims ? t : { ...t, anims: URI_TX.en.anims }; };
+  // the play corner: a big Uri to poke, moods to try, tricks to play, a wardrobe (some items open only after enough pokes)
   function openUriPlay() {
     if (!panel || panel.querySelector(".aiUriPlay")) return;
     const T = utx(), C = URI_CFG, ov = document.createElement("div"); ov.className = "aiUriPlay";
     ov.innerHTML = '<div class="aiUpH"><button type="button" class="aiHb" data-x aria-label="' + esc2(T.close) + '">' + I_X + "</button><b>" + esc2(T.title) + '</b></div><div class="aiUpS"><div class="aiUpFace" role="button" tabindex="0" aria-label="' + esc2(T.poke) + '"></div><div class="aiUpStat"></div>' +
-      '<div class="aiUpRow"><div class="aiUpMoods"></div></div><div class="aiUpRow aiUpWardWrap"><h4>' + esc2(T.ward) + '</h4><div class="aiUpWard"></div></div></div>';
+      '<div class="aiUpRow"><div class="aiUpMoods"></div></div><div class="aiUpRow"><h4>' + esc2(T.tricks) + '</h4><div class="aiUpTricks"></div></div><div class="aiUpRow aiUpWardWrap"><h4>' + esc2(T.ward) + '</h4><div class="aiUpWard"></div></div></div>';
     panel.appendChild(ov);
-    const face = ov.querySelector(".aiUpFace"), stat = ov.querySelector(".aiUpStat"), moods = ov.querySelector(".aiUpMoods"), ward = ov.querySelector(".aiUpWard");
+    const face = ov.querySelector(".aiUpFace"), stat = ov.querySelector(".aiUpStat"), moods = ov.querySelector(".aiUpMoods"), ward = ov.querySelector(".aiUpWard"), tricks = ov.querySelector(".aiUpTricks");
     let mood = C.behavior.sleepy && uriNight() ? "sleep" : "happy";
     const draw = () => { face.innerHTML = uriSVG(C, { mood, kind: "play" }); };
     const nextLock = () => Object.entries(C.unlocks || {}).filter(([k, n]) => C.available.includes(k) && uriPokes() < n).sort((a, b) => a[1] - b[1])[0];
@@ -1161,23 +1319,24 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         items.forEach(k => {
           const open = uriUnlocked(C, k), b = document.createElement("button"); b.type = "button"; b.className = "aiUpItem" + (cur[slot] === k ? " on" : "") + (open ? "" : " lock");
           b.innerHTML = uriSVG(C, { outfit: { ...cur, [slot]: k }, kind: "item" }) + "<span>" + esc2(T.items[k] || k) + "</span>" + (open ? "" : "<i>" + esc2(C.unlocks[k] + "") + "</i>");
-          b.onclick = () => { if (open) setOut(slot, k); else { uriSay(b, T.next(T.items[k] || k, C.unlocks[k] - uriPokes())); } };
+          b.onclick = () => { if (open) setOut(slot, k); else uriSay(b, T.next(T.items[k] || k, C.unlocks[k] - uriPokes())); };
           list.appendChild(b);
         });
         row.appendChild(list); ward.appendChild(row);
       });
       const rs = document.createElement("button"); rs.type = "button"; rs.className = "aiLink"; rs.textContent = T.reset; rs.onclick = () => { uls.set("uriOut", {}); draw(); wardrobe(); uriRefresh(); }; ward.appendChild(rs);
     };
-    Object.keys(T.moods).forEach(m => { const b = document.createElement("button"); b.type = "button"; b.textContent = T.moods[m]; if (m === mood) b.classList.add("on"); b.onclick = () => { mood = m; moods.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); draw(); uriReact(face, m === "love" ? "blush" : "jump"); }; moods.appendChild(b); });
+    Object.keys(T.moods).forEach(m => { const b = document.createElement("button"); b.type = "button"; b.textContent = T.moods[m]; if (m === mood) b.classList.add("on"); b.onclick = () => { mood = m; moods.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); draw(); uriPlay(face, m === "love" ? "blush" : m === "dizzy" ? "wobble" : "jump"); }; moods.appendChild(b); });
+    (C.anim.enabled || []).filter(id => URI_ANIMS[id]).forEach(id => { const b = document.createElement("button"); b.type = "button"; b.textContent = T.anims[id] || id; b.onclick = () => uriPlay(face, id); tricks.appendChild(b); });
     const poke = () => {
       const before = uriPokes(), n = before + 1; uls.set("uriPokes", n);
-      uriReact(face); uriSay(face, C.phrases[Math.floor(Math.random() * C.phrases.length)]);
+      uriTap(face);
       const opened = Object.entries(C.unlocks || {}).find(([k, v]) => C.available.includes(k) && before < v && n >= v);
-      if (opened) { uriParticles(face, "star"); setTimeout(() => { uriSay(face, T.got(T.items[opened[0]] || opened[0])); wardrobe(); }, 500); }
+      if (opened) { uriParticles(face, "star", 10); setTimeout(() => { uriPlay(face, "tada"); uriSay(face, T.got(T.items[opened[0]] || opened[0])); wardrobe(); }, 500); }
       status();
     };
     face.onclick = poke; face.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); poke(); } };
-    ov.querySelector("[data-x]").onclick = () => { ov.remove(); panel.querySelectorAll(".aiUriSay").forEach(n => n.remove()); };
+    ov.querySelector("[data-x]").onclick = () => { ov.remove(); document.querySelectorAll(".aiUriSay").forEach(n => n.remove()); };
     draw(); wardrobe(); status();
   }
   const I_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
@@ -1809,7 +1968,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (i >= from && !(sent && m.role === "user")) {                    // (the sent message is started by send(), from the input bar)
         row.classList.add("aiIn"); row.style.setProperty("--ad", ((i - from) * (sent ? 170 : 45)) + "ms"); if (!sent) row.style.setProperty("--fy", "12px");
       }
-      if (m.justDone) { row.classList.add("aiDone"); m.justDone = false; }  // the answer has just arrived
+      if (m.justDone) { row.classList.add("aiDone"); m.justDone = false; uriEvent("done"); }  // the answer has just arrived
       if (m.err) addErr(b, m, i === msgs.length - 1);
       if (busy && i === msgs.length - 1 && m.role !== "user") curBub = b;
       ms.appendChild(row);
@@ -1850,6 +2009,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (sendBtn && was !== b) { sendBtn.classList.remove("aiSwap"); void sendBtn.offsetWidth; sendBtn.classList.add("aiSwap"); setTimeout(() => sendBtn.classList.remove("aiSwap"), 360); }
     sendBtn.innerHTML = b ? I_STOP : I_SEND; sendBtn.setAttribute("aria-label", b ? tx("stop") : tx("send")); sendBtn.title = b ? tx("stop") : tx("send");
     sendBtn.disabled = !b && !input.value.trim();
+    if (was !== b) uriBusy(b);
   }
   function setStatus(txt) { statusEl.textContent = txt || ""; statusEl.hidden = !txt; }
 
@@ -2297,7 +2457,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const from = input.getBoundingClientRect();            // where the message starts its way up
     input.value = ""; input.style.height = "auto";
     animFrom = msgs.length;
-    msgs.push({ role: "user", content: text });
+    msgs.push({ role: "user", content: text }); uriEvent("send");
     const ai = { role: "assistant", content: "", pending: true }; msgs.push(ai);
     setBusy(true); renderMsgs(); busy = true; curBub = ms.lastElementChild.querySelector(".aiB");
     const ur = ms.children[msgs.length - 2];
@@ -2372,6 +2532,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       clearTimeout(wake); if (ctl === myCtl) ctl = null;
       setBusy(false); left();
       if (!ai.err && ai.content && ai.content.trim()) ai.justDone = true;
+      if (ai.err) uriEvent("error");
       if (panel && !panel.hidden && !histMode && !memMode && msgs.includes(ai)) renderMsgs();
     }
   }
@@ -2546,10 +2707,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     document.body.appendChild(panel);
     // Uri himself: tap his avatar for the play corner, tap the big one on the welcome screen for a little reaction, his eyes follow the finger; the settings come from the server
     { const av = panel.querySelector(".aiTt .aiAv"); if (av) { av.setAttribute("role", "button"); av.tabIndex = 0; av.setAttribute("aria-label", utx().title);
-        const go = () => { if (URI_CFG.behavior.play) openUriPlay(); else if (URI_CFG.behavior.react) { uriReact(av); uriSay(av, URI_CFG.phrases[Math.floor(Math.random() * URI_CFG.phrases.length)]); } };
+        const go = () => { if (URI_CFG.behavior.play) openUriPlay(); else uriTap(av); };
         av.addEventListener("click", go); av.addEventListener("keydown", e => { if (e.key === "Enter") go(); }); }
-      panel.addEventListener("click", e => { const b = e.target.closest(".aiBig"); if (b && URI_CFG.behavior.react) { uriReact(b); uriSay(b, URI_CFG.phrases[Math.floor(Math.random() * URI_CFG.phrases.length)]); } });
-      document.addEventListener("pointermove", uriLookMove, { passive: true }); uriFetch(); uriIdle(); }
+      panel.addEventListener("click", e => { const b = e.target.closest(".aiBig"); if (b) uriTap(b); });
+      document.addEventListener("pointermove", uriLookMove, { passive: true }); uriApplyLook(URI_CFG); uriFetch(); uriIdle(); }
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
     splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]'); memBtn = panel.querySelector('[data-a="mem"]');
 
@@ -2749,6 +2910,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       else { const watched = await demoGate(); if (!watched) { close(); return; } }
     }
     if (matchMedia("(hover:hover)").matches) input.focus();
+    setTimeout(() => uriEvent("open"), 500);
   }
 
   async function openLoad() {                 // what the chat needs before it can be shown; returns what went wrong, or null
@@ -3222,7 +3384,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
     _fit() { fit(true); },
     _md(src) { return md(src); },
-    _uri(cfg, o) { return uriSVG(cfg, o); },                    // for the admin app's preview: draw Uri from the given settings
+    _uri(cfg, o) { return uriSVG(cfg, o); }, _uriPlay(host, id, cfg, outfit) { return uriPlay(host, id, cfg, outfit); }, _uriLook(cfg) { uriApplyLook(cfg); }, _uriEvent(n, h, u) { uriEvent(n, h, u); }, _uriSay(h, x) { uriSay(h, x); },                    // for the admin app's preview: draw Uri from the given settings
     _uriCfg() { return URI_CFG; }, _play() { build(); panel.hidden = false; panel.classList.add("on"); openUriPlay(); },
     _preview(src) { build(); return md(src); },                // for the admin app's design gallery: the same drawing code the students get
     _demo() { return demoGate(); },                      // for tests only: render a message text the way the chat does

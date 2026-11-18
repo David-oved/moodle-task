@@ -17,6 +17,9 @@ html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-u
 .uT{width:92px;text-align:center;font:700 11px system-ui;color:var(--muted)}.uT .uF{width:84px;height:84px;margin:0 auto 5px;border-radius:24px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));padding:7px;box-sizing:border-box}
 .uT .uF svg{width:100%;height:100%;overflow:visible;display:block}.uT .uF.s{width:56px;height:56px;border-radius:50%;padding:7px}.uT .uF.m{width:38px;height:38px;border-radius:50%;padding:4px}.uT .uF.xs{width:30px;height:30px;border-radius:50%;padding:3px}
 .uT .uF.big{width:120px;height:120px;border-radius:30px;background:var(--card);border:1px solid var(--line)}.uT.w{width:128px}
+.uStage{position:relative;display:flex;flex-direction:column;align-items:center;padding:14px 0 8px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-bottom:14px}
+.uStageF{position:relative;width:132px;height:132px}.uStageF>svg.aiFace{width:100%;height:100%;overflow:visible}
+.uStage small{margin-top:6px;font:700 11px system-ui;color:var(--muted)}
 .pvFrame{overflow:hidden;border-radius:12px;background:var(--bg);outline:1px dashed color-mix(in srgb,var(--muted) 35%,transparent)}
 </style>
 </head>
@@ -74,10 +77,12 @@ function frameFor(html, width, noZoom) {
 function renderUri(cfg, L) {
   window.AIChat._preview("");                                            // makes sure the app's styles are in the page
   const W = window.AIChat._uri, esc = x => String(x == null ? "" : x).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  window.AIChat._uriLook(cfg);                                           // speed, button colours, tag: the global settings
   const base = Object.assign({ hat: "", face: "", neck: "" }, cfg.outfit || {});
   const tile = (label, svg, cls) => '<div class="uT"><div class="uF ' + (cls || "") + '">' + svg + "</div>" + esc(label) + "</div>";
   const moods = L.moods || { happy: "happy", grin: "grin", wow: "wow", think: "think", love: "love", sleep: "sleep" };
-  let h = '<div class="uSec"><h4>' + esc(L.hMoods || "מצבי רוח") + '</h4><div class="uRow">' + Object.keys(moods).map(m => tile(moods[m], W(cfg, { mood: m, outfit: base }))).join("") + "</div></div>";
+  let h = '<div class="uSec"><div class="uStage"><div class="uStageF" id="uStageF">' + W(cfg, { outfit: base, kind: "play" }) + "</div><small>" + esc(L.stage || "הבמה: כאן רואים את האנימציות והמשפטים") + "</small></div></div>" +
+    '<div class="uSec"><h4>' + esc(L.hMoods || "מצבי רוח") + '</h4><div class="uRow">' + Object.keys(moods).map(m => tile(moods[m], W(cfg, { mood: m, outfit: base }))).join("") + "</div></div>";
   h += '<div class="uSec"><h4>' + esc(L.hSizes || "בגדלים שבהם הוא מופיע") + '</h4><div class="uRow">' +
     tile(L.fab || "הכפתור הצף", W(cfg, { outfit: base }), "s") + tile(L.hdr || "כותרת הצ׳אט", W(cfg, { outfit: base }), "m") + tile(L.bub || "בהודעות", W(cfg, { outfit: base }), "xs") +
     tile(L.dead || "כשיש תקלה", W(cfg, { dead: true, outfit: base }), "s") + "</div></div>";
@@ -92,6 +97,13 @@ addEventListener("message", e => {
   if (!ALLOWED.includes(e.origin) || !e.data) return;
   if (e.data.t === "theme") { document.documentElement.dataset.theme = e.data.dark ? "dark" : "light"; sendH(); return; }
   if (e.data.t === "uri" && window.AIChat) { renderUri(e.data.cfg || {}, e.data.labels || {}); return; }
+  if (e.data.t === "uriPlay" && window.AIChat) {                          // play one animation (and say a line) on the stage
+    let host = document.getElementById("uStageF"); if (!host) { renderUri(e.data.cfg || {}, e.data.labels || {}); host = document.getElementById("uStageF"); }
+    window.AIChat._uriLook(e.data.cfg || {});
+    if (e.data.id) window.AIChat._uriPlay(host, String(e.data.id), e.data.cfg || {}, Object.assign({ hat: "", face: "", neck: "" }, (e.data.cfg || {}).outfit || {}));
+    if (e.data.text) window.AIChat._uriSay(host, String(e.data.text).slice(0, 80));
+    return;
+  }
   if (e.data.t !== "render" || !Array.isArray(e.data.items) || !window.AIChat) return;
   const widths = e.data.width === "all" ? [320, 390, 768, 1280] : [Math.max(280, Math.min(1920, Number(e.data.width) || 390))];
   out.innerHTML = "";
