@@ -97,6 +97,17 @@ addEventListener("message", e => {
   if (!ALLOWED.includes(e.origin) || !e.data) return;
   if (e.data.t === "theme") { document.documentElement.dataset.theme = e.data.dark ? "dark" : "light"; sendH(); return; }
   if (e.data.t === "uri" && window.AIChat) { renderUri(e.data.cfg || {}, e.data.labels || {}); return; }
+  if (e.data.t === "uriSim" && window.AIChat) {                           // what happens when the chat opens: the button's face, the sequence, a line, the face he keeps
+    const cfg = e.data.cfg || {}, A = window.AIChat, outfit = Object.assign({ hat: "", face: "", neck: "" }, cfg.outfit || {});
+    let host = document.getElementById("uStageF"); if (!host) { renderUri(cfg, {}); host = document.getElementById("uStageF"); }
+    A._uriLook(cfg); host.innerHTML = A._uri(cfg, { mood: String(e.data.fab || "happy"), outfit, kind: "play" });
+    const seq = (Array.isArray(e.data.seq) ? e.data.seq : []).slice(0, 6), chat = String(e.data.chat || "happy");
+    let at = 700;
+    seq.forEach((id, i) => { const t = at; setTimeout(() => A._uriPlay(host, String(id), cfg, outfit, i === seq.length - 1 ? chat : ""), t); at += A._uriMs(String(id), cfg) + 140; });
+    setTimeout(() => { host.innerHTML = A._uri(cfg, { mood: chat, outfit, kind: "play" }); }, at + 200);
+    if (e.data.line) setTimeout(() => A._uriSay(host, String(e.data.line).slice(0, 80)), 700 + Math.min(at - 700, 900));
+    return;
+  }
   if (e.data.t === "uriPlay" && window.AIChat) {                          // play one animation (and say a line) on the stage
     let host = document.getElementById("uStageF"); if (!host) { renderUri(e.data.cfg || {}, e.data.labels || {}); host = document.getElementById("uStageF"); }
     window.AIChat._uriLook(e.data.cfg || {});

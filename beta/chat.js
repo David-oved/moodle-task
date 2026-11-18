@@ -158,7 +158,15 @@
 .aiFace.aiRx-lookaround{animation:aiUriTiltS calc(2s*var(--ud,1)) ease-in-out}
 .aiFace.aiRx-wink .aiEyeR{animation:aiUriWinkE calc(.7s*var(--ud,1)) ease-in-out}.aiFace.aiRx-wink{animation:aiUriTiltS calc(.7s*var(--ud,1)) ease-in-out}
 .aiFace.aiRx-rainbow{animation:aiUriRainbow calc(1.8s*var(--ud,1)) linear}
+.aiFace.aiRx-wake{animation:aiUriWake calc(2.6s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-stretch{animation:aiUriStretch calc(1.9s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-snore{animation:aiUriSnore calc(2.6s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-drowse{animation:aiUriDrowse calc(2.8s*var(--ud,1)) ease-in-out}
 .aiFace.aiRx-party{animation:aiUriTada calc(1.1s*var(--ud,1)) ease-in-out,aiUriBounce calc(1.1s*var(--ud,1)) calc(1.1s*var(--ud,1)) ease-out,aiUriRainbow calc(2.2s*var(--ud,1)) linear 1.1s}
+@keyframes aiUriWake{0%{transform:translateY(6%) scale(1.02,.94)}18%{transform:translateY(6%) rotate(-3deg) scale(1.02,.94)}30%{transform:translateY(6%) rotate(3deg) scale(1.02,.94)}45%{transform:translateY(-14%) scale(.94,1.14)}60%{transform:scale(1.08,.92)}75%{transform:rotate(-4deg)}88%{transform:rotate(3deg)}100%{transform:none}}
+@keyframes aiUriStretch{0%,100%{transform:none}35%,60%{transform:scale(.88,1.26) translateY(-6%)}80%{transform:scale(1.08,.94)}}
+@keyframes aiUriSnore{0%,100%{transform:translateY(3%) scale(1.02,.97)}50%{transform:translateY(3%) scale(.97,1.05)}}
+@keyframes aiUriDrowse{0%,100%{transform:none}25%{transform:rotate(6deg) translateY(6%)}42%{transform:rotate(11deg) translateY(10%)}52%{transform:rotate(-2deg) translateY(-4%)}65%{transform:rotate(5deg) translateY(5%)}85%{transform:rotate(9deg) translateY(8%)}92%{transform:rotate(0) translateY(-3%)}}
 @keyframes aiUriJump{0%{transform:none}35%{transform:translateY(-22%) scale(.94,1.08)}60%{transform:translateY(0) scale(1.1,.88)}80%{transform:scale(.97,1.04)}100%{transform:none}}
 @keyframes aiUriBounce{0%,100%{transform:none}15%{transform:translateY(-26%) scale(.95,1.06)}30%{transform:scale(1.08,.9)}45%{transform:translateY(-14%)}60%{transform:scale(1.05,.95)}75%{transform:translateY(-6%)}90%{transform:none}}
 @keyframes aiUriFlip{0%{transform:none}40%{transform:translateY(-34%) rotate(-180deg)}100%{transform:rotate(-360deg)}}
@@ -1027,8 +1035,26 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
      that needs an app update; the choices, colours, texts and timing need none. */
   const uls = { get(k, d) { try { return typeof LS !== "undefined" ? LS.get(k, d) : d; } catch (e) { return d; } }, set(k, v) { try { if (typeof LS !== "undefined") LS.set(k, v); } catch (e) {} } };
   const URI_SLOTS = { hat: ["gradcap", "partyhat", "crown", "sprout", "bow", "headphones", "ears"], face: ["glasses", "sunglasses"], neck: ["scarf"] };
-  const URI_ANIM_IDS = ["jump", "bounce", "backflip", "spin", "squish", "wiggle", "shake", "nod", "no", "pulse", "zoom", "peekaboo", "tilt", "wobble", "dizzy", "blush", "kiss", "laugh", "sneeze", "yawn", "sparkle", "confetti", "tada", "glitch", "float", "lookaround", "wink", "rainbow", "party"];
+  const URI_ANIM_IDS = ["jump", "bounce", "backflip", "spin", "squish", "wiggle", "shake", "nod", "no", "pulse", "zoom", "peekaboo", "tilt", "wobble", "dizzy", "blush", "kiss", "laugh", "sneeze", "yawn", "sparkle", "confetti", "tada", "glitch", "float", "lookaround", "wink", "rainbow", "party", "wake", "stretch", "snore", "drowse"];
+  const URI_MOOD_IDS = ["happy", "grin", "wow", "think", "love", "sleep", "sleepy", "wink", "dizzy"];
+  // every mood is a character: what it does when the chat opens / when it idles / when touched, and its own lines
+  const URI_PERSONAS = {
+    happy: { open: ["jump", "wiggle"], idle: ["wiggle", "squish", "jump"], tap: ["jump", "squish", "blush"], lines: ["היי! שמח לראות אותך", "איזה יום יפה לשאול שאלות"] },
+    grin: { open: ["laugh"], idle: ["laugh", "bounce", "wiggle"], tap: ["laugh", "bounce"], lines: ["חחח אני מצחיק היום", "סיפרו לי בדיחה על מבחנים... לא, עדיף שלא"] },
+    wow: { open: ["zoom", "peekaboo"], idle: ["zoom", "lookaround", "jump"], tap: ["zoom", "jump"], lines: ["וואו, כבר פה?", "לא ציפיתי לך!"] },
+    think: { open: ["tilt", "lookaround"], idle: ["lookaround", "tilt", "wobble"], tap: ["tilt", "nod"], lines: ["הממ, מעניין...", "אני חושב על זה"] },
+    love: { open: ["pulse", "kiss"], idle: ["pulse", "blush", "kiss"], tap: ["kiss", "blush", "pulse"], lines: ["אני אוהב לעזור לך", "איזה כיף שבאת"] },
+    sleep: { open: ["wake"], idle: ["snore", "yawn"], tap: ["wake", "yawn"], lines: ["רגע... חמש דקות...", "הא? מי? מה?"] },
+    sleepy: { open: ["yawn", "drowse"], idle: ["drowse", "yawn", "stretch"], tap: ["stretch", "yawn"], lines: ["אני קצת עייף, אבל אני כאן", "אפשר קפה?"] },
+    wink: { open: ["wink", "tilt"], idle: ["wink", "tilt", "float"], tap: ["wink", "kiss", "tilt"], lines: ["הי יפה", "יש לי סוד לבחינה... סתם", "מה קורה?"] },
+    dizzy: { open: ["dizzy", "wobble"], idle: ["wobble", "dizzy"], tap: ["dizzy", "wobble"], lines: ["הכול מסתובב...", "אופס, קמתי מהר מדי"] },
+  };
+  const URI_AUTO = [
+    { id: "night", label: "לילה: ישן ומתעורר", enabled: true, from: "00:00", to: "05:00", days: [], dateFrom: "", dateTo: "", fab: "sleep", open: ["wake"], chat: "sleepy", chatSec: 90, line: "" },
+    { id: "late", label: "ערב מאוחר: מפהק", enabled: true, from: "22:00", to: "24:00", days: [], dateFrom: "", dateTo: "", fab: "sleepy", open: ["yawn"], chat: "", chatSec: 0, line: "" },
+  ];
   const URI_DEF = {
+    baseMood: "happy", personas: URI_PERSONAS, auto: URI_AUTO,
     shape: "bubble", body: "#ffffff", cheek: "#ff8fb1", eyes: "big", cheeks: true, spark: true, outfit: { hat: "", face: "", neck: "" }, seasons: [], wardrobe: true,
     available: ["gradcap", "glasses", "sunglasses", "bow", "headphones", "partyhat", "crown", "sprout", "ears", "scarf"], unlocks: { sunglasses: 10, crown: 25 },
     behavior: { blink: true, look: true, bounce: true, react: true, play: true, sleepy: true },
@@ -1050,7 +1076,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     c = c && typeof c === "object" ? c : {}; const D = URI_DEF;
     const ph = Array.isArray(c.phrases) ? { tap: c.phrases } : (c.phrases && typeof c.phrases === "object" ? c.phrases : {}), phrases = {};
     Object.keys(D.phrases).forEach(k => { phrases[k] = Array.isArray(ph[k]) && ph[k].length ? ph[k] : D.phrases[k]; });
-    return { ...D, ...c, outfit: { ...D.outfit, ...(c.outfit || {}) }, behavior: { ...D.behavior, ...(c.behavior || {}) }, unlocks: c.unlocks || D.unlocks, available: c.available || D.available, seasons: c.seasons || [],
+    const per = {}, cp = c.personas && typeof c.personas === "object" ? c.personas : {};
+    Object.keys(D.personas).forEach(m => { const x = cp[m] && typeof cp[m] === "object" ? cp[m] : {}; per[m] = {}; ["open", "idle", "tap", "lines"].forEach(k => { per[m][k] = Array.isArray(x[k]) ? x[k] : D.personas[m][k]; }); });
+    return { ...D, ...c, baseMood: URI_MOOD_IDS.includes(c.baseMood) ? c.baseMood : D.baseMood, personas: per, auto: Array.isArray(c.auto) ? c.auto : D.auto, outfit: { ...D.outfit, ...(c.outfit || {}) }, behavior: { ...D.behavior, ...(c.behavior || {}) }, unlocks: c.unlocks || D.unlocks, available: c.available || D.available, seasons: c.seasons || [],
       anim: { ...D.anim, ...(c.anim || {}) }, triggers: { ...D.triggers, ...(c.triggers || {}) }, talk: { ...D.talk, ...(c.talk || {}) }, idle: { ...D.idle, ...(c.idle || {}) }, look: { ...D.look, ...(c.look || {}) }, phrases };
   };
   let URI_CFG = uriMerge(uls.get("uriCfg", null));
@@ -1071,13 +1099,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const URI_HEART = (x, y) => '<path class="aiHeartEye" d="M' + x + " " + (y + 2.6) + "c-3.7-2.2-4.3-4.6-2.9-5.9 1.1-1 2.5-.6 2.9.5.4-1.1 1.8-1.5 2.9-.5 1.4 1.3.8 3.7-2.9 5.9z\"/>";
   function uriEyes(c, mood) {
     if (mood === "sleep") return '<g class="aiEyes"><path class="aiLid" d="M12.4 19.4q2.4 2.7 4.8 0M22.8 19.4q2.4 2.7 4.8 0"/></g>';
+    if (mood === "sleepy") return '<g class="aiEyes"><path class="aiLid" d="M12.2 19.6h5.2M22.6 19.6h5.2"/><path class="aiLid" style="stroke-width:1;opacity:.5" d="M13.2 21.5q1.6.9 3.2 0M23.6 21.5q1.6.9 3.2 0"/></g>';
     if (mood === "love") return '<g class="aiEyes">' + URI_HEART(14.8, 16.6) + URI_HEART(25.2, 16.6) + "</g>";
     if (mood === "dizzy") return '<g class="aiEyes"><circle class="aiLidC" cx="14.8" cy="19" r="3.3"/><circle class="aiLidC" cx="14.8" cy="19" r="1.5"/><circle class="aiLidC" cx="25.2" cy="19" r="3.3"/><circle class="aiLidC" cx="25.2" cy="19" r="1.5"/></g>';
     if (mood === "grin" || c.eyes === "happy") return '<g class="aiEyes"><path class="aiLid" d="M12.4 20.2q2.4-3.8 4.8 0M22.8 20.2q2.4-3.8 4.8 0"/></g>';
     const st = mood === "think" ? ' style="--ex:1.1px;--ey:-1.1px"' : "";
+    if (c.eyes === "oval" && mood === "wink") return '<g class="aiEyes"><ellipse class="aiEye aiEyeL" cx="14.8" cy="19" rx="2.1" ry="2.7"/><path class="aiLid" d="M22.8 20.2q2.4-3.8 4.8 0"/></g>';
     if (c.eyes === "oval") return '<g class="aiEyes"' + st + '><ellipse class="aiEye aiEyeL" cx="14.8" cy="19" rx="2.1" ry="2.7"/><ellipse class="aiEye aiEyeR" cx="25.2" cy="19" rx="2.1" ry="2.7"/></g>';
     const big = mood === "wow" ? 1.12 : 1;
     const eye = (x, side) => '<g class="aiEye ' + side + '"><ellipse cx="' + x + '" cy="19.2" rx="' + (2.7 * big).toFixed(2) + '" ry="' + (3.3 * big).toFixed(2) + '"/><circle class="aiShine" cx="' + (x + 1) + '" cy="17.7" r="1.1"/><circle class="aiShine" cx="' + (x - 0.9) + '" cy="20.9" r=".5"/></g>';
+    if (mood === "wink") return '<g class="aiEyes">' + eye(14.8, "aiEyeL") + '<path class="aiLid" d="M22.8 20.2q2.4-3.8 4.8 0"/></g>';
     return '<g class="aiEyes"' + st + ">" + eye(14.8, "aiEyeL") + eye(25.2, "aiEyeR") + "</g>";
   }
   function uriMouth(mood) {
@@ -1085,6 +1116,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (mood === "wow") return '<ellipse class="aiMouthF" cx="20" cy="26.3" rx="1.9" ry="2.5"/>';
     if (mood === "think" || mood === "dizzy") return '<path class="aiSmile" d="M16.2 26.2q1.9-1.6 3.8 0t3.8 0"/>';
     if (mood === "sleep") return '<path class="aiSmile" d="M18.2 25.6q1.8 1.4 3.6 0"/>';
+    if (mood === "sleepy") return '<path class="aiSmile" d="M17.4 25.9q2.6 1 5.2 0"/>';
+    if (mood === "wink") return '<path class="aiSmile" d="M15 24q5.2 4.8 10-.6"/>';
     return '<path class="aiSmile" d="M15.3 24.4q4.7 3.8 9.4 0"/>';
   }
   function uriOutfit(c) {
@@ -1119,14 +1152,32 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       x += uriEyes(c, mood) + uriMouth(mood);
     }
     x += acc(out.face) + acc(out.neck) + (out.hat !== "ears" ? acc(out.hat) : "");
-    if (!dead) x += mood === "sleep" ? '<path class="aiZ" d="M30 8h4l-4 4.6h4M34 2.6h2.6l-2.6 3h2.6"/>' : (c.spark ? '<path class="aiSpark" d="M33.5 1.5l1.5 3.9 3.9 1.5-3.9 1.5-1.5 3.9-1.5-3.9-3.9-1.5 3.9-1.5z"/>' : "");
+    if (!dead) x += mood === "sleep" ? '<path class="aiZ" d="M30 8h4l-4 4.6h4M34 2.6h2.6l-2.6 3h2.6"/>' : mood === "sleepy" ? "" : (c.spark ? '<path class="aiSpark" d="M33.5 1.5l1.5 3.9 3.9 1.5-3.9 1.5-1.5 3.9-1.5-3.9-3.9-1.5 3.9-1.5z"/>' : "");
     return x + "</svg>";
   }
-  let FACE = "", FACE_DEAD = "", FACE_FAB = "";
+  // automations: the first rule that fits the moment (time of day, days of the week, dates) decides how he looks on the button, what he does when the chat opens, and how he looks inside the chat
+  function uriRule(C, d) {
+    C = C || URI_CFG; if (!C.behavior || !C.behavior.sleepy) return null; d = d || new Date();
+    const pad = n => String(n).padStart(2, "0"), mins = d.getHours() * 60 + d.getMinutes(), md = pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+    const tm = v => { const a = String(v || "").split(":").map(Number); return (a[0] || 0) * 60 + (a[1] || 0); };
+    return (C.auto || []).find(r => {
+      if (!r || !r.enabled) return false;
+      if (r.days && r.days.length && !r.days.includes(d.getDay())) return false;
+      if (r.dateFrom && r.dateTo && !(r.dateFrom <= r.dateTo ? (md >= r.dateFrom && md <= r.dateTo) : (md >= r.dateFrom || md <= r.dateTo))) return false;
+      const a = tm(r.from), b = tm(r.to);
+      return a === b ? true : a < b ? (mins >= a && mins < b) : (mins >= a || mins < b);
+    }) || null;
+  }
+  const uriBaseOf = C => (URI_MOOD_IDS.includes(C.baseMood) ? C.baseMood : "happy");
+  const uriBase = () => uriBaseOf(URI_CFG);
+  const uriFabMoodOf = (C, d) => { const r = uriRule(C, d); return r && r.fab ? r.fab : uriBaseOf(C); };
+  const uriChatMoodOf = (C, d) => { const r = uriRule(C, d), fm = uriFabMoodOf(C, d); return (r && r.chat) || (fm === "sleep" ? "sleepy" : fm); };
+  let FACE = "", FACE_DEAD = "", FACE_FAB = "", URI_CHATM = "", URI_CHATT = 0, URI_FABM = "happy", uriPlan = null;
   function uriBuild() {
-    FACE = uriSVG(URI_CFG, { kind: "main" });
+    URI_FABM = uriFabMoodOf(URI_CFG);
+    FACE = uriSVG(URI_CFG, { kind: "main", mood: URI_CHATM || uriBase() });
     FACE_DEAD = uriSVG(URI_CFG, { dead: true, kind: "dead" });
-    FACE_FAB = uriSVG(URI_CFG, { kind: "fab", mood: URI_CFG.behavior.sleepy && uriNight() ? "sleep" : "happy" });
+    FACE_FAB = uriSVG(URI_CFG, { kind: "fab", mood: URI_FABM });
   }
   uriBuild();
   // global look: animation speed, the floating button's colours and size, the small tag
@@ -1148,14 +1199,26 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (t.content.firstChild) sv.replaceWith(t.content.firstChild);
     });
   }
+  let uriFetchT = 0, uriFetching = false, uriLiveOn = false;
   async function uriFetch(force) {
-    const t = Number(uls.get("uriT", 0)) || 0;
-    if (!force && Date.now() - t < 5 * 60 * 1000) return;
+    const now = Date.now(); if (uriFetching || (!force && now - uriFetchT < 40000)) return;
+    uriFetching = true; uriFetchT = now;
     try {
       const r = await fetch(api() + "/api/mascot", { cache: "no-store" }); if (!r.ok) return;
-      const c = uriMerge(await r.json()); uls.set("uriCfg", c); uls.set("uriT", Date.now());
+      const c = uriMerge(await r.json()); uls.set("uriCfg", c);
       if (JSON.stringify(c) !== JSON.stringify(URI_CFG)) { URI_CFG = c; uriRefresh(); }
-    } catch (e) {}
+    } catch (e) {} finally { uriFetching = false; }
+  }
+  // the button's mood follows the clock (night, late evening...): checked every minute
+  function uriTick() {
+    if (uriFabMoodOf(URI_CFG) === URI_FABM) return;
+    uriBuild(); document.querySelectorAll("svg.aiFace[data-uri='fab']").forEach(sv => uriMoodSet(sv, URI_FABM));
+  }
+  function uriLive() {
+    if (uriLiveOn) return; uriLiveOn = true;
+    const go = () => { if (!document.hidden) { uriFetch(); uriTick(); } };
+    setInterval(go, 60000);
+    document.addEventListener("visibilitychange", go); window.addEventListener("focus", go); window.addEventListener("pageshow", go); window.addEventListener("online", go);
   }
   /* ---- movement. Each animation is a CSS class (aiRx-NAME); some also swap his face for a moment (a mood) and throw particles */
   const URI_ANIMS = {
@@ -1164,6 +1227,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     blush: { ms: 900, p: "heart" }, kiss: { ms: 900, mood: "love", p: "heart" }, laugh: { ms: 900, mood: "grin", p: "star" }, sneeze: { ms: 900, mood: "wow", p: "drop" }, yawn: { ms: 1800, mood: "wow", p: "zz" },
     sparkle: { ms: 900, p: "star" }, confetti: { ms: 1000, mood: "grin", p: "confetti" }, tada: { ms: 1100, mood: "grin", p: "confetti" }, glitch: { ms: 600 }, float: { ms: 2400 },
     lookaround: { ms: 2000 }, wink: { ms: 700 }, rainbow: { ms: 1800 }, party: { ms: 3300, mood: "grin", p: "confetti", again: 1100 },
+    wake: { ms: 2600, mood: "sleep", steps: [[800, "wow"], [1500, "sleepy"]] }, stretch: { ms: 1900, mood: "grin", steps: [[1300, "sleepy"]] },
+    snore: { ms: 2600, mood: "sleep", p: "zz", again: 1300 }, drowse: { ms: 2800, mood: "sleepy", steps: [[1100, "sleep"], [1480, "sleepy"]] },
   };
   const URI_PART = {
     star: { d: "M5 0l1.3 3.4L10 5 6.3 6.6 5 10 3.7 6.6 0 5l3.7-1.6z", fill: "#ffd166" },
@@ -1186,18 +1251,29 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     }
   }
   const uriStill = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
-  // plays one animation on the Uri inside host. cfg/outfit are optional (the admin's preview passes its own)
-  function uriPlay(host, id, cfg, outfit) {
+  // changes only his face (eyes, mouth) inside the same element, so a movement that is playing goes on
+  function uriMoodSet(sv, mood, cfg, outfit) {
+    if (!sv) return; const t = document.createElement("template"); t.innerHTML = uriSVG(cfg || URI_CFG, { mood, kind: sv.dataset.uri || "main", outfit: outfit || undefined });
+    const n = t.content.firstChild; if (n) sv.innerHTML = n.innerHTML;
+  }
+  const uriSpeed = C => Math.max(0.5, Math.min(2, Number(C.anim.speed) || 1));
+  // plays one animation on the Uri inside host. cfg/outfit are optional (the admin's preview passes its own). endMood: the face he keeps when it ends (instead of the one he had)
+  function uriPlay(host, id, cfg, outfit, endMood) {
     const def = URI_ANIMS[id]; if (!def || !host || uriStill()) return false;
-    const C = cfg ? uriMerge(cfg) : URI_CFG;
+    const C = cfg ? uriMerge(cfg) : URI_CFG, sp = uriSpeed(C);
     let sv = host.querySelector("svg.aiFace:not(.aiDeadFace)"); if (!sv) return false;
-    if (sv._orig) { clearTimeout(sv._rxT); const o = sv._orig; sv.replaceWith(o); sv = o; } else if (sv._rxT) { clearTimeout(sv._rxT); sv.className.baseVal = sv.className.baseVal.replace(/\baiRx-\S+/g, "").trim(); }
+    if (sv._orig) { clearTimeout(sv._rxT); (sv._sT || []).forEach(clearTimeout); const o = sv._orig; sv.replaceWith(o); sv = o; } else if (sv._rxT) { clearTimeout(sv._rxT); (sv._sT || []).forEach(clearTimeout); sv.className.baseVal = sv.className.baseVal.replace(/\baiRx-\S+/g, "").trim(); }
     const orig = sv; let cur = sv;
     if (def.mood) { const t = document.createElement("template"); t.innerHTML = uriSVG(C, { mood: def.mood, kind: sv.dataset.uri || "main", outfit: outfit || undefined }); const n = t.content.firstChild; if (n) { sv.replaceWith(n); cur = n; cur._orig = orig; } }
+    cur._sT = (def.steps || []).map(st => setTimeout(() => { if (cur.isConnected) uriMoodSet(cur, st[1], C, outfit); }, st[0] / sp));
     void cur.getBoundingClientRect(); cur.classList.add("aiRx-" + id);
-    if (def.p && C.anim.particles !== false) { uriParticles(host, def.p, C.anim.amount); if (def.again) setTimeout(() => uriParticles(host, def.p, C.anim.amount), def.again * (1 / Math.max(0.5, Math.min(2, Number(C.anim.speed) || 1)))); }
-    const ms = def.ms / Math.max(0.5, Math.min(2, Number(C.anim.speed) || 1)) + 60;
-    cur._rxT = setTimeout(() => { cur.classList.remove("aiRx-" + id); if (cur._orig && cur.isConnected) cur.replaceWith(cur._orig); cur._orig = null; }, ms);
+    if (def.p && C.anim.particles !== false) { uriParticles(host, def.p, C.anim.amount); if (def.again) setTimeout(() => uriParticles(host, def.p, C.anim.amount), def.again / sp); }
+    cur._rxT = setTimeout(() => {
+      cur.classList.remove("aiRx-" + id);
+      if (endMood && cur.isConnected) uriMoodSet(cur, endMood, C, outfit);
+      else if (cur._orig && cur.isConnected) cur.replaceWith(cur._orig);
+      cur._orig = null;
+    }, def.ms / sp + 60);
     return true;
   }
   // the speech bubble: inside the chat panel when he is in it, otherwise above or below the floating button
@@ -1231,11 +1307,45 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (document.hidden || document.body.classList.contains("calm")) return;
     const now = Date.now(); if (!user && now - (uriEvAt[name] || 0) < 3000) return; uriEvAt[name] = now;
     host = host || uriHost(); if (!host) return;
+    const per = (URI_CFG.personas || {})[uriMoodOf(host)] || {}, mine = name === "tap" || name === "idle";
+    const own = mine ? (per[name] || []).filter(id => URI_ANIMS[id]) : [];
     const ok = (URI_CFG.triggers[name] || []).filter(id => (URI_CFG.anim.enabled || []).includes(id) && URI_ANIMS[id]);
-    if (ok.length) uriPlay(host, uriPick(ok));
+    const pool = own.length && (!ok.length || Math.random() < 0.65) ? own : ok;
+    if (pool.length) uriPlay(host, uriPick(pool));
     const p = Number(URI_CFG.talk[name]);
-    if (Math.random() * 100 < (isNaN(p) ? 0 : p)) { const t = uriPhrase(name); if (t) uriSay(host, t); }
+    if (Math.random() * 100 < (isNaN(p) ? 0 : p)) { const t = mine && per.lines && per.lines.length && Math.random() < 0.4 ? uriPick(per.lines) : uriPhrase(name); if (t) uriSay(host, t); }
   }
+  // the face that is showing in this host: in the chat it is the chat's mood, on the button the button's
+  const uriMoodOf = host => (panel && panel.contains(host) ? (URI_CHATM || uriBase()) : URI_FABM);
+  // the chat is opening: the faces inside start as the button the student just touched (asleep, winking...)
+  function uriSetChatMood(m, shown) {
+    URI_CHATM = m; uriBuild();
+    if (panel) panel.querySelectorAll("svg.aiFace[data-uri='main']").forEach(f => uriMoodSet(f, shown || m || uriBase()));
+  }
+  function uriOpenPrep() {
+    clearTimeout(URI_CHATT);
+    const C = URI_CFG, fm = uriFabMoodOf(C), cm = uriChatMoodOf(C);
+    uriPlan = { r: uriRule(C), fm, cm };
+    uriSetChatMood(cm, fm !== cm ? fm : "");
+  }
+  // then, once the chat is open: the automation's sequence (or one movement of the character), a line, and the face he keeps inside the chat
+  function uriOpenRun() {
+    const plan = uriPlan; uriPlan = null; if (!plan || !panel || panel.hidden) return;
+    const { r, fm, cm } = plan, C = URI_CFG, host = uriHost(), sp = uriSpeed(C), per = (C.personas || {})[fm] || {};
+    if (!host || document.hidden || document.body.classList.contains("calm") || uriStill()) { uriSetChatMood(cm); return; }
+    let seq = r && r.open && r.open.length ? r.open.filter(id => URI_ANIMS[id]) : [];
+    if (!seq.length && (C.behavior.react || (r && r.open))) {
+      const own = (per.open || []).filter(id => URI_ANIMS[id]), pool = own.length ? own : (C.triggers.open || []).filter(id => (C.anim.enabled || []).includes(id) && URI_ANIMS[id]);
+      const one = uriPick(pool); if (one && C.behavior.react) seq = [one];
+    }
+    let at = 0;
+    seq.forEach((id, i) => { setTimeout(() => uriPlay(host, id, null, null, i === seq.length - 1 ? cm : ""), at); at += URI_ANIMS[id].ms / sp + 140; });
+    setTimeout(() => { if (!panel.hidden) uriSetChatMood(cm); }, at + 200);
+    const line = r && r.line ? r.line : (Math.random() * 100 < (Number(C.talk.open) || 0) ? (per.lines && per.lines.length && Math.random() < 0.6 ? uriPick(per.lines) : uriPhrase("open")) : "");
+    if (line) setTimeout(() => uriSay(host, line), Math.min(at, 900));
+    if (r && r.chat && Number(r.chatSec) > 0) URI_CHATT = setTimeout(() => { if (!panel.hidden && URI_CHATM === cm) uriSetChatMood(""); }, Number(r.chatSec) * 1000 + at);
+  }
+  function uriChatReset() { clearTimeout(URI_CHATT); uriPlan = null; if (panel && panel.hidden) uriSetChatMood(""); }
   // seven quick taps start a party
   let uriTaps = [];
   function uriTap(host) {
@@ -1275,15 +1385,15 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     });
   }
   const URI_TX = {
-    he: { title: "פינת אורי", poke: "תגעו באורי", moods: { happy: "שמח", grin: "צוחק", wow: "מופתע", think: "חושב", love: "אוהב", sleep: "ישן", dizzy: "מסוחרר" }, ward: "לבוש", tricks: "טריקים", slots: { hat: "כובע", face: "פנים", neck: "צוואר" }, none: "ללא",
+    he: { title: "פינת אורי", poke: "תגעו באורי", moods: { happy: "שמח", grin: "צוחק", wow: "מופתע", think: "חושב", love: "אוהב", sleep: "ישן", sleepy: "ישנוני", wink: "קורץ", dizzy: "מסוחרר" }, ward: "לבוש", tricks: "טריקים", slots: { hat: "כובע", face: "פנים", neck: "צוואר" }, none: "ללא",
       pokes: n => "נגיעות: " + n, next: (nm, n) => "עוד " + n + " נגיעות ו" + nm + " נפתח", got: nm => nm + " נפתח!", season: l => "היום אורי לובש: " + l, reset: "איפוס לבוש", close: "סגור",
       items: { gradcap: "כובע בוגרים", partyhat: "כובע מסיבה", crown: "כתר", sprout: "נבט", bow: "פפיון", headphones: "אוזניות", ears: "אוזני חתול", glasses: "משקפיים", sunglasses: "משקפי שמש", scarf: "צעיף" },
-      anims: { jump: "קפיצה", bounce: "קפיצות", backflip: "סלטה", spin: "סיבוב", squish: "מעיכה", wiggle: "ניענוע", shake: "רעד", nod: "הנהון", no: "לא לא", pulse: "פעימת לב", zoom: "התקרבות", peekaboo: "קוקו", tilt: "הטיית ראש", wobble: "נדנוד", dizzy: "סחרחורת", blush: "מבוכה", kiss: "נשיקה", laugh: "צחוק", sneeze: "התעטשות", yawn: "פיהוק", sparkle: "נצנוץ", confetti: "קונפטי", tada: "טה-דה", glitch: "גליץ'", float: "ריחוף", lookaround: "מסתכל סביב", wink: "קריצה", rainbow: "קשת", party: "מסיבה" } },
-    en: { title: "Uri's corner", poke: "Poke Uri", moods: { happy: "Happy", grin: "Laughing", wow: "Surprised", think: "Thinking", love: "In love", sleep: "Sleepy", dizzy: "Dizzy" }, ward: "Outfit", tricks: "Tricks", slots: { hat: "Hat", face: "Face", neck: "Neck" }, none: "None",
+      anims: { jump: "קפיצה", bounce: "קפיצות", backflip: "סלטה", spin: "סיבוב", squish: "מעיכה", wiggle: "ניענוע", shake: "רעד", nod: "הנהון", no: "לא לא", pulse: "פעימת לב", zoom: "התקרבות", peekaboo: "קוקו", tilt: "הטיית ראש", wobble: "נדנוד", dizzy: "סחרחורת", blush: "מבוכה", kiss: "נשיקה", laugh: "צחוק", sneeze: "התעטשות", yawn: "פיהוק", sparkle: "נצנוץ", confetti: "קונפטי", tada: "טה-דה", glitch: "גליץ'", float: "ריחוף", lookaround: "מסתכל סביב", wink: "קריצה", rainbow: "קשת", party: "מסיבה", wake: "מתעורר", stretch: "מתמתח", snore: "נוחר", drowse: "מנמנם" } },
+    en: { title: "Uri's corner", poke: "Poke Uri", moods: { happy: "Happy", grin: "Laughing", wow: "Surprised", think: "Thinking", love: "In love", sleep: "Asleep", sleepy: "Drowsy", wink: "Winking", dizzy: "Dizzy" }, ward: "Outfit", tricks: "Tricks", slots: { hat: "Hat", face: "Face", neck: "Neck" }, none: "None",
       pokes: n => "Pokes: " + n, next: (nm, n) => n + " more pokes to unlock " + nm, got: nm => nm + " unlocked!", season: l => "Today Uri wears: " + l, reset: "Reset outfit", close: "Close",
       items: { gradcap: "Graduation cap", partyhat: "Party hat", crown: "Crown", sprout: "Sprout", bow: "Bow", headphones: "Headphones", ears: "Cat ears", glasses: "Glasses", sunglasses: "Sunglasses", scarf: "Scarf" },
-      anims: { jump: "Jump", bounce: "Bounce", backflip: "Backflip", spin: "Spin", squish: "Squish", wiggle: "Wiggle", shake: "Shake", nod: "Nod", no: "No no", pulse: "Heartbeat", zoom: "Zoom", peekaboo: "Peekaboo", tilt: "Tilt", wobble: "Wobble", dizzy: "Dizzy", blush: "Blush", kiss: "Kiss", laugh: "Laugh", sneeze: "Sneeze", yawn: "Yawn", sparkle: "Sparkle", confetti: "Confetti", tada: "Ta-da", glitch: "Glitch", float: "Float", lookaround: "Look around", wink: "Wink", rainbow: "Rainbow", party: "Party" } },
-    fr: { title: "Le coin d’Uri", poke: "Touchez Uri", moods: { happy: "Content", grin: "Rieur", wow: "Surpris", think: "Pensif", love: "Amoureux", sleep: "Endormi", dizzy: "Étourdi" }, ward: "Tenue", tricks: "Tours", slots: { hat: "Chapeau", face: "Visage", neck: "Cou" }, none: "Aucun",
+      anims: { jump: "Jump", bounce: "Bounce", backflip: "Backflip", spin: "Spin", squish: "Squish", wiggle: "Wiggle", shake: "Shake", nod: "Nod", no: "No no", pulse: "Heartbeat", zoom: "Zoom", peekaboo: "Peekaboo", tilt: "Tilt", wobble: "Wobble", dizzy: "Dizzy", blush: "Blush", kiss: "Kiss", laugh: "Laugh", sneeze: "Sneeze", yawn: "Yawn", sparkle: "Sparkle", confetti: "Confetti", tada: "Ta-da", glitch: "Glitch", float: "Float", lookaround: "Look around", wink: "Wink", rainbow: "Rainbow", party: "Party", wake: "Wake up", stretch: "Stretch", snore: "Snore", drowse: "Drowse" } },
+    fr: { title: "Le coin d’Uri", poke: "Touchez Uri", moods: { happy: "Content", grin: "Rieur", wow: "Surpris", think: "Pensif", love: "Amoureux", sleep: "Endormi", sleepy: "Somnolent", wink: "Clin d’œil", dizzy: "Étourdi" }, ward: "Tenue", tricks: "Tours", slots: { hat: "Chapeau", face: "Visage", neck: "Cou" }, none: "Aucun",
       pokes: n => "Touches : " + n, next: (nm, n) => n + " touches de plus pour débloquer " + nm, got: nm => nm + " débloqué !", season: l => "Aujourd’hui Uri porte : " + l, reset: "Réinitialiser", close: "Fermer",
       items: { gradcap: "Toque", partyhat: "Chapeau de fête", crown: "Couronne", sprout: "Pousse", bow: "Nœud", headphones: "Casque", ears: "Oreilles de chat", glasses: "Lunettes", sunglasses: "Lunettes de soleil", scarf: "Écharpe" } },
   };
@@ -1296,7 +1406,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       '<div class="aiUpRow"><div class="aiUpMoods"></div></div><div class="aiUpRow"><h4>' + esc2(T.tricks) + '</h4><div class="aiUpTricks"></div></div><div class="aiUpRow aiUpWardWrap"><h4>' + esc2(T.ward) + '</h4><div class="aiUpWard"></div></div></div>';
     panel.appendChild(ov);
     const face = ov.querySelector(".aiUpFace"), stat = ov.querySelector(".aiUpStat"), moods = ov.querySelector(".aiUpMoods"), ward = ov.querySelector(".aiUpWard"), tricks = ov.querySelector(".aiUpTricks");
-    let mood = C.behavior.sleepy && uriNight() ? "sleep" : "happy";
+    let mood = uriFabMoodOf(C);
     const draw = () => { face.innerHTML = uriSVG(C, { mood, kind: "play" }); };
     const nextLock = () => Object.entries(C.unlocks || {}).filter(([k, n]) => C.available.includes(k) && uriPokes() < n).sort((a, b) => a[1] - b[1])[0];
     const status = () => {
@@ -1326,7 +1436,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       });
       const rs = document.createElement("button"); rs.type = "button"; rs.className = "aiLink"; rs.textContent = T.reset; rs.onclick = () => { uls.set("uriOut", {}); draw(); wardrobe(); uriRefresh(); }; ward.appendChild(rs);
     };
-    Object.keys(T.moods).forEach(m => { const b = document.createElement("button"); b.type = "button"; b.textContent = T.moods[m]; if (m === mood) b.classList.add("on"); b.onclick = () => { mood = m; moods.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); draw(); uriPlay(face, m === "love" ? "blush" : m === "dizzy" ? "wobble" : "jump"); }; moods.appendChild(b); });
+    Object.keys(T.moods).forEach(m => { const b = document.createElement("button"); b.type = "button"; b.textContent = T.moods[m]; if (m === mood) b.classList.add("on"); b.onclick = () => { mood = m; moods.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); draw(); uriPlay(face, m === "love" ? "blush" : m === "dizzy" ? "wobble" : m === "sleep" ? "snore" : m === "sleepy" ? "drowse" : m === "wink" ? "wink" : "jump"); }; moods.appendChild(b); });
     (C.anim.enabled || []).filter(id => URI_ANIMS[id]).forEach(id => { const b = document.createElement("button"); b.type = "button"; b.textContent = T.anims[id] || id; b.onclick = () => uriPlay(face, id); tricks.appendChild(b); });
     const poke = () => {
       const before = uriPokes(), n = before + 1; uls.set("uriPokes", n);
@@ -2710,7 +2820,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         const go = () => { if (URI_CFG.behavior.play) openUriPlay(); else uriTap(av); };
         av.addEventListener("click", go); av.addEventListener("keydown", e => { if (e.key === "Enter") go(); }); }
       panel.addEventListener("click", e => { const b = e.target.closest(".aiBig"); if (b) uriTap(b); });
-      document.addEventListener("pointermove", uriLookMove, { passive: true }); uriApplyLook(URI_CFG); uriFetch(); uriIdle(); }
+      document.addEventListener("pointermove", uriLookMove, { passive: true }); uriApplyLook(URI_CFG); uriFetch(true); uriIdle(); uriLive(); }
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
     splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]'); memBtn = panel.querySelector('[data-a="mem"]');
 
@@ -2890,6 +3000,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     fabRect = fr;
     const winStart = winWanted();                               // a computer, and the student left it as a small window last time: it opens as one (no opening animation)
     panel.hidden = false; fab.hidden = true;
+    uriOpenPrep(); uriFetch();
     if (winStart) enterWinState();
     else {
       // the history entry first (the browser saves the page's scroll position for the old entry now), only then lock the page
@@ -2910,7 +3021,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       else { const watched = await demoGate(); if (!watched) { close(); return; } }
     }
     if (matchMedia("(hover:hover)").matches) input.focus();
-    setTimeout(() => uriEvent("open"), 500);
+    setTimeout(uriOpenRun, 500);
   }
 
   async function openLoad() {                 // what the chat needs before it can be shown; returns what went wrong, or null
@@ -2954,7 +3065,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   function close(fromPop, instant) {
     if (!panel || panel.hidden || closing) return;
-    left(); demoStop(false);
+    left(); demoStop(false); setTimeout(uriChatReset, 900);
     try { if (document.activeElement === input) input.blur(); } catch (e) {}
     closeMenu(); const dlg = panel.querySelector(".aiDlg"); if (dlg) dlg.hidden = true;
     const failed = !!(intro && intro.failed), midIntro = !!(intro && !intro.failed);      // closed while the opening animation still plays: no fuss, just close
@@ -3384,7 +3495,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
     _fit() { fit(true); },
     _md(src) { return md(src); },
-    _uri(cfg, o) { return uriSVG(cfg, o); }, _uriPlay(host, id, cfg, outfit) { return uriPlay(host, id, cfg, outfit); }, _uriLook(cfg) { uriApplyLook(cfg); }, _uriEvent(n, h, u) { uriEvent(n, h, u); }, _uriSay(h, x) { uriSay(h, x); },                    // for the admin app's preview: draw Uri from the given settings
+    _uri(cfg, o) { return uriSVG(cfg, o); }, _uriPlay(host, id, cfg, outfit) { return uriPlay(host, id, cfg, outfit); }, _uriLook(cfg) { uriApplyLook(cfg); }, _uriRule(cfg, d) { return uriRule(uriMerge(cfg), d); }, _uriMoods(cfg, d) { const C = uriMerge(cfg); return { rule: uriRule(C, d), fab: uriFabMoodOf(C, d), chat: uriChatMoodOf(C, d) }; }, _uriMood(sv, m, cfg) { uriMoodSet(sv, m, cfg); }, _uriMs(id, cfg) { const d = URI_ANIMS[id]; return d ? d.ms / uriSpeed(uriMerge(cfg)) + 60 : 0; }, _uriEvent(n, h, u) { uriEvent(n, h, u); }, _uriSay(h, x) { uriSay(h, x); },                    // for the admin app's preview: draw Uri from the given settings
     _uriCfg() { return URI_CFG; }, _play() { build(); panel.hidden = false; panel.classList.add("on"); openUriPlay(); },
     _preview(src) { build(); return md(src); },                // for the admin app's design gallery: the same drawing code the students get
     _demo() { return demoGate(); },                      // for tests only: render a message text the way the chat does

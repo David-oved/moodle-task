@@ -2,7 +2,7 @@
 // הבקשות ל-Moodle לא עוברות כאן ולא נשמרות במטמון.
 // the beta (…/beta/) and the regular app share one site: each keeps and cleans only its own cache
 const CH = /\/beta\/$/.test(self.registration.scope) ? "beta-" : "";
-const CACHE = "moodle-tasks-" + CH + "v103";
+const CACHE = "moodle-tasks-" + CH + "v104";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-any-192.png", "icon-any-512.png", "apple-touch-icon.png", "favicon-64.png", "badge-96.png", "logo.svg", "chat.js"];
 self.addEventListener("install", e => {
   // "reload": straight from the site, not from the browser's own 10-minute cache (else a new version could install an old page)
@@ -32,6 +32,8 @@ self.addEventListener("fetch", e => {
       return r;
     }).catch(() => hit);
     if (fresh) return net.then(r => r || hit);
+    // the app's own script (Uri and the chat) comes from the network first, so a new version arrives on the next open, not the one after (the saved copy answers if the network takes over 2.5s)
+    if (/\/chat\.js$/.test(u.pathname) && hit) return Promise.race([net.then(r => r || hit), new Promise(res => setTimeout(() => res(hit), 2500))]);
     return hit || net;
   }));
 });
