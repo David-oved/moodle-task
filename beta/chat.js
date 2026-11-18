@@ -303,6 +303,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHtt{display:flex;flex-wrap:wrap;gap:5px}
 .aiHtt i{font-style:normal;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;padding:3px 8px;border-radius:99px;font-size:12.5px;font-weight:800;letter-spacing:0;background:color-mix(in srgb,var(--bc) 15%,var(--card));border:1px solid color-mix(in srgb,var(--bc) 32%,var(--line))}
 .aiHtt i.tx{direction:rtl;font-weight:650;font-size:12.5px;letter-spacing:0}
+.aiHtt i small{margin-inline-start:7px;font-size:.8em;font-weight:700;opacity:.78;direction:rtl;unicode-bidi:isolate}.aiHtt i.off{opacity:.5}
 .aiHw{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .aiHwd{border-radius:11px;padding:6px 1px;text-align:center;background:color-mix(in srgb,var(--text) 5%,transparent);font-size:10px;line-height:1.35;min-height:52px}
 .aiHwd b{display:block;font-size:12.5px;margin-bottom:3px}.aiHwd span{display:block;direction:ltr;font-size:9.5px}.aiHwd.today{background:var(--bc);color:#fff}.aiHwd.none{opacity:.45}
@@ -1120,9 +1121,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   };
   const uiIc = (n, cls) => '<svg class="aiIc' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + (UI_IC[n] || UI_IC.info) + '"/></svg>';
   const UI_L = {
-    he: { todayTag: "היום", email: "מייל", phone: "חיוג", whatsapp: "וואטסאפ", link: "פתח", address: "ניווט", copy: "העתק", copied: "הועתק", open: "פתוח עכשיו", closed: "סגור כעת", until: "עד ", opens: "נפתח ", waze: "Waze", maps: "מפות", dayN: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"] },
-    en: { todayTag: "Today", email: "Email", phone: "Call", whatsapp: "WhatsApp", link: "Open", address: "Navigate", copy: "Copy", copied: "Copied", open: "Open now", closed: "Closed now", until: "until ", opens: "opens ", waze: "Waze", maps: "Maps", dayN: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
-    fr: { todayTag: "Aujourd'hui", email: "E-mail", phone: "Appeler", whatsapp: "WhatsApp", link: "Ouvrir", address: "Itinéraire", copy: "Copier", copied: "Copié", open: "Ouvert", closed: "Fermé", until: "jusqu'à ", opens: "ouvre ", waze: "Waze", maps: "Maps", dayN: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"] },
+    he: { todayTag: "היום", shut: "סגור", email: "מייל", phone: "חיוג", whatsapp: "וואטסאפ", link: "פתח", address: "ניווט", copy: "העתק", copied: "הועתק", open: "פתוח עכשיו", closed: "סגור כעת", until: "עד ", opens: "נפתח ", waze: "Waze", maps: "מפות", dayN: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"] },
+    en: { todayTag: "Today", shut: "Closed", email: "Email", phone: "Call", whatsapp: "WhatsApp", link: "Open", address: "Navigate", copy: "Copy", copied: "Copied", open: "Open now", closed: "Closed now", until: "until ", opens: "opens ", waze: "Waze", maps: "Maps", dayN: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
+    fr: { todayTag: "Aujourd'hui", shut: "Fermé", email: "E-mail", phone: "Appeler", whatsapp: "WhatsApp", link: "Ouvrir", address: "Itinéraire", copy: "Copier", copied: "Copié", open: "Ouvert", closed: "Fermé", until: "jusqu'à ", opens: "ouvre ", waze: "Waze", maps: "Maps", dayN: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"] },
   };
   const ul = () => UI_L[lang()] || UI_L.he;
   const uiCo = b => " c-" + (b.co || "def");
@@ -1184,15 +1185,38 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function uiTimeChips(h) {
     const parts = String(h || "").split(/\s*(?:,|;|\/|\s\+\s|\sו-?(?=\d))\s*/).map(x => x.trim()).filter(Boolean);
     return (parts.length ? parts : [String(h || "").trim()]).map(x => {
+      let n = ""; const nm = x.match(/\(([^)]*)\)/);                       // "10:00-12:00 (טלפוני)": the note is kept apart from the time, never cut in two
+      if (nm) { n = nm[1].trim(); x = x.replace(nm[0], "").trim(); }
       const m = x.match(/^(\d{1,2})[:.](\d{2})\s*[-–]\s*(\d{1,2})[:.](\d{2})$/);
-      return m ? { v: m[1].padStart(2, "0") + ":" + m[2] + "–" + m[3].padStart(2, "0") + ":" + m[4] } : { v: x, t: 1 };
+      return m ? { v: m[1].padStart(2, "0") + ":" + m[2] + "–" + m[3].padStart(2, "0") + ":" + m[4], n } : { v: x, t: 1, n };
     });
+  }
+  const uiChipHTML = c => "<i" + (c.t ? ' class="tx"' : "") + ">" + esc2(c.v) + (c.n ? "<small>" + esc2(c.n) + "</small>" : "") + "</i>";
+  // days that share exactly the same opening hours become ONE row ("א׳–ה׳"); closed days are one muted row. Works for any amount of ranges and notes per day.
+  function uiHoursGroups(rows, L) {
+    const slots = d => rows.filter(r => uiDays(r.d).has(d)).flatMap(r => uiTimeChips(r.h).map(c => ({ ...c, n: c.n || r.l || "" })));
+    const sig = d => JSON.stringify(slots(d).map(c => [c.v, c.n]));
+    const groups = []; let cur = null;
+    for (let d = 0; d < 7; d++) {
+      const s = sig(d);
+      if (cur && cur.sig === s) { cur.days.push(d); } else { cur = { sig: s, days: [d], slots: slots(d) }; groups.push(cur); }
+    }
+    return groups.map(g => ({ days: g.days, slots: g.slots, label: g.days.length > 1 ? L.dayN[g.days[0]] + "–" + L.dayN[g.days[g.days.length - 1]] : L.dayN[g.days[0]] }));
   }
   function uiHours(b) {
     const L = ul(), st = uiOpenNow(b.it);
     const badge = st ? '<span class="aiHbadge ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed) + "</span>" : "";
     let body;
-    if (b.s === "week") {
+    const dayHasData = b.it.some(r => uiDays(r.d).size);
+    const complexHours = dayHasData && (b.it.some(r => r.l) || [0, 1, 2, 3, 4, 5, 6].some(d => b.it.filter(r => uiDays(r.d).has(d)).length > 1 || b.it.filter(r => uiDays(r.d).has(d)).some(r => uiTimeChips(r.h).length > 1)));
+    if (complexHours && (b.s === "week" || b.s === "table" || !b.s)) {
+      const todayG = new Date().getDay();
+      body = '<div class="aiHtab">' + uiHoursGroups(b.it, L).map(g => {
+        const isToday = g.days.includes(todayG);
+        return '<div class="aiHtr' + (isToday ? " today" : "") + '"><span class="aiHtd"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + '</span><div class="aiHtt">' +
+          (g.slots.length ? g.slots.map(uiChipHTML).join("") : '<i class="tx off">' + esc2(L.shut) + "</i>") + "</div></div>";
+      }).join("") + "</div>";
+    } else if (b.s === "week") {
       const today = new Date().getDay();
       body = '<div class="aiHw">' + L.dayN.map((n, d) => {
         const t = b.it.filter(r => uiDays(r.d).has(d)).map(r => r.h).join("\n");
@@ -1204,7 +1228,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const todayN = new Date().getDay();
       body = '<div class="aiHtab">' + b.it.map(r => {
         const dayTxt = uiDayLabel(r.d), isToday = !!r.d && uiDays(r.d).has(todayN);
-        const chips = uiTimeChips(r.h).map(c => '<i' + (c.t ? ' class="tx"' : "") + ">" + esc2(c.v) + "</i>").join("");
+        const chips = uiTimeChips(r.h).map(uiChipHTML).join("");
         return '<div class="aiHtr' + (isToday ? " today" : "") + '"><span class="aiHtd"><b>' + esc2(dayTxt || r.l || "") + "</b>" + (r.l && dayTxt ? "<small>" + esc2(r.l) + "</small>" : "") + (isToday ? '<em>' + esc2(L.todayTag) + "</em>" : "") + '</span><div class="aiHtt">' + chips + "</div></div>";
       }).join("") + "</div>";
     }
