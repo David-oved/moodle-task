@@ -512,6 +512,12 @@ export class Community extends DurableObject {
       const cn = cid ? this.one("SELECT name FROM courses WHERE cid = ?", cid) : null;
       return [200, { rows: rows.map(r => ({ uid: r.uid, pts: r.pts, total: r.total || 0, name: r.name, deg: r.deg, yr: r.yr })), me: { pts: mine ? mine.pts : 0, pos }, cname: cn ? cn.name : "" }];
     }
+    if (op === "ranks") {            // how many people are at each rank (all-time points; the thresholds match RANKS in social.js)
+      const th = [0, 30, 80, 150, 350, 800, 2000], all = this.one("SELECT COUNT(*) AS n FROM users").n || 0;
+      const n = th.map((lo, i) => i === 0 ? 0 : this.one("SELECT COUNT(*) AS n FROM tot WHERE cid = '' AND per = 'all' AND pts >= ?" + (i < th.length - 1 ? " AND pts < ?" : ""), lo, ...(i < th.length - 1 ? [th[i + 1]] : [])).n);
+      n[0] = Math.max(0, all - n.reduce((a, x) => a + x, 0));
+      return [200, { n, all }];
+    }
     if (op === "user") {
       const who = okId(b.who) ? b.who : me.uid, u = this.one("SELECT uid, name, deg, yr FROM users WHERE uid = ?", who);
       if (!u) return [404, { error: "no such user" }];
