@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.0-beta.8";
+const SOC_V = "1.9.0-beta.9";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -49,7 +49,7 @@ Object.assign(I18N.he, {
   lgAdd: (f, r) => f + " הוסיף אצלו את ״" + r + "״", lgTime: r => "דיווח זמן על ״" + r + "״", lgWa: "קישור לקבוצת הוואטסאפ", lgSomeone: "מישהו",
   socMute: "השתק משתמש זה 🔇", socUnmute: "בטל השתקה", socMuted: n => n + " הושתק. לא תראה יותר את מה שהוא משתף.", socUnmuted: "ההשתקה בוטלה",
   socOnLbl: "הקהילה פעילה", socOnHint: "כשכבוי – אין שום חיבור לשרת הקהילה ושום דבר מזה לא מוצג.", socProfT: "הפרופיל שלי", socWaT: "קבוצות וואטסאפ לפי קורס",
-  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socPtsU: "נק׳", socHere: "את/ה כאן", adCancel: "ביטול", adT: "ניהול הקהילה", adOv: "סקירה", adChats: "צ׳אטים", adUsers: "משתמשים", adLog: "יומן פעולות", adOk: "🛡 מעכשיו את/ה מנהל/ת הקהילה", adBad: "הקוד לא נכון או שכבר השתמשו בו", adTries: "יותר מדי ניסיונות היום. נסו מחר", adNo: "אין הרשאת ניהול", adOpenTh: "לשיחה ←", adBack: "→ חזרה", adNMsgs: n => n + " הודעות", adRecent: "ההודעות האחרונות מכל הקורסים", adUsersN: "בקהילה", adAct7: "פעילים בשבוע", adAct1: "פעילים היום", adMsgs7: "הודעות בשבוע", adPost7: "כותבים בשבוע", adFiles: "קבצים", adTimes: "דיווחי זמן", adStars: "סימוני ⭐", adDays: "הודעות ב-14 הימים האחרונים", adCourses: "צ׳אטים לפי קורס", adCrsLine: (n, w, p) => n + " הודעות · " + w + " השבוע · " + p + " כותבים", adTop: "הכי הרבה נקודות", adSearch: "חיפוש לפי שם", adSeen: x => "נראה " + x, adGive: "＋ נקודות", adAmount: "כמה", adWhyBeta: "בודק/ת בטא", adWhyFb: "פידבק טוב וקבוע", adWhyHelp: "עזרה מיוחדת", adWhyPh: "סיבה (תופיע ביומן הנקודות שלו/ה)", adGiveTo: n => "לתת ל" + n, adBadAmt: "בין 500- ל-500", adNeedWhy: "צריך סיבה קצרה", adGiven: (p, tot) => p + " נקודות ניתנו ✓ עכשיו יש " + tot, adNone: "אין כאן כלום", adLogGrant: (p, n) => p + " נקודות ל" + n, adLogClaim: "הפך/ה למנהל/ת", lgAdmin: r => "🎁 בונוס מהצוות" + (r ? ": " + r : ""), svT: "השמורים שלי", svBtn: "שמירה לאחר כך", svDone: "נשמר 🔖 בצ׳אטים ← השמורים שלי", svOff: "הוסר מהשמורים", svNone: "עוד אין כאן כלום. 🔖 ליד הודעה בצ׳אט שומר אותה כאן, ואפשר גם לכתוב פתק לעצמך.", svNotePh: "פתק לעצמי…", svNoteAdd: "שמירה", svNoteT: "פתק שלי", svTo: "לצ׳אט ←", svDel: "הסרה", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
+  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socPtsU: "נק׳", socHere: "את/ה כאן", adT: "ניהול הקהילה", lgAdmin: r => "🎁 בונוס מהצוות" + (r ? ": " + r : ""), svT: "השמורים שלי", svBtn: "שמירה לאחר כך", svDone: "נשמר 🔖 בצ׳אטים ← השמורים שלי", svOff: "הוסר מהשמורים", svNone: "עוד אין כאן כלום. 🔖 ליד הודעה בצ׳אט שומר אותה כאן, ואפשר גם לכתוב פתק לעצמך.", svNotePh: "פתק לעצמי…", svNoteAdd: "שמירה", svNoteT: "פתק שלי", svTo: "לצ׳אט ←", svDel: "הסרה", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
   shT: "נוסף ללוח שלך ✓", shBig: "שתף עם כל הסטודנטים בקורס", shBigSub: "כולם יוכלו להוסיף לעצמם בלחיצה אחת · \u2066+3\u2069 נק׳ על כל מי שמוסיף", shAuto: "לשתף אוטומטית כל בוחן ומשימה שאוסיף לקורס",
   shAutoOn: "שיתוף אוטומטי פעיל ✓", shLater: "לא עכשיו", shBtn: "שתף", shShared: "משותף", shUnshare: "הסר שיתוף", shNoCourse: "אפשר לשתף רק פריט ששייך לקורס",
   shTaskT: "המשימה נשמרה ✓", shMineArea: "שיתוף עם הקורס", shAutoT: "שיתוף אוטומטי",
@@ -98,7 +98,7 @@ Object.assign(I18N.en, {
   lgAdd: (f, r) => f + " added “" + r + "” to theirs", lgTime: r => "Time report on “" + r + "”", lgWa: "WhatsApp group link", lgSomeone: "Someone",
   socMute: "Mute this user 🔇", socUnmute: "Unmute", socMuted: n => n + " is muted. You won’t see what they share.", socUnmuted: "Unmuted",
   socOnLbl: "Community on", socOnHint: "When off, nothing connects to the community server and none of this is shown.", socProfT: "My profile", socWaT: "WhatsApp groups by course",
-  socMuteT: "Muted users", socMuteNone: "None", socPtsU: "pts", socHere: "You’re here", adCancel: "Cancel", adT: "Community admin", adOv: "Overview", adChats: "Chats", adUsers: "People", adLog: "Action log", adOk: "🛡 You are now the community admin", adBad: "Wrong or already used code", adTries: "Too many tries today. Try tomorrow", adNo: "No admin access", adOpenTh: "Open →", adBack: "← Back", adNMsgs: n => n + " messages", adRecent: "Latest messages from all courses", adUsersN: "In the community", adAct7: "Active this week", adAct1: "Active today", adMsgs7: "Messages this week", adPost7: "Writers this week", adFiles: "Files", adTimes: "Time reports", adStars: "⭐ marks", adDays: "Messages, last 14 days", adCourses: "Chats by course", adCrsLine: (n, w, p) => n + " messages · " + w + " this week · " + p + " writers", adTop: "Most points", adSearch: "Search by name", adSeen: x => "Seen " + x, adGive: "＋ Points", adAmount: "Amount", adWhyBeta: "Beta tester", adWhyFb: "Great, steady feedback", adWhyHelp: "Special help", adWhyPh: "Reason (shown in their points log)", adGiveTo: n => "Give to " + n, adBadAmt: "Between -500 and 500", adNeedWhy: "Add a short reason", adGiven: (p, tot) => p + " points given ✓ now " + tot, adNone: "Nothing here", adLogGrant: (p, n) => p + " points to " + n, adLogClaim: "Became admin", lgAdmin: r => "🎁 Bonus from the team" + (r ? ": " + r : ""), svT: "My saved", svBtn: "Save for later", svDone: "Saved 🔖 Chats → My saved", svOff: "Removed from saved", svNone: "Nothing here yet. 🔖 next to a chat message saves it here, and you can write yourself a note.", svNotePh: "A note to myself…", svNoteAdd: "Save", svNoteT: "My note", svTo: "To the chat →", svDel: "Remove", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
+  socMuteT: "Muted users", socMuteNone: "None", socPtsU: "pts", socHere: "You’re here", adT: "Community admin", lgAdmin: r => "🎁 Bonus from the team" + (r ? ": " + r : ""), svT: "My saved", svBtn: "Save for later", svDone: "Saved 🔖 Chats → My saved", svOff: "Removed from saved", svNone: "Nothing here yet. 🔖 next to a chat message saves it here, and you can write yourself a note.", svNotePh: "A note to myself…", svNoteAdd: "Save", svNoteT: "My note", svTo: "To the chat →", svDel: "Remove", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
   shT: "Added to your board ✓", shBig: "Share with everyone in the course", shBigSub: "They can add it in one tap · +3 pts for each one who does", shAuto: "Share every quiz and task I add to a course automatically",
   shAutoOn: "Auto-share is on ✓", shLater: "Not now", shBtn: "Share", shShared: "Shared", shUnshare: "Stop sharing", shNoCourse: "Only items that belong to a course can be shared",
   shTaskT: "Task saved ✓", shMineArea: "Share with the course", shAutoT: "Auto-share",
@@ -148,7 +148,7 @@ Object.assign(I18N.fr, {
   lgAdd: (f, r) => f + " a ajouté « " + r + " » chez lui", lgTime: r => "Durée indiquée pour « " + r + " »", lgWa: "Lien du groupe WhatsApp", lgSomeone: "Quelqu’un",
   socMute: "Masquer cet utilisateur 🔇", socUnmute: "Ne plus masquer", socMuted: n => n + " est masqué. Vous ne verrez plus ses partages.", socUnmuted: "Plus masqué",
   socOnLbl: "Communauté activée", socOnHint: "Désactivée : aucune connexion au serveur de la communauté, et rien de tout cela n’est affiché.", socProfT: "Mon profil", socWaT: "Groupes WhatsApp par cours",
-  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socPtsU: "pts", socHere: "Vous êtes ici", adCancel: "Annuler", adT: "Gestion de la communauté", adOv: "Aperçu", adChats: "Chats", adUsers: "Membres", adLog: "Journal", adOk: "🛡 Vous gérez maintenant la communauté", adBad: "Code faux ou déjà utilisé", adTries: "Trop d’essais aujourd’hui", adNo: "Pas d’accès", adOpenTh: "Ouvrir →", adBack: "← Retour", adNMsgs: n => n + " messages", adRecent: "Derniers messages de tous les cours", adUsersN: "Membres", adAct7: "Actifs cette semaine", adAct1: "Actifs aujourd’hui", adMsgs7: "Messages cette semaine", adPost7: "Auteurs cette semaine", adFiles: "Fichiers", adTimes: "Durées", adStars: "⭐", adDays: "Messages, 14 derniers jours", adCourses: "Chats par cours", adCrsLine: (n, w, p) => n + " messages · " + w + " cette semaine · " + p + " auteurs", adTop: "Le plus de points", adSearch: "Chercher un nom", adSeen: x => "Vu " + x, adGive: "＋ Points", adAmount: "Montant", adWhyBeta: "Testeur bêta", adWhyFb: "Retours réguliers", adWhyHelp: "Aide spéciale", adWhyPh: "Raison (dans son journal de points)", adGiveTo: n => "Donner à " + n, adBadAmt: "Entre -500 et 500", adNeedWhy: "Ajoutez une raison", adGiven: (p, tot) => p + " points donnés ✓ total " + tot, adNone: "Rien ici", adLogGrant: (p, n) => p + " points à " + n, adLogClaim: "Devenu admin", lgAdmin: r => "🎁 Bonus de l’équipe" + (r ? " : " + r : ""), svT: "Mes enregistrés", svBtn: "Garder pour plus tard", svDone: "Enregistré 🔖 Chats → Mes enregistrés", svOff: "Retiré", svNone: "Rien pour l’instant. 🔖 à côté d’un message l’enregistre ici, et vous pouvez écrire une note pour vous.", svNotePh: "Une note pour moi…", svNoteAdd: "Enregistrer", svNoteT: "Ma note", svTo: "Vers le chat →", svDel: "Retirer", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
+  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socPtsU: "pts", socHere: "Vous êtes ici", adT: "Gestion de la communauté", lgAdmin: r => "🎁 Bonus de l’équipe" + (r ? " : " + r : ""), svT: "Mes enregistrés", svBtn: "Garder pour plus tard", svDone: "Enregistré 🔖 Chats → Mes enregistrés", svOff: "Retiré", svNone: "Rien pour l’instant. 🔖 à côté d’un message l’enregistre ici, et vous pouvez écrire une note pour vous.", svNotePh: "Une note pour moi…", svNoteAdd: "Enregistrer", svNoteT: "Ma note", svTo: "Vers le chat →", svDel: "Retirer", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
   shT: "Ajouté à votre tableau ✓", shBig: "Partager avec tout le cours", shBigSub: "Chacun peut l’ajouter en un geste · +3 pts par ajout", shAuto: "Partager automatiquement chaque quiz et devoir que j’ajoute à un cours",
   shAutoOn: "Partage automatique activé ✓", shLater: "Pas maintenant", shBtn: "Partager", shShared: "Partagé", shUnshare: "Ne plus partager", shNoCourse: "Seuls les éléments liés à un cours peuvent être partagés",
   shTaskT: "Devoir enregistré ✓", shMineArea: "Partager avec le cours", shAutoT: "Partage automatique",
@@ -927,89 +927,17 @@ function addNote() {
 }
 function delSaved(k) { P.soc_saved = (P.soc_saved || []).filter(x => x.k !== k); savePrefs(); openSaved(); if (V.view === "chat") chatView(); if (ST.chat && !$("#socChat").hidden) drawChat(); }
 
-/* ---------- community management: only for an account the SERVER lists as admin (claimed once with a one-time code). The screen here is only a view:
-   every call is checked on the server, so this code being public changes nothing ---------- */
+/* ---------- community management: only for an account the SERVER lists as admin. The screen itself is in admin.js, downloaded only after the server
+   says so, and locked behind a passkey (Face ID / fingerprint) that the server checks too. Nobody else's app loads it or shows a way in ---------- */
 const isAdmin = () => !!(ST.ov && ST.ov.me && ST.ov.me.admin);
-const AD = { tab: "ov", ov: null, users: null, q: "", log: null, th: null, crs: null, grantTo: null };
-async function adminClaim(code) {
-  try { await api("admin/claim", { code }); toast(t("adOk"), 6000); useHit("adClaim"); await overview(true); openAdmin(); }
-  catch (e) { toast(e.status === 429 ? t("adTries") : t("adBad"), 6000); }
-}
-async function adLoad(op, body, key) { try { AD[key] = await api(op, body); } catch (e) { AD[key] = { err: e.status === 403 ? t("adNo") : t("socNet") }; } adDraw(); }
-function openAdmin(tab) {
-  if (tab) AD.tab = tab; useHit("adOpen");
-  sheet("socAdmin", "<h3><span>" + ic("shield") + " " + esc(t("adT")) + "</span>" + xbtn() + '</h3><div class="adtabs">' +
-    [["ov", "adOv"], ["chats", "adChats"], ["users", "adUsers"], ["log", "adLog"]].map(([k, l]) => '<button class="chf" data-adtab="' + k + '">' + esc(t(l)) + "</button>").join("") + '</div><div id="adBody"><div class="hint">' + esc(t("socLoading")) + "</div></div>");
-  adGo(AD.tab);
-}
-function adGo(tab) {
-  AD.tab = tab; AD.th = null; AD.crs = null;
-  $$("#socAdmin [data-adtab]").forEach(b => b.classList.toggle("on", b.dataset.adtab === tab));
-  if (tab === "ov" || tab === "chats") adLoad("admin/ov", {}, "ov"); else if (tab === "users") adLoad("admin/users", { q: AD.q }, "users"); else adLoad("admin/log", {}, "log");
-}
-const adMsg = m => '<div class="adm' + (m.del ? " del" : "") + '"><div class="admh"><b><bdi>' + esc(m.name || "?") + "</bdi></b> · <bdi>" + esc(shortName(m.cn || "")) + "</bdi>" + (m.tn ? " · <bdi>" + esc(m.tn) + "</bdi>" : "") +
-  '<small>' + esc(msgTime(m.at)) + (m.stars ? " · ⭐" + m.stars : "") + '</small></div><div class="admb">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body || ""))) + '</div><button class="link" data-adth="' + esc(m.cid) + "|" + esc(m.tk) + '">' + esc(t("adOpenTh")) + "</button></div>";
-function adDraw() {
-  const el = $("#adBody"); if (!el) return;
-  if (AD.th) {                                  // one conversation, read only
-    const x = AD.th; if (x.err) { el.innerHTML = '<p class="hint">' + esc(x.err) + "</p>"; return; }
-    el.innerHTML = '<button class="link" data-adback>' + esc(t("adBack")) + '</button><div class="stitle"><bdi>' + esc(shortName(x.name || "")) + "</bdi>" + (x.tn ? " · <bdi>" + esc(x.tn) + "</bdi>" : " · " + esc(t("chatCourse"))) + "</div>" +
-      (x.msgs.length ? x.msgs.map(m => '<div class="adm' + (m.del ? " del" : "") + '"><div class="admh"><b><bdi>' + esc(m.name || "?") + '</bdi></b><small>' + esc(msgTime(m.at)) + (m.stars ? " · ⭐" + m.stars : "") + '</small></div><div class="admb">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body || ""))) + "</div></div>").join("") : '<p class="hint">' + esc(t("chatEmpty")) + "</p>");
-    return;
-  }
-  if (AD.crs) {
-    const x = AD.crs; if (x.err) { el.innerHTML = '<p class="hint">' + esc(x.err) + "</p>"; return; }
-    el.innerHTML = '<button class="link" data-adback>' + esc(t("adBack")) + '</button><div class="stitle"><bdi>' + esc(shortName(x.name || "")) + "</bdi></div>" +
-      x.thr.map(r => '<button class="adrow" data-adth="' + esc(x.cid) + "|" + esc(r.tk) + '"><span class="sw"><b><bdi>' + esc(r.tk === "c" ? t("chatCourse") : r.ref || r.tk) + "</bdi></b><small>" + esc(t("adNMsgs", r.n) + " · " + msgTime(r.last)) + "</small></span>" + ic("chevron-left") + "</button>").join("");
-    return;
-  }
-  if (AD.tab === "ov" || AD.tab === "chats") {
-    const o = AD.ov; if (!o) { el.innerHTML = '<div class="hint">' + esc(t("socLoading")) + "</div>"; return; } if (o.err) { el.innerHTML = '<p class="hint">' + esc(o.err) + "</p>"; return; }
-    if (AD.tab === "chats") { el.innerHTML = '<div class="stitle">' + esc(t("adRecent")) + "</div>" + (o.recent.length ? o.recent.map(adMsg).join("") : '<p class="hint">' + esc(t("chatEmpty")) + "</p>"); return; }
-    const s = o.stats, tile = (n, l) => '<div class="adtile"><b>' + esc(String(n)) + "</b><span>" + esc(l) + "</span></div>", mx = Math.max(1, ...o.days.map(d => d.n));
-    el.innerHTML = '<div class="adtiles">' + tile(s.users, t("adUsersN")) + tile(s.active7, t("adAct7")) + tile(s.active1, t("adAct1")) + tile(s.msgs7, t("adMsgs7")) + tile(s.posters7, t("adPost7")) + tile(s.files, t("adFiles")) + tile(s.times, t("adTimes")) + tile(s.stars, t("adStars")) + "</div>" +
-      '<div class="stitle">' + esc(t("adDays")) + '</div><div class="addays">' + o.days.map(d => '<i title="' + esc(d.d + ": " + d.n) + '" style="height:' + Math.max(2, Math.round(60 * d.n / mx)) + 'px"></i>').join("") + "</div>" +
-      '<div class="stitle">' + esc(t("adCourses")) + "</div>" + (o.courses.length ? o.courses.map(c => '<button class="adrow" data-adcrs="' + esc(c.cid) + '" style="--c:' + colorOf(Number(c.cid)) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name || c.cid)) + "</bdi></b><small>" +
-        esc(t("adCrsLine", c.msgs, c.week, c.people) + " · " + msgTime(c.last)) + "</small></span>" + ic("chevron-left") + "</button>").join("") : '<p class="hint">' + esc(t("chatEmpty")) + "</p>") +
-      '<div class="stitle">' + esc(t("adTop")) + "</div>" + o.top.map((u, i) => '<div class="adrow st"><span class="sw"><b>' + (i + 1) + ". <bdi>" + esc(u.name) + "</bdi></b><small>" + esc(t("socPts", u.pts)) + "</small></span>" + rankTag(u.pts) + "</div>").join("");
-    return;
-  }
-  if (AD.tab === "users") {
-    const o = AD.users;
-    el.innerHTML = '<input type="search" id="adQ" placeholder="' + esc(t("adSearch")) + '" value="' + esc(AD.q) + '">' + (!o ? '<div class="hint">' + esc(t("socLoading")) + "</div>" : o.err ? '<p class="hint">' + esc(o.err) + "</p>" :
-      o.users.map(u => '<div class="aduser"><div class="adrow st"><span class="sw"><b><bdi>' + esc(u.name) + "</bdi>" + (u.admin ? " 🛡" : "") + "</b><small>" + esc([t("socPts", u.pts), u.deg ? degLabel(u.deg) : "", u.yr ? yrTxt(u.yr) : "", t("adNMsgs", u.msgs), u.seen ? t("adSeen", msgTime(u.seen)) : ""].filter(Boolean).join(" · ")) + "</small></span>" +
-        rankTag(u.pts) + '<button class="btn sm" data-adgive="' + esc(u.uid) + '">' + esc(t("adGive")) + "</button></div>" + (AD.grantTo === u.uid ? adGrantForm(u) : "") + "</div>").join("") || '<p class="hint">' + esc(t("adNone")) + "</p>");
-    const q = $("#adQ"); if (q) { q.oninput = () => { AD.q = q.value; clearTimeout(AD.qt); AD.qt = setTimeout(() => adLoad("admin/users", { q: AD.q }, "users"), 350); }; if (document.activeElement !== q && AD.qFocus) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
-    return;
-  }
-  const o = AD.log; if (!o) { el.innerHTML = '<div class="hint">' + esc(t("socLoading")) + "</div>"; return; } if (o.err) { el.innerHTML = '<p class="hint">' + esc(o.err) + "</p>"; return; }
-  el.innerHTML = o.log.length ? o.log.map(l => { let d = {}; try { d = JSON.parse(l.d || "{}"); } catch (e) {}
-    return '<div class="adrow st"><span class="sw"><b>' + esc(l.act === "grant" ? t("adLogGrant", d.pts > 0 ? "+" + d.pts : String(d.pts), d.name || "?") : l.act === "claim" ? t("adLogClaim") : l.act) + "</b><small><bdi>" + esc((d.why ? d.why + " · " : "") + (l.name || "") + " · " + msgTime(l.at)) + "</bdi></small></span></div>"; }).join("") : '<p class="hint">' + esc(t("adNone")) + "</p>";
-}
-const yrTxt = y => /^\d$/.test(String(y)) ? ({ he: "שנה ", en: "Year ", fr: "Année " }[LANG] || "") + y : String(y || "");
-const adGrantForm = u => '<div class="adgf"><div class="adchips">' + [10, 25, 50, 100].map(n => '<button class="chf" data-adpts="' + n + '">+' + n + "</button>").join("") +
-  '<input type="number" id="adPts" value="25" min="-500" max="500" step="1" aria-label="' + esc(t("adAmount")) + '"></div><div class="adchips">' + ["adWhyBeta", "adWhyFb", "adWhyHelp"].map(k => '<button class="chf" data-adwhy="' + esc(t(k)) + '">' + esc(t(k)) + "</button>").join("") + "</div>" +
-  '<input type="text" id="adWhy" maxlength="80" placeholder="' + esc(t("adWhyPh")) + '" value="' + esc(t("adWhyBeta")) + '"><div class="adchips"><button class="primary" data-adsend="' + esc(u.uid) + '">' + esc(t("adGiveTo", u.name)) + '</button><button class="link" data-adcancel>' + esc(t("adCancel")) + "</button></div></div>";
-async function adGrant(uid) {
-  const pts = Math.trunc(Number(($("#adPts") || {}).value)), why = (($("#adWhy") || {}).value || "").trim();
-  if (!pts || Math.abs(pts) > 500) return toast(t("adBadAmt")); if (why.length < 2) return toast(t("adNeedWhy"));
-  try { const r = await api("admin/grant", { to: uid, pts, why }); toast(t("adGiven", pts > 0 ? "+" + pts : String(pts), r.total.all), 5000); useHit("adGrant"); AD.grantTo = null; adLoad("admin/users", { q: AD.q }, "users"); }
-  catch (e) { toast(e.status === 403 ? t("adNo") : t("socNet")); }
-}
-document.addEventListener("click", e => {
-  const g = s => e.target.closest(s); if (!g("#socAdmin")) return; let b;
-  if ((b = g("[data-adtab]"))) return adGo(b.dataset.adtab);
-  if (g("[data-adback]")) { if (AD.th && AD.crs) { AD.th = null; return adDraw(); } AD.th = null; AD.crs = null; return adDraw(); }
-  if ((b = g("[data-adcrs]"))) { AD.crs = { name: "", thr: [] }; api("admin/course", { cid: b.dataset.adcrs }).then(r => { AD.crs = r; adDraw(); }).catch(() => { AD.crs = { err: t("socNet") }; adDraw(); }); return adDraw(); }
-  if ((b = g("[data-adth]"))) { const [cid, tk] = b.dataset.adth.split("|"); AD.th = { name: "", msgs: [] }; api("admin/thread", { cid, tk }).then(r => { AD.th = r; adDraw(); const bx = $("#socAdmin .box"); if (bx) bx.scrollTop = bx.scrollHeight; }).catch(() => { AD.th = { err: t("socNet") }; adDraw(); }); return adDraw(); }
-  if ((b = g("[data-adgive]"))) { AD.grantTo = AD.grantTo === b.dataset.adgive ? null : b.dataset.adgive; AD.qFocus = false; return adDraw(); }
-  if ((b = g("[data-adpts]"))) { const i = $("#adPts"); if (i) i.value = b.dataset.adpts; return; }
-  if ((b = g("[data-adwhy]"))) { const i = $("#adWhy"); if (i) i.value = b.dataset.adwhy; return; }
-  if (g("[data-adcancel]")) { AD.grantTo = null; return adDraw(); }
-  if ((b = g("[data-adsend]"))) return adGrant(b.dataset.adsend);
-});
-document.addEventListener("focusin", e => { if (e.target.id === "adQ") AD.qFocus = true; });
-document.addEventListener("focusout", e => { if (e.target.id === "adQ") AD.qFocus = false; });
+let ADM = null;
+const admLoad = () => ADM || (ADM = new Promise((ok, no) => {
+  const s = document.createElement("script"); s.src = "admin.js?v=" + encodeURIComponent(SOC_V);
+  s.onload = () => window.SOC_ADMIN ? ok(window.SOC_ADMIN({ api, ST, sheet, xbtn, overview, msgTime, linkify, rankTag, degLabel, close })) : no(new Error("admin.js"));
+  s.onerror = () => no(new Error("admin.js")); document.head.appendChild(s);
+}).catch(e => { ADM = null; throw e; }));
+function openAdmin(tab) { if (!isAdmin()) return; admLoad().then(a => a.open(tab), () => toast(t("socNet"))); }
+function adminClaim(code) { admLoad().then(a => a.claim(code), () => toast(t("socNet"))); }
 
 /* ---------- small sheets made on demand, like the app's own ---------- */
 const xbtn = () => ' <button class="xbtn" data-socx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button>";
@@ -1211,16 +1139,6 @@ html[dir=rtl] .sm{border-radius:16px 16px 4px 16px}html[dir=rtl] .sm.me{border-r
 .sstar{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:1px 8px;font-size:12px;font-weight:600;color:var(--muted)}
 .sstar .i{width:13px;height:13px}.sstar.on{color:#b7791f;border-color:#f6c34a;background:color-mix(in srgb,#f6c34a 18%,var(--card))}.sstar.on .i{fill:#f6c34a}
 .sic{border:0;background:none;padding:3px;color:var(--muted);display:inline-grid;place-items:center}.sic .i{width:16px;height:16px}
-.adtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.adtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}@media (max-width:520px){.adtiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.adtile{background:var(--row);border-radius:12px;padding:8px;text-align:center}.adtile b{display:block;font-size:20px;font-variant-numeric:tabular-nums}.adtile span{font-size:12px;color:var(--muted)}
-.addays{display:flex;align-items:flex-end;gap:4px;height:64px;padding:2px 0;border-bottom:1px solid var(--line)}.addays i{flex:1;background:var(--accent);border-radius:4px 4px 0 0;min-width:4px}
-.adrow{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:inherit;font:inherit;margin-bottom:6px;cursor:pointer}
-.adrow.st{cursor:default}.adrow .sw{flex:1;min-width:0;display:flex;flex-direction:column}.adrow small{color:var(--muted);font-size:12.5px}.adrow .dot{width:10px;height:10px;border-radius:50%;background:var(--c,var(--accent));flex:none}.adrow>.i{width:16px;height:16px;color:var(--muted);flex:none}
-.adm{border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-bottom:6px;background:var(--card)}.adm.del{opacity:.55}.admh{font-size:13px;display:flex;gap:6px;flex-wrap:wrap;align-items:baseline}.admh small{color:var(--muted);margin-inline-start:auto}
-.admb{white-space:pre-wrap;overflow-wrap:anywhere;margin:3px 0}
-#adQ,#adWhy,#adPts{font:inherit;border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--row);color:inherit}#adQ{width:100%;margin-bottom:8px;box-sizing:border-box}#adWhy{width:100%;box-sizing:border-box}#adPts{width:90px}
-.adgf{display:grid;gap:8px;padding:10px;margin:-2px 0 8px;border:1px dashed var(--line);border-radius:12px}.adchips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .sic.ssv.on{color:var(--accent-t)}.sic.ssv.on .i{fill:currentColor}
 .chsv{display:flex;align-items:center;gap:8px;width:100%;margin:6px 0 4px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg,inherit);font:inherit;font-weight:600;cursor:pointer}
 .chsv .i{width:18px;height:18px;color:var(--accent-t)}.chsv .n{margin-inline-start:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
