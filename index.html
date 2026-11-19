@@ -3039,14 +3039,23 @@ async function fetchAll() {
     if (!calFull || !add.length) break;
     after = r.events[r.events.length - 1].id;
   }
+  /* one task per Moodle activity. An automatic checker (VPL) and other activities can have several calendar events: "opens" and "due", or a group's
+     own date beside the course's (Roni, 19.11: exercise 5 twice, with two dates; Peri, 19.11: "it says I submitted the moment the submission opens" –
+     the "opens" event left the list and was taken as a submission). Keep the deadline: a due event over an "opens" one, a group's date over the course's */
+  const evRank = e => (/open|start/i.test(e.eventtype || "") ? 0 : 4) + (Number(e.groupid) > 0 ? 1 : 0);
+  const byAct = new Map();
   for (const e of cal.events || []) {
     if (e.modulename === "assign" || e.modulename === "quiz") continue;
+    const k = e.modulename && Number(e.instance) > 0 ? e.modulename + ":" + e.instance : "e:" + e.id, o = byAct.get(k);
+    if (!o || evRank(e) > evRank(o) || (evRank(e) === evRank(o) && (e.timestart || 0) > (o.timestart || 0))) byAct.set(k, e);
+  }
+  for (const e of byAct.values()) {
     const c = e.course || {}, act = e.action || {};
     const zm = e.modulename === "zoom" || /zoom|זום/i.test(e.name || "");
     const cm = Number((/[?&]id=(\d+)/.exec(e.url || act.url || "") || [])[1]) || 0;      // a Moodle activity's page says which activity it is (for its course page row, materials and grade)
     tasks.push({ key: "event:" + e.id, type: zm ? "zoom" : "event", via: zm || !e.modulename ? "other" : "online", mod: zm ? "" : e.modulename || "", cid: Number(c.id) || 0, cmid: e.modulename ? cm : 0, course: names[c.id] || stripHtml(c.fullname || ""),
       name: tName((e.modulename && e.activityname) || e.name),          // the activity's own name, not Moodle's "… submission" event title
-      due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
+      due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "", ev: String(e.eventtype || "").slice(0, 20),
       intro: stripHtml(e.description), links: introLinks(e.description), files: [], url: e.url || act.url || "" });
   }
   /* Moodle drops an activity's deadline from this list once it's done (the automatic checker (VPL) the moment there's a submission,
@@ -3059,6 +3068,8 @@ async function fetchAll() {
     const cand = [];
     for (const p of prevT) {
       if (!p.key.startsWith("event:") || got.has(p.key) || p.type !== "event" || p.via !== "online" || !names[p.cid]) continue;
+      if (p.cmid && tasks.some(x => x.cid === p.cid && x.cmid === p.cmid)) continue;       // the activity is still listed, under another of its events (its due date, a group's date): not a submission
+      if (/open|start/i.test(p.ev || "")) continue;                                        // an "opens" event leaves the list when the activity opens
       if (p.status === "submitted") { if (p.gone && (!p.due || p.due > now - 21 * 86400)) tasks.push(p); continue; }
       if ((full && p.due > lastTs) || (p.due && p.due + 12 * 3600 < now)) continue;     // beyond the 50 we got, or its deadline passed (Moodle drops it then too)
       cand.push(p);
@@ -4330,7 +4341,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.1";
+const APP_VERSION = "1.9.2";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };

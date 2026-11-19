@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.1";
+const SOC_V = "1.9.2";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -59,7 +59,7 @@ Object.assign(I18N.he, {
   lgStar: (f, r) => f + " סימן את התשובה שלך כמועילה" + (r ? " ב״" + r + "״" : ""),
   chvT: "💬 צ'אטים", chvHint: "לכל קורס יש צ'אט כללי, ולכל מטלה בקורס יש דיון משלה.", chvSearch: "חיפוש קורס או מטלה", chvGeneral: "הצ'אט הכללי של הקורס", chvGeneralSub: "שאלות, עדכונים ותיאומים לכל הקורס",
   chvTasks: n => "דיונים במטלות" + (n ? " (" + n + ")" : ""), chvMore: n => "עוד " + n + " מטלות", chvLess: "פחות", chvNoMsg: "אין הודעות עדיין · אפשר לפתוח", chvDue: d => "הגשה " + d, chvNone: "לא נמצאו קורסים או מטלות",
-  chvUnread: n => n + " חדשות", chBread: "הצ'אט הכללי", chDisc: "דיון במטלה",
+  chvUnread: n => n + " חדשות", chvFUn: "לא נקראו", chvReadAll: "✓ סימון הכל כנקרא", chBread: "הצ'אט הכללי", chDisc: "דיון במטלה",
   socNet: "אין חיבור לשרת הקהילה כרגע", socLoading: "טוען…", socRanksT: "הדרגות", socJoinBtn: "הצטרפות לקהילה",
 });
 Object.assign(I18N.en, {
@@ -108,7 +108,7 @@ Object.assign(I18N.en, {
   lgStar: (f, r) => f + " marked your answer helpful" + (r ? " in “" + r + "”" : ""),
   chvT: "💬 Chats", chvHint: "Every course has a general chat, and every task in it has its own discussion.", chvSearch: "Search a course or task", chvGeneral: "The course’s general chat", chvGeneralSub: "Questions, updates and plans for the whole course",
   chvTasks: n => "Task discussions" + (n ? " (" + n + ")" : ""), chvMore: n => n + " more tasks", chvLess: "Less", chvNoMsg: "No messages yet · open it", chvDue: d => "Due " + d, chvNone: "No course or task found",
-  chvUnread: n => n + " new", chBread: "General chat", chDisc: "Task discussion",
+  chvUnread: n => n + " new", chvFUn: "Unread", chvReadAll: "✓ Mark all as read", chBread: "General chat", chDisc: "Task discussion",
   socNet: "Can’t reach the community server right now", socLoading: "Loading…", socRanksT: "Ranks", socJoinBtn: "Join the community",
 });
 Object.assign(I18N.fr, {
@@ -158,7 +158,7 @@ Object.assign(I18N.fr, {
   lgStar: (f, r) => f + " a marqué votre réponse comme utile" + (r ? " dans « " + r + " »" : ""),
   chvT: "💬 Chats", chvHint: "Chaque cours a un chat général, et chaque devoir du cours a sa propre discussion.", chvSearch: "Chercher un cours ou un devoir", chvGeneral: "Le chat général du cours", chvGeneralSub: "Questions, nouvelles et organisation pour tout le cours",
   chvTasks: n => "Discussions des devoirs" + (n ? " (" + n + ")" : ""), chvMore: n => n + " devoirs de plus", chvLess: "Moins", chvNoMsg: "Pas encore de messages · ouvrir", chvDue: d => "À rendre " + d, chvNone: "Aucun cours ni devoir trouvé",
-  chvUnread: n => n + " nouveaux", chBread: "Chat général", chDisc: "Discussion du devoir",
+  chvUnread: n => n + " nouveaux", chvFUn: "Non lus", chvReadAll: "✓ Tout marquer comme lu", chBread: "Chat général", chDisc: "Discussion du devoir",
   socNet: "Serveur de la communauté injoignable pour l’instant", socLoading: "Chargement…", socRanksT: "Rangs", socJoinBtn: "Rejoindre la communauté",
 });
 /* summaries and solutions in the chats */
@@ -702,7 +702,7 @@ function chatView() {
   const typing = document.activeElement && document.activeElement.id === "chq" ? document.activeElement.selectionStart : null;
   if (!ST.ov) { el.innerHTML = '<div class="hint" style="padding:20px;text-align:center">' + esc(t("socLoading")) + "</div>"; overview(); return; }
   /* one list, like WhatsApp: every conversation is a row that says plainly where it belongs (a course's chat, or a task's discussion inside a course) */
-  const now = nowS(), q = (ST.chq || "").trim().toLowerCase(), f = ["act", "course", "task"].includes(ST.chf) ? ST.chf : "act";
+  const now = nowS(), q = (ST.chq || "").trim().toLowerCase(); let f = ["act", "course", "task", "un"].includes(ST.chf) ? ST.chf : "act";
   const rows = [];
   for (const c of myCourses()) {
     const cd = cdata(c.id) || {}, th = cd.th || {}, cname = shortName(c.name);
@@ -715,10 +715,13 @@ function chatView() {
     for (const tk in th) if (tk !== "c" && !seen.has(tk)) rows.push({ kind: "t", c, cname, tk, x: null, title: th[tk][2] || tk, i: thInfo(c.id, tk), u: unread(c.id, tk) });
   }
   const match = r => !q || (r.title + " " + r.cname).toLowerCase().includes(q);
-  const pass = r => q ? true : f === "act" ? r.i.n > 0 : f === "course" ? r.kind === "c" : r.kind === "t";
+  /* Pnina, 19.11: "it says 2 new messages, but no chat shows a new one" – the new ones sat in a chat the chosen filter hid (a task's discussion under
+     "courses", or the other way round). "N new" now opens an "unread" filter with exactly those chats, and "mark all as read" */
+  if (f === "un" && !rows.some(r => r.u > 0)) f = "act";
+  const pass = r => q ? true : f === "un" ? r.u > 0 : f === "act" ? r.i.n > 0 : f === "course" ? r.kind === "c" : r.kind === "t";
   const L = rows.filter(r => match(r) && pass(r)).sort((a, b) => (b.u > 0) - (a.u > 0) || b.i.last - a.i.last ||
     (f === "task" ? ((a.x && a.x.due) || 9e9) - ((b.x && b.x.due) || 9e9) : 0) || (a.kind === "c" ? -1 : 0) - (b.kind === "c" ? -1 : 0) || a.title.localeCompare(b.title));
-  const cnt = k => rows.filter(r => (k === "act" ? r.i.n > 0 : k === "course" ? r.kind === "c" : r.kind === "t")).length;
+  const cnt = k => rows.filter(r => (k === "un" ? r.u > 0 : k === "act" ? r.i.n > 0 : k === "course" ? r.kind === "c" : r.kind === "t")).length;
   const un = rows.reduce((n, r) => n + r.u, 0);
   const preview = i => i.n ? '<span class="chpv"><b><bdi>' + esc(i.lb && i.lb === myName() ? t("chatYou") : i.lb || "") + "</bdi>:</b> <bdi>" + esc(i.lt || "") + "</bdi></span>" : '<span class="chpv">' + esc(t("chvNoMsg")) + "</span>";
   const row = r => {
@@ -732,9 +735,10 @@ function chatView() {
   };
   const chip = (k, lbl) => '<button class="chf' + (f === k ? " on" : "") + '" data-chf="' + k + '" aria-pressed="' + (f === k) + '">' + esc(lbl) + ' <span class="n">' + cnt(k) + "</span></button>";
   const empty = q ? t("chvNoMatch") : f === "act" ? t("chvNoAct") : t("chvNone");
-  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + (un ? ' <span class="scnt new">' + esc(t("chvUnread", un)) + "</span>" : "") + "</h2>" + meBar() + savedBtn() +
+  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + (un ? ' <button class="scnt new chun" data-chf="un">' + esc(t("chvUnread", un)) + "</button>" : "") + "</h2>" + meBar() + savedBtn() +
     '<input type="search" id="chq" placeholder="' + esc(t("chvSearch")) + '" value="' + esc(ST.chq || "") + '">' +
-    (q ? "" : '<div class="chfs">' + chip("act", t("chvFAct")) + chip("course", t("chvFCourse")) + chip("task", t("chvFTask")) + "</div>") + "</div>" +
+    (q ? "" : '<div class="chfs">' + (un ? chip("un", t("chvFUn")) : "") + chip("act", t("chvFAct")) + chip("course", t("chvFCourse")) + chip("task", t("chvFTask")) + "</div>") +
+    (f === "un" && !q ? '<button class="link chreadall" data-chreadall>' + esc(t("chvReadAll")) + "</button>" : "") + "</div>" +
     (L.length ? '<div class="chlist">' + L.map(row).join("") + "</div>" : '<div class="chempty"><p>' + esc(empty) + "</p>" + (f === "act" && !q ? '<button class="primary" data-chf="course">' + esc(t("chvStart")) + "</button>" : "") + "</div>");
   const inp = $("#chq");
   inp.oninput = () => { ST.chq = inp.value; chatView(); };
@@ -1006,7 +1010,8 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socsvdel]"))) return delSaved(b.dataset.socsvdel);
   if ((b = g("[data-socchat]"))) { e.preventDefault(); close("socNote"); close("socFiles"); close("socSaved"); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
   if ((b = g("[data-socchats]"))) { $$(".sheet").forEach(x => x.hidden = true); setView("chat"); render(); window.scrollTo(0, 0); return; }
-  if ((b = g("[data-chf]"))) { ST.chf = b.dataset.chf; LS.set("socChF", ST.chf); return chatView(); }
+  if ((b = g("[data-chf]"))) { ST.chf = b.dataset.chf; if (ST.chf !== "un") LS.set("socChF", ST.chf); else useHit("socUnFilter"); return chatView(); }
+  if (g("[data-chreadall]")) { for (const c of myCourses()) { const cd = cdata(c.id); if (cd && cd.th) for (const tk in cd.th) if (unread(c.id, tk)) markSeen(c.id, tk, thInfo(c.id, tk).n); } useHit("socReadAll"); ST.chf = LS.get("socChF", "act"); renderTop(nowS()); return chatView(); }
   if ((b = g("[data-socsend]"))) return sendMsg();
   if ((b = g("[data-socfile]"))) { useHit("socFileBtn"); return $("#socFile").click(); }
   if ((b = g("[data-socfx]"))) return setFile(null);
@@ -1179,6 +1184,8 @@ html[dir=rtl] .sm{border-radius:16px 16px 4px 16px}html[dir=rtl] .sm.me{border-r
 .svf{display:flex;align-items:center;gap:10px}.svf small{flex:1;color:var(--muted)}
 .spick{display:flex;gap:4px;margin-top:6px}.spick button{border:0;background:var(--card);border-radius:10px;font-size:20px;padding:4px 7px}
 .schc{border-top:1px solid var(--line);padding:8px 0 calc(10px + env(safe-area-inset-bottom));background:inherit}
+html.kb .sheet.chat .box{padding-bottom:0!important}html.kb .schc{padding-bottom:6px!important}   /* keyboard open: no room kept for the iPhone's home bar – the keyboard covers it (David, 18.11: "too much space taken for nothing") */
+.chun{border:0;cursor:pointer;font-family:inherit;height:24px;padding:0 10px;font-size:13px;vertical-align:middle}.chreadall{display:block;margin:6px 0 0;font-size:13.5px}
 .schrep{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);padding:0 4px 6px}
 .schin{display:flex;gap:8px;align-items:flex-end}
 .schin textarea{flex:1;resize:none;min-height:42px;max-height:120px;padding:10px 12px;border-radius:14px;font:inherit;font-size:16px}
