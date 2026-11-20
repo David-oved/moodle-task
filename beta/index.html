@@ -458,6 +458,9 @@ body.dashed .dedit2{display:none}
 #dash > .dcard[data-mode=full]:not(.dexp) > *{flex:none}
 /* "next up" looks like it did up to 1.7 (people missed it): the course and time chips and the button keep their own width instead of stretching across */
 #dash > #hero[data-mode=full] > :is(span,button,a){align-self:flex-start;max-width:100%}
+#hero.hf1 .gr,#hero.hf2 .lbl,#hero.hf3 .when{display:none}
+#hero.hf5 > button[data-tk]{display:none}#hero.hf5[data-tk]{cursor:pointer}
+#hero.hf4 .nm{font-size:17px;margin-top:0}#hero.hf4 .big{margin-top:6px;font-size:20px}#hero.hf4 button{margin-top:8px;padding:6px 12px;font-size:13px}
 #dash > .dcard[data-mode=full]:not(.dexp) > .dxx,#dash > .dcard[data-mode=full]:not(.dexp) > .dmore{position:absolute}
 /* the main part takes what's left, and its rows grow into it (to a point) */
 #dash > #monthCard[data-mode=full]:not(.dexp) > .month{flex:1 0 auto;grid-template-rows:auto;grid-auto-rows:minmax(0,1fr)}
@@ -4341,7 +4344,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.2";
+const APP_VERSION = "1.9.3";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -6423,7 +6426,18 @@ function layoutDash() {
   dashCell(); requestAnimationFrame(dashOvf);
 }
 /* a full card with more than fits: "more" (opens it) */
-function dashOvf() { for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (!el || el.classList.contains("dexp")) continue; el.classList.toggle("ovf", el.dataset.mode === "full" && el.scrollHeight > el.clientHeight + 3); } }
+/* "next up" fits itself (Pnina, 20.11: "why is it suddenly cut off? it was great until now" – with the community's time estimate under the course,
+   the greeting, label and date no longer fitted and "more" covered the bottom): it drops its least important lines one at a time until all fits –
+   the greeting, then "next up", then the date, then smaller type, then the button (the whole card opens the task then) – and only then shows "more" */
+const HERO_FIT = ["hf1", "hf2", "hf3", "hf4", "hf5"];
+function heroFit() {
+  const el = document.getElementById("hero"); if (!el) return;
+  el.classList.remove(...HERO_FIT); delete el.dataset.tk;
+  if (el.dataset.mode !== "full" || el.classList.contains("dexp")) return;
+  for (const c of HERO_FIT) { if (el.scrollHeight <= el.clientHeight + 3) break; el.classList.add(c); }
+  const b = el.querySelector(":scope > button[data-tk]"); if (el.classList.contains("hf5") && b) el.dataset.tk = b.dataset.tk;
+}
+function dashOvf() { heroFit(); for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (!el || el.classList.contains("dexp")) continue; el.classList.toggle("ovf", el.dataset.mode === "full" && el.scrollHeight > el.clientHeight + 3); } }
 if ("ResizeObserver" in window) { let lw = 0; new ResizeObserver(() => { const w = $("#dash").clientWidth; if (w && w !== lw) { lw = w; dashCell(); renderMini(); } }).observe($("#dash")); }
 /* a card opened on top of everything (from its small version or from "more") */
 const DX = { id: "", mode: "" };
