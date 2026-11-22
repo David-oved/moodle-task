@@ -402,6 +402,8 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiAgR .d b{font-size:15.5px}.aiAgR li{font-size:15px}.aiAgR li small{font-size:13px}
   .aiAgF button{padding:6px 15px;font-size:13.5px}
 }
+.aiUi :is(.aiAgR,.aiAgSc,.aiHoRow,.aiFaR,.aiPzI,.aiSt2 li,.aiLi li,.aiTmI,.aiRtI,.aiCmpCard,.aiTbl tbody tr,.aiHlI,.aiTg span,.aiHeroS>div,.aiCo2,.aiSm,.aiQt){cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){.aiUi :is(.aiAgR,.aiHoRow,.aiFaR,.aiPzI,.aiSt2 li,.aiLi li,.aiTmI,.aiRtI,.aiTbl tbody tr,.aiHlI):hover{background-color:color-mix(in srgb,var(--accent) 8%,transparent)}.aiUi :is(.aiAgSc,.aiCmpCard):hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}}
 .aiHc{display:flex;flex-wrap:wrap;gap:7px}.aiHc span{padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));font-size:13px}
 .aiSt2 ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;position:relative}
 .aiSt2 li{display:flex;gap:11px;align-items:flex-start;position:relative}
@@ -1891,7 +1893,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (i >= from && !(sent && m.role === "user")) {                    // (the sent message is started by send(), from the input bar)
         row.classList.add("aiIn"); row.style.setProperty("--ad", ((i - from) * (sent ? 170 : 45)) + "ms"); if (!sent) row.style.setProperty("--fy", "12px");
       }
-      if (m.justDone) { row.classList.add("aiDone"); m.justDone = false; uriEvent("done"); }  // the answer has just arrived
+      if (m.justDone) {
+        row.classList.add("aiDone"); m.justDone = false; uriEvent("done");
+        if (row.querySelector(".aiUi") && !LS.get("aiItemHint", 0)) { LS.set("aiItemHint", 1); setTimeout(() => toast((ITM[lang()] || ITM.he).hint, 5200), 1100); }
+      }  // the answer has just arrived
       if (m.err) addErr(b, m, i === msgs.length - 1);
       if (busy && i === msgs.length - 1 && m.role !== "user") curBub = b;
       ms.appendChild(row);
@@ -2211,7 +2216,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
 
   /* ------------------------------------------------------------ long-press menu on a message (copy, share, select, edit and resend) */
-  let menuEl = null, menuBg = null, menuFor = null, holdT = 0, holdXY = [0, 0];
+  let menuEl = null, menuBg = null, menuFor = null, holdT = 0, holdXY = [0, 0], pendingCtx = null;
   const cancelHold = () => { clearTimeout(holdT); holdT = 0; };
 
   let menuPeek = null;
@@ -2291,20 +2296,38 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 
   // long press on a task, a course or a grade inside the AI's cards: ask about it, get its files, and so on
   const ITM = {
-    he: { open: "פתח ב-Moodle", ask: "שאל על זה", files: "הקבצים של זה", tasks: "המטלות בקורס", grades: "הציונים בקורס", cfiles: "הקבצים של הקורס", copy: "העתק",
+    he: { open: "פתח ב-Moodle", ask: "שאל על זה", files: "הקבצים של זה", tasks: "המטלות בקורס", grades: "הציונים בקורס", cfiles: "הקבצים של הקורס", copy: "העתק", askX: "שאל על זה", explain: "הסבר לי בפשטות", more: "מה עוד כדאי לדעת", other: "שאל משהו אחר על זה...", hint: "אפשר ללחוץ על כל פריט בכרטיס ולשאול עליו",
+      qx: { ask: n => 'ספר לי עוד על "' + n + '"', explain: n => 'הסבר לי בפשטות: "' + n + '"', more: n => 'מה עוד כדאי לי לדעת על "' + n + '"?', pre: n => 'על "' + n + '": ' },
       q: { d: (n, c) => 'ספר לי על המטלה "' + n + '" בקורס ' + c, df: (n, c) => 'שלח לי קבצים שקשורים ל"' + n + '" בקורס ' + c, g: (n) => 'ספר לי על הציון "' + n + '" ואיך הוא מחושב', c: (n) => "ספר לי על הקורס " + n, ct: (n) => "מה המטלות שלי בקורס " + n + "?", cg: (n) => "מה הציונים שלי בקורס " + n + "?", cf: (n) => "אילו קבצים יש בקורס " + n + "?" } },
-    en: { open: "Open in Moodle", ask: "Ask about this", files: "Files for this", tasks: "Tasks in this course", grades: "Grades in this course", cfiles: "Course files", copy: "Copy",
+    en: { open: "Open in Moodle", ask: "Ask about this", files: "Files for this", tasks: "Tasks in this course", grades: "Grades in this course", cfiles: "Course files", copy: "Copy", askX: "Ask about this", explain: "Explain simply", more: "What else should I know", other: "Ask something else about this...", hint: "You can tap any item in a card to ask about it",
+      qx: { ask: n => 'Tell me more about "' + n + '"', explain: n => 'Explain simply: "' + n + '"', more: n => 'What else should I know about "' + n + '"?', pre: n => 'About "' + n + '": ' },
       q: { d: (n, c) => 'Tell me about the task "' + n + '" in ' + c, df: (n, c) => 'Send me files related to "' + n + '" in ' + c, g: (n) => 'Tell me about the grade "' + n + '" and how it is calculated', c: (n) => "Tell me about the course " + n, ct: (n) => "What are my tasks in " + n + "?", cg: (n) => "What are my grades in " + n + "?", cf: (n) => "Which files are in " + n + "?" } },
-    fr: { open: "Ouvrir dans Moodle", ask: "Poser une question", files: "Fichiers liés", tasks: "Devoirs du cours", grades: "Notes du cours", cfiles: "Fichiers du cours", copy: "Copier",
+    fr: { open: "Ouvrir dans Moodle", ask: "Poser une question", files: "Fichiers liés", tasks: "Devoirs du cours", grades: "Notes du cours", cfiles: "Fichiers du cours", copy: "Copier", askX: "Poser une question", explain: "Explique simplement", more: "Quoi savoir d'autre", other: "Poser une autre question...", hint: "Touchez un élément d'une carte pour poser une question",
+      qx: { ask: n => 'Dis-m\'en plus sur « ' + n + ' »', explain: n => 'Explique simplement : « ' + n + ' »', more: n => 'Que dois-je savoir d\'autre sur « ' + n + ' » ?', pre: n => 'À propos de « ' + n + ' » : ' },
       q: { d: (n, c) => 'Parle-moi du devoir "' + n + '" dans ' + c, df: (n, c) => 'Envoie-moi les fichiers liés à "' + n + '" dans ' + c, g: (n) => 'Parle-moi de la note "' + n + '" et de son calcul', c: (n) => "Parle-moi du cours " + n, ct: (n) => "Quels sont mes devoirs en " + n + " ?", cg: (n) => "Quelles sont mes notes en " + n + " ?", cf: (n) => "Quels fichiers y a-t-il dans " + n + " ?" } },
   };
+  // EVERYTHING in a card can be pressed: a row of hours, a step, a price, a contact, a table row... A touch screen: a tap, or a long press; a computer: a click or a right click.
+  const GI_SEL = ".aiAgR,.aiAgSc,.aiHoRow,.aiHoWk .c,.aiFaR,.aiHlI,.aiPzI,.aiSt2 li,.aiLi li,.aiCkI,.aiTmI,.aiRtI,.aiCmpCard,.aiTbl tbody tr,.aiLkI,.aiTg span,.aiAcc details,.aiTbP,.aiSm,.aiQt,.aiCo2,.aiBn,.aiHero,.aiCt,.aiLoc,.aiHeroS>div,.aiXc";
+  const GI_TAP_SKIP = "a,button,input,label,summary,details,select,textarea,[data-act],[data-qk],[data-po],[data-tab],[data-hf],.aiFile,.aiPoll,.aiQuick";
+  const genericItem = t => { const el = t && t.closest ? t.closest(GI_SEL) : null; return el && el.closest(".aiUi") ? el : null; };
+  function itemDescr(el) {
+    if (el.dataset && el.dataset.it) { try { return JSON.parse(el.dataset.it); } catch (e) { return null; } }
+    const one = v => String(v || "").replace(/\s+/g, " ").trim(), blk = el.closest(".aiBk") || el.closest(".aiUi > *");
+    const te = blk && blk.querySelector(".aiBkT span,.aiHH>b,.aiCtH b,.aiUiT,.aiLocH b,.aiHg b,.aiHeroT b,.aiSm>b");
+    const text = one(el.innerText || el.textContent).replace(/[\[\]]/g, " ").slice(0, 160);
+    return text ? { k: "x", n: text, c: te ? one(te.textContent).slice(0, 60) : "" } : null;
+  }
   function openItemMenu(el, x, y, byKey) {
-    let d; try { d = JSON.parse(el.dataset.it); } catch (e) { return; }
+    const d = itemDescr(el); if (!d) return;
     const T = ITM[lang()] || ITM.he, n = d.n || "", c = d.c || "";
-    const ctxOf = { n, c, t: d.t || 0, d: d.d || "", v: d.v || "", o: d.o ? 1 : 0 };
+    const ctxOf = d.k === "x" ? { x: 1, n, c } : { n, c, t: d.t || 0, d: d.d || "", v: d.v || "", o: d.o ? 1 : 0 };
     const go = q => () => { send(q, ctxOf); };
     const items = [];
-    if (d.k === "d") {
+    if (d.k === "x") {
+      const sh = n.length > 44 ? n.slice(0, 42).trim() + "…" : n;
+      items.push({ icon: I_NEW, label: T.askX, run: go(T.qx.ask(sh)) }, { icon: I_SELECT, label: T.explain, run: go(T.qx.explain(sh)) }, { icon: I_SELECT, label: T.more, run: go(T.qx.more(sh)) },
+        { icon: I_NEW, label: T.other, run: () => { const pre = T.qx.pre(sh); pendingCtx = { prefix: pre.trim(), ctx: ctxOf }; input.value = pre; input.dispatchEvent(new Event("input")); try { input.focus(); input.setSelectionRange(pre.length, pre.length); } catch (e) {} } });
+    } else if (d.k === "d") {
       items.push({ icon: I_NEW, label: T.ask, run: go(T.q.d(n, c)) }, { icon: I_SELECT, label: T.files, run: go(T.q.df(n, c)) });
       if (typeof d.u === "string" && d.u.startsWith("https://moodle.jct.ac.il/")) items.push({ icon: I_SHARE, label: T.open, run: () => { window.open(d.u, "_blank", "noopener,noreferrer"); } });
     }
@@ -2374,6 +2397,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   async function send(text, ctx) {
     text = String(text || "").trim().slice(0, 2000);
     if (!text || busy || demoOn) return;
+    if (!ctx && pendingCtx && text.startsWith(pendingCtx.prefix)) ctx = pendingCtx.ctx;
+    pendingCtx = null;
     gen++;                                    // a pending history/load result must not overwrite the chat now
     histMode = false; memMode = false; setMode();
     lastPending = text;
@@ -2663,6 +2688,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       lockPoll(card, []); send(v);
     });
     ms.addEventListener("click", e => {
+      if (!menuEl && !busy && !e.target.closest(GI_TAP_SKIP)) {
+        const gi = e.target.closest("[data-it]") || genericItem(e.target);
+        let sel = ""; try { sel = String(getSelection()); } catch (er) {}
+        if (gi && !sel.trim()) { openItemMenu(gi, e.clientX, e.clientY, e.clientX === 0 && e.clientY === 0); return; }
+      }
       const u = e.target.closest("[data-undo]"); if (u) { undoMem(u.dataset.undo); return; }
       const mc = e.target.closest(".aiMemChip"); if (mc && !mc.classList.contains("undone")) { openMemory(); return; }
       const f = e.target.closest(".aiFile"); if (f) { downloadFile(f); return; }
@@ -2703,7 +2733,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ms.addEventListener("pointerdown", e => {
       closeMenu();
       if (e.pointerType === "mouse" || e.button !== 0 || e.target.closest(".aiFile,a,.aiErr button")) return;
-      const itEl = e.target.closest("[data-it]"), b = e.target.closest(".aiB"); if (!b) return;
+      const itEl = e.target.closest("[data-it]") || genericItem(e.target), b = e.target.closest(".aiB"); if (!b) return;
       holdXY = [e.clientX, e.clientY];
       holdT = setTimeout(() => { holdT = 0; try { navigator.vibrate && navigator.vibrate(12); } catch (er) {} if (itEl && !busy) openItemMenu(itEl, holdXY[0], holdXY[1]); else openMenu(b, holdXY[0], holdXY[1]); }, 450);
     });
@@ -2713,7 +2743,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ms.addEventListener("contextmenu", e => {
       const b = e.target.closest(".aiB"); if (!b) return;
       e.preventDefault(); if (menuEl) return;
-      const itEl = e.target.closest("[data-it]");
+      const itEl = e.target.closest("[data-it]") || genericItem(e.target);
       if (itEl && !busy) openItemMenu(itEl, e.clientX, e.clientY, e.clientX === 0 && e.clientY === 0);
       else openMenu(b, e.clientX, e.clientY, e.clientX === 0 && e.clientY === 0);
     });
