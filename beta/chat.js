@@ -691,6 +691,70 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiBk.aiHero{padding:28px 34px;flex-wrap:nowrap}
   .aiHeroS{flex:none}.aiHeroT b{font-size:32px}.aiHeroS b{font-size:34px}
 }
+/* ---- the computer and iPad shell. Not the phone stretched: a conversation rail (a computer or an iPad turned sideways), a quiet header, the answer without a bubble on a
+   readable column, cards that use the width, a composer like a desktop app. The small floating window keeps the phone design (these classes are removed there). */
+.aiRail{display:none}
+.aiKeys{display:none}.aiP.aiDesk .aiKeys{display:inline;unicode-bidi:plaintext}
+.aiP.aiWide .aiMs{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--muted) 40%,transparent) transparent}
+.aiP.aiWide .aiHd{background:var(--card);color:var(--text);border-bottom:1px solid var(--line);padding:12px max(18px,calc((100% - 900px) / 2))}
+.aiP.aiWide .aiHb{color:var(--muted)}.aiP.aiWide .aiHb:hover{background:color-mix(in srgb,var(--text) 8%,transparent);color:var(--text)}.aiP.aiWide .aiHb:focus-visible{outline-color:var(--accent)}
+.aiP.aiWide .aiTt .aiAv{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));box-shadow:0 3px 10px -2px color-mix(in srgb,var(--accent) 55%,transparent)}
+.aiP.aiWide .aiTt small{opacity:1;color:var(--muted)}
+.aiP.aiWide .aiMs{padding:30px max(20px,calc((100% - 900px) / 2)) 14px;gap:24px}
+.aiP.aiWide .aiM{align-items:flex-start;gap:12px}
+.aiP.aiWide .aiM .aiAv{margin-top:3px}
+.aiP.aiWide .aiM.ai{align-self:stretch}
+.aiP.aiWide .aiM.ai .aiB{flex:1;min-width:0;max-width:100%;background:transparent;border:0;box-shadow:none;border-radius:0;padding:2px 0;font-size:16.5px;line-height:1.75}
+.aiP.aiWide .aiM.ai:has(.aiUi) .aiB{padding:0}
+.aiP.aiWide .aiM.me .aiB{max-width:min(72%,680px);padding:11px 18px;border-radius:20px;font-size:16px}
+.aiP.aiWide .aiFt{border-top:0;background:transparent;padding:6px max(20px,calc((100% - 900px) / 2)) calc(14px + env(safe-area-inset-bottom))}
+.aiP.aiWide .aiIn{align-items:flex-end;padding:7px 8px 7px 12px;border-radius:26px;border:1px solid var(--line);background:var(--card);box-shadow:0 10px 32px -16px #0006}
+.aiP.aiWide .aiIn:focus-within{border-color:color-mix(in srgb,var(--accent) 60%,var(--line));box-shadow:0 10px 32px -14px color-mix(in srgb,var(--accent) 50%,transparent)}
+.aiP.aiWide .aiIn textarea{border:0;background:transparent;box-shadow:none;padding:10px 6px;max-height:200px;font-size:16.5px}.aiP.aiWide .aiIn textarea:focus{outline:0}
+.aiP.aiWide .aiNt{font-size:12px;padding-top:8px}
+.aiP.aiWide .aiHi{max-width:820px}
+.aiP.aiWide .aiHi .aiBig{width:104px;height:104px}.aiP.aiWide .aiHi .aiBig svg{width:70px;height:70px}.aiP.aiWide .aiHi h2{font-size:32px}
+.aiP.aiWide .aiSug{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:820px;gap:12px;margin-top:20px}
+.aiP.aiWide .aiSug button{padding:18px 16px;border-radius:18px;font-size:15px;line-height:1.45;min-height:92px;display:flex;align-items:flex-start;box-shadow:0 6px 18px -12px #0005;transition:transform .15s,border-color .15s,box-shadow .15s}
+.aiP.aiWide .aiSug button:hover{transform:translateY(-2px);box-shadow:0 12px 26px -14px color-mix(in srgb,var(--accent) 55%,transparent)}
+.aiP.aiDesk{display:grid;grid-template-columns:var(--aiRail,296px) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto}
+.aiP.aiDesk[hidden]{display:none}
+.aiP.aiDesk>.aiHd{grid-column:2;grid-row:1}.aiP.aiDesk>.aiMs{grid-column:2;grid-row:2}.aiP.aiDesk>.aiFt{grid-column:2;grid-row:3}
+.aiP.aiDesk .aiHb[data-a="hist"],.aiP.aiDesk .aiHb[data-a="new"],.aiP.aiDesk .aiHb[data-a="mem"],.aiP.aiDesk .aiHb[data-a="demo"]{display:none}
+.aiP.aiDesk .aiHd .aiTt .aiAv{display:none}
+.aiP.aiDesk>.aiRail{display:flex;flex-direction:column;grid-column:1;grid-row:1/-1;min-height:0;background:color-mix(in srgb,var(--bg) 62%,var(--card));border-inline-end:1px solid var(--line)}
+.aiRB{display:flex;align-items:center;gap:11px;padding:18px 16px 12px}
+.aiRB .aiAv{flex:none;width:42px;height:42px;border-radius:50%;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));box-shadow:0 4px 12px -3px color-mix(in srgb,var(--accent) 55%,transparent);display:grid;place-items:center;position:relative}
+.aiRB .aiAv svg{width:30px;height:30px;overflow:visible}
+.aiRB b{display:block;font-size:17px;line-height:1.2}.aiRB small{display:block;font-size:12px;color:var(--muted);line-height:1.3}
+.aiRNew{display:flex;align-items:center;gap:10px;margin:4px 14px 10px;padding:11px 14px;border-radius:13px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));background:var(--accent-soft,color-mix(in srgb,var(--accent) 12%,var(--card)));color:var(--accent-t,var(--accent));font:inherit;font-size:14.5px;font-weight:800;cursor:pointer}
+.aiRNew svg,.aiRF svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.aiRNew:hover{border-color:var(--accent)}
+.aiRL{flex:1;min-height:0;overflow-y:auto;padding:2px 10px 8px;overscroll-behavior:contain;scrollbar-width:thin}
+.aiRG{font-size:11.5px;font-weight:800;color:var(--muted);padding:14px 8px 5px}
+.aiRI{position:relative;display:flex;align-items:center;border-radius:10px}
+.aiRI:hover{background:color-mix(in srgb,var(--text) 6%,transparent)}.aiRI.on{background:var(--accent-soft,color-mix(in srgb,var(--accent) 12%,var(--card)))}
+.aiRIb{flex:1;min-width:0;padding:9px 10px;border:0;background:none;color:var(--text);font:inherit;font-size:14px;text-align:start;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:10px}
+.aiRI.on .aiRIb{font-weight:750;color:var(--accent-t,var(--accent))}
+.aiRId{flex:none;width:30px;height:30px;margin-inline-end:4px;border:0;border-radius:8px;background:none;color:var(--muted);display:none;place-items:center;cursor:pointer}
+.aiRId svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.aiRI:hover .aiRId{display:grid}.aiRId:hover{background:color-mix(in srgb,var(--err,#e5484d) 14%,transparent);color:var(--err,#e5484d)}
+.aiRE{padding:14px 10px;font-size:13px;color:var(--muted)}
+.aiRF{flex:none;display:flex;flex-direction:column;gap:2px;padding:10px;border-top:1px solid var(--line)}
+.aiRF button{display:flex;align-items:center;gap:11px;padding:9px 10px;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;font-size:14px;cursor:pointer;text-align:start}
+.aiRF button svg{color:var(--muted)}.aiRF button:hover{background:color-mix(in srgb,var(--text) 6%,transparent)}.aiRF button[hidden]{display:none}
+/* the demo's picture of the floating window (computers) */
+.aiDmDesk{position:absolute;left:50%;top:14%;transform:translateX(-50%);width:min(580px,66%);aspect-ratio:16/10;direction:ltr;border-radius:14px;overflow:hidden;background:#1b2030;border:1px solid #ffffff26;box-shadow:0 24px 70px -20px #000;z-index:2;opacity:0;animation:aiDmDeskIn .5s ease forwards}
+.aiDmDesk .sb{position:absolute;right:0;top:0;bottom:0;width:15%;background:#ffffff0d;border-left:1px solid #ffffff14}.aiDmDesk .sb i{display:block;height:6%;margin:9% 14% 0;border-radius:5px;background:#ffffff1f}
+.aiDmDesk .tp{position:absolute;left:0;right:15%;top:0;height:10%;background:#ffffff0f}
+.aiDmDesk .cd{position:absolute;border-radius:8px;background:#ffffff14}
+.aiDmDesk .w{position:absolute;left:58%;top:26%;width:32%;height:58%;border-radius:10px;background:#12151d;border:1px solid #ffffff55;box-shadow:0 12px 34px #000b;transform-origin:0 0;opacity:0;animation:aiDmWin 6.2s .5s ease-in-out forwards;overflow:hidden}
+.aiDmDesk .w .wh{height:14%;background:linear-gradient(135deg,#5b7cff,#8b5cf6)}
+.aiDmDesk .w .wb{height:86%;box-sizing:border-box;padding:7%;display:flex;flex-direction:column;gap:7%}.aiDmDesk .w .wb i{display:block;height:11%;border-radius:99px;background:#ffffff26;width:70%}.aiDmDesk .w .wb i:nth-child(even){align-self:flex-end;width:55%;background:#7c93ff66}
+.aiDmDesk .cur{position:absolute;width:5.5%;z-index:3;opacity:0;animation:aiDmCur 6.2s .5s ease-in-out forwards;filter:drop-shadow(0 2px 3px #0009)}
+@keyframes aiDmDeskIn{to{opacity:1}}
+@keyframes aiDmWin{0%{opacity:0;transform:translate(0,0) scale(.7)}7%{opacity:1;transform:translate(0,0) scale(1)}28%{opacity:1;transform:translate(0,0)}52%{opacity:1;transform:translate(-145%,6%)}66%{opacity:1;transform:translate(-145%,6%)}88%,100%{opacity:1;transform:translate(-145%,6%) scale(1.4,1.18)}}
+@keyframes aiDmCur{0%{opacity:0;left:92%;top:20%}7%{opacity:1;left:88%;top:24%}18%{opacity:1;left:74%;top:28%}28%{opacity:1;left:74%;top:28%}52%{opacity:1;left:28%;top:34%}60%{opacity:1;left:28%;top:34%}66%{opacity:1;left:43%;top:84%}88%,100%{opacity:1;left:56%;top:95%}}
 .aiDev{margin:16px 0 4px;border:1px dashed var(--line);border-radius:14px;padding:2px 12px;opacity:.85}
 .aiDev>summary{cursor:pointer;padding:10px 0;font-size:13px;font-weight:700;color:var(--muted);list-style:none}.aiDev>summary::-webkit-details-marker{display:none}
 .aiDevB{display:flex;flex-direction:column;gap:9px;padding:2px 0 12px}.aiDevN{margin:0;font-size:12.5px;line-height:1.5;color:var(--muted)}
@@ -1173,7 +1237,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   }
   function uriHost() {
     if (!panel) return fab && !fab.hidden ? fab : null;
-    if (!panel.hidden && panel.classList.contains("on")) return panel.querySelector(".aiTt .aiAv");
+    if (!panel.hidden && panel.classList.contains("on")) return panel.classList.contains("aiDesk") ? panel.querySelector(".aiRB .aiAv") : panel.querySelector(".aiTt .aiAv");
     return fab && !fab.hidden ? fab : null;
   }
   // a MOMENT (open, think, done, error, idle): pick one of the movements the admin allowed for it, and now and then say a line
@@ -1211,7 +1275,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const px = e.clientX, py = e.clientY;
     uriLookRaf = requestAnimationFrame(() => {
       uriLookRaf = 0;
-      document.querySelectorAll(".aiHd .aiFace, .aiBig .aiFace").forEach(f => {
+      document.querySelectorAll(".aiHd .aiFace, .aiBig .aiFace, .aiRB .aiFace").forEach(f => {
         const r = f.getBoundingClientRect(); if (!r.width) return;
         const dx = px - (r.left + r.width / 2), dy = py - (r.top + r.height / 2), d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 170);
         f.style.setProperty("--ex", (dx / d * 1.3 * k).toFixed(2) + "px"); f.style.setProperty("--ey", (dy / d * 1.1 * k).toFixed(2) + "px");
@@ -1953,7 +2017,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (!res.ok) throw new AiErr(errKind(res));
       const j = await res.json();
       msgs = (j.messages || []).map(m => ({ role: m.role === "user" ? "user" : "assistant", content: String(m.content || "") }));
-      conv = id; LS.set("aiConv", id);
+      conv = id; LS.set("aiConv", id); markRail();
       loadAnimN = 8; renderMsgs();
     } catch (e) {
       if (my !== gen) return;
@@ -1968,7 +2032,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   function startNew() {
     closeMenu();
     gen++; if (ctl) { ctl.abort(); } msgs = []; conv = null; LS.del("aiConv"); setBusy(false); setStatus("");
-    renderMsgs();
+    renderMsgs(); markRail();
   }
 
   async function openHistory() {
@@ -2189,7 +2253,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (!res.ok && res.status !== 404) throw new AiErr(errKind(res));
     } catch (e) { toast(errText(e), 3500); return; }
     if (id === conv) dropCurrent();
-    toast(tx("deleted"), 1800);
+    toast(tx("deleted"), 1800); refreshRail();
     const row = histMode ? ms.querySelector('.aiHrow[data-id="' + id + '"]') : null;
     if (!row) { openHistory(); return; }
     row.classList.add("aiGone"); await wait(340); row.remove(); afterHistChange();      // the row folds away, the count follows
@@ -2481,6 +2545,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       setBusy(false); left();
       if (!ai.err && ai.content && ai.content.trim()) ai.justDone = true;
       if (ai.err) uriEvent("error");
+      refreshRail();
       if (panel && !panel.hidden && !histMode && !memMode && msgs.includes(ai)) renderMsgs();
     }
   }
@@ -2510,7 +2575,72 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     ms.scrollTop = Math.max(0, ms.scrollHeight - ms.clientHeight - dist);
   }
 
+  const DK = {
+    he: { keys: "Enter לשליחה · Shift+Enter לשורה חדשה · Ctrl+K שיחה חדשה", today: "היום", yest: "אתמול", week: "השבוע", older: "קודם", win: "חלון צף", winHint: "אפשר להקטין אותי לחלון צף, להזיז אותו על המסך ולהמשיך לעבוד באפליקציה" },
+    en: { keys: "Enter to send · Shift+Enter for a new line · Ctrl+K new chat", today: "Today", yest: "Yesterday", week: "This week", older: "Earlier", win: "Floating window", winHint: "You can shrink me into a floating window, move it around the screen and keep using the app" },
+    fr: { keys: "Entrée pour envoyer · Maj+Entrée nouvelle ligne · Ctrl+K nouvelle conversation", today: "Aujourd’hui", yest: "Hier", week: "Cette semaine", older: "Avant", win: "Fenêtre flottante", winHint: "Vous pouvez me réduire en fenêtre flottante et continuer à utiliser l’appli" },
+  };
+  // a computer or an iPad: the wide shell (700px and up) and, from 1000px, the conversation rail. The small floating window keeps the phone design.
+  function applyLayout() {
+    if (!panel) return;
+    const w = innerWidth, wide = !winMode && w >= 700, desk = !winMode && w >= 1000;
+    panel.classList.toggle("aiWide", wide);
+    if (desk !== panel.classList.contains("aiDesk")) { panel.classList.toggle("aiDesk", desk); if (desk) refreshRail(); }
+  }
+  let railList = [], railT = 0;
+  async function refreshRail() {
+    if (!panel || !panel.classList.contains("aiDesk")) return;
+    const my = ++railT;
+    try {
+      const res = await call("/api/conversations"); if (!res.ok || my !== railT) return;
+      railList = ((await res.json()).conversations || []).filter(c => c && c.id);
+    } catch (e) { return; }
+    drawRail();
+  }
+  const markRail = () => { if (panel) panel.querySelectorAll(".aiRI").forEach(r => r.classList.toggle("on", r.dataset.id === conv)); };
+  function drawRail() {
+    const box = panel && panel.querySelector(".aiRL"); if (!box) return;
+    const D = DK[lang()] || DK.he, n = new Date(), sod = new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime(), G = [[], [], [], []];
+    railList.forEach(c => { const t = new Date(c.updated_at || c.created_at).getTime(); G[isNaN(t) ? 3 : t >= sod ? 0 : t >= sod - 864e5 ? 1 : t >= sod - 6 * 864e5 ? 2 : 3].push(c); });
+    box.innerHTML = "";
+    [D.today, D.yest, D.week, D.older].forEach((label, k) => {
+      if (!G[k].length) return;
+      const h = document.createElement("div"); h.className = "aiRG"; h.textContent = label; box.appendChild(h);
+      G[k].forEach(c => {
+        const row = document.createElement("div"); row.className = "aiRI" + (c.id === conv ? " on" : ""); row.dataset.id = c.id; row.setAttribute("role", "listitem");
+        const b = document.createElement("button"); b.type = "button"; b.className = "aiRIb"; b.dir = "auto"; b.textContent = c.title && c.title !== "שיחה חדשה" ? c.title : tx("histNone"); b.title = b.textContent;
+        const del = document.createElement("button"); del.type = "button"; del.className = "aiRId"; del.innerHTML = I_TRASH; del.setAttribute("aria-label", tx("delOne")); del.title = tx("delOne");
+        row.append(b, del); box.appendChild(row);
+      });
+    });
+    if (!railList.length) { const e = document.createElement("div"); e.className = "aiRE"; e.textContent = tx("histEmpty"); box.appendChild(e); }
+  }
+  function buildRail() {
+    const rail = document.createElement("aside"); rail.className = "aiRail";
+    rail.innerHTML = '<div class="aiRB"><div class="aiAv">' + FACE + '</div><div><b></b><small></small></div></div><button type="button" class="aiRNew"></button><div class="aiRL" role="list"></div>' +
+      '<div class="aiRF"><button type="button" data-r="mem"></button><button type="button" data-r="demo"></button><button type="button" data-r="win"></button></div>';
+    panel.insertBefore(rail, panel.firstChild);
+    rail.addEventListener("click", e => {
+      const nb = e.target.closest(".aiRNew"); if (nb) { startNew(); markRail(); input.focus(); return; }
+      const rb = e.target.closest(".aiRIb"), rd = e.target.closest(".aiRId"), row = e.target.closest(".aiRI");
+      if (rd && row) { deleteOne(row.dataset.id).then(refreshRail); return; }
+      if (rb && row) { if (row.dataset.id === conv && msgs.length) renderMsgs(); else loadConv(row.dataset.id); markRail(); return; }
+      const fb = e.target.closest("[data-r]"); if (!fb) return;
+      if (fb.dataset.r === "mem") openMemory(); else if (fb.dataset.r === "demo") demoReplay(); else if (fb.dataset.r === "win") setWin(true);
+    });
+  }
+  function railTexts() {
+    const rail = panel.querySelector(".aiRail"); if (!rail) return;
+    const D = DK[lang()] || DK.he;
+    rail.querySelector(".aiRB b").textContent = tx("title"); rail.querySelector(".aiRB small").textContent = tx("sub");
+    rail.querySelector(".aiRNew").innerHTML = I_NEW + "<span></span>"; rail.querySelector(".aiRNew span").textContent = tx("newc");
+    const set = (k, ic, t) => { const b = rail.querySelector('[data-r="' + k + '"]'); b.innerHTML = ic + "<span></span>"; b.lastChild.textContent = t; };
+    set("mem", I_BRAIN, tx("memTitle")); set("demo", I_PLAY, demoData().replay); set("win", I_WIN, D.win);
+    rail.querySelector('[data-r="win"]').hidden = !winOK();
+  }
+
   function fit(force) {
+    if (panel && !panel.hidden) applyLayout();
     if (!panel || panel.hidden || winMode) return;
     const vv = vvp(), ih = innerHeight;
     const ok = vv && (vv.scale || 1) < 1.05;                   // pinch-zoomed in: that is not the keyboard, ignore it
@@ -2580,7 +2710,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     b.innerHTML = winMode ? I_MAX : I_WIN; const l = tx(winMode ? "winMax" : "winMin"); b.setAttribute("aria-label", l); b.title = l;
   }
   function enterWinState() {                  // the window look, without touching history or the page lock
-    winMode = true; panel.classList.add("aiWin"); panel.setAttribute("aria-modal", "false"); applyWinGeo();
+    winMode = true; panel.classList.add("aiWin"); panel.classList.remove("aiWide", "aiDesk"); panel.setAttribute("aria-modal", "false"); applyWinGeo();
     document.documentElement.classList.remove("aiOn"); unlockPage(); updateWinBtn();
   }
   function setWin(on, remember) {
@@ -2653,6 +2783,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       '<div class="aiDlg" hidden role="alertdialog" aria-modal="true"><div class="aiDlgBox"><p></p><div class="aiDlgBtns"><button type="button" data-no></button><button type="button" class="danger" data-ok></button></div></div></div>' +
       '<div class="aiRz" aria-hidden="true"></div><div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + FACE_DEAD + '</div><div class="aiSplTx"></div></div></div>';
     document.body.appendChild(panel);
+    buildRail();
     // Uri himself: his eyes follow the finger, he moves now and then, and the settings come from the server
     { document.addEventListener("pointermove", uriLookMove, { passive: true }); uriApplyLook(URI_CFG); uriFetch(true); uriIdle(); uriLive(); }
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
@@ -2755,7 +2886,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       if (n && n.closest && n.closest(".aiSel,textarea,input")) return;
       e.preventDefault();
     });
-    panel.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); close(); } });
+    panel.addEventListener("keydown", e => {
+      if (e.key === "Escape") { e.stopPropagation(); close(); }
+      else if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && String(e.key).toLowerCase() === "k") { e.preventDefault(); startNew(); markRail(); input.focus(); }
+      else if (e.key === "/" && !e.ctrlKey && !e.metaKey && !/^(TEXTAREA|INPUT)$/.test((document.activeElement || {}).tagName || "")) { e.preventDefault(); input.focus(); }
+    });
     if (window.visualViewport) { visualViewport.addEventListener("resize", scheduleFit); visualViewport.addEventListener("scroll", scheduleFit); }
     addEventListener("resize", scheduleFit); addEventListener("orientationchange", fitSoon);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) fitSoon(); });
@@ -2777,7 +2912,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     { const ub = panel.querySelector('[data-a="use"]'); ub.innerHTML = I_USE; ub.setAttribute("aria-label", tx("useBtn")); ub.title = tx("useBtn"); }
     const db = panel.querySelector('[data-a="demo"]'); db.innerHTML = I_PLAY; { const lbl = demoData().replay; db.setAttribute("aria-label", lbl); db.title = lbl; }
     input.placeholder = tx("ph"); input.setAttribute("aria-label", tx("ph"));
-    panel.querySelector(".aiNt").textContent = tx("note");
+    { const D = DK[lang()] || DK.he, nt = panel.querySelector(".aiNt"); nt.textContent = tx("note"); const k = document.createElement("span"); k.className = "aiKeys"; k.textContent = " · " + D.keys; nt.appendChild(k); }
+    try { railTexts(); } catch (e) {}
     panel.setAttribute("aria-label", tx("title"));
     setMode(); setBusy(busy); try { updateWinBtn(); } catch (e) {}
   }
@@ -2871,6 +3007,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     }
     if (matchMedia("(hover:hover)").matches) input.focus();
     setTimeout(() => uriEvent("open"), 500);
+    refreshRail();
+    if (winOK() && !winMode && !LS.get("aiWinHint", 0)) { LS.set("aiWinHint", 1); setTimeout(() => toast((DK[lang()] || DK.he).winHint, 6500), 2600); }
   }
 
   async function openLoad() {                 // what the chat needs before it can be shown; returns what went wrong, or null
@@ -3143,6 +3281,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       s3: "וגם את האישי שלך מ-Moodle: מטלות, ציונים וקבצים", s3b: "איחורים באדום, וספירה לאחור לכל מועד (זו דוגמה)",
       s4: "צריך לדבר עם מישהו? אני נותן את הפרטים", s4b: "חיוג, מייל, וואטסאפ או העתקה, בלחיצה אחת",
       s5: "ועוד טריק: לחיצה ארוכה", s5b: "על מטלה, קורס או הודעה, ואני פותח תפריט: לשאול עליה, לקבל קבצים או להעתיק",
+      s6: "במחשב אני גם חלון צף", s6b: "מקטינים אותי לחלון, מזיזים אותו על המסך ומשנים לו גודל. האפליקציה נשארת פתוחה מאחורי, ואפשר לעבוד איתה ואיתי במקביל",
       heart: "ואם משהו לא ברור, תגידו לי. אני לומד מכם ומשתפר כל הזמן, כי אכפת לי שיהיה לכם קל.",
       bye: "זהו! אני אורי, ואני כאן בשבילך. שאלו אותי כל דבר.",
       q1: "איך מגיעים לקמפוס לב?", q2: "כמה עולה חדר במעונות?", q3: "מה המטלות שלי השבוע?", q4: "איך מדברים עם מזכירות תלמידים?",
@@ -3164,6 +3303,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       s3: "And your personal data from Moodle too: tasks, grades and files", s3b: "Late items in red, and a countdown for every deadline (this is an example)",
       s4: "Need to talk to someone? I give you the details", s4b: "Call, email, WhatsApp or copy, with one tap",
       s5: "One more trick: a long press", s5b: "on a task, a course or a message, and I open a menu: ask about it, get its files or copy",
+      s6: "On a computer I'm also a floating window", s6b: "Shrink me into a window, drag it around the screen and resize it. The app stays open behind me, so you can use both at once",
       heart: "And if something is unclear, tell me. I learn from you and keep getting better, because I care that it is easy for you.",
       bye: "That's it! I'm Uri and I'm here for you. Ask me anything.",
       q1: "How do I get to the Lev campus?", q2: "How much is a dorm room?", q3: "What are my tasks this week?", q4: "How do I contact the students' secretariat?",
@@ -3284,7 +3424,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     };
     // every part lasts exactly DEMO_PART: the scene runs, then waits for whatever time is left
     let partNo = 0;
-    const part = async fn => { const t0 = Date.now(); step(++partNo, 8); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
+    const total = winOK() ? 9 : 8;                                  // a computer also gets the part about the floating window
+    const part = async fn => { const t0 = Date.now(); step(++partNo, total); await fn(); await dw(Math.max(0, DEMO_PART - (Date.now() - t0))); };
     try {
       ms.innerHTML = ""; ms.style.paddingBottom = "190px";
       // part 1: hello (big, in the middle, on the black stage)
@@ -3323,6 +3464,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
           await dw(900); t.remove(); openItemMenu(card, x, y); say(L.s5b); act("wig"); await dw(3600); closeMenu();
         }
       });
+      // (computers) the floating window: a small picture of the screen, the chat window appears, is dragged across it and resized
+      if (winOK()) await part(async () => {
+        place(88, 80, 64); act("jump"); say(L.s6);
+        const sc = document.createElement("div"); sc.className = "aiDmDesk";
+        sc.innerHTML = '<div class="sb"><i></i><i></i><i></i><i></i><i></i></div><div class="tp"></div><div class="cd" style="left:4%;top:16%;width:36%;height:22%"></div><div class="cd" style="left:44%;top:16%;width:36%;height:22%"></div>' +
+          '<div class="cd" style="left:4%;top:44%;width:76%;height:18%"></div><div class="cd" style="left:4%;top:68%;width:36%;height:22%"></div><div class="cd" style="left:44%;top:68%;width:36%;height:22%"></div>' +
+          '<div class="w"><div class="wh"></div><div class="wb"><i></i><i></i><i></i><i></i></div></div><svg class="cur" viewBox="0 0 20 24"><path d="M2 1l15 12-7 1 4 8-3 1-4-8-5 5z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+        ov.appendChild(sc);
+        await dw(2800); say(L.s6b); act("wig"); await dw(3600); sc.remove();
+      });
       // part 7: the emotional one - Uri comes close, the screen dims, hearts float up
       await part(async () => { ms.style.paddingBottom = ""; ov.classList.add("dim"); place(50, 46, 112); act("jump"); say(L.heart); await dw(900); burst("hearts"); await dw(2200); burst("hearts"); });
       // part 8: goodbye
@@ -3346,6 +3497,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     _md(src) { return md(src); },
     _uri(cfg, o) { return uriSVG(cfg, o); }, _uriPlay(host, id, cfg, outfit) { return uriPlay(host, id, cfg, outfit); }, _uriLook(cfg) { uriApplyLook(cfg); }, _uriEvent(n, h) { uriEvent(n, h); }, _uriSay(h, x) { uriSay(h, x); },                    // for the admin app's preview: draw Uri from the given settings
     _uriCfg() { return URI_CFG; },
+    _show(list) { build(); panel.hidden = false; panel.classList.add("on"); document.documentElement.classList.add("aiOn"); msgs = list || []; applyTexts(); renderMsgs(); fit(true); },     // for tests only: the real chat window with these messages
+    _rail(list) { railList = list || []; drawRail(); },
     _preview(src) { build(); return md(src); },                // for the admin app's design gallery: the same drawing code the students get
     _demo() { return demoGate(); },                      // for tests only: render a message text the way the chat does
   };
