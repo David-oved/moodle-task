@@ -440,7 +440,7 @@ export class Community extends DurableObject {
     if (op === "share") {
       const kind = b.kind === "task" ? "task" : "xq", at = Math.floor(Number(b.at));
       if (!cid || !Number.isFinite(at) || at < now / 1000 - 86400 || at > now / 1000 + 400 * 86400) return [400, { error: "bad" }];
-      const d = b.d || {}, dd = JSON.stringify({ n: clip(d.n, 100), k: clip(d.k, 10), note: clip(d.note, 200), s: clip(d.s, 16), allDay: !!d.allDay });
+      const d = b.d || {}, dd = JSON.stringify({ n: clip(d.n, 100), k: clip(d.k, 10), note: clip(d.note, 200), s: clip(d.s, 16), allDay: !!d.allDay, aud: ["camp", "cdy"].includes(d.aud) ? d.aud : "all" });      // who it's for (Pnina); the app shows it only to them
       this.course(cid, b.cname);
       if (b.id) {
         const s = this.one("SELECT uid, cid FROM shares WHERE id = ?", Number(b.id));

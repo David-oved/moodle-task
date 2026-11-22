@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.9.3";
+const SOC_V = "1.9.4-beta.3";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -50,7 +50,7 @@ Object.assign(I18N.he, {
   socMute: "השתק משתמש זה 🔇", socUnmute: "בטל השתקה", socMuted: n => n + " הושתק. לא תראה יותר את מה שהוא משתף.", socUnmuted: "ההשתקה בוטלה",
   socOnLbl: "הקהילה פעילה", socOnHint: "כשכבוי – אין שום חיבור לשרת הקהילה ושום דבר מזה לא מוצג.", socProfT: "הפרופיל שלי", socWaT: "קבוצות וואטסאפ לפי קורס",
   socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socPtsU: "נק׳", socHere: "את/ה כאן", adT: "ניהול הקהילה", lgAdmin: r => "🎁 בונוס מהצוות" + (r ? ": " + r : ""), svT: "השמורים שלי", svBtn: "שמירה לאחר כך", svDone: "נשמר 🔖 בצ׳אטים ← השמורים שלי", svOff: "הוסר מהשמורים", svNone: "עוד אין כאן כלום. 🔖 ליד הודעה בצ׳אט שומר אותה כאן, ואפשר גם לכתוב פתק לעצמך.", svNotePh: "פתק לעצמי…", svNoteAdd: "שמירה", svNoteT: "פתק שלי", svTo: "לצ׳אט ←", svDel: "הסרה", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
-  shT: "נוסף ללוח שלך ✓", shBig: "שתף עם כל הסטודנטים בקורס", shBigSub: "כולם יוכלו להוסיף לעצמם בלחיצה אחת · \u2066+3\u2069 נק׳ על כל מי שמוסיף", shAuto: "לשתף אוטומטית כל בוחן ומשימה שאוסיף לקורס",
+  shT: "נוסף ללוח שלך ✓", shBig: "שתף עם כל הסטודנטים בקורס", shAudT: "למי?", shAud_all: "כל הקורס", shAud_camp: "הקמפוס שלי", shAud_cdy: "הקמפוס, התואר והשנה שלי", shAudNo: "כדי לשתף רק לקמפוס או לשנה שלך, צריך למלא קמפוס, תואר ושנה בפרופיל הקהילה", shBigSub: "כולם יוכלו להוסיף לעצמם בלחיצה אחת · \u2066+3\u2069 נק׳ על כל מי שמוסיף", shAuto: "לשתף אוטומטית כל בוחן ומשימה שאוסיף לקורס",
   shAutoOn: "שיתוף אוטומטי פעיל ✓", shLater: "לא עכשיו", shBtn: "שתף", shShared: "משותף", shUnshare: "הסר שיתוף", shNoCourse: "אפשר לשתף רק פריט ששייך לקורס",
   shTaskT: "המשימה נשמרה ✓", shMineArea: "שיתוף עם הקורס", shAutoT: "שיתוף אוטומטי",
   chatBtn: "דיון", chatCourse: "הצ'אט של הקורס", chatT: "💬 דיון", chatTC: "💬 הצ'אט של הקורס", chatPh: "כתוב הודעה…", chatEmpty: "עוד אין כאן הודעות. שאלה, טיפ או תשובה – תהיה הראשון!",
@@ -99,7 +99,7 @@ Object.assign(I18N.en, {
   socMute: "Mute this user 🔇", socUnmute: "Unmute", socMuted: n => n + " is muted. You won’t see what they share.", socUnmuted: "Unmuted",
   socOnLbl: "Community on", socOnHint: "When off, nothing connects to the community server and none of this is shown.", socProfT: "My profile", socWaT: "WhatsApp groups by course",
   socMuteT: "Muted users", socMuteNone: "None", socPtsU: "pts", socHere: "You’re here", adT: "Community admin", lgAdmin: r => "🎁 Bonus from the team" + (r ? ": " + r : ""), svT: "My saved", svBtn: "Save for later", svDone: "Saved 🔖 Chats → My saved", svOff: "Removed from saved", svNone: "Nothing here yet. 🔖 next to a chat message saves it here, and you can write yourself a note.", svNotePh: "A note to myself…", svNoteAdd: "Save", svNoteT: "My note", svTo: "To the chat →", svDel: "Remove", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
-  shT: "Added to your board ✓", shBig: "Share with everyone in the course", shBigSub: "They can add it in one tap · +3 pts for each one who does", shAuto: "Share every quiz and task I add to a course automatically",
+  shT: "Added to your board ✓", shBig: "Share with everyone in the course", shAudT: "For whom?", shAud_all: "The whole course", shAud_camp: "My campus", shAud_cdy: "My campus, degree and year", shAudNo: "To share only with your campus or year, fill in campus, degree and year in your community profile", shBigSub: "They can add it in one tap · +3 pts for each one who does", shAuto: "Share every quiz and task I add to a course automatically",
   shAutoOn: "Auto-share is on ✓", shLater: "Not now", shBtn: "Share", shShared: "Shared", shUnshare: "Stop sharing", shNoCourse: "Only items that belong to a course can be shared",
   shTaskT: "Task saved ✓", shMineArea: "Share with the course", shAutoT: "Auto-share",
   chatBtn: "Discuss", chatCourse: "Course chat", chatT: "💬 Discussion", chatTC: "💬 Course chat", chatPh: "Write a message…", chatEmpty: "No messages yet. A question, a tip or an answer – be the first!",
@@ -149,7 +149,7 @@ Object.assign(I18N.fr, {
   socMute: "Masquer cet utilisateur 🔇", socUnmute: "Ne plus masquer", socMuted: n => n + " est masqué. Vous ne verrez plus ses partages.", socUnmuted: "Plus masqué",
   socOnLbl: "Communauté activée", socOnHint: "Désactivée : aucune connexion au serveur de la communauté, et rien de tout cela n’est affiché.", socProfT: "Mon profil", socWaT: "Groupes WhatsApp par cours",
   socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socPtsU: "pts", socHere: "Vous êtes ici", adT: "Gestion de la communauté", lgAdmin: r => "🎁 Bonus de l’équipe" + (r ? " : " + r : ""), svT: "Mes enregistrés", svBtn: "Garder pour plus tard", svDone: "Enregistré 🔖 Chats → Mes enregistrés", svOff: "Retiré", svNone: "Rien pour l’instant. 🔖 à côté d’un message l’enregistre ici, et vous pouvez écrire une note pour vous.", svNotePh: "Une note pour moi…", svNoteAdd: "Enregistrer", svNoteT: "Ma note", svTo: "Vers le chat →", svDel: "Retirer", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
-  shT: "Ajouté à votre tableau ✓", shBig: "Partager avec tout le cours", shBigSub: "Chacun peut l’ajouter en un geste · +3 pts par ajout", shAuto: "Partager automatiquement chaque quiz et devoir que j’ajoute à un cours",
+  shT: "Ajouté à votre tableau ✓", shBig: "Partager avec tout le cours", shAudT: "Pour qui ?", shAud_all: "Tout le cours", shAud_camp: "Mon campus", shAud_cdy: "Mon campus, ma filière et mon année", shAudNo: "Pour partager seulement avec votre campus ou votre année, indiquez campus, filière et année dans votre profil", shBigSub: "Chacun peut l’ajouter en un geste · +3 pts par ajout", shAuto: "Partager automatiquement chaque quiz et devoir que j’ajoute à un cours",
   shAutoOn: "Partage automatique activé ✓", shLater: "Pas maintenant", shBtn: "Partager", shShared: "Partagé", shUnshare: "Ne plus partager", shNoCourse: "Seuls les éléments liés à un cours peuvent être partagés",
   shTaskT: "Devoir enregistré ✓", shMineArea: "Partager avec le cours", shAutoT: "Partage automatique",
   chatBtn: "Discuter", chatCourse: "Chat du cours", chatT: "💬 Discussion", chatTC: "💬 Chat du cours", chatPh: "Écrire un message…", chatEmpty: "Pas encore de messages. Une question, une astuce, une réponse – lancez-vous !",
@@ -349,6 +349,13 @@ function showNotes(L) {
 }
 
 /* ---------- shared quizzes and tasks ---------- */
+/* who a share is for (Pnina): the whole course, the sharer's campus, or campus + degree + year. Shown only to those it's for */
+const audOk = s => { const a = s.d && s.d.aud; if (!a || a === "all") return true; const p = prof(); if (!p.camp || p.camp !== s.camp) return false; return a === "camp" || (!!p.deg && p.deg === s.deg && !!p.yr && p.yr === s.yr); };
+function audPick() {
+  const p = prof(), can = { all: true, camp: !!p.camp, cdy: !!(p.camp && p.deg && p.yr) }, cur = can[P.soc_aud] ? P.soc_aud : "all";
+  return '<div class="shaud"><span>' + esc(t("shAudT")) + "</span>" + ["all", "camp", "cdy"].map(a => '<label class="shaudo' + (can[a] ? "" : " off") + '"><input type="radio" name="socAud" value="' + a + '"' + (a === cur ? " checked" : "") + (can[a] ? "" : " disabled") + "><span>" + esc(t("shAud_" + a)) + "</span></label>").join("") +
+    (can.cdy ? "" : '<small class="hint">' + esc(t("shAudNo")) + "</small>") + "</div>";
+}
 function offers(kind, now) {
   if (!ST.ov || !ST.ov.c) return [];
   const added = new Set(ST.ov.added || []), ign = P.soc_ign || [], out = [];
@@ -357,7 +364,7 @@ function offers(kind, now) {
   for (const c of myCourses()) {
     const cd = cdata(c.id); if (!cd) continue;
     for (const s of cd.sh || []) {
-      if (s.kind !== kind || isMe(s.uid) || mineSids.has(s.id) || muted(s.uid) || ign.includes(s.id) || added.has(s.id) || have.has(s.id) || s.at < now - DAY) continue;
+      if (s.kind !== kind || isMe(s.uid) || mineSids.has(s.id) || muted(s.uid) || !audOk(s) || ign.includes(s.id) || added.has(s.id) || have.has(s.id) || s.at < now - DAY) continue;
       out.push(Object.assign({ cid: c.id, cname: shortName(c.name) }, s));
     }
   }
@@ -389,7 +396,7 @@ const courseOf = cid => ((V.data && V.data.courses) || []).find(x => x.id === ci
 function shareBody(kind, item) {
   const c = courseOf(item.cid), cname = c ? shortName(c.name) : "";
   const b = kind === "xq"
-    ? { cid: item.cid, cname, kind: "xq", at: xqTs(item), d: { n: t("xq_" + item.k) + (item.note ? " · " + item.note : ""), k: item.k, note: item.note || "", s: item.at, allDay: !parseDT(item.at) } }
+    ? { cid: item.cid, cname, kind: "xq", at: xqTs(item), d: { n: t("xq_" + item.k) + (item.note ? " · " + item.note : ""), k: item.k, note: item.note || "", s: item.at, allDay: !parseDT(item.at), aud: item.aud || P.soc_aud || "all" } }
     : { cid: item.cid, cname, kind: "task", at: item.due, d: { n: item.title, note: (item.note || "").slice(0, 200) } };
   if (item.sid) b.id = item.sid;
   return b;
@@ -418,6 +425,7 @@ function askShare(kind, item) {
   sheet("socShare", "<h3><span>" + esc(t(kind === "xq" ? "shT" : "shTaskT")) + "</span>" + xbtn() + "</h3>" +
     '<div class="shitem" style="--c:' + colorOf(item.cid) + '"><i></i><div><b><bdi>' + esc(what) + '</bdi></b><small><bdi>' + esc(c ? shortName(c.name) : "") + "</bdi> · " + esc(when_) + "</small></div></div>" +
     '<button class="shbig" data-socsh="' + kind + "|" + esc(item.id) + '">' + ic("megaphone") + '<span><b>' + esc(t("shBig")) + "</b><small>" + esc(t("shBigSub")) + "</small></span></button>" +
+    (kind === "xq" ? audPick() : "") +
     '<label class="socchk"><input type="checkbox" id="socAutoBox"' + (P.soc_auto ? " checked" : "") + "><span>" + esc(t("shAuto")) + "</span></label>" +
     '<button class="link" data-socx style="width:100%;margin-top:4px">' + esc(t("shLater")) + "</button>");
   $("#socAutoBox").onchange = e => setAuto(e.target.checked);
@@ -999,7 +1007,10 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socme]"))) return P.soc_id && openUser(P.soc_id.uid);
   if ((b = g("[data-socjoin]"))) return intro(true);
   if ((b = g("[data-socjoinnow]"))) return join();
-  if ((b = g("[data-socsh]"))) { const [k, id] = b.dataset.socsh.split("|"); close("socShare"); return shareItem(k, id); }
+  if ((b = g("[data-socsh]"))) { const [k, id] = b.dataset.socsh.split("|");
+    if (k === "xq" && b.classList.contains("sshtag")) { const it = findItem(k, id); if (it) return askShare(k, it); }     // from the quiz list: first choose who it's for
+    const r = document.querySelector('input[name="socAud"]:checked'), it = findItem(k, id); if (r && it) { it.aud = r.value; P.soc_aud = r.value; savePrefs(); }
+    close("socShare"); return shareItem(k, id); }
   if ((b = g("[data-socunsh]"))) { const [k, id] = b.dataset.socunsh.split("|"); return stopSharing(k, id); }
   if ((b = g("[data-soctimes]"))) { e.preventDefault(); return openTimes(b.dataset.soctimes); }
   if ((b = g("[data-socsave]"))) return toggleSave(Number(b.dataset.socsave));
@@ -1077,6 +1088,9 @@ css.textContent = `
 .swa.sm{padding:5px 8px;border-radius:9px}
 .swaadd{font-weight:600}
 .socchk{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:14px}
+.shaud{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 4px;font-size:13.5px}.shaud > span{color:var(--muted);width:100%}
+.shaudo{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;min-height:38px;box-sizing:border-box}
+.shaudo input{margin:0;accent-color:var(--accent)}.shaudo:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}.shaudo.off{opacity:.45;cursor:default}.shaud .hint{width:100%}
 .socchk input{width:18px;height:18px;accent-color:var(--accent)}
 .stime{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
 .stime button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:14px;font-weight:600}
@@ -1256,5 +1270,5 @@ html[dir=ltr] .chhead{background:linear-gradient(to right,color-mix(in srgb,var(
 `;
 document.head.appendChild(css);
 
-window.SOC = { adminClaim, openAdmin, isAdmin, postNote, taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
+window.SOC = { audOk, adminClaim, openAdmin, isAdmin, postNote, taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
 })();
