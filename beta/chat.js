@@ -242,9 +242,9 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiPgo{margin-top:10px;padding:9px 18px;border-radius:99px;border:0;background:var(--accent);color:var(--on-accent,#fff);font:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s,transform .15s}
 .aiPgo:disabled{opacity:.35;cursor:default}
 .aiPgo:not(:disabled):active{transform:scale(.95)}
-.aiQuick{display:flex;flex-wrap:nowrap;gap:7px;margin-top:10px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding:2px 1px 4px}
+.aiQuick{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;padding:2px 1px 4px}
 .aiQuick::-webkit-scrollbar{display:none}
-.aiQuick button{flex:none;white-space:nowrap;max-width:78vw;overflow:hidden;text-overflow:ellipsis;scroll-snap-align:start;padding:6px 14px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
+.aiQuick button{flex:0 1 auto;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;padding:6px 14px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
 .aiQuick button:active{transform:scale(.94)}
 .aiQuick button.on{background:var(--accent);color:var(--on-accent,#fff)}
 .aiUi{display:flex;flex-direction:column;gap:9px;min-width:min(76vw,320px)}
@@ -383,13 +383,21 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiAgR li small{font-size:12px;font-weight:700;color:var(--muted);min-width:0;overflow-wrap:anywhere}
 .aiAgR .x{display:none;font-size:13.5px;color:var(--muted);align-self:center}
 .aiAgR.off,.aiAgR.none{opacity:.6}.aiAgR.off .t,.aiAgR.none .t{display:none}.aiAgR.off .x,.aiAgR.none .x{display:block}
+.aiAgS{display:flex;flex-direction:column;gap:10px}
+.aiAgSc{padding:10px 12px 4px;border-radius:14px;border:1px solid color-mix(in srgb,var(--hc,var(--bc)) 30%,var(--line));background:color-mix(in srgb,var(--hc,var(--bc)) 5%,var(--card))}
+.aiAgSc header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.aiAgSc header i{width:9px;height:9px;border-radius:50%;background:var(--hc,var(--bc));flex:none}
+.aiAgSc header b{font-size:14.5px;font-weight:850;min-width:0;overflow-wrap:anywhere}
+.aiAgSc .st{margin-inline-start:auto;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:99px}.aiAgSc .st.on{color:#22a55e;background:#22a55e1f}.aiAgSc .st.off{color:var(--muted);background:color-mix(in srgb,var(--text) 8%,transparent)}
+.aiAgSc .aiAgR{padding:8px 2px}.aiAgSc .aiAgR.today{padding-inline:8px;margin-inline:-6px}
+.aiAgR.nl li{grid-template-columns:max-content}
 @container aip (max-width:460px){                    /* narrow: the kind of service goes under the time, never squeezed into a sliver beside it */
-  .aiAgR li{grid-template-columns:8px minmax(0,1fr);row-gap:1px}.aiAgR li small{grid-column:2}
+  .aiAgR li{grid-template-columns:8px minmax(0,1fr);row-gap:1px}.aiAgR li small{grid-column:2}.aiAgR.nl li{grid-template-columns:max-content}
   .aiAgF{gap:5px}.aiAgF button{padding:4px 10px;font-size:12px}
 }
 @container aip (min-width:640px){
-  .aiAgL{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:22px}
-  .aiAgL .aiAgR:nth-child(2){border-top-color:transparent}
+  .aiAg>.aiAgL{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:22px}
+  .aiAg>.aiAgL .aiAgR:nth-child(2){border-top-color:transparent}
+  .aiAgS{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
   .aiAgR{padding:12px 6px;grid-template-columns:72px minmax(0,1fr)}.aiAgR.today{padding-inline:12px}
   .aiAgR .d b{font-size:15.5px}.aiAgR li{font-size:15px}.aiAgR li small{font-size:13px}
   .aiAgF button{padding:6px 15px;font-size:13.5px}
@@ -440,6 +448,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiTbH button{padding:6px 14px;border-radius:99px;border:1.5px solid color-mix(in srgb,var(--bc) 40%,var(--line));background:transparent;color:var(--text);font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
 .aiTbH button.on{background:var(--bc);color:#fff;border-color:var(--bc)}
 .aiTbP{display:none;font-size:14px;line-height:1.55;white-space:pre-line}.aiTbP.on{display:block;animation:aiKRise .3s ease both}
+.aiTmr{white-space:nowrap;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
 .aiTblW{overflow-x:auto;margin:0 -4px;padding:0 4px}.aiTbl table{border-collapse:collapse;width:100%;font-size:13.5px}
 .aiTbl th,.aiTbl td{padding:8px 9px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}.aiTbl thead th{color:var(--bc);font-weight:800;font-size:12.5px}.aiTbl tbody th{font-weight:700;color:var(--muted)}
 .aiTbl.striped tbody tr:nth-child(odd){background:color-mix(in srgb,var(--bc) 7%,transparent)}
@@ -1509,6 +1518,18 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     }
     return groups.map(g => ({ days: g.days, slots: g.slots, label: g.days.length > 1 ? L.dayN[g.days[0]] + "–" + L.dayN[g.days[g.days.length - 1]] : L.dayN[g.days[0]] }));
   }
+  const uiCell = t => esc2(t).replace(/(\d{1,2}[:.]\d{2})\s*[-–]\s*(\d{1,2}[:.]\d{2})/g, '<span class="aiTmr">$1–$2</span>');
+  function uiHoursGroups2(rows, L) {
+    const slots = d => rows.filter(r => uiDays(r.d).has(d)).flatMap(r => uiTimeChips(r.h).map(c => ({ ...c, n: c.n || r.l || "" })));
+    const by = new Map();
+    for (let d = 0; d < 7; d++) { const sl = slots(d), k = JSON.stringify(sl.map(c => [c.v, c.n])); if (!by.has(k)) by.set(k, { days: [], slots: sl }); by.get(k).days.push(d); }
+    const lab = days => {                                               // runs of three or more days become "א׳–ה׳", the rest are listed
+      const parts = []; let i = 0;
+      while (i < days.length) { let j = i; while (j + 1 < days.length && days[j + 1] === days[j] + 1) j++; if (j - i >= 2) parts.push(L.dayN[days[i]] + "–" + L.dayN[days[j]]); else for (let k = i; k <= j; k++) parts.push(L.dayN[days[k]]); i = j + 1; }
+      return parts.join(", ").replace(/'/g, "׳");
+    };
+    return [...by.values()].sort((a, b) => a.days[0] - b.days[0]).map(g => ({ days: g.days, slots: g.slots, label: lab(g.days) }));
+  }
   const uiMins = v => { const m = String(v).match(/^(\d{2}):(\d{2})–(\d{2}):(\d{2})$/); return m ? [+m[1] * 60 + +m[2], (+m[3] * 60 + +m[4]) || 1440] : null; };
   function uiHours(b) {
     const L = ul(), st = uiOpenNow(b.it), todayN = new Date().getDay();
@@ -1526,15 +1547,25 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (b.s === "compact") {                                                   // an older answer that was saved in the earlier "compact" style
       body = '<div class="aiHc">' + b.it.map(r => "<span><b>" + esc2(r.l || r.d) + "</b> " + esc2(r.h) + "</span>").join("") + "</div>";
     } else if (b.s === "agenda") {
-      // the world-standard hours list (maps apps): one row per group of days, the day on one side and below each other the ranges, a dot for the kind of service.
-      // Nothing is a pill that can run off the side; with several kinds of service a filter row lets the student see just one; closed days are one quiet row; today is lifted.
-      const row = g => {
+      // the hours list of a maps app. One or two kinds of service: one row per group of days, the ranges under each other, a dot for the kind, a filter to see one.
+      // Three or more (departments): each department is its own small card with its own days and its own "open now". Nothing is a pill that can run to the side.
+      const row = (g, labelled) => {
         const isToday = g.days.includes(todayN);
-        const lis = g.slots.map(c => '<li data-n="' + (c.n ? notes.indexOf(c.n) : "") + '" style="--hc:' + colOf(c.n) + '"><i></i><em' + (c.t ? ' class="tx"' : "") + ">" + esc2(c.v) + "</em>" + (c.n ? "<small>" + esc2(c.n) + "</small>" : "") + "</li>").join("");
-        return '<div class="aiAgR' + (isToday ? " today" : "") + (g.slots.length ? "" : " off") + '"><span class="d"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + '</span><ul class="t">' + lis + '</ul><span class="x">' + esc2(L.shut) + "</span></div>";
+        const lis = g.slots.map(c => '<li data-n="' + (c.n ? notes.indexOf(c.n) : "") + '" style="--hc:' + colOf(c.n) + '">' + (labelled ? "<i></i>" : "") + "<em" + (c.t ? ' class="tx"' : "") + ">" + esc2(c.v) + "</em>" + (labelled && c.n ? "<small>" + esc2(c.n) + "</small>" : "") + "</li>").join("");
+        return '<div class="aiAgR' + (labelled ? "" : " nl") + (isToday ? " today" : "") + (g.slots.length ? "" : " off") + '"><span class="d"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + '</span><ul class="t">' + lis + '</ul><span class="x">' + esc2(L.shut) + "</span></div>";
       };
-      const filt = notes.length > 1 ? '<div class="aiAgF" role="tablist"><button type="button" data-hf="" class="on">' + esc2(L.all) + "</button>" + notes.map((n, i) => '<button type="button" data-hf="' + i + '" style="--hc:' + colOf(n) + '"><i></i>' + esc2(n) + "</button>").join("") + "</div>" : "";
-      body = '<div class="aiAg">' + filt + '<div class="aiAgL">' + groups.map(row).join("") + "</div></div>";
+      const g2 = hasDays ? uiHoursGroups2(b.it, L) : groups;
+      if (hasDays && notes.length >= 3) {
+        const vrows = b.it.flatMap(r => uiTimeChips(r.h).map(c => ({ d: r.d, h: c.v, l: c.n || r.l || "" })));
+        body = '<div class="aiAgS">' + notes.map(n => {
+          const mine = vrows.filter(x => x.l === n), st2 = uiOpenNow(mine), gs = uiHoursGroups2(mine, L);
+          const stx = st2 ? '<span class="st ' + (st2.open ? "on" : "off") + '">' + esc2(st2.open ? L.until + uiHM(st2.until) : L.closed) + "</span>" : "";
+          return '<section class="aiAgSc" style="--hc:' + colOf(n) + '"><header><i></i><b>' + esc2(n) + "</b>" + stx + '</header><div class="aiAgL">' + gs.map(g => row(g, false)).join("") + "</div></section>";
+        }).join("") + "</div>";
+      } else {
+        const filt = notes.length > 1 ? '<div class="aiAgF" role="tablist"><button type="button" data-hf="" class="on">' + esc2(L.all) + "</button>" + notes.map((n, i) => '<button type="button" data-hf="' + i + '" style="--hc:' + colOf(n) + '"><i></i>' + esc2(n) + "</button>").join("") + "</div>" : "";
+        body = '<div class="aiAg">' + filt + '<div class="aiAgL">' + g2.map(g => row(g, true)).join("") + "</div></div>";
+      }
     } else if (b.s === "week") {
       body = '<div class="aiHoWk">' + L.dayN.map((n, d) => {
         const sl = b.it.filter(r => uiDays(r.d).has(d)).flatMap(r => uiTimeChips(r.h).map(c => ({ ...c, n: c.n || r.l || "" })));
@@ -1592,10 +1623,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         if (!it.length) return "";
         const cols = b.col || [];
         if (b.k === "compare" && b.s === "cards" && cols.length) {
-          return uiBk(b, "aiCmpC", cols.map((c, ci) => '<div class="aiCmpCard"><b>' + esc2(c) + "</b>" + it.map(r => "<div><span>" + esc2(r.l) + "</span>" + esc2((r.c || [])[ci] || "-") + "</div>").join("") + "</div>").join(""), true);
+          return uiBk(b, "aiCmpC", cols.map((c, ci) => '<div class="aiCmpCard"><b>' + esc2(c) + "</b>" + it.map(r => "<div><span>" + esc2(r.l) + "</span>" + uiCell((r.c || [])[ci] || "-") + "</div>").join("") + "</div>").join(""), true);
         }
         const head = cols.length ? "<thead><tr>" + (it.some(r => r.l) ? "<th></th>" : "") + cols.map(c => "<th>" + esc2(c) + "</th>").join("") + "</tr></thead>" : "";
-        return uiBk(b, "aiTbl " + (b.s === "striped" || b.k === "compare" ? "striped" : ""), '<div class="aiTblW"><table>' + head + "<tbody>" + it.map(r => "<tr>" + (r.l ? "<th>" + esc2(r.l) + "</th>" : "") + (r.c || []).map(c => "<td>" + esc2(c) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>", true);
+        return uiBk(b, "aiTbl " + (b.s === "striped" || b.k === "compare" ? "striped" : ""), '<div class="aiTblW"><table>' + head + "<tbody>" + it.map(r => "<tr>" + (r.l ? "<th>" + uiCell(r.l) + "</th>" : "") + (r.c || []).map(c => "<td>" + uiCell(c) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>", true);
       }
       case "links": return it.length ? uiBk(b, "aiLk " + (b.s || "list"), it.map(x => '<button type="button" class="aiLkI" data-act="url" data-v="' + esc2(x.u) + '">' + uiIc(x.ic || "link") + "<span><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</span>" + uiIc("arrow", "go") + "</button>").join(""), true) : "";
       case "timeline": return it.length ? uiBk(b, "aiTm " + (b.s || "vertical"), it.map((x, i) => '<div class="aiTmI" style="--k:' + i + '"><i></i><div><em>' + esc2(x.dt) + "</em><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></div>").join(""), true) : "";
