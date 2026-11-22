@@ -730,7 +730,8 @@ body.dashed main{padding-bottom:150px}
 .wd .dn{font-size:11.5px;color:var(--muted)}
 .wd .dd{font-size:15px;font-weight:700;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .wd.today .dd{background:var(--accent);color:var(--on-accent)}
-.wd .bars{display:flex;flex-direction:column;gap:3px;width:100%;align-items:center;flex:1}
+.wd .bars{display:flex;flex-direction:column;gap:3px;width:100%;align-items:center;flex:1 1 0;min-height:0;overflow:hidden}
+.wd .bar{flex:none}.wd .bar[hidden]{display:none}
 .wd .bar{width:72%;height:14px;border-radius:5px;background:var(--c)}
 .wd .bar.dn2{background:transparent;border:2px solid var(--c);opacity:.55}
 .wd .bar.mn{background:color-mix(in srgb,var(--c) 30%,var(--card));border:2px dashed var(--c)}.wd .bar.mn.dn2{background:transparent;opacity:.55}
@@ -1049,6 +1050,21 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .task.done:hover,.task.done:focus-within{opacity:1}
 .task.hid{opacity:.45}
 .task.hl{box-shadow:0 0 0 3px var(--accent)}
+/* several tasks shown as one card (tgCard): a small stack behind it, a count, and it opens onto the tasks */
+.task.tgrp{cursor:pointer;margin-bottom:14px;transition:box-shadow .2s}
+.task.tgrp:not(.open){box-shadow:0 5px 0 -1px var(--card),0 5px 0 0 var(--line),0 10px 0 -3px var(--card),0 10px 0 -2px var(--line)}   /* a small stack of cards under it */
+.task.tgrp .tgn{display:inline-block;margin-inline-start:6px;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:800;color:#fff;background:var(--c);vertical-align:2px}
+.task.tgrp .tgest{display:inline-block;margin-top:4px;font-size:12.5px;color:var(--muted)}
+.task.tgrp .tgtog{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:13.5px;font-weight:700;color:var(--accent-t, var(--accent))}
+.task.tgrp .tgtog .i{width:16px;height:16px;transform:rotate(90deg);transition:transform .25s}
+.task.tgrp.open .tgtog .i{transform:rotate(-90deg)}
+.task.tgrp.open{grid-column:1/-1;margin-bottom:6px;border-end-start-radius:6px;border-end-end-radius:6px}
+.tgbox{grid-column:1/-1;margin:0 0 14px;padding:10px 0 2px;padding-inline-start:14px;border-inline-start:3px solid color-mix(in srgb,var(--c) 55%,transparent);display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:0 12px;align-items:start}
+.tgbox.anim > .task{animation:tgin .38s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 45ms)}
+.tgbox.closing{animation:tgout .2s ease both}
+@keyframes tgin{from{opacity:0;transform:translateY(-10px) scale(.98)}}
+@keyframes tgout{to{opacity:0;transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){.tgbox.anim > .task,.tgbox.closing{animation:none}}
 .task .x{position:absolute;inset-block-start:4px;inset-inline-end:4px;width:40px;height:40px;padding:0;border:0;background:none;color:var(--muted);font-size:15px}
 .task .tl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-inline-end:34px;padding-inline-start:36px}
 .task .ck{position:absolute;inset-block-start:10px;inset-inline-start:10px;width:28px;height:28px;padding:0;border-radius:50%;border:2px solid var(--muted);background:none;color:transparent;display:grid;place-items:center;cursor:pointer}
@@ -1168,6 +1184,7 @@ body[data-density=compact] .task .ck{inset-block-start:6px;width:24px;height:24p
 .fl{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:6px 10px;border-radius:10px;background:var(--row);border:1px solid var(--line);color:var(--text);text-decoration:none;font-size:13.5px}
 .fl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fl small{color:var(--muted);flex:none}
+.fl small.crsok{color:var(--ok);font-weight:600}
 .task .act{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;align-items:center}
 .task .act a,.task .act button{color:var(--accent-t);text-decoration:none;font-weight:600;display:inline-block;padding:6px 0;border:0;background:none;font-size:14.5px}
 .st{font-size:12px;padding:2px 9px;border-radius:99px;font-weight:600}
@@ -2126,17 +2143,18 @@ const I18N = {
     sNotifHint: "תזכורות למטלות, למבחנים ולשיעורים — בהתראות ובלוח השנה שלך.",
     sumRemOn: "תזכורות פועלות", sumRemOff: "תזכורות כבויות", sumCalOn: "יומן מחובר", sumCalOff: "יומן לא מחובר", sumNone: "לא הוגדר", sumSyncOn: "סנכרון פעיל", sumSyncOff: "סנכרון כבוי",
     sumRules: n => n ? (n === 1 ? "כלל אחד פעיל" : n + " כללים פעילים") : "ללא סינון", sumCourses: (a, b) => a + " מתוך " + b + " קורסים מוצגים",
-    badgeLbl: "מספר על אייקון האפליקציה", badgeHint: "המספר על האייקון במסך הבית = מטלות באיחור ומטלות להיום. אותו מספר מופיע על לשונית ״משימות״. אין מספר = אין משהו דחוף.", newAlLbl: "התראה על חדש בקורס", newAlHint: "כשנפתחת מטלה או בוחן חדש, או כשמרצה מעלה קובץ או קישור חדש. נבדק בכל פעם שהאפליקציה נפתחת ומתעדכנת, ומופיע בסקירה. התראה בטלפון מגיעה כשההתראות מופעלות.", frTitle: "🆕 חדש בקורסים", frTask: "מטלה חדשה", frQuiz: "בוחן חדש", frFile: "קובץ חדש", frLink: "קישור חדש", frSeen: "סימון שראיתי", frMore: n => "ועוד " + n, frNotifT: n => n === 1 ? "🆕 חדש בקורס" : "🆕 " + n + " דברים חדשים בקורסים", calWhat: "מה ייכנס ליומן", calWTask: "מטלות", calWExam: "מבחנים ובחנים", calWCls: "שיעורים מהמערכת", calWCrs: (a, b) => "קורסים: " + (a === b ? "כולם" : a + " מתוך " + b), calWHint: "שינוי כאן נכנס ליומן ברענון הבא שלו (גוגל מרענן כמה פעמים ביום).", calWNone: "כרגע לא ייכנס כלום ליומן", dueWas: x => "מועד ההגשה היה " + x, calmLbl: "תצוגה רגועה (בלי אנימציות)", calmHint: "מכבה את כל התנועות באפליקציה: כרטיסים שנכנסים, חלונות שמחליקים וההנפשות במדריכים.", awayLbl: "חזרה לסקירה אחרי", awayHint: "כשחוזרים לאפליקציה אחרי זמן ארוך, היא נפתחת מחדש בסקירה (ובודקת אם יש גרסה חדשה).", away_0: "אף פעם", away_30: "חצי שעה", away_60: "שעה", away_180: "3 שעות", mThemes: "ערכות צבעים ולוגו", logoTitle: "לוגו", logoHint: "הלוגו בראש האפליקציה ובלשונית בדפדפן. האייקון במסך הבית נשאר כמו שהותקן.", logoOrig: "הלוגו המקורי",
+    badgeLbl: "מספר אדום (על האייקון ובטאב משימות)", badgeHint: "המספר על האייקון במסך הבית = מטלות באיחור ומטלות להיום. אותו מספר מופיע על לשונית ״משימות״. אין מספר = אין משהו דחוף.", newAlLbl: "התראה על חדש בקורס", newAlHint: "כשנפתחת מטלה או בוחן חדש, או כשמרצה מעלה קובץ או קישור חדש. נבדק בכל פעם שהאפליקציה נפתחת ומתעדכנת, ומופיע בסקירה. התראה בטלפון מגיעה כשההתראות מופעלות.", frTitle: "🆕 חדש בקורסים", frTask: "מטלה חדשה", frQuiz: "בוחן חדש", frFile: "קובץ חדש", frLink: "קישור חדש", frSeen: "סימון שראיתי", frMore: n => "ועוד " + n, frNotifT: n => n === 1 ? "🆕 חדש בקורס" : "🆕 " + n + " דברים חדשים בקורסים", calWhat: "מה ייכנס ליומן", calWTask: "מטלות", calWExam: "מבחנים ובחנים", calWCls: "שיעורים מהמערכת", calWCrs: (a, b) => "קורסים: " + (a === b ? "כולם" : a + " מתוך " + b), calWHint: "שינוי כאן נכנס ליומן ברענון הבא שלו (גוגל מרענן כמה פעמים ביום).", calWNone: "כרגע לא ייכנס כלום ליומן", dueWas: x => "מועד ההגשה היה " + x, calmLbl: "תצוגה רגועה (בלי אנימציות)", calmHint: "מכבה את כל התנועות באפליקציה: כרטיסים שנכנסים, חלונות שמחליקים וההנפשות במדריכים.", awayLbl: "חזרה לסקירה אחרי", awayHint: "כשחוזרים לאפליקציה אחרי זמן ארוך, היא נפתחת מחדש בסקירה (ובודקת אם יש גרסה חדשה).", away_0: "אף פעם", away_30: "חצי שעה", away_60: "שעה", away_180: "3 שעות", mThemes: "ערכות צבעים ולוגו", logoTitle: "לוגו", logoHint: "הלוגו בראש האפליקציה ובלשונית בדפדפן. האייקון במסך הבית נשאר כמו שהותקן.", logoOrig: "הלוגו המקורי",
     crsTitle: "📘 הקורסים שלי", dcCourses: "הקורסים שלי", crsOpen: "📘 דף הקורס", crsNone: "אין קורסים פעילים כרגע", crsOpenN: n => n + " פתוחות", crsNoOpen: "אין מטלות פתוחות", crsNextShort: d => "הבאה: " + d, crsCode: c => "מספר קורס " + c, crsTOpen: "פתוחות", crsTLate: "באיחור", crsTDone: "הושלמו", crsNextDue: "ההגשה הבאה", crsNextExam: "המבחן הבא", crsNextClass: "השיעור הבא", crsSTasks: n => "משימות" + (n ? " (" + n + ")" : ""), crsAllTasks: "לכל המשימות של הקורס", crsAddMine: "משימה משלי", crsSExams: n => "מבחנים ובחנים" + (n ? " (" + n + ")" : ""), crsNoExams: "אין מבחנים או בחנים שמורים לקורס הזה", crsAddXq: "הוספת בוחן או מבחן", crsExDates: "מועדי מבחנים", crsSTT: n => "במערכת השעות" + (n ? " (" + n + ")" : ""), crsNoTT: "הקורס עוד לא במערכת השעות שלך", crsToTT: "למערכת השעות", crsAddTT: "הוספה למערכת", crsSMoodle: "תוכן הקורס במודל", crsQ: "חיפוש קובץ או נושא בקורס", crsQNone: "לא נמצא בקורס", crsEmpty: "אין עדיין תוכן בקורס הזה", crsLoading: "טוען את תוכן הקורס…", crsErr: "לא הצלחתי לטעון את התוכן עכשיו. מוצג מה שנשמר בפעם הקודמת.", crsAt: a => "עודכן " + a, crsMoodle: "פתיחת הקורס באתר מודל", crsSec: n => "נושא " + n, crsSNews: n => "הודעות מהקורס (" + n + ")", crsSSoc: "קהילה: צ'אט, וואטסאפ ודירוג", crsSocOff: "בקהילה יש צ'אט לכל קורס, דיון לכל מטלה, קישור לקבוצת הוואטסאפ וטבלת דירוג.", crsSocJoin: "להצטרפות לקהילה", crsSSet: "הקורס באפליקציה", crsColor: "צבע הקורס", crsShow: "להציג את הקורס", crsShowHint: "קורס מוסתר לא מופיע במשימות, בסקירה ובתזכורות. אפשר להחזיר אותו מההגדרות ← קורסים וצבעים.", crsShown: "הקורס מוצג", crsHidden: "הקורס הוסתר",
     tkCourse: "לדף הקורס", tkList: "הצגה ברשימת המטלות", tkDesc: "הנחיות המטלה", tkNoDesc: "אין הנחיות כתובות במודל. אפשר לפתוח את המטלה במודל.", tkFiles: n => "קבצים וקישורים של המטלה (" + n + ")", tkRel: n => "חומרים מאותו נושא בקורס (" + n + ")",
     tkGone: "המודל הוריד את המועד הזה מרשימת ההגשות שלך, וזה קורה אחרי שמגישים. אם עוד לא הגשת, כדאי לבדוק במודל.", tkOpen: "פתיחה במודל", notSubBtn: "לא הגשתי – להחזיר לפתוחות", notSubDone: "חזרה לרשימת הפתוחות", tkSoc: "מה אחרים אומרים", tkHide: "הסתרת המטלה", tkUnhide: "החזרה לרשימה", tkMore: "עוד", tkDueLbl: "הגשה עד",
     tkCrsSub: (o, l) => (o ? o + " פתוחות" : "אין מטלות פתוחות") + (l ? " · " + l + " באיחור" : ""), tkPageBtn: "עמוד המטלה",
     ex_task: "עמוד המטלה\nכל מה שקשור למטלה במקום אחד: מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה.\nמכאן אפשר לפתוח אותה במודל, לסמן שסיימת, להוסיף ליומן או לעבור לדף הקורס.",
+    tgN: n => n + " משימות", tgOpen: n => "הצגת " + n + " המשימות", tgClose: "הסתרה", tgEst: h => "⏳ ~" + h + " שע׳ בסה״כ", tgDoneN: (a, b) => a + "/" + b + " בוצעו",
     lgTask: "מטלה", lgMine: "משימה שלי", lgExam: "מבחן / בוחן", lgDone: "הוגש / בוצע", tkExpand: "פתיחת עמוד המטלה",
     lang_he: "עברית", lang_en: "English", lang_fr: "Français", grpN: g => "קבוצה " + g, tipLangT: c => "ב" + c + " כל מטלה מופיעה בכמה שפות", tipLangS: "באיזו שפה להציג? השאר יוסתרו (אפשר לשנות בדף הקורס)", tipGrpT: c => "ב" + c + " יש מטלות לכמה קבוצות", tipGrpS: "באיזו קבוצה את/ה? מטלות של קבוצות אחרות יוסתרו (אפשר לשנות בדף הקורס)",
     tipAll: "להציג הכל", tipAllC: "להציג הכל", tipDone: c => "✓ ב" + c + " מוצג רק מה שבחרת. אפשר לשנות בדף הקורס", tipShowAllL: "כל השפות", tipShowAllG: "כל הקבוצות", crsPickH: "מוצג בקורס:",
     attYes: "בקורס הזה יש רישום נוכחות במודל", attPct: p => "נוכחות במודל: " + p + "% (לפי רישום הנוכחות)", attPctShort: p => "נוכחות " + p + "%",
-    badgeNow: (n, l, d) => "המספר " + n + " על אייקון האפליקציה = " + l + " באיחור + " + d + " להיום", wnThanks: s => "🙏 תודה ל" + s + " ששלחו פידבק – בזכותכם האפליקציה משתפרת",
+    badgeNow: (n, l, d) => "המספר האדום " + n + " (על האייקון ובטאב משימות) = " + l + " באיחור + " + d + " להיום", badgeOff: "כיבוי", badgeOffT: "כבוי. אפשר להחזיר בהגדרות ← התראות", wnThanks: s => "🙏 תודה ל" + s + " ששלחו פידבק – בזכותכם האפליקציה משתפרת",
     fbMore: "💡 כמה שתפרטו יותר (מה עשיתם, מה קרה ומה ציפיתם שיקרה, ואפשר גם צילום מסך) – ככה אוכל לתקן ולשפר טוב יותר, גם באגים וגם הצעות.", fbCredit: "אפשר להודות לי בשם הפרטי ב״מה חדש״", fbAskT: "יש לך דקה? 🙏 מה היית משפר/ה, מה חסר או מה לא עובד? כל הודעה נקראת.", fbLater: "לא עכשיו",
     grFail: "לא הצלחנו לטעון את הציונים של הקורס הזה. ננסה שוב ברענון הבא.", grFailShort: "לא נטען, ננסה שוב", daForPhone: "(הסידור הזה הוא לטלפון. בטאבלט ובמחשב יש סידור נפרד.)", daForBig: "(הסידור הזה הוא למסך רחב. בטלפון יש סידור נפרד.)",
     grPageT: "הציונים שלי", grMenuSub: "כל הציונים מכל הקורסים, במקום אחד", grAllLink: "כל הציונים ←", grAllBtn: "כל הציונים שלי", grAllCourse: "כל הציונים בקורס ←", grRecent: "ציונים חדשים (שבועיים אחרונים)", grByCourse: "לפי קורס",
@@ -2305,7 +2323,7 @@ const I18N = {
     logoutConfirm: "למחוק את הטוקן מהטלפון הזה? כדי לחזור תצטרך להתחבר שוב.",
     gLate: "באיחור", gToday: "היום", gWeek: "עוד השבוע", gNext: "בשבוע הבא", gLater: "בהמשך", gNodue: "ללא מועד הגשה", gOld: "ישנות (באיחור)", gDone: "הוגשו",
     tAssign: "מטלה", tQuiz: "בוחן", tEvent: "אירוע", viaFile: "הגשת קובץ", viaPdf: "הגשת PDF", viaOnline: "מענה במודל", viaNone: "בלי הגשה במודל",
-    stSubmitted: "הוגש ✓", stManual: "בוצע (סימון שלי) ✓", stDraft: "טיוטה, לא הוגש", stNa: "ללא הגשה אונליין", stUnknown: "סטטוס לא ידוע", stLate: "באיחור", stNone: "לא הוגש", grade: x => "ציון: " + x,
+    crsChecked: "נבדק ✓", stSubmitted: "הוגש ✓", stManual: "בוצע (סימון שלי) ✓", stDraft: "טיוטה, לא הוגש", stNa: "ללא הגשה אונליין", stUnknown: "סטטוס לא ידוע", stLate: "באיחור", stNone: "לא הוגש", grade: x => "ציון: " + x,
     extended: "הארכה אישית", noDue: "אין מועד הגשה", opens: x => "נפתח להגשה: " + x, cutoff: x => "נעילה סופית: " + x, details: "תוכן המטלה", openSite: "פתח באתר ↗", hide: "הסתר", restore: "החזר",
     loading: "טוען…", refreshing: "מרענן…", updated: x => "עודכן " + x, lastData: " (מוצגים הנתונים האחרונים)", loadingTasks: "טוען משימות…",
     noMatch: "אין משימות בסינון הזה", noTasks: "לא נמצאו משימות", sumOpen: n => "<b>" + n + "</b> לא הוגשו", sumLate: n => n + " באיחור", next: "הקרובה:",
@@ -2379,17 +2397,18 @@ const I18N = {
     sNotifHint: "Reminders for tasks, exams and classes — as notifications and in your calendar.",
     sumRemOn: "Reminders on", sumRemOff: "Reminders off", sumCalOn: "Calendar connected", sumCalOff: "Calendar not connected", sumNone: "Not set", sumSyncOn: "Sync on", sumSyncOff: "Sync off",
     sumRules: n => n ? (n === 1 ? "1 rule active" : n + " rules active") : "No filters", sumCourses: (a, b) => a + " of " + b + " courses shown",
-    badgeLbl: "Number on the app icon", badgeHint: "The number on the home-screen icon = overdue tasks and tasks due today. The same number shows on the Tasks tab. No number = nothing urgent.", newAlLbl: "Alert when something is new in a course", newAlHint: "When a new assignment or quiz opens, or a lecturer uploads a new file or link. Checked every time the app opens and refreshes, and shown on the overview. A phone notification comes when notifications are on.", frTitle: "🆕 New in your courses", frTask: "New assignment", frQuiz: "New quiz", frFile: "New file", frLink: "New link", frSeen: "Mark as seen", frMore: n => "and " + n + " more", frNotifT: n => n === 1 ? "🆕 New in a course" : "🆕 " + n + " new things in your courses", calWhat: "What goes into the calendar", calWTask: "Tasks", calWExam: "Exams and quizzes", calWCls: "Classes from the timetable", calWCrs: (a, b) => "Courses: " + (a === b ? "all" : a + " of " + b), calWHint: "A change here reaches your calendar at its next refresh (Google refreshes a few times a day).", calWNone: "Nothing will go into the calendar right now", dueWas: x => "Was due " + x, calmLbl: "Calm display (no animations)", calmHint: "Turns off all motion in the app: cards sliding in, sheets sliding up and the animations in guides.", awayLbl: "Back to the overview after", awayHint: "When you come back to the app after a long time, it starts again on the overview (and checks for a new version).", away_0: "Never", away_30: "30 minutes", away_60: "1 hour", away_180: "3 hours", mThemes: "Colour themes and logo", logoTitle: "Logo", logoHint: "The logo at the top of the app and in the browser tab. The home-screen icon stays as installed.", logoOrig: "Original logo",
+    badgeLbl: "Red number (on the icon and the Tasks tab)", badgeHint: "The number on the home-screen icon = overdue tasks and tasks due today. The same number shows on the Tasks tab. No number = nothing urgent.", newAlLbl: "Alert when something is new in a course", newAlHint: "When a new assignment or quiz opens, or a lecturer uploads a new file or link. Checked every time the app opens and refreshes, and shown on the overview. A phone notification comes when notifications are on.", frTitle: "🆕 New in your courses", frTask: "New assignment", frQuiz: "New quiz", frFile: "New file", frLink: "New link", frSeen: "Mark as seen", frMore: n => "and " + n + " more", frNotifT: n => n === 1 ? "🆕 New in a course" : "🆕 " + n + " new things in your courses", calWhat: "What goes into the calendar", calWTask: "Tasks", calWExam: "Exams and quizzes", calWCls: "Classes from the timetable", calWCrs: (a, b) => "Courses: " + (a === b ? "all" : a + " of " + b), calWHint: "A change here reaches your calendar at its next refresh (Google refreshes a few times a day).", calWNone: "Nothing will go into the calendar right now", dueWas: x => "Was due " + x, calmLbl: "Calm display (no animations)", calmHint: "Turns off all motion in the app: cards sliding in, sheets sliding up and the animations in guides.", awayLbl: "Back to the overview after", awayHint: "When you come back to the app after a long time, it starts again on the overview (and checks for a new version).", away_0: "Never", away_30: "30 minutes", away_60: "1 hour", away_180: "3 hours", mThemes: "Colour themes and logo", logoTitle: "Logo", logoHint: "The logo at the top of the app and in the browser tab. The home-screen icon stays as installed.", logoOrig: "Original logo",
     crsTitle: "📘 My courses", dcCourses: "My courses", crsOpen: "📘 Course page", crsNone: "No active courses right now", crsOpenN: n => n + " open", crsNoOpen: "No open tasks", crsNextShort: d => "next: " + d, crsCode: c => "Course number " + c, crsTOpen: "Open", crsTLate: "Overdue", crsTDone: "Done", crsNextDue: "Next deadline", crsNextExam: "Next exam", crsNextClass: "Next class", crsSTasks: n => "Tasks" + (n ? " (" + n + ")" : ""), crsAllTasks: "All of this course’s tasks", crsAddMine: "My own task", crsSExams: n => "Exams and quizzes" + (n ? " (" + n + ")" : ""), crsNoExams: "No exams or quizzes saved for this course", crsAddXq: "Add a quiz or exam", crsExDates: "Exam dates", crsSTT: n => "In the timetable" + (n ? " (" + n + ")" : ""), crsNoTT: "This course isn’t in your timetable yet", crsToTT: "To the timetable", crsAddTT: "Add to timetable", crsSMoodle: "Course content in Moodle", crsQ: "Search a file or topic in this course", crsQNone: "Nothing found in this course", crsEmpty: "No content in this course yet", crsLoading: "Loading the course content…", crsErr: "Couldn’t load the content right now. Showing what was saved last time.", crsAt: a => "Updated " + a, crsMoodle: "Open the course on the Moodle site", crsSec: n => "Topic " + n, crsSNews: n => "Course announcements (" + n + ")", crsSSoc: "Community: chat, WhatsApp and ranking", crsSocOff: "The community has a chat for every course, a discussion for every task, the WhatsApp group link and a leaderboard.", crsSocJoin: "Join the community", crsSSet: "This course in the app", crsColor: "Course colour", crsShow: "Show this course", crsShowHint: "A hidden course doesn’t appear in tasks, the overview or reminders. You can bring it back in Settings → Courses & colours.", crsShown: "Course shown", crsHidden: "Course hidden",
     tkCourse: "Course page", tkList: "Show in the task list", tkDesc: "Instructions", tkNoDesc: "No written instructions in Moodle. You can open the task in Moodle.", tkFiles: n => "Task files and links (" + n + ")", tkRel: n => "Materials from the same topic (" + n + ")",
     tkGone: "Moodle removed this deadline from your list, which happens once you submit. If you haven't submitted yet, check in Moodle.", tkOpen: "Open in Moodle", notSubBtn: "I didn’t submit – back to open", notSubDone: "Back in the open list", tkSoc: "What others say", tkHide: "Hide this task", tkUnhide: "Back to the list", tkMore: "More", tkDueLbl: "Due",
     tkCrsSub: (o, l) => (o ? o + " open" : "No open tasks") + (l ? " · " + l + " overdue" : ""), tkPageBtn: "Task page",
     ex_task: "The task page\nEverything about the task in one place: when it's due, the instructions, its files and materials from the same topic, how long it took others and the discussion about it.\nFrom here you can open it in Moodle, mark it done, add it to your calendar or go to the course page.",
+    tgN: n => n + " tasks", tgOpen: n => "Show all " + n, tgClose: "Hide", tgEst: h => "⏳ ~" + h + " h in all", tgDoneN: (a, b) => a + "/" + b + " done",
     lgTask: "Task", lgMine: "My own task", lgExam: "Exam / quiz", lgDone: "Submitted / done", tkExpand: "Open the task page",
     lang_he: "עברית", lang_en: "English", lang_fr: "Français", grpN: g => "Group " + g, tipLangT: c => "In " + c + " every task comes in several languages", tipLangS: "Which language should show? The rest will be hidden (change it on the course page)", tipGrpT: c => "In " + c + " there are tasks for several groups", tipGrpS: "Which group are you in? Other groups' tasks will be hidden (change it on the course page)",
     tipAll: "Show everything", tipAllC: "Show everything", tipDone: c => "✓ " + c + " now shows only what you chose. Change it on the course page", tipShowAllL: "All languages", tipShowAllG: "All groups", crsPickH: "Shown in this course:",
     attYes: "This course takes attendance in Moodle", attPct: p => "Attendance in Moodle: " + p + "%", attPctShort: p => "attendance " + p + "%",
-    badgeNow: (n, l, d) => "The " + n + " on the app icon = " + l + " overdue + " + d + " due today", wnThanks: s => "🙏 Thanks to " + s + " for the feedback – you make the app better",
+    badgeNow: (n, l, d) => "The red " + n + " (on the icon and the Tasks tab) = " + l + " overdue + " + d + " due today", badgeOff: "Turn off", badgeOffT: "Off. You can turn it back on in Settings → Notifications", wnThanks: s => "🙏 Thanks to " + s + " for the feedback – you make the app better",
     fbMore: "💡 The more detail (what you did, what happened, what you expected – a screenshot helps too), the better I can fix and improve, for bugs and ideas alike.", fbCredit: "You may thank me by first name in “What's new”", fbAskT: "Have a minute? 🙏 What would you improve, what's missing or not working? Every message is read.", fbLater: "Not now",
     grFail: "Couldn't load this course's grades. We'll try again on the next refresh.", grFailShort: "Didn't load, will retry", daForPhone: "(This layout is for the phone. Tablets and computers have their own.)", daForBig: "(This layout is for big screens. The phone has its own.)",
     grPageT: "My grades", grMenuSub: "All grades from every course, in one place", grAllLink: "All grades →", grAllBtn: "All my grades", grAllCourse: "All grades in this course →", grRecent: "New grades (last two weeks)", grByCourse: "By course",
@@ -2558,7 +2577,7 @@ const I18N = {
     logoutConfirm: "Delete the token from this phone? You will need to connect again.",
     gLate: "Overdue", gToday: "Today", gWeek: "Later this week", gNext: "Next week", gLater: "Later", gNodue: "No due date", gOld: "Old (overdue)", gDone: "Submitted",
     tAssign: "Assignment", tQuiz: "Quiz", tEvent: "Event", viaFile: "Upload a file", viaPdf: "Upload a PDF", viaOnline: "Answer in Moodle", viaNone: "No Moodle submission",
-    stSubmitted: "Submitted ✓", stManual: "Done (marked by me) ✓", stDraft: "Draft, not submitted", stNa: "No online submission", stUnknown: "Status unknown", stLate: "Overdue", stNone: "Not submitted", grade: x => "Grade: " + x,
+    crsChecked: "Checked ✓", stSubmitted: "Submitted ✓", stManual: "Done (marked by me) ✓", stDraft: "Draft, not submitted", stNa: "No online submission", stUnknown: "Status unknown", stLate: "Overdue", stNone: "Not submitted", grade: x => "Grade: " + x,
     extended: "personal extension", noDue: "No due date", opens: x => "Opens: " + x, cutoff: x => "Final cutoff: " + x, details: "Assignment details", openSite: "Open on site ↗", hide: "Hide", restore: "Restore",
     loading: "Loading…", refreshing: "Refreshing…", updated: x => "Updated " + x, lastData: " (showing last data)", loadingTasks: "Loading tasks…",
     noMatch: "No tasks match this filter", noTasks: "No tasks found", sumOpen: n => "<b>" + n + "</b> not submitted", sumLate: n => n + " overdue", next: "Next:",
@@ -2632,17 +2651,18 @@ const I18N = {
     sNotifHint: "Rappels pour les devoirs, examens et cours — en notifications et dans votre agenda.",
     sumRemOn: "Rappels activés", sumRemOff: "Rappels désactivés", sumCalOn: "Agenda connecté", sumCalOff: "Agenda non connecté", sumNone: "Non défini", sumSyncOn: "Synchro activée", sumSyncOff: "Synchro désactivée",
     sumRules: n => n ? (n === 1 ? "1 règle active" : n + " règles actives") : "Aucun filtre", sumCourses: (a, b) => a + " cours sur " + b + " affichés",
-    badgeLbl: "Nombre sur l’icône de l’appli", badgeHint: "Le nombre sur l’icône = devoirs en retard et devoirs pour aujourd’hui. Le même nombre apparaît sur l’onglet Devoirs. Pas de nombre = rien d’urgent.", newAlLbl: "Alerte quand il y a du nouveau dans un cours", newAlHint: "Quand un nouveau devoir ou quiz ouvre, ou qu’un enseignant publie un nouveau fichier ou lien. Vérifié à chaque ouverture et actualisation de l’appli, et affiché dans l’aperçu. Une notification arrive si les notifications sont activées.", frTitle: "🆕 Nouveau dans vos cours", frTask: "Nouveau devoir", frQuiz: "Nouveau quiz", frFile: "Nouveau fichier", frLink: "Nouveau lien", frSeen: "Marquer comme vu", frMore: n => "et " + n + " de plus", frNotifT: n => n === 1 ? "🆕 Nouveau dans un cours" : "🆕 " + n + " nouveautés dans vos cours", calWhat: "Ce qui entre dans l’agenda", calWTask: "Devoirs", calWExam: "Examens et quiz", calWCls: "Cours de l’emploi du temps", calWCrs: (a, b) => "Cours : " + (a === b ? "tous" : a + " sur " + b), calWHint: "Un changement ici arrive dans l’agenda à sa prochaine actualisation (Google actualise quelques fois par jour).", calWNone: "Rien n’entrera dans l’agenda pour l’instant", dueWas: x => "Échéance " + x, calmLbl: "Affichage calme (sans animations)", calmHint: "Désactive tous les mouvements : cartes qui apparaissent, fenêtres qui glissent et animations des guides.", awayLbl: "Retour à l’aperçu après", awayHint: "Quand vous revenez après longtemps, l’appli repart de l’aperçu (et vérifie s’il y a une nouvelle version).", away_0: "Jamais", away_30: "30 minutes", away_60: "1 heure", away_180: "3 heures", mThemes: "Thèmes de couleurs et logo", logoTitle: "Logo", logoHint: "Le logo en haut de l’appli et dans l’onglet du navigateur. L’icône de l’écran d’accueil reste celle de l’installation.", logoOrig: "Logo d’origine",
+    badgeLbl: "Nombre rouge (sur l’icône et l’onglet Devoirs)", badgeHint: "Le nombre sur l’icône = devoirs en retard et devoirs pour aujourd’hui. Le même nombre apparaît sur l’onglet Devoirs. Pas de nombre = rien d’urgent.", newAlLbl: "Alerte quand il y a du nouveau dans un cours", newAlHint: "Quand un nouveau devoir ou quiz ouvre, ou qu’un enseignant publie un nouveau fichier ou lien. Vérifié à chaque ouverture et actualisation de l’appli, et affiché dans l’aperçu. Une notification arrive si les notifications sont activées.", frTitle: "🆕 Nouveau dans vos cours", frTask: "Nouveau devoir", frQuiz: "Nouveau quiz", frFile: "Nouveau fichier", frLink: "Nouveau lien", frSeen: "Marquer comme vu", frMore: n => "et " + n + " de plus", frNotifT: n => n === 1 ? "🆕 Nouveau dans un cours" : "🆕 " + n + " nouveautés dans vos cours", calWhat: "Ce qui entre dans l’agenda", calWTask: "Devoirs", calWExam: "Examens et quiz", calWCls: "Cours de l’emploi du temps", calWCrs: (a, b) => "Cours : " + (a === b ? "tous" : a + " sur " + b), calWHint: "Un changement ici arrive dans l’agenda à sa prochaine actualisation (Google actualise quelques fois par jour).", calWNone: "Rien n’entrera dans l’agenda pour l’instant", dueWas: x => "Échéance " + x, calmLbl: "Affichage calme (sans animations)", calmHint: "Désactive tous les mouvements : cartes qui apparaissent, fenêtres qui glissent et animations des guides.", awayLbl: "Retour à l’aperçu après", awayHint: "Quand vous revenez après longtemps, l’appli repart de l’aperçu (et vérifie s’il y a une nouvelle version).", away_0: "Jamais", away_30: "30 minutes", away_60: "1 heure", away_180: "3 heures", mThemes: "Thèmes de couleurs et logo", logoTitle: "Logo", logoHint: "Le logo en haut de l’appli et dans l’onglet du navigateur. L’icône de l’écran d’accueil reste celle de l’installation.", logoOrig: "Logo d’origine",
     crsTitle: "📘 Mes cours", dcCourses: "Mes cours", crsOpen: "📘 Page du cours", crsNone: "Aucun cours actif pour l’instant", crsOpenN: n => n + " ouverts", crsNoOpen: "Aucun devoir ouvert", crsNextShort: d => "prochain : " + d, crsCode: c => "Numéro du cours " + c, crsTOpen: "Ouverts", crsTLate: "En retard", crsTDone: "Faits", crsNextDue: "Prochaine échéance", crsNextExam: "Prochain examen", crsNextClass: "Prochain cours", crsSTasks: n => "Devoirs" + (n ? " (" + n + ")" : ""), crsAllTasks: "Tous les devoirs du cours", crsAddMine: "Ma propre tâche", crsSExams: n => "Examens et tests" + (n ? " (" + n + ")" : ""), crsNoExams: "Aucun examen ni test enregistré pour ce cours", crsAddXq: "Ajouter un test ou un examen", crsExDates: "Dates d’examen", crsSTT: n => "Dans l’emploi du temps" + (n ? " (" + n + ")" : ""), crsNoTT: "Ce cours n’est pas encore dans votre emploi du temps", crsToTT: "Vers l’emploi du temps", crsAddTT: "Ajouter à l’emploi du temps", crsSMoodle: "Contenu du cours sur Moodle", crsQ: "Chercher un fichier ou un thème du cours", crsQNone: "Rien trouvé dans ce cours", crsEmpty: "Pas encore de contenu dans ce cours", crsLoading: "Chargement du contenu du cours…", crsErr: "Impossible de charger le contenu maintenant. Voici la dernière version enregistrée.", crsAt: a => "Mis à jour " + a, crsMoodle: "Ouvrir le cours sur le site Moodle", crsSec: n => "Thème " + n, crsSNews: n => "Annonces du cours (" + n + ")", crsSSoc: "Communauté : chat, WhatsApp et classement", crsSocOff: "La communauté a un chat pour chaque cours, une discussion par devoir, le lien du groupe WhatsApp et un classement.", crsSocJoin: "Rejoindre la communauté", crsSSet: "Ce cours dans l’appli", crsColor: "Couleur du cours", crsShow: "Afficher ce cours", crsShowHint: "Un cours masqué n’apparaît ni dans les devoirs, ni dans l’aperçu, ni dans les rappels. Vous pouvez le rétablir dans Paramètres → Cours et couleurs.", crsShown: "Cours affiché", crsHidden: "Cours masqué",
     tkCourse: "Page du cours", tkList: "Voir dans la liste", tkDesc: "Consignes", tkNoDesc: "Pas de consignes écrites dans Moodle. Vous pouvez ouvrir le devoir dans Moodle.", tkFiles: n => "Fichiers et liens du devoir (" + n + ")", tkRel: n => "Ressources du même thème (" + n + ")",
     tkGone: "Moodle a retiré cette échéance de votre liste, ce qui arrive après un rendu. Si vous n’avez pas encore rendu, vérifiez dans Moodle.", tkOpen: "Ouvrir dans Moodle", notSubBtn: "Je n’ai pas rendu – remettre en ouvert", notSubDone: "De retour dans la liste ouverte", tkSoc: "Ce qu’en disent les autres", tkHide: "Masquer ce devoir", tkUnhide: "Remettre dans la liste", tkMore: "Plus", tkDueLbl: "À rendre",
     tkCrsSub: (o, l) => (o ? o + " ouverts" : "Rien d’ouvert") + (l ? " · " + l + " en retard" : ""), tkPageBtn: "Page du devoir",
     ex_task: "La page du devoir\nTout sur le devoir au même endroit : l’échéance, les consignes, ses fichiers et les ressources du même thème, le temps qu’il a pris aux autres et la discussion.\nDe là, ouvrez-le dans Moodle, marquez-le fait, ajoutez-le à l’agenda ou allez à la page du cours.",
+    tgN: n => n + " tâches", tgOpen: n => "Afficher les " + n, tgClose: "Masquer", tgEst: h => "⏳ ~" + h + " h au total", tgDoneN: (a, b) => a + "/" + b + " faites",
     lgTask: "Devoir", lgMine: "Ma tâche", lgExam: "Examen / test", lgDone: "Rendu / fait", tkExpand: "Ouvrir la page du devoir",
     lang_he: "עברית", lang_en: "English", lang_fr: "Français", grpN: g => "Groupe " + g, tipLangT: c => "Dans " + c + ", chaque devoir existe en plusieurs langues", tipLangS: "Quelle langue afficher ? Le reste sera masqué (modifiable sur la page du cours)", tipGrpT: c => "Dans " + c + ", il y a des devoirs pour plusieurs groupes", tipGrpS: "Dans quel groupe êtes-vous ? Les devoirs des autres groupes seront masqués (modifiable sur la page du cours)",
     tipAll: "Tout afficher", tipAllC: "Tout afficher", tipDone: c => "✓ " + c + " n’affiche plus que votre choix. Modifiable sur la page du cours", tipShowAllL: "Toutes les langues", tipShowAllG: "Tous les groupes", crsPickH: "Affiché dans ce cours :",
     attYes: "Ce cours relève les présences dans Moodle", attPct: p => "Présence dans Moodle : " + p + " %", attPctShort: p => "présence " + p + " %",
-    badgeNow: (n, l, d) => "Le " + n + " sur l’icône = " + l + " en retard + " + d + " pour aujourd’hui", wnThanks: s => "🙏 Merci à " + s + " pour vos retours – grâce à vous l’appli s’améliore",
+    badgeNow: (n, l, d) => "Le " + n + " rouge (sur l’icône et l’onglet Devoirs) = " + l + " en retard + " + d + " pour aujourd’hui", badgeOff: "Désactiver", badgeOffT: "Désactivé. Réactivable dans Réglages → Notifications", wnThanks: s => "🙏 Merci à " + s + " pour vos retours – grâce à vous l’appli s’améliore",
     fbMore: "💡 Plus vous détaillez (ce que vous avez fait, ce qui s’est passé, ce que vous attendiez – une capture aide aussi), mieux je peux corriger et améliorer.", fbCredit: "Vous pouvez me remercier par mon prénom dans « Nouveautés »", fbAskT: "Une minute ? 🙏 Que changeriez-vous, que manque-t-il, qu’est-ce qui ne marche pas ? Chaque message est lu.", fbLater: "Pas maintenant",
     grFail: "Impossible de charger les notes de ce cours. Nouvel essai à la prochaine actualisation.", grFailShort: "Non chargé, nouvel essai", daForPhone: "(Cette disposition est pour le téléphone. Tablettes et ordinateurs ont la leur.)", daForBig: "(Cette disposition est pour les grands écrans. Le téléphone a la sienne.)",
     grPageT: "Mes notes", grMenuSub: "Toutes les notes de tous les cours, au même endroit", grAllLink: "Toutes les notes →", grAllBtn: "Toutes mes notes", grAllCourse: "Toutes les notes du cours →", grRecent: "Nouvelles notes (deux dernières semaines)", grByCourse: "Par cours",
@@ -2811,7 +2831,7 @@ const I18N = {
     logoutConfirm: "Supprimer le jeton de ce téléphone ? Il faudra vous reconnecter.",
     gLate: "En retard", gToday: "Aujourd’hui", gWeek: "Plus tard cette semaine", gNext: "La semaine prochaine", gLater: "Plus tard", gNodue: "Sans date limite", gOld: "Anciens (en retard)", gDone: "Rendus",
     tAssign: "Devoir", tQuiz: "Test", tEvent: "Événement", viaFile: "Déposer un fichier", viaPdf: "Déposer un PDF", viaOnline: "Réponse sur Moodle", viaNone: "Sans dépôt Moodle",
-    stSubmitted: "Rendu ✓", stManual: "Fait (marqué par moi) ✓", stDraft: "Brouillon, non rendu", stNa: "Pas de remise en ligne", stUnknown: "Statut inconnu", stLate: "En retard", stNone: "Non rendu", grade: x => "Note : " + x,
+    crsChecked: "Corrigé ✓", stSubmitted: "Rendu ✓", stManual: "Fait (marqué par moi) ✓", stDraft: "Brouillon, non rendu", stNa: "Pas de remise en ligne", stUnknown: "Statut inconnu", stLate: "En retard", stNone: "Non rendu", grade: x => "Note : " + x,
     extended: "prolongation personnelle", noDue: "Pas de date limite", opens: x => "Ouverture : " + x, cutoff: x => "Clôture définitive : " + x, details: "Contenu du devoir", openSite: "Ouvrir sur le site ↗", hide: "Masquer", restore: "Rétablir",
     loading: "Chargement…", refreshing: "Actualisation…", updated: x => "Mis à jour " + x, lastData: " (dernières données affichées)", loadingTasks: "Chargement des devoirs…",
     noMatch: "Aucun devoir pour ce filtre", noTasks: "Aucun devoir trouvé", sumOpen: n => "<b>" + n + "</b> non rendus", sumLate: n => n + " en retard", next: "Prochain :",
@@ -3166,7 +3186,7 @@ if (!Array.isArray(P.tt)) P.tt = [];
 for (const k of ["sem", "exams", "ccode", "colors", "prog", "notes"]) if (!P[k] || typeof P[k] !== "object" || Array.isArray(P[k])) P[k] = {};
 P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^\d+$/);
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
-const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
+const V = { tgOpen: new Set(), tgJust: null, data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
 const SYNC_KEYS = ["tt", "ttv", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades", "soc_old", "dash_w", "dash_t", "soc_saved", "rkg", "lang_keep", "grp", "prog", "notes", "soc_seen", "soc_ns", "rd", "notSub"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
@@ -3433,6 +3453,47 @@ document.addEventListener("click", e => {
   if (!socOn()) { toast(t("noteNeedSoc"), 5000); return socEnsure(() => SOC.intro(true)); }
   socEnsure(() => SOC.postNote && SOC.postNote(cid, tk, txt));
 });
+/* ---------- tasks that are really one: "exercise 6, question 1 … 6" (feedback via Meir, 22.11: "make it one homework instead of 6, it just takes room").
+   Same course, the same deadline to the minute, and names that differ in ONE number only → one card ("6 tasks") that opens with an animation onto
+   the separate tasks. Everything else stays per task: its status, reports, chat, marking done – it's only how the list shows them ---------- */
+const tgParts = s => String(s || "").split(/(\d+)/);           // odd places = numbers
+function tgCluster(items) {
+  const by = new Map(), out = [];
+  for (const x of items) {
+    if (!x.due || !(x.cid > 0) || x.mine) { out.push(x); continue; }
+    const k = x.cid + "|" + x.due + "|" + String(x.name || "").replace(/\d+/g, "#") + "|" + (isDone(x) ? 1 : 0) + (P.hidden.includes(x.key) ? 1 : 0);
+    let c = by.get(k); if (!c) { c = { k, items: [] }; by.set(k, c); out.push(c); }
+    c.items.push(x);
+  }
+  const res = [];
+  for (const e of out) {
+    if (!e.items) { res.push(e); continue; }
+    if (e.items.length < 2) { res.push(e.items[0]); continue; }
+    const P0 = e.items.map(x => tgParts(x.name)), vary = [];
+    for (let i = 1; i < P0[0].length; i += 2) if (new Set(P0.map(p => p[i])).size > 1) vary.push(i);
+    if (vary.length > 1) { res.push(...e.items); continue; }                       // more than one number differs: not the same exercise
+    const at = vary[0], its = e.items.slice().sort((a, b) => (at ? Number(tgParts(a.name)[at]) - Number(tgParts(b.name)[at]) : 0) || a.key.localeCompare(b.key));
+    let title = its[0].name;
+    if (at) { const ns = its.map(x => Number(tgParts(x.name)[at])), seq = ns.every((n, i) => !i || n === ns[i - 1] + 1);
+      const p = tgParts(its[0].name); p[at] = "\u2066" + (seq ? ns[0] + "–" + ns[ns.length - 1] : ns.join(", ")) + "\u2069";   /* isolated, so Hebrew shows "1–6" and not "6–1" */ title = p.join(""); }
+    res.push({ tg: true, gk: "tg:" + e.k, title, items: its });
+  }
+  return res;
+}
+function tgCard(G, now, g) {
+  const x = G.items[0], open = V.tgOpen.has(G.gk) || G.items.some(y => y.key === V.hl), n = G.items.length;
+  const done = G.items.filter(isDone).length, est = G.items.reduce((a, y) => a + (estOf(y) || 0), 0);
+  const due = isDone(x) ? "<b>" + esc(when(x.due)) + "</b>" : "<b>" + esc(when(x.due)) + "</b><br>" + cdSpan(x.due, now);
+  const head = '<div class="task tgrp' + (open ? " open" : "") + (g === "done" ? " done" : "") + '" data-tgrp="' + esc(G.gk) + '" role="button" tabindex="0" aria-expanded="' + open + '" style="--c:' + colorOf(x.cid) + '">' +
+    '<div class="tl"><span class="tname"><bdi>' + esc(G.title) + '</bdi></span><span class="tgn">' + esc(t("tgN", n)) + "</span>" + stChip(x, g) +
+    '<span class="tc"><span class="crsl" data-crs="' + x.cid + '" role="button" tabindex="0"><bdi>' + esc(shortName(x.course)) + "</bdi></span> · " + esc(typeLabel(x)) + "</span>" +
+    (est ? '<span class="tgest">' + esc(t("tgEst", Math.round(est * 10) / 10)) + "</span>" : "") + "</div>" +
+    '<div class="due">' + due + (done && done < n ? ' <span class="rel">· ' + esc(t("tgDoneN", done, n)) + "</span>" : "") + "</div>" +
+    '<div class="tgtog">' + ic("chevron-right") + "<span>" + esc(open ? t("tgClose") : t("tgOpen", n)) + "</span></div></div>";
+  if (!open) return head;
+  const anim = V.tgJust === G.gk; if (anim) V.tgJust = null;
+  return head + '<div class="tgbox' + (anim ? " anim" : "") + '" data-tgbox="' + esc(G.gk) + '" style="--c:' + colorOf(x.cid) + '">' + G.items.map((y, i) => card(y, now, groupOf(y, now)).replace('<div class="task', '<div style="--i:' + i + '" class="task')).join("") + "</div>";
+}
 function card(x, now, g) {
   const st = x.status, hid = P.hidden.includes(x.key), man = isManual(x), chip = stChip(x, g);
   const due = x.due && isDone(x) ? "<b>" + esc(when(x.due)) + '</b><br><span class="rel">' + esc(x.due < now ? t("dueWas", rel(x.due, now)) : rel(x.due, now)) + "</span>"      // done: no countdown, never "overdue"
@@ -3490,7 +3551,7 @@ function renderDash(d, now) {
   // tiles + weekly progress ring (this calendar week: submitted / due)
   const ws = weekStartDate(now).getTime() / 1000, we = ws + 7 * 86400;
   const thisWeek = rl.filter(x => x.due >= ws && x.due < we), wDone = thisWeek.filter(isDone).length;
-  const bdg = P.appBadge !== false && navigator.setAppBadge && (late.length + today.filter(x => x.due >= now).length) ? '<div class="bdghint">' + ic("bell") + "<span>" + esc(t("badgeNow", late.length + today.filter(x => x.due >= now).length, late.length, today.filter(x => x.due >= now).length)) + "</span></div>" : "";
+  const bdg = P.appBadge !== false && (late.length + today.filter(x => x.due >= now).length) ? '<div class="bdghint">' + ic("bell") + "<span>" + esc(t("badgeNow", late.length + today.filter(x => x.due >= now).length, late.length, today.filter(x => x.due >= now).length)) + '</span><button class="link" data-badgeoff>' + esc(t("badgeOff")) + "</button></div>" : "";
   $("#stats").innerHTML = bdg +
     '<button class="tile late" data-fg="late"><span class="n">' + late.length + '</span><span class="l">' + esc(t("tLate")) + "</span></button>" +
     '<button class="tile today" data-fg="today"><span class="n">' + today.length + '</span><span class="l">' + esc(t("tToday")) + "</span></button>" +
@@ -3503,13 +3564,13 @@ function renderDash(d, now) {
   for (let i = 0; i < 7; i++) {
     const day = new Date(base); day.setDate(base.getDate() + i); const k = dayKey(day);
     const items = rl.filter(x => x.due && dueDay(x) === k).sort((a, b) => isDone(a) - isDone(b) || a.due - b.due);
-    const shown = items.slice(0, 5), more = items.length - shown.length;
+    const shown = items, more = 0;          // all of them; weekFit() hides what has no room and writes "+N" (feedback, 22.11: "why +1 when there's room for another one?")
     let wdn = ""; try { wdn = day.toLocaleDateString(t("locale"), { weekday: "short" }); } catch (e) {}
     wk += '<button class="wd' + (i === 0 ? " today" : "") + (V.focus && V.focus.kind === "day" && V.focus.d === k ? " sel" : "") + '" data-day="' + k + '" aria-label="' + esc(dayLabel(day) + ": " + items.length) + '">' +
       '<span class="dn">' + esc(wdn) + '</span><span class="dd">' + day.getDate() + '</span><span class="bars">' +
       (exByDay[k] || []).map(x => '<i class="bar xm" style="--c:' + colorOf(x.cid) + '" title="📝 ' + esc(exTitle(x)) + '"></i>').join("") +
       shown.map(x => '<i class="bar' + (isDone(x) ? " dn2" : "") + (x.type === "mine" ? " mn" : "") + '" style="--c:' + colorOf(x.cid) + '" title="' + esc(x.name) + '"></i>').join("") + "</span>" +
-      (more > 0 ? '<span class="more">+' + more + "</span>" : "") + '<span class="cnt">' + (items.length || "") + "</span></button>";
+      '<span class="more" hidden></span><span class="cnt">' + (items.length || "") + "</span></button>";
   }
   $("#week").innerHTML = wk;
   { const lg = '<span><i class="lg bar" style="--c:var(--accent)"></i>' + esc(t("lgTask")) + '</span><span><i class="lg bar mn" style="--c:var(--accent)"></i>' + esc(t("lgMine")) + '</span><span><i class="lg bar xm" style="--c:var(--accent)"></i>' + esc(t("lgExam")) + '</span><span><i class="lg bar dn2" style="--c:var(--accent)"></i>' + esc(t("lgDone")) + "</span>";
@@ -3542,8 +3603,10 @@ function renderDash(d, now) {
     return '<button class="lr" data-fc="' + id + '" style="--c:' + colorOf(id) + '" title="' + esc(l.late ? t("loadLate", l.late) : "") + '"><span class="ln"><bdi>' + esc(shortName(c)) + '</bdi></span><span class="lb">' +
       (l.late ? '<i class="lt" style="width:' + (100 * l.late / max) + '%"></i>' : "") + '<i style="width:' + (100 * (l.n - l.late) / max) + '%"></i></span><span class="lc">' + l.n + "</span></button>";
   }).join("") : '<div class="hint">' + esc(t("noLoad")) + "</div>";
-  const urgent = late.length + today.length, tb = $("#tabBadge");
-  tb.hidden = !urgent; tb.textContent = urgent;
+  /* the red number on the Tasks tab = the one on the app icon (overdue + due today), and the same switch turns both off
+     (feedback via Meir, 22.11: "it isn't clear what it's for, and there's no way to turn it off – it stresses me") */
+  const urgent = P.appBadge === false ? 0 : late.length + today.length, tb = $("#tabBadge");
+  tb.hidden = !urgent; tb.textContent = urgent; tb.title = urgent ? t("badgeNow", urgent, late.length, today.length) : "";
 }
 
 /* ---------- semester progress ---------- */
@@ -4344,7 +4407,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.3";
+const APP_VERSION = "1.9.4-beta.1";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -5037,7 +5100,7 @@ function render() {
   let h = "";
   for (const b of buckets) {
     if (b.cls !== "plain") h += '<div class="grp ' + b.cls + '" data-g="' + esc(b.key) + '"' + (b.color ? ' style="--c:' + b.color + '"' : "") + '><span class="tw">' + (b.open ? "▾" : t("closedArrow")) + "</span><bdi>" + esc(b.label) + '</bdi> <span class="cnt">' + b.items.length + "</span></div>";
-    if (b.open) h += b.items.map(x => card(x, now, groupOf(x, now))).join("");
+    if (b.open) h += (P.tgrp === false ? b.items : tgCluster(b.items)).map(x => x.tg ? tgCard(x, now, groupOf(x.items[0], now)) : card(x, now, groupOf(x, now))).join("");
   }
   $("#list").innerHTML = tipBar() + (h || '<div class="empty">' + esc(V.focus && V.focus.kind === "day" ? t("dayEmpty") : d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>") +
     (() => {        // what was already submitted is one tap away (to look back, or say how long it took)
@@ -5058,6 +5121,7 @@ function render() {
   $("#sum").innerHTML = t("sumOpen", dated.length) + (late.length ? ' · <b class="late">' + esc(t("sumLate", late.length)) + "</b>" : "") +
     (next ? '<div class="next">' + esc(t("next")) + " <b><bdi>" + esc(next.name) + "</bdi></b> · " + cdSpan(next.due, now) + "</div>" : "");
   const urgent = P.appBadge === false ? 0 : late.length + dated.filter(x => x.due >= now && groupOf(x, now) === "today").length;      // the same number as on the Tasks tab
+  if (urgent) $("#sum").innerHTML += '<div class="bdghint">' + ic("bell") + "<span>" + esc(t("badgeNow", urgent, late.length, urgent - late.length)) + '</span><button class="link" data-badgeoff>' + esc(t("badgeOff")) + "</button></div>";   // where the red number leads: what it is, and "turn off"
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
   if (socOn()) S("render", now); else { $("#socTop").innerHTML = ""; $("#chatBadge").hidden = true; }
   if (V.view === "chat") renderChatv();
@@ -5902,8 +5966,11 @@ function crsItem(it, cid) {
   if (it.k === "file") return fileLink({ n: it.n, u: it.u, s: it.s });
   if (it.k === "link") return fileLink({ n: it.n, u: it.u, link: 1 });
   const x = it.id && V.data ? V.data.tasks.find(y => y.cid === cid && y.cmid === it.id) : null;
-  if (x) return '<button class="fl crsact" data-crsgo="' + esc(x.key) + '">' + ic(MOD_IC[it.k] || "file-text") + " <span><bdi>" + esc(it.n) + "</bdi></span><small>" + esc(isDone(x) ? t("stSubmitted") : x.due ? shortDate(x.due) : "") + "</small></button>";
-  return /^https?:\/\//.test(it.u) ? '<a class="fl" href="' + esc(it.u) + '" target="_blank" rel="noopener noreferrer">' + ic(MOD_IC[it.m] || MOD_IC[it.k] || "external-link") + " <span><bdi>" + esc(it.n) + "</bdi></span></a>" : "";
+  // checked (Rivki): an activity with a grade in the gradebook says so, also when it has already left the task list (an automatic checker after its date)
+  const g = it.id && grOn() ? grItems(cid).find(i => i.cmid === it.id && i.raw != null) : null, gt = g ? grTxt(g) : "";
+  const chk = g ? '<small class="crsok">' + esc(t("crsChecked") + (gt ? " · " + gt : "")) + "</small>" : "";
+  if (x) return '<button class="fl crsact" data-crsgo="' + esc(x.key) + '">' + ic(MOD_IC[it.k] || "file-text") + " <span><bdi>" + esc(it.n) + "</bdi></span>" + (chk || "<small" + (isDone(x) ? ' class="crsok"' : "") + ">" + esc(isDone(x) ? t("stSubmitted") : x.due ? shortDate(x.due) : "") + "</small>") + "</button>";
+  return /^https?:\/\//.test(it.u) ? '<a class="fl" href="' + esc(it.u) + '" target="_blank" rel="noopener noreferrer">' + ic(MOD_IC[it.m] || MOD_IC[it.k] || "external-link") + " <span><bdi>" + esc(it.n) + "</bdi></span>" + chk + "</a>" : "";
 }
 function renderCourse() {
   const cid = CRS.cid, c = crsOf(cid), box = $("#crsBox"); if (!c || !box) return;
@@ -6437,7 +6504,16 @@ function heroFit() {
   for (const c of HERO_FIT) { if (el.scrollHeight <= el.clientHeight + 3) break; el.classList.add(c); }
   const b = el.querySelector(":scope > button[data-tk]"); if (el.classList.contains("hf5") && b) el.dataset.tk = b.dataset.tk;
 }
-function dashOvf() { heroFit(); for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (!el || el.classList.contains("dexp")) continue; el.classList.toggle("ovf", el.dataset.mode === "full" && el.scrollHeight > el.clientHeight + 3); } }
+function weekFit() {
+  for (const wd of document.querySelectorAll("#week .wd")) {
+    const bars = [...wd.querySelectorAll(".bars .bar:not(.xm)")], more = wd.querySelector(".more"); if (!more) continue;
+    bars.forEach(b => { b.hidden = false; }); more.hidden = true;
+    const box = wd.querySelector(".bars"), fits = () => box.scrollHeight <= box.clientHeight + 1 && wd.scrollHeight <= wd.clientHeight + 1;
+    let hid = 0;
+    while (!fits() && hid < bars.length) { bars[bars.length - 1 - hid].hidden = true; hid++; more.textContent = "+" + hid; more.hidden = false; }
+  }
+}
+function dashOvf() { heroFit(); weekFit(); for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (!el || el.classList.contains("dexp")) continue; el.classList.toggle("ovf", el.dataset.mode === "full" && el.scrollHeight > el.clientHeight + 3); } }
 if ("ResizeObserver" in window) { let lw = 0; new ResizeObserver(() => { const w = $("#dash").clientWidth; if (w && w !== lw) { lw = w; dashCell(); renderMini(); } }).observe($("#dash")); }
 /* a card opened on top of everything (from its small version or from "more") */
 const DX = { id: "", mode: "" };
@@ -7512,6 +7588,7 @@ $("#fresh").addEventListener("click", e => {
 $("#calm").onchange = e => { P.calm = e.target.checked; savePrefs(); render(); };
 $("#grOn").onchange = e => { P.grades = e.target.checked; savePrefs(); useHit("grades_" + (P.grades ? 1 : 0)); if (P.grades && V.data) gradeScan(V.data, true); render(); };
 $("#newAl").onchange = e => { P.newAl = e.target.checked; savePrefs(); useHit("newAl_" + (P.newAl ? 1 : 0)); render(); };
+document.addEventListener("click", e => { if (!e.target.closest("[data-badgeoff]")) return; P.appBadge = false; savePrefs(); useHit("appBadge_off_hint"); toast(t("badgeOffT"), 5000); render(); });
 $("#appBadge").onchange = e => { P.appBadge = e.target.checked; savePrefs(); useHit("appBadge_" + (P.appBadge ? 1 : 0)); render(); };
 $("#away").onchange = e => { P.away = Number(e.target.value); savePrefs(); };
 $("#logoGrid").addEventListener("click", e => { const b = e.target.closest("[data-logo]"); if (!b) return; P.logo = b.dataset.logo; useHit("logo"); savePrefs(); applyLogo(); renderLogos(); });
@@ -7556,8 +7633,17 @@ $("#cats").addEventListener("click", e => { const b = e.target.closest("[data-ca
 $("#seg").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { P.filter = b.dataset.f; savePrefs(); render(); } });
 $("#sort").onchange = e => { P.sort = e.target.value; savePrefs(); render(); };
 let qt; $("#q").addEventListener("input", e => { clearTimeout(qt); qt = setTimeout(() => { V.q = e.target.value.trim(); render(); }, 120); });
+function tgToggle(gk) {
+  const box = $('.tgbox[data-tgbox="' + CSS.escape(gk) + '"]');
+  if (V.tgOpen.has(gk)) {                                            // closing: fold away first, then redraw
+    V.tgOpen.delete(gk); useHit("tgClose");
+    if (box && !matchMedia("(prefers-reduced-motion: reduce)").matches) { box.classList.add("closing"); const hd = box.previousElementSibling; if (hd) hd.classList.remove("open"); setTimeout(render, 220); } else render();
+  } else { V.tgOpen.add(gk); V.tgJust = gk; useHit("tgOpen"); render(); }
+}
+$("#list").addEventListener("keydown", e => { const g = e.target.closest && e.target.closest("[data-tgrp]"); if (g && e.target === g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); tgToggle(g.dataset.tgrp); } });
 $("#list").addEventListener("click", e => {
   { const o = e.target.closest("[data-tk]"); if (o) return openTask(o.dataset.tk); }
+  { const gr = e.target.closest("[data-tgrp]"); if (gr && !e.target.closest("[data-crs]")) return tgToggle(gr.dataset.tgrp); }
   const x = e.target.closest("[data-hide]");
   if (x) {
     const k = x.dataset.hide, was = P.hidden.includes(k);
