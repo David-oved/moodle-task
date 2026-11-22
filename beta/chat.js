@@ -363,6 +363,37 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiHoWk .c.today .s{background:none;border-top-color:#ffffffb3}
 }
 @container aip (max-width:420px){.aiHoRow{grid-template-columns:minmax(0,1fr);gap:5px}.aiHoRow .d{display:flex;align-items:baseline;gap:8px}.aiHoRow .d em{display:inline}}
+/* agenda: the day, and under each other its ranges (a dot for the kind of service). Rows never run to the side; two columns once there is room. */
+.aiAg{display:flex;flex-direction:column;gap:10px}
+.aiAgF{display:flex;flex-wrap:wrap;gap:6px}
+.aiAgF button{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:12.5px;font-weight:750;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.aiAgF button i{width:8px;height:8px;border-radius:50%;background:var(--hc,var(--bc));flex:none}
+.aiAgF button.on{background:color-mix(in srgb,var(--hc,var(--bc)) 14%,var(--card));border-color:var(--hc,var(--bc))}
+.aiAgL{display:flex;flex-direction:column}
+.aiAgR{display:grid;grid-template-columns:minmax(58px,auto) minmax(0,1fr);gap:4px 12px;align-items:start;padding:10px 4px;border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.aiAgR:first-child{border-top-color:transparent}
+.aiAgR.today{background:color-mix(in srgb,var(--bc) 10%,transparent);border-radius:12px;padding-inline:10px;border-top-color:transparent}.aiAgR.today+.aiAgR{border-top-color:transparent}
+.aiAgR .d b{display:block;font-size:14.5px;font-weight:850;white-space:nowrap}.aiAgR .d em{display:block;font-style:normal;font-size:10.5px;font-weight:800;color:var(--bc)}
+.aiAgR .t{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.aiAgR li{display:grid;grid-template-columns:8px max-content minmax(0,1fr);align-items:baseline;gap:4px 9px;font-size:14px;line-height:1.4}
+.aiAgR li[hidden]{display:none}
+.aiAgR li i{width:8px;height:8px;border-radius:50%;background:var(--hc,var(--bc));align-self:center}
+.aiAgR li em{justify-self:start;font-style:normal;font-weight:800;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;white-space:nowrap}
+.aiAgR li em.tx{direction:rtl;white-space:normal;font-weight:650;grid-column:2/-1}
+.aiAgR li small{font-size:12px;font-weight:700;color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.aiAgR .x{display:none;font-size:13.5px;color:var(--muted);align-self:center}
+.aiAgR.off,.aiAgR.none{opacity:.6}.aiAgR.off .t,.aiAgR.none .t{display:none}.aiAgR.off .x,.aiAgR.none .x{display:block}
+@container aip (max-width:460px){                    /* narrow: the kind of service goes under the time, never squeezed into a sliver beside it */
+  .aiAgR li{grid-template-columns:8px minmax(0,1fr);row-gap:1px}.aiAgR li small{grid-column:2}
+  .aiAgF{gap:5px}.aiAgF button{padding:4px 10px;font-size:12px}
+}
+@container aip (min-width:640px){
+  .aiAgL{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:22px}
+  .aiAgL .aiAgR:nth-child(2){border-top-color:transparent}
+  .aiAgR{padding:12px 6px;grid-template-columns:72px minmax(0,1fr)}.aiAgR.today{padding-inline:12px}
+  .aiAgR .d b{font-size:15.5px}.aiAgR li{font-size:15px}.aiAgR li small{font-size:13px}
+  .aiAgF button{padding:6px 15px;font-size:13.5px}
+}
 .aiHc{display:flex;flex-wrap:wrap;gap:7px}.aiHc span{padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--bc) 14%,var(--card));font-size:13px}
 .aiSt2 ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;position:relative}
 .aiSt2 li{display:flex;gap:11px;align-items:flex-start;position:relative}
@@ -1384,9 +1415,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   };
   const uiIc = (n, cls) => '<svg class="aiIc' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + (UI_IC[n] || UI_IC.info) + '"/></svg>';
   const UI_L = {
-    he: { todayTag: "היום", shut: "סגור", email: "מייל", phone: "חיוג", whatsapp: "וואטסאפ", link: "פתח", address: "ניווט", copy: "העתק", copied: "הועתק", open: "פתוח עכשיו", closed: "סגור כעת", until: "עד ", opens: "נפתח ", waze: "Waze", maps: "מפות", dayN: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"] },
-    en: { todayTag: "Today", shut: "Closed", email: "Email", phone: "Call", whatsapp: "WhatsApp", link: "Open", address: "Navigate", copy: "Copy", copied: "Copied", open: "Open now", closed: "Closed now", until: "until ", opens: "opens ", waze: "Waze", maps: "Maps", dayN: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
-    fr: { todayTag: "Aujourd'hui", shut: "Fermé", email: "E-mail", phone: "Appeler", whatsapp: "WhatsApp", link: "Ouvrir", address: "Itinéraire", copy: "Copier", copied: "Copié", open: "Ouvert", closed: "Fermé", until: "jusqu'à ", opens: "ouvre ", waze: "Waze", maps: "Maps", dayN: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"] },
+    he: { todayTag: "היום", shut: "סגור", email: "מייל", phone: "חיוג", whatsapp: "וואטסאפ", link: "פתח", address: "ניווט", copy: "העתק", copied: "הועתק", open: "פתוח עכשיו", closed: "סגור כעת", until: "עד ", opens: "נפתח ", tdy: "היום", tom: "מחר", all: "הכול", waze: "Waze", maps: "מפות", dayN: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"] },
+    en: { todayTag: "Today", shut: "Closed", email: "Email", phone: "Call", whatsapp: "WhatsApp", link: "Open", address: "Navigate", copy: "Copy", copied: "Copied", open: "Open now", closed: "Closed now", until: "until ", opens: "opens ", tdy: "today", tom: "tomorrow", all: "All", waze: "Waze", maps: "Maps", dayN: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] },
+    fr: { todayTag: "Aujourd'hui", shut: "Fermé", email: "E-mail", phone: "Appeler", whatsapp: "WhatsApp", link: "Ouvrir", address: "Itinéraire", copy: "Copier", copied: "Copié", open: "Ouvert", closed: "Fermé", until: "jusqu'à ", opens: "ouvre ", tdy: "aujourd'hui", tom: "demain", all: "Tout", waze: "Waze", maps: "Maps", dayN: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"] },
   };
   const ul = () => UI_L[lang()] || UI_L.he;
   const uiCo = b => " c-" + (b.co || "def");
@@ -1442,6 +1473,17 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     return until !== null ? { open: true, until } : { open: false };
   }
   const uiHM = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+  function uiNextOpen(rows) {                              // the first range that starts after now: { off: days from today, at: minutes }
+    const now = new Date(), day = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
+    for (let off = 0; off < 8; off++) {
+      const d = (day + off) % 7, starts = [];
+      for (const r of rows) if (uiDays(r.d).has(d)) uiRanges(r.h).forEach(rg => starts.push(rg[0]));
+      starts.sort((a, b) => a - b);
+      const at = starts.find(x => off > 0 || x > mins);
+      if (at !== undefined) return { off, at, day: d };
+    }
+    return null;
+  }
   // "א' - ה'" -> "א׳–ה׳" (one tidy label that never breaks across lines)
   const uiDayLabel = d => String(d || "").trim().replace(/\s*[-–]\s*/g, "–").replace(/'/g, "׳").replace(/\s*,\s*/g, ", ");
   // "06:00-09:00, 12:00-14:00 ו-18:00-01:00" -> three chips; anything that is not a plain range ("06:00 עד כניסת שבת") stays a text chip
@@ -1470,7 +1512,9 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const uiMins = v => { const m = String(v).match(/^(\d{2}):(\d{2})–(\d{2}):(\d{2})$/); return m ? [+m[1] * 60 + +m[2], (+m[3] * 60 + +m[4]) || 1440] : null; };
   function uiHours(b) {
     const L = ul(), st = uiOpenNow(b.it), todayN = new Date().getDay();
-    const badge = st ? '<span class="aiHbadge ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed) + "</span>" : "";
+    const nx = st && !st.open ? uiNextOpen(b.it) : null;
+    const nxTxt = nx ? " · " + L.opens + (nx.off === 0 ? L.tdy : nx.off === 1 ? L.tom : L.dayN[nx.day]) + " " + uiHM(nx.at) : "";
+    const badge = st ? '<span class="aiHbadge ' + (st.open ? "on" : "off") + '"><i></i>' + esc2(st.open ? L.open + " · " + L.until + uiHM(st.until) : L.closed + nxTxt) + "</span>" : "";
     const notes = []; b.it.forEach(r => uiTimeChips(r.h).forEach(c => { const n = c.n || r.l || ""; if (n && !notes.includes(n)) notes.push(n); }));
     const colOf = n => HOURS_COL[n ? notes.indexOf(n) % HOURS_COL.length : 0];
     const chip = c => '<span class="aiHoChip' + (c.t ? " tx" : "") + '" style="--hc:' + colOf(c.n) + '">' + (c.n ? "<i></i>" : "") + "<em>" + esc2(c.v) + "</em>" + (c.n ? "<small>" + esc2(c.n) + "</small>" : "") + "</span>";
@@ -1481,6 +1525,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     let body;
     if (b.s === "compact") {                                                   // an older answer that was saved in the earlier "compact" style
       body = '<div class="aiHc">' + b.it.map(r => "<span><b>" + esc2(r.l || r.d) + "</b> " + esc2(r.h) + "</span>").join("") + "</div>";
+    } else if (b.s === "agenda") {
+      // the world-standard hours list (maps apps): one row per group of days, the day on one side and below each other the ranges, a dot for the kind of service.
+      // Nothing is a pill that can run off the side; with several kinds of service a filter row lets the student see just one; closed days are one quiet row; today is lifted.
+      const row = g => {
+        const isToday = g.days.includes(todayN);
+        const lis = g.slots.map(c => '<li data-n="' + (c.n ? notes.indexOf(c.n) : "") + '" style="--hc:' + colOf(c.n) + '"><i></i><em' + (c.t ? ' class="tx"' : "") + ">" + esc2(c.v) + "</em>" + (c.n ? "<small>" + esc2(c.n) + "</small>" : "") + "</li>").join("");
+        return '<div class="aiAgR' + (isToday ? " today" : "") + (g.slots.length ? "" : " off") + '"><span class="d"><b>' + esc2(g.label) + "</b>" + (isToday ? "<em>" + esc2(L.todayTag) + "</em>" : "") + '</span><ul class="t">' + lis + '</ul><span class="x">' + esc2(L.shut) + "</span></div>";
+      };
+      const filt = notes.length > 1 ? '<div class="aiAgF" role="tablist"><button type="button" data-hf="" class="on">' + esc2(L.all) + "</button>" + notes.map((n, i) => '<button type="button" data-hf="' + i + '" style="--hc:' + colOf(n) + '"><i></i>' + esc2(n) + "</button>").join("") + "</div>" : "";
+      body = '<div class="aiAg">' + filt + '<div class="aiAgL">' + groups.map(row).join("") + "</div></div>";
     } else if (b.s === "week") {
       body = '<div class="aiHoWk">' + L.dayN.map((n, d) => {
         const sl = b.it.filter(r => uiDays(r.d).has(d)).flatMap(r => uiTimeChips(r.h).map(c => ({ ...c, n: c.n || r.l || "" })));
@@ -2583,6 +2637,16 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const f = e.target.closest(".aiFile"); if (f) { downloadFile(f); return; }
       const q = e.target.closest("[data-q]"); if (q) send(q.dataset.q);
       const ac = e.target.closest("[data-act]"); if (ac) { uiAction(ac); return; }
+      const hf = e.target.closest("[data-hf]");
+      if (hf) {                                              // opening hours: show one kind of service only
+        const box = hf.closest(".aiAg"), f = hf.dataset.hf;
+        box.querySelectorAll("[data-hf]").forEach(x => x.classList.toggle("on", x === hf));
+        box.querySelectorAll(".aiAgR:not(.off)").forEach(r => {
+          let any = false; r.querySelectorAll("li").forEach(li => { const show = !f || li.dataset.n === f; li.hidden = !show; any = any || show; });
+          r.classList.toggle("none", !any);
+        });
+        return;
+      }
       const tbb = e.target.closest("[data-tab]");
       if (tbb) {
         const box = tbb.closest(".aiTb"), i = tbb.dataset.tab;
