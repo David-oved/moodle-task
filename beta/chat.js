@@ -134,7 +134,9 @@
 .aiFace.aiRx-float{animation:aiUriFloat calc(2.4s*var(--ud,1)) ease-in-out}
 .aiFace.aiRx-lookaround .aiEyes{animation:aiUriLook calc(2s*var(--ud,1)) ease-in-out}
 .aiFace.aiRx-lookaround{animation:aiUriTiltS calc(2s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-wink{animation:aiUriTiltS calc(.9s*var(--ud,1)) ease-in-out}
+.aiFace.aiRx-wink{transform-origin:50% 60%;animation:aiTilt calc(.7s*var(--ud,1)) ease-in-out both}
+.aiFace.aiRx-wink .aiEyes .aiEyeR,body:not(.calm) .aiFace.aiRx-wink[data-blink] .aiEyes .aiEyeR{animation:aiWinkEye calc(.7s*var(--ud,1)) ease-in-out both}
+.aiFace.aiRx-wink .aiSmile{animation:aiWinkSmile calc(.7s*var(--ud,1)) ease-in-out both}
 @keyframes aiUriJump{0%{transform:none}35%{transform:translateY(-16%) scale(.96,1.05)}60%{transform:translateY(0) scale(1.06,.93)}80%{transform:scale(.98,1.02)}100%{transform:none}}
 @keyframes aiUriNod{0%,100%{transform:none}25%{transform:translateY(8%) scale(1.03,.94)}50%{transform:none}75%{transform:translateY(8%) scale(1.03,.94)}}
 @keyframes aiUriWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}45%{transform:rotate(7deg)}70%{transform:rotate(-4deg)}}
@@ -1011,12 +1013,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const eye = (x, side) => c.eyes === "big"
       ? '<g class="aiEye ' + side + '"><ellipse cx="' + x + '" cy="19.2" rx="' + (2.7 * wide).toFixed(2) + '" ry="' + (3.3 * wide).toFixed(2) + '"/><circle class="aiShine" cx="' + (x + 1) + '" cy="17.7" r="1.1"/><circle class="aiShine" cx="' + (x - 0.9) + '" cy="20.9" r=".5"/></g>'
       : '<ellipse class="aiEye ' + side + '" cx="' + x + '" cy="19" rx="' + (2.1 * wide).toFixed(2) + '" ry="' + (2.7 * wide).toFixed(2) + '"/>';
-    return '<g class="aiEyes"' + st + ">" + eye(14.8, "aiEyeL") + (mood === "wink" ? arcR : eye(25.2, "aiEyeR")) + "</g>";
+    return '<g class="aiEyes"' + st + ">" + eye(14.8, "aiEyeL") + (mood === "wink" ? '<path class="aiLid" d="M23 19.4h4.4"/>' : eye(25.2, "aiEyeR")) + "</g>";
   }
   function uriMouth(mood) {
     if (mood === "wow") return '<ellipse class="aiMouthF" cx="20" cy="26.3" rx="1.9" ry="2.5"/>';
     if (mood === "think") return '<path class="aiSmile" d="M16.2 26.2q1.9-1.6 3.8 0t3.8 0"/>';
-    if (mood === "wink") return '<path class="aiSmile" d="M15 24q5.2 4.8 10-.6"/>';
     return '<path class="aiSmile" d="M15.3 24.4q4.7 3.8 9.4 0"/>';
   }
   // what he wears now: the outfit of a season that covers today's date, otherwise the default one (only the admin decides)
@@ -1093,7 +1094,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   /* ---- movement. Each one is a CSS class (aiRx-NAME); some also change his face for a moment (a mood) */
   const URI_ANIMS = {
     jump: { ms: 700 }, nod: { ms: 800 }, wiggle: { ms: 700 }, tilt: { ms: 1200, mood: "think" }, pulse: { ms: 1000 }, zoom: { ms: 800, mood: "wow" },
-    shake: { ms: 600, mood: "wow" }, lookaround: { ms: 2000 }, float: { ms: 2400 }, wink: { ms: 900, mood: "wink" },
+    shake: { ms: 600, mood: "wow" }, lookaround: { ms: 2000 }, float: { ms: 2400 }, wink: { ms: 700 },
   };
   const uriStill = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
   const uriSpeed = C => Math.max(0.5, Math.min(2, Number(C.anim.speed) || 1));
