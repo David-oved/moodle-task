@@ -415,7 +415,8 @@ body.dashed .dedit2{display:none}
 .dw .wdots i.o{background:none;box-shadow:inset 0 0 0 1.5px var(--c)}
 .dw .wdots i.x{border-radius:1.5px}
 .dw .wday{justify-content:flex-start;padding-top:6px}
-.dw .wbars{display:flex;flex-direction:column;gap:3px;width:72%;flex:1;justify-content:flex-start;margin-top:4px}
+.dw .wbars{display:flex;flex-direction:column;gap:3px;width:72%;flex:1 1 0;min-height:0;overflow:hidden;justify-content:flex-start;margin-top:4px}
+.dw .wday{min-height:0;overflow:hidden}.dw .wbars i{flex:none}.dw .wbars i[hidden],.dw .wmo[hidden]{display:none}.dw .wbars .wmo{flex:none;font-size:9.5px;line-height:10px;margin-top:-2px;text-align:center;color:var(--muted)}
 .dw .wbars i{height:12px;border-radius:5px;background:var(--c)}
 .dw .wbars i.o{background:none;box-shadow:inset 0 0 0 1.5px var(--c)}
 .dw .wbars i.m{box-sizing:border-box;background:color-mix(in srgb,var(--c) 30%,var(--card));border:1.5px dashed var(--c)}
@@ -3456,12 +3457,13 @@ document.addEventListener("click", e => {
 /* ---------- tasks that are really one: "exercise 6, question 1 … 6" (feedback via Meir, 22.11: "make it one homework instead of 6, it just takes room").
    Same course, the same deadline to the minute, and names that differ in ONE number only → one card ("6 tasks") that opens with an animation onto
    the separate tasks. Everything else stays per task: its status, reports, chat, marking done – it's only how the list shows them ---------- */
-const tgParts = s => String(s || "").split(/(\d+)/);           // odd places = numbers
+const tgNorm = s => String(s || "").normalize("NFKC").replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, "").replace(/[\u2010-\u2015\u2212\u05be]/g, "-").replace(/\s*-\s*/g, " - ").replace(/\s+/g, " ").trim().toLowerCase();   // "שאלה 1 -  בודק" = "שאלה 2 – בודק"
+const tgParts = s => tgNorm(s).split(/(\d+)/);           // odd places = numbers
 function tgCluster(items) {
   const by = new Map(), out = [];
   for (const x of items) {
     if (!x.due || !(x.cid > 0) || x.mine) { out.push(x); continue; }
-    const k = x.cid + "|" + x.due + "|" + String(x.name || "").replace(/\d+/g, "#") + "|" + (isDone(x) ? 1 : 0) + (P.hidden.includes(x.key) ? 1 : 0);
+    const k = x.cid + "|" + Math.floor(x.due / 60) + "|" + tgNorm(x.name).replace(/\d+/g, "#") + "|" + (isDone(x) ? 1 : 0) + (P.hidden.includes(x.key) ? 1 : 0);
     let c = by.get(k); if (!c) { c = { k, items: [] }; by.set(k, c); out.push(c); }
     c.items.push(x);
   }
@@ -3475,7 +3477,7 @@ function tgCluster(items) {
     const at = vary[0], its = e.items.slice().sort((a, b) => (at ? Number(tgParts(a.name)[at]) - Number(tgParts(b.name)[at]) : 0) || a.key.localeCompare(b.key));
     let title = its[0].name;
     if (at) { const ns = its.map(x => Number(tgParts(x.name)[at])), seq = ns.every((n, i) => !i || n === ns[i - 1] + 1);
-      const p = tgParts(its[0].name); p[at] = "\u2066" + (seq ? ns[0] + "–" + ns[ns.length - 1] : ns.join(", ")) + "\u2069";   /* isolated, so Hebrew shows "1–6" and not "6–1" */ title = p.join(""); }
+      let p = String(its[0].name || "").split(/(\d+)/); if (p.length !== tgParts(its[0].name).length) p = tgParts(its[0].name); p[at] = "\u2066" + (seq ? ns[0] + "–" + ns[ns.length - 1] : ns.join(", ")) + "\u2069";   /* isolated, so Hebrew shows "1–6" and not "6–1" */ title = p.join(""); }
     res.push({ tg: true, gk: "tg:" + e.k, title, items: its });
   }
   return res;
@@ -4407,7 +4409,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.1";
+const APP_VERSION = "1.9.4-beta.2";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -5948,7 +5950,7 @@ async function crsLoad(cid) {
           continue;
         }
         if (m.modname === "url") { const c = (m.contents || [])[0]; if (c && c.fileurl) items.push({ k: "link", n: name, u: c.fileurl }); continue; }
-        items.push({ k: m.modname === "assign" || m.modname === "quiz" ? m.modname : "mod", m: m.modname || "", n: name, u: m.url || "", id: Number(m.id) || 0 });
+        items.push({ k: m.modname === "assign" || m.modname === "quiz" ? m.modname : "mod", m: m.modname || "", n: name, u: m.url || "", id: Number(m.id) || 0, cd: crsDone(m) });
       }
       const sum = stripHtml(sec.summary || "").trim().slice(0, 400);
       if (items.length || sum) out.push({ n: stripHtml(sec.name || "") || t("crsSec", out.length + 1), sum, items: items.slice(0, 150) });
@@ -5961,6 +5963,8 @@ async function crsLoad(cid) {
   if (CRS.cid === cid && !$("#crsSheet").hidden) renderCourse();
 }
 const MOD_IC = { assign: "file-up", quiz: "circle-check", forum: "message-circle", page: "file-text", book: "book-open", lesson: "book-open", choice: "list-checks", feedback: "list-checks", zoom: "video", bigbluebuttonbn: "video", h5pactivity: "sparkles", url: "link" };
+// Moodle's own completion marks (when the course uses them): a rule other than "viewed" met = submitted/graded, so this holds even when the app never saw it as a task
+function crsDone(m) { const d = m && m.completiondata; if (!d || !(d.state > 0) || !Array.isArray(d.details)) return 0; return d.details.some(r => r && r.rulename !== "completionview" && r.rulevalue && (r.rulevalue.status === 1 || r.rulevalue.status === 2)) ? 1 : 0; }
 function crsItem(it, cid) {
   if (it.k === "label") return '<div class="crsnote">' + esc(it.n) + "</div>";
   if (it.k === "file") return fileLink({ n: it.n, u: it.u, s: it.s });
@@ -5968,7 +5972,7 @@ function crsItem(it, cid) {
   const x = it.id && V.data ? V.data.tasks.find(y => y.cid === cid && y.cmid === it.id) : null;
   // checked (Rivki): an activity with a grade in the gradebook says so, also when it has already left the task list (an automatic checker after its date)
   const g = it.id && grOn() ? grItems(cid).find(i => i.cmid === it.id && i.raw != null) : null, gt = g ? grTxt(g) : "";
-  const chk = g ? '<small class="crsok">' + esc(t("crsChecked") + (gt ? " · " + gt : "")) + "</small>" : "";
+  const chk = g ? '<small class="crsok">' + esc(t("crsChecked") + (gt ? " · " + gt : "")) + "</small>" : it.cd && !x ? '<small class="crsok">' + esc(t("stSubmitted")) + "</small>" : "";
   if (x) return '<button class="fl crsact" data-crsgo="' + esc(x.key) + '">' + ic(MOD_IC[it.k] || "file-text") + " <span><bdi>" + esc(it.n) + "</bdi></span>" + (chk || "<small" + (isDone(x) ? ' class="crsok"' : "") + ">" + esc(isDone(x) ? t("stSubmitted") : x.due ? shortDate(x.due) : "") + "</small>") + "</button>";
   return /^https?:\/\//.test(it.u) ? '<a class="fl" href="' + esc(it.u) + '" target="_blank" rel="noopener noreferrer">' + ic(MOD_IC[it.m] || MOD_IC[it.k] || "external-link") + " <span><bdi>" + esc(it.n) + "</bdi></span>" + chk + "</a>" : "";
 }
@@ -6292,13 +6296,13 @@ function widgetOf(id, w, h, d, now) {
       if (K === "2x1") return { a: ' data-fg="next7"', h: wHead("calendar-days", t("weekTitle")) + '<div class="wrow wbase">' + wFit(String(n), "wbig", 28, 16) + wFit(t("miniDue7"), "wl1 wgrow", 12, 9) + "</div>" };
       const base = new Date(now * 1000); base.setHours(0, 0, 0, 0); let cols = "";
       // the same days as the full card: same order (open first, then by time), same marks (exam striped, my own task dashed, done outlined), same "today" circle
-      const few = h < 2, cap = few ? 3 : 5;
+      const few = h < 2;
       for (let i = 0; i < 7; i++) { const dd = new Date(base); dd.setDate(base.getDate() + i); const k = dayKey(dd), ex = examList().filter(e => dayKey(new Date(e.ts * 1000)) === k);
-        const its = rl.filter(x => x.due && dueDay(x) === k).sort((a, b) => isDone(a) - isDone(b) || a.due - b.due), sh = its.slice(0, Math.max(0, cap - ex.length)), more = its.length - sh.length;
+        const its = rl.filter(x => x.due && dueDay(x) === k).sort((a, b) => isDone(a) - isDone(b) || a.due - b.due), sh = its;      // all of them; weekFit hides what doesn't fit and writes "+N" ("there's room, so why +1")
         let dn = ""; try { dn = dd.toLocaleDateString(t("locale"), { weekday: few ? "narrow" : "short" }); } catch (e) {}
         const mk = (c, cls) => '<i' + (cls ? ' class="' + cls + '"' : "") + ' style="--c:' + c + '"></i>';
         cols += '<button class="wday' + (i === 0 ? " wtoday" : "") + '" data-day="' + k + '"><small>' + wEsc(dn) + "</small><b>" + dd.getDate() + '</b><span class="wbars">' + ex.map(e => mk(colorOf(e.cid), "x")).join("") +
-          sh.map(x => mk(colorOf(x.cid), (isDone(x) ? "o" : "") + (x.type === "mine" ? " m" : ""))).join("") + "</span>" + (more > 0 ? "<small>+" + more + "</small>" : "") +
+          sh.map(x => mk(colorOf(x.cid), (isDone(x) ? "o" : "") + (x.type === "mine" ? " m" : ""))).join("") + "<small class=\"wmo\" hidden></small></span>" +
           (!few ? '<small class="wcnt7">' + (its.length || "") + "</small>" : "") + "</button>"; }
       return { a: "", cls: "wweek", h: cols };
     }
@@ -6505,10 +6509,10 @@ function heroFit() {
   const b = el.querySelector(":scope > button[data-tk]"); if (el.classList.contains("hf5") && b) el.dataset.tk = b.dataset.tk;
 }
 function weekFit() {
-  for (const wd of document.querySelectorAll("#week .wd")) {
-    const bars = [...wd.querySelectorAll(".bars .bar:not(.xm)")], more = wd.querySelector(".more"); if (!more) continue;
+  for (const wd of document.querySelectorAll("#week .wd, .dw .wday")) {
+    const mini = wd.classList.contains("wday"), bars = [...wd.querySelectorAll(mini ? ".wbars i:not(.x)" : ".bars .bar:not(.xm)")], more = wd.querySelector(mini ? ".wmo" : ".more"); if (!more) continue;
     bars.forEach(b => { b.hidden = false; }); more.hidden = true;
-    const box = wd.querySelector(".bars"), fits = () => box.scrollHeight <= box.clientHeight + 1 && wd.scrollHeight <= wd.clientHeight + 1;
+    const box = wd.querySelector(mini ? ".wbars" : ".bars"), fits = () => box.scrollHeight <= box.clientHeight + 1 && wd.scrollHeight <= wd.clientHeight + 1;
     let hid = 0;
     while (!fits() && hid < bars.length) { bars[bars.length - 1 - hid].hidden = true; hid++; more.textContent = "+" + hid; more.hidden = false; }
   }
