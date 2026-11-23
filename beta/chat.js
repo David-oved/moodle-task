@@ -456,6 +456,15 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiTblW{overflow-x:auto;margin:0 -4px;padding:0 4px}.aiTbl table{border-collapse:collapse;width:100%;font-size:13.5px}
 .aiTbl th,.aiTbl td{padding:8px 9px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}.aiTbl thead th{color:var(--bc);font-weight:800;font-size:12.5px}.aiTbl tbody th{font-weight:700;color:var(--muted)}
 .aiTbl.striped tbody tr:nth-child(odd){background:color-mix(in srgb,var(--bc) 7%,transparent)}
+@container aip (max-width:560px){          /* a table of three or more columns on a phone: every row becomes a small card (key cell as the title, the other cells as "column: value"), never words cut in the middle */
+  .aiTbl.stk thead{display:none}.aiTbl.stk table,.aiTbl.stk tbody{display:block}
+  .aiTbl.stk tr{display:block;padding:10px 12px;margin-bottom:8px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.aiTbl.stk tr:last-child{margin-bottom:0}
+  .aiTbl.stk th{display:block;border:0;padding:0 0 4px;color:var(--text);font-size:14.5px;font-weight:800}
+  .aiTbl.stk td{display:grid;grid-template-columns:minmax(64px,34%) minmax(0,1fr);gap:8px;border:0;padding:3px 0;font-size:13.5px}
+  .aiTbl.stk td::before{content:attr(data-l);color:var(--muted);font-size:12px;font-weight:700}
+  .aiTbl.stk td.k{display:block;font-weight:800;font-size:14.5px;padding-bottom:4px}.aiTbl.stk td.k::before{content:none}
+  .aiTbl.striped.stk tbody tr:nth-child(odd){background:var(--card)}
+}
 .aiCmpC{display:flex;flex-wrap:wrap;gap:9px}.aiCmpC>.aiBkT{flex-basis:100%;margin-bottom:0}
 .aiCmpCard{flex:1;min-width:130px;padding:10px;border-radius:13px;background:var(--card);border:1px solid var(--line)}.aiCmpCard>b{display:block;color:var(--bc);margin-bottom:6px}
 .aiCmpCard div{font-size:13.5px;padding:3px 0}.aiCmpCard span{display:block;font-size:11.5px;color:var(--muted)}
@@ -1694,7 +1703,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
           return uiBk(b, "aiCmpC", cols.map((c, ci) => '<div class="aiCmpCard"><b>' + esc2(c) + "</b>" + it.map(r => "<div><span>" + esc2(r.l) + "</span>" + uiCell((r.c || [])[ci] || "-") + "</div>").join("") + "</div>").join(""), true);
         }
         const head = cols.length ? "<thead><tr>" + (it.some(r => r.l) ? "<th></th>" : "") + cols.map(c => "<th>" + esc2(c) + "</th>").join("") + "</tr></thead>" : "";
-        return uiBk(b, "aiTbl " + (b.s === "striped" || b.k === "compare" ? "striped" : ""), '<div class="aiTblW"><table>' + head + "<tbody>" + it.map(r => "<tr>" + (r.l ? "<th>" + uiCell(r.l) + "</th>" : "") + (r.c || []).map(c => "<td>" + uiCell(c) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>", true);
+        const stk = cols.length + (it.some(r => r.l) ? 1 : 0) >= 3;                    // three columns or more: on a narrow screen the rows turn into cards
+        return uiBk(b, "aiTbl " + (b.s === "striped" || b.k === "compare" ? "striped" : "") + (stk ? " stk" : ""), '<div class="aiTblW"><table>' + head + "<tbody>" + it.map(r => "<tr>" + (r.l ? "<th>" + uiCell(r.l) + "</th>" : "") + (r.c || []).map((c, ci) => '<td data-l="' + esc2(cols[ci] || "") + '"' + (!r.l && ci === 0 && stk ? ' class="k"' : "") + ">" + uiCell(c) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>", true);
       }
       case "links": return it.length ? uiBk(b, "aiLk " + (b.s || "list"), it.map(x => '<button type="button" class="aiLkI" data-act="url" data-v="' + esc2(x.u) + '">' + uiIc(x.ic || "link") + "<span><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</span>" + uiIc("arrow", "go") + "</button>").join(""), true) : "";
       case "timeline": return it.length ? uiBk(b, "aiTm " + (b.s || "vertical"), it.map((x, i) => '<div class="aiTmI" style="--k:' + i + '"><i></i><div><em>' + esc2(x.dt) + "</em><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></div>").join(""), true) : "";
