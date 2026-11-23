@@ -381,6 +381,7 @@ body.dashed .dedit2{display:none}
 .dw .wbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
 .dw .wring{display:block;max-height:100%;aspect-ratio:1}
 .dw .wlist{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0;justify-content:flex-start}
+.dw .wlist[data-tfit]{overflow:hidden}.dw .wlist[data-tfit] > *{flex:none}.dw .wlist [hidden]{display:none!important}
 .dw .wli{display:flex;align-items:center;gap:10px;min-width:0;padding:6px 8px;border-radius:10px;background:var(--row);border:0;color:inherit;font:inherit;text-align:start;width:100%;box-sizing:border-box}
 .dw .wli.wpast{opacity:.45}
 .tte.off2{opacity:.5;background-image:repeating-linear-gradient(135deg,transparent 0 6px,color-mix(in srgb,var(--c) 12%,transparent) 6px 8px)}
@@ -4435,7 +4436,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.3";
+const APP_VERSION = "1.9.4-beta.4";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -6295,19 +6296,12 @@ function widgetOf(id, w, h, d, now) {
       if (K === "1x1") return { a: "", h: wHead("clock", "") + (x ? wFit(x.s, "wbig", 24, 14) + wFit(ttName(x), "wt1", 12, 9) : wFit("—", "wbig", 24, 14) + wFit(T.later ? T.later.x.s : t("miniNoCls"), "wt1", 11, 9)) };
       if (K === "2x1" || K === "4x1") return { a: "", cls: K === "4x1" ? "wrow" : "", h: (K === "4x1" ? '<div class="wcol wgrow">' : "") + wHead("clock", t(T.cur ? "wNow" : x ? "wNextCls" : "todayClasses")) +
         (x ? wFit(ttName(x), "wt", 16, 10) + (stTx(x) ? wFit(stTx(x), "wl1", 12, 9) : "") : wFit(t("miniNoCls"), "wt", 15, 10)) + (K === "4x1" ? '</div><div class="wcol wend">' : "") + (x ? wFit(x.s + (K === "4x1" ? "–" + x.e : ""), "wbig", 24, 14) : wFit(lt, "wl1", 12, 9)) + (K === "4x1" ? "</div>" : "") };
-      // everything if it fits; otherwise the classes still ahead, with one line for those already over and one for the rest
-      const L = T.today, n = wRows(h, 40), fi = L.findIndex(c => hm(c.e) > T.m), first = fi < 0 ? L.length : fi;
-      let body = "";
-      if (L.length && L.length <= n) body = L.map(row).join("");
-      else if (L.length) {
-        let room = n; const parts = [];
-        if (first > 0 && n >= 4) { parts.push('<div class="wmore">✓ ' + wEsc(t("wPastN", first)) + "</div>"); room--; }   // a small tile says it in the title instead
-        const rest = L.slice(first), vis = rest.slice(0, rest.length > room ? Math.max(1, room - 1) : room);
-        parts.push(...vis.map(row)); if (rest.length > vis.length) parts.push('<div class="wmore">' + wEsc(t("wMoreN", rest.length - vis.length)) + "</div>");
-        body = parts.join("");
-      }
-      return { a: "", h: wHead("clock", t("todayClasses") + " · " + dayName(new Date(now * 1000).getDay(), "short") + (L.length > n && first > 0 && n < 4 && first < L.length ? " · ✓" + first : "")) +
-        (L.length && (first < L.length || L.length <= n) ? '<div class="wlist">' + body + "</div>" : L.length ? '<div class="wlist">' + body + "</div>" + (lt ? '<small class="ft1">' + wEsc(lt + " · " + ttName(T.later.x)) + "</small>" : "") : '<div class="wcen"><div class="wemo">☕</div>' + wFit(t("miniNoCls"), "wt", 16, 11) + (lt ? '<small class="ft1">' + wEsc(lt + " · " + ttName(T.later.x)) + "</small>" : "") + "</div>") };
+      // everything if it fits; if not, the classes already over make room first (one "✓ N over" line), so what's now and next is always seen (Pnina),
+      // and only then the last ones become "+N". Measured on the real tile by todayFit()
+      const L = T.today, fi = L.findIndex(c => hm(c.e) > T.m), first = fi < 0 ? L.length : fi;
+      const body = L.length ? '<div class="wmore wpastn" hidden></div>' + L.map(row).join("") + '<div class="wmore wrest" hidden></div>' : "";
+      return { a: "", h: wHead("clock", t("todayClasses") + " · " + dayName(new Date(now * 1000).getDay(), "short")) +
+        (L.length && first < L.length ? '<div class="wlist" data-tfit>' + body + "</div>" : L.length ? '<div class="wlist" data-tfit>' + body + "</div>" + (lt ? '<small class="ft1">' + wEsc(lt + " · " + ttName(T.later.x)) + "</small>" : "") : '<div class="wcen"><div class="wemo">☕</div>' + wFit(t("miniNoCls"), "wt", 16, 11) + (lt ? '<small class="ft1">' + wEsc(lt + " · " + ttName(T.later.x)) + "</small>" : "") + "</div>") };
     }
     case "examCard": {
       const L = examList().filter(e => e.ts >= dayStart(now)), dn = e => Math.max(0, daysBetween(dayStart(now), dayStart(e.ts)));
@@ -6547,6 +6541,18 @@ function heroFit() {
   for (const c of HERO_FIT) { if (el.scrollHeight <= el.clientHeight + 3) break; el.classList.add(c); }
   const b = el.querySelector(":scope > button[data-tk]"); if (el.classList.contains("hf5") && b) el.dataset.tk = b.dataset.tk;
 }
+function todayFit() {
+  for (const ls of document.querySelectorAll(".dw .wlist[data-tfit]")) {
+    const rows = [...ls.querySelectorAll(".wli")], past = rows.filter(r => r.classList.contains("wpast")), pn = ls.querySelector(".wpastn"), rest = ls.querySelector(".wrest");
+    rows.forEach(r => { r.hidden = false; }); pn.hidden = rest.hidden = true;
+    const fits = () => ls.scrollHeight <= ls.clientHeight + 1;
+    let hp = 0;
+    while (!fits() && hp < past.length) { past[hp++].hidden = true; pn.hidden = false; pn.textContent = "✓ " + t("wPastN", hp); }
+    if (!fits() && hp) pn.hidden = true;                                   // a tiny tile: no room even for that line
+    const fut = rows.filter(r => !r.hidden); let hf = 0;
+    while (!fits() && fut.length - hf > 1) { fut[fut.length - 1 - hf++].hidden = true; rest.hidden = false; rest.textContent = t("wMoreN", hf); }
+  }
+}
 function weekFit() {
   for (const wd of document.querySelectorAll("#week .wd, .dw .wday")) {
     const mini = wd.classList.contains("wday"), bars = [...wd.querySelectorAll(mini ? ".wbars i:not(.x)" : ".bars .bar:not(.xm)")], more = wd.querySelector(mini ? ".wmo" : ".more"); if (!more) continue;
@@ -6556,7 +6562,7 @@ function weekFit() {
     while (!fits() && hid < bars.length) { bars[bars.length - 1 - hid].hidden = true; hid++; more.textContent = "+" + hid; more.hidden = false; }
   }
 }
-function dashOvf() { heroFit(); weekFit(); for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (!el || el.classList.contains("dexp")) continue; el.classList.toggle("ovf", el.dataset.mode === "full" && el.scrollHeight > el.clientHeight + 3); } }
+function dashOvf() { heroFit(); weekFit(); todayFit(); for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (!el || el.classList.contains("dexp")) continue; el.classList.toggle("ovf", el.dataset.mode === "full" && el.scrollHeight > el.clientHeight + 3); } }
 if ("ResizeObserver" in window) { let lw = 0; new ResizeObserver(() => { const w = $("#dash").clientWidth; if (w && w !== lw) { lw = w; dashCell(); renderMini(); } }).observe($("#dash")); }
 /* a card opened on top of everything (from its small version or from "more") */
 const DX = { id: "", mode: "" };
