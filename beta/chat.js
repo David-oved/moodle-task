@@ -319,12 +319,12 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiAc{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;border:1px solid color-mix(in srgb,var(--bc) 38%,var(--line));background:color-mix(in srgb,var(--bc) 13%,var(--card));color:var(--text);font:inherit;cursor:pointer;text-align:start;transition:transform .15s,background .2s,color .2s}
 .aiAc .aiIc{color:var(--bc)}.aiAc span{min-width:0;display:flex;flex-direction:column}
 .aiAc i{font-style:normal;font-weight:750;font-size:13.5px}
-.aiAc em{font-style:normal;font-size:12px;color:var(--muted);direction:ltr;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aiAc em{font-style:normal;font-size:12px;color:var(--muted);direction:ltr;text-align:start;overflow-wrap:anywhere;word-break:break-all;line-height:1.35}
 .aiAc:active,.aiAcC:active{transform:scale(.96)}
 .aiAcC{flex:none;width:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:transform .15s,background .2s,color .2s}
 .aiAc.done,.aiAcC.done{background:var(--bc);color:#fff;border-color:var(--bc)}.aiAc.done .aiIc,.aiAc.done em{color:#fff}
 .aiAcT{font-size:13.5px;color:var(--muted)}
-.aiCt.row{display:flex;align-items:center;gap:10px;padding:9px 11px}.aiCt.row .aiCtA{flex-direction:row;margin:0;margin-inline-start:auto;flex:none}
+.aiCt.row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;padding:9px 11px}.aiCt.row .aiCtH{flex:1 1 150px;min-width:0}.aiCt.row .aiCtH>div{min-width:0}.aiCt.row .aiCtA{flex-direction:row;margin:0;margin-inline-start:auto;flex:none}
 .aiCt.row .aiAc em,.aiCt.row .aiAc i,.aiCt.row .aiAcC{display:none}.aiCt.row .aiAc{padding:9px;flex:none}.aiCt.row .aiAvt{width:34px;height:34px;font-size:14px}
 .aiCt.big{text-align:center}.aiCt.big .aiCtH{flex-direction:column}.aiCt.big .aiAvt{width:58px;height:58px;font-size:23px}.aiCt.big .aiCtH b{font-size:17px}.aiCt.big .aiAc{padding:13px}
 .aiHH{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px;font-size:14.5px}.aiHH>.aiIc{color:var(--bc)}
@@ -422,7 +422,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiHl{display:flex;flex-wrap:wrap;gap:10px}.aiHl>.aiBkT{flex-basis:100%;margin-bottom:0}
 .aiHlI{flex:1;min-width:84px;text-align:center}.aiHlI b{display:block;font-size:32px;line-height:1.05;font-weight:900;color:var(--bc);letter-spacing:-.02em}
 .aiHlI span{display:block;font-weight:700;font-size:13px;margin-top:2px}
-.aiHl.pill .aiHlI{flex:none;display:inline-flex;align-items:baseline;gap:7px;padding:6px 14px;border-radius:99px;background:color-mix(in srgb,var(--bc) 15%,var(--card))}.aiHl.pill .aiHlI b{font-size:18px}
+.aiHl.pill .aiHlI{flex:0 1 auto;max-width:100%;box-sizing:border-box;display:inline-flex;align-items:baseline;flex-wrap:wrap;gap:2px 7px;padding:6px 14px;border-radius:18px;background:color-mix(in srgb,var(--bc) 15%,var(--card))}.aiHl.pill .aiHlI b{font-size:18px}
 .aiHl.row .aiHlI{text-align:start}
 .aiPz{display:flex;flex-wrap:wrap;gap:8px}.aiPz>.aiBkT{flex-basis:100%;margin-bottom:0}
 .aiPzI{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.aiPzI span{font-size:13.5px}.aiPzI b{font-weight:850;color:var(--bc);font-size:15px}
