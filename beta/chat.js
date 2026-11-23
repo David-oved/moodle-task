@@ -383,6 +383,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiAgR li small{font-size:12px;font-weight:700;color:var(--muted);min-width:0;overflow-wrap:anywhere}
 .aiAgR .x{display:none;font-size:13.5px;color:var(--muted);align-self:center}
 .aiAgR.off,.aiAgR.none{opacity:.6}.aiAgR.off .t,.aiAgR.none .t{display:none}.aiAgR.off .x,.aiAgR.none .x{display:block}
+.aiAg,.aiAgW{container:agc/inline-size}                  /* the hours card lays itself out by ITS OWN width (it can sit in half a row on a wide screen), not by the chat panel's */
 .aiAgS{display:flex;flex-direction:column;gap:10px}
 .aiAgSc{padding:10px 12px 4px;border-radius:14px;border:1px solid color-mix(in srgb,var(--hc,var(--bc)) 30%,var(--line));background:color-mix(in srgb,var(--hc,var(--bc)) 5%,var(--card))}
 .aiAgSc header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.aiAgSc header i{width:9px;height:9px;border-radius:50%;background:var(--hc,var(--bc));flex:none}
@@ -390,11 +391,12 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiAgSc .st{margin-inline-start:auto;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:99px}.aiAgSc .st.on{color:#22a55e;background:#22a55e1f}.aiAgSc .st.off{color:var(--muted);background:color-mix(in srgb,var(--text) 8%,transparent)}
 .aiAgSc .aiAgR{padding:8px 2px}.aiAgSc .aiAgR.today{padding-inline:8px;margin-inline:-6px}
 .aiAgR.nl li{grid-template-columns:max-content}
-@container aip (max-width:460px){                    /* narrow: the kind of service goes under the time, never squeezed into a sliver beside it */
+@container agc (max-width:460px){                    /* narrow: the kind of service goes under the time, never squeezed into a sliver beside it */
   .aiAgR li{grid-template-columns:8px minmax(0,1fr);row-gap:1px}.aiAgR li small{grid-column:2}.aiAgR.nl li{grid-template-columns:max-content}
   .aiAgF{gap:5px}.aiAgF button{padding:4px 10px;font-size:12px}
 }
-@container aip (min-width:640px){
+@container agc (max-width:300px){.aiAgR{grid-template-columns:minmax(0,1fr)}}
+@container agc (min-width:560px){
   .aiAg>.aiAgL{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:22px}
   .aiAg>.aiAgL .aiAgR:nth-child(2){border-top-color:transparent}
   .aiAgS{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
@@ -1623,11 +1625,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       const g2 = hasDays ? uiHoursGroups2(b.it, L) : groups;
       if (hasDays && notes.length >= 3) {
         const vrows = b.it.flatMap(r => uiTimeChips(r.h).map(c => ({ d: r.d, h: c.v, l: c.n || r.l || "" })));
-        body = '<div class="aiAgS">' + notes.map(n => {
+        body = '<div class="aiAgW"><div class="aiAgS">' + notes.map(n => {
           const mine = vrows.filter(x => x.l === n), st2 = uiOpenNow(mine), gs = uiHoursGroups2(mine, L);
           const stx = st2 ? '<span class="st ' + (st2.open ? "on" : "off") + '">' + esc2(st2.open ? L.until + uiHM(st2.until) : L.closed) + "</span>" : "";
           return '<section class="aiAgSc" style="--hc:' + colOf(n) + '"><header><i></i><b>' + esc2(n) + "</b>" + stx + '</header><div class="aiAgL">' + gs.map(g => row(g, false)).join("") + "</div></section>";
-        }).join("") + "</div>";
+        }).join("") + "</div></div>";
       } else {
         const filt = notes.length > 1 ? '<div class="aiAgF" role="tablist"><button type="button" data-hf="" class="on">' + esc2(L.all) + "</button>" + notes.map((n, i) => '<button type="button" data-hf="' + i + '" style="--hc:' + colOf(n) + '"><i></i>' + esc2(n) + "</button>").join("") + "</div>" : "";
         body = '<div class="aiAg">' + filt + '<div class="aiAgL">' + g2.map(g => row(g, true)).join("") + "</div></div>";
