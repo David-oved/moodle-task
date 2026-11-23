@@ -389,6 +389,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiAgSc header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.aiAgSc header i{width:9px;height:9px;border-radius:50%;background:var(--hc,var(--bc));flex:none}
 .aiAgSc header b{font-size:14.5px;font-weight:850;min-width:0;overflow-wrap:anywhere}
 .aiAgSc .st{margin-inline-start:auto;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:99px}.aiAgSc .st.on{color:#22a55e;background:#22a55e1f}.aiAgSc .st.off{color:var(--muted);background:color-mix(in srgb,var(--text) 8%,transparent)}
+.aiAgSc .aiAgR.off:not(:only-child){display:none}                /* department cards: the days it is closed are not repeated in every card (the badge says closed now; the open days are listed) */
 .aiAgSc .aiAgR{padding:8px 2px}.aiAgSc .aiAgR.today{padding-inline:8px;margin-inline:-6px}
 .aiAgR.nl li{grid-template-columns:max-content}
 @container agc (max-width:460px){                    /* narrow: the kind of service goes under the time, never squeezed into a sliver beside it */
@@ -415,6 +416,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiSt2.cards li{padding:10px;border-radius:13px;background:var(--card);border:1px solid var(--line)}
 .aiFaR{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}.aiFaR:last-child{border-bottom:0}
 .aiFaR .aiIc{color:var(--bc)}.aiFaR span{flex:1;color:var(--muted)}.aiFaR b{font-weight:750;text-align:end;overflow-wrap:anywhere}
+.aiFaR small{flex-basis:100%;order:5;font-size:13px;line-height:1.45;color:var(--text);opacity:.85;overflow-wrap:anywhere}.aiFaR.hd{flex-wrap:wrap;row-gap:3px;align-items:baseline}.aiFaR.hd span{color:var(--text);font-weight:750}
 .aiFa.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.aiFa.grid>.aiBkT{grid-column:1/-1;margin-bottom:0}
 .aiFa.grid .aiFaR{flex-direction:column;align-items:flex-start;gap:3px;padding:9px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.aiFa.grid .aiFaR b{text-align:start}
 .aiFa.chips{display:flex;flex-wrap:wrap;gap:7px}.aiFa.chips>.aiBkT{flex-basis:100%;margin-bottom:0}
@@ -485,7 +487,7 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiQt.quote{border-inline-start:4px solid var(--bc);border-radius:6px 16px 16px 6px}.aiQt p{margin:0;font-size:15.5px;line-height:1.5;font-weight:600}
 .aiQt small{margin-top:6px}.aiQt.definition>b{display:block;color:var(--bc);font-size:15px;margin-bottom:3px}.aiQt.definition p{font-weight:500;font-size:14.5px}
 .aiSm>b{display:flex;align-items:center;gap:8px;font-size:15.5px;margin-bottom:5px}.aiSm>b .aiIc{color:var(--bc)}.aiSm p{margin:0 0 6px;font-size:14.5px;line-height:1.5}
-.aiSm ul{margin:4px 0 0;padding-inline-start:1.2em}.aiSm li{margin:3px 0;font-size:14px}
+.aiSm ul{margin:4px 0 0;padding-inline-start:1.2em}.aiSm li{margin:3px 0;font-size:14px}.aiSm li small{display:block;color:var(--muted);font-size:13px}
 .aiSm.plain{background:none;border:0;padding:2px}.aiSm.glass{background:linear-gradient(135deg,color-mix(in srgb,var(--bc) 22%,transparent),color-mix(in srgb,var(--bc) 6%,transparent));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .aiHg{display:flex;gap:10px;align-items:center;background:none;border:0;padding:2px 2px 0}.aiHg>.aiIc{color:var(--bc);width:22px;height:22px}.aiHg b{font-size:17px;font-weight:850}
 .aiHg.accent{border-inline-start:4px solid var(--bc);padding-inline-start:10px;border-radius:2px}.aiHg.centered{justify-content:center;text-align:center}
@@ -1685,7 +1687,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         const st = b.s || "numbered";
         return uiBk(b, "aiSt2 " + st, "<ol>" + it.map((x, i) => '<li style="--k:' + i + '"><span class="aiStN">' + (i + 1) + "</span><div><b>" + esc2(x.l) + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div></li>").join("") + "</ol>", true);
       }
-      case "facts": return it.length ? uiBk(b, "aiFa " + (b.s || "list"), it.map(x => '<div class="aiFaR">' + (x.ic ? uiIc(x.ic) : "") + "<span>" + esc2(x.l) + "</span><b>" + esc2(x.v || "") + "</b></div>").join(""), true) : "";
+      case "facts": return it.length ? uiBk(b, "aiFa " + (b.s || "list"), it.map(x => '<div class="aiFaR' + (x.d ? " hd" : "") + '">' + (x.ic ? uiIc(x.ic) : "") + "<span>" + esc2(x.l) + "</span>" + (x.v ? "<b>" + esc2(x.v) + "</b>" : "") + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div>").join(""), true) : "";          // (the detail line was never drawn: a row with only a label and a detail showed just the label)
       case "highlight": return it.length ? uiBk(b, "aiHl " + (b.s || "big"), it.map(x => '<div class="aiHlI"><b>' + esc2(x.v || x.l) + "</b>" + (x.v && x.l ? "<span>" + esc2(x.l) + "</span>" : "") + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div>").join(""), true) : "";
       case "price": return it.length ? uiBk(b, "aiPz " + (b.s || "tags"), it.map(x => '<div class="aiPzI"><span>' + esc2(x.l) + "</span><b>" + esc2(x.v || "") + "</b>" + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</div>").join(""), true) : "";
       case "callout": case "banner": {
@@ -1713,7 +1715,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         return uiBk(b, "aiLoc", '<div class="aiLocH">' + uiIc(b.ic || "pin") + "<div><b>" + esc2(b.ti || b.tx) + "</b>" + (b.su ? "<small>" + esc2(b.su) + "</small>" : "") + (b.ti ? "<small>" + addr + "</small>" : "") + '</div></div><div class="aiLocA"><button type="button" class="aiAc" data-act="waze" data-v="' + addr + '">' + uiIc("nav") + "<span><i>" + esc2(L.waze) + '</i></span></button><button type="button" class="aiAc" data-act="maps" data-v="' + addr + '">' + uiIc("pin") + "<span><i>" + esc2(L.maps) + '</i></span></button><button type="button" class="aiAcC" data-act="copy" data-v="' + addr + '" aria-label="' + esc2(L.copy) + '">' + uiIc("copy") + "</button></div>", false);
       }
       case "quote": return uiBk(b, "aiQt " + (b.s || "quote"), (b.s === "definition" ? "<b>" + esc2(b.su || b.ti || "") + "</b><p>" + esc2(b.tx) + "</p>" : "<p>" + esc2(b.tx) + "</p>" + (b.su || b.ti ? "<small>" + esc2(b.su || b.ti) + "</small>" : "")), false);
-      case "summary": return uiBk(b, "aiSm " + (b.s || "card"), (b.ti ? "<b>" + (b.ic ? uiIc(b.ic) : "") + esc2(b.ti) + "</b>" : "") + (b.tx ? "<p>" + esc2(b.tx) + "</p>" : "") + (it.length ? "<ul>" + it.map(x => "<li>" + esc2(x.l) + "</li>").join("") + "</ul>" : ""), false);
+      case "summary": return uiBk(b, "aiSm " + (b.s || "card"), (b.ti ? "<b>" + (b.ic ? uiIc(b.ic) : "") + esc2(b.ti) + "</b>" : "") + (b.tx ? "<p>" + esc2(b.tx) + "</p>" : "") + (it.length ? "<ul>" + it.map(x => "<li>" + esc2(x.l) + (x.d ? "<small>" + esc2(x.d) + "</small>" : "") + "</li>").join("") + "</ul>" : ""), false);
       case "heading": return uiBk(b, "aiHg " + (b.s || "plain"), (b.ic ? uiIc(b.ic) : "") + "<div><b>" + esc2(b.ti) + "</b>" + (b.tx ? "<small>" + esc2(b.tx) + "</small>" : "") + "</div>", false);
       case "hero": return b.ti ? uiBk(b, "aiHero " + (b.s || "gradient"), '<span class="aiHeroI">' + uiIc(b.ic || "star") + '</span><div class="aiHeroT"><b>' + esc2(b.ti) + "</b>" + (b.su ? "<em>" + esc2(b.su) + "</em>" : "") + (b.tx ? "<small>" + esc2(b.tx) + "</small>" : "") + "</div>" +
         (it.length ? '<div class="aiHeroS">' + it.map((x, i) => '<div style="--k:' + i + '"><b>' + esc2(x.v) + "</b><small>" + esc2(x.l) + "</small></div>").join("") + "</div>" : ""), false) : "";
