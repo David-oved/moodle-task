@@ -111,10 +111,9 @@
 #aiFab:focus-visible{outline:3px solid var(--accent-t,var(--accent));outline-offset:3px}
 #aiFab{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 #aiFab svg{width:38px;height:38px;display:block;overflow:visible}
-.aiFace .aiBub{fill:var(--uri-body,#fff);fill-opacity:.97;stroke:var(--uri-line,none);stroke-width:var(--uri-lw,0);stroke-linejoin:round}
+.aiFace .aiBub{fill:var(--uri-body,#fff);fill-opacity:.97}
 .aiFace .aiEye{fill:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000))}
 .aiFace .aiSmile{fill:none;stroke:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000));stroke-width:2.1;stroke-linecap:round}
-.aiFace[data-aura]{filter:drop-shadow(0 0 var(--uri-ar,0px) var(--uri-ac,transparent))}
 .aiFace .aiSpark{fill:#ffd166;transform-box:fill-box;transform-origin:center}
 /* Uri: eyes, a few quiet movements, the speech bubble (every duration is multiplied by --ud, set from the admin's speed) */
 .aiFace .aiShine{fill:#fff}.aiFace .aiMouthF{fill:var(--uri-eye,color-mix(in srgb,var(--accent) 78%,#000))}
@@ -124,40 +123,13 @@
 @media (prefers-reduced-motion:no-preference){body:not(.calm) .aiFace[data-blink] .aiEyes .aiEye{animation:aiBlink 4.6s var(--bd,1.2s) infinite}}
 .aiFace{transform-box:fill-box;transform-origin:50% 88%}
 .aiFace .aiEyes .aiEye{transform-box:fill-box;transform-origin:center}
-.aiFace.aiRx-jump{animation:aiUriJump calc(.7s*var(--ud,1)) cubic-bezier(.3,1.4,.5,1)}
-.aiFace.aiRx-nod{animation:aiUriNod calc(.8s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-wiggle{animation:aiUriWig calc(.7s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-tilt{animation:aiUriTilt calc(1.2s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-pulse{animation:aiUriPulse calc(1s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-zoom{animation:aiUriZoom calc(.8s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-shake{animation:aiUriShake calc(.6s*var(--ud,1)) linear}
-.aiFace.aiRx-float{animation:aiUriFloat calc(2.4s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-lookaround .aiEyes{animation:aiUriLook calc(2s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-lookaround{animation:aiUriTiltS calc(2s*var(--ud,1)) ease-in-out}
-.aiFace.aiRx-wink{transform-origin:50% 60%;animation:aiTilt calc(.7s*var(--ud,1)) ease-in-out both}
-.aiFace.aiRx-wink .aiEyes .aiEyeR,body:not(.calm) .aiFace.aiRx-wink[data-blink] .aiEyes .aiEyeR{animation:aiWinkEye calc(.7s*var(--ud,1)) ease-in-out both}
-.aiFace.aiRx-wink .aiSmile{animation:aiWinkSmile calc(.7s*var(--ud,1)) ease-in-out both}
-@keyframes aiUriJump{0%{transform:none}35%{transform:translateY(-16%) scale(.96,1.05)}60%{transform:translateY(0) scale(1.06,.93)}80%{transform:scale(.98,1.02)}100%{transform:none}}
-@keyframes aiUriNod{0%,100%{transform:none}25%{transform:translateY(8%) scale(1.03,.94)}50%{transform:none}75%{transform:translateY(8%) scale(1.03,.94)}}
-@keyframes aiUriWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}45%{transform:rotate(7deg)}70%{transform:rotate(-4deg)}}
-@keyframes aiUriTilt{0%,100%{transform:none}30%,70%{transform:rotate(12deg) translateY(-2%)}}
-@keyframes aiUriPulse{0%,100%{transform:none}30%{transform:scale(1.1)}60%{transform:scale(1.05)}}
-@keyframes aiUriZoom{0%{transform:none}40%{transform:scale(1.25)}60%{transform:scale(1.2)}100%{transform:none}}
-@keyframes aiUriShake{0%,100%{transform:translateX(0)}10%{transform:translateX(-7%)}20%{transform:translateX(7%)}30%{transform:translateX(-6%)}40%{transform:translateX(6%)}50%{transform:translateX(-4%)}60%{transform:translateX(4%)}70%{transform:translateX(-2%)}}
-@keyframes aiUriFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10%) rotate(2deg)}}
-@keyframes aiUriTiltS{0%,100%{transform:none}25%,75%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-@keyframes aiUriLook{0%,100%{translate:0 0}20%,45%{translate:-1.7px 0}55%,80%{translate:1.7px 0}}
-#aiFab{background:linear-gradient(145deg,var(--uri-fab1,var(--accent)),var(--uri-fab2,color-mix(in srgb,var(--accent) 45%,#7b5cff)));scale:var(--uri-fs,1)}
-.aiM .aiAv{background:linear-gradient(145deg,var(--uri-fab1,var(--accent)),var(--uri-fab2,color-mix(in srgb,var(--accent) 45%,#7b5cff)))}
-.aiUriSay{position:absolute;z-index:30;max-width:72%;padding:7px 13px;border-radius:var(--uri-sb-r,14px);background:var(--uri-sb-bg,var(--card));color:var(--uri-sb-tx,var(--text));border:1px solid var(--uri-sb-bd,var(--line));box-shadow:0 8px 22px -8px #0007;font-size:13.5px;font-weight:650;animation:aiUriSayIn .22s ease-out;pointer-events:none}
-@keyframes aiUriSayIn{from{opacity:0;transform:translateY(-4px) scale(.96)}}
+#aiFab{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff))}
+.aiM .aiAv{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff))}
 #aiFab .aiTag{position:absolute;inset-block-end:-4px;inset-inline-start:-4px;padding:1px 6px;border-radius:99px;border:1px solid var(--line);
   background:var(--card);color:var(--accent-t,var(--accent));font-size:10px;font-weight:800;letter-spacing:.05em;line-height:14px}
 @media (min-width:600px) and (max-width:999px){ #aiFab{bottom:calc(104px + env(safe-area-inset-bottom))} }
 @media (min-width:1000px){ #aiFab{bottom:28px;inset-inline-end:28px;width:62px;height:62px} }
 @media (prefers-reduced-motion:no-preference){
-  body:not(.calm) #aiFab{animation:aiFloat 3.8s ease-in-out infinite}
-  body:not(.calm) .aiFace .aiSpark{animation:aiTwinkle 2.6s ease-in-out infinite}
   body:not(.calm) .aiDots i{animation:aiDot 1.2s ease-in-out infinite}
 }
 @keyframes aiFloat{0%,100%{translate:0 0}50%{translate:0 -5px}}
@@ -884,10 +856,10 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 .aiP.aiIntro > :not(.aiSplash){visibility:hidden}
 .aiSplash{position:absolute;inset:0;z-index:9;overflow:hidden}
 .aiSplash[hidden]{display:none}
-.aiSplash.aiCovered{background:#050507}
+.aiSplash.aiCovered{background:var(--aibg,#050507)}
 .aiGrow{position:absolute;left:calc(var(--aicx,50%) - var(--aigr,29px));top:calc(var(--aicy,90%) - var(--aigr,29px));width:calc(var(--aigr,29px) * 2);height:calc(var(--aigr,29px) * 2);border-radius:50%;
   background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));animation:aiGrow .5s cubic-bezier(.55,0,.2,1) both;will-change:transform}
-.aiGrow::after{content:"";position:absolute;inset:0;border-radius:50%;background:#050507;animation:aiDarken .5s ease-in both}
+.aiGrow::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--aibg,#050507);animation:aiDarken .5s ease-in both}
 .aiGrow > svg{position:absolute;inset:16%;width:68%;height:68%;overflow:visible;animation:aiFadeQuick .22s ease-out both}
 @keyframes aiGrow{from{transform:scale(1)}to{transform:scale(var(--ais,20))}}
 @keyframes aiDarken{0%,22%{opacity:0}100%{opacity:1}}
@@ -906,15 +878,54 @@ html[dir=rtl] .aiSd .aiSendI{transform:scaleX(-1)}
 /* the face's life: both eyes blink now and then; the wink closes the right eye and lifts the smile, with a little tilt and a twinkle */
 .aiSplash .aiEye,.aiSplash .aiSmile{transform-box:fill-box;transform-origin:center}
 .aiSplash .aiEye{animation:aiBlink 3.6s 1.5s infinite}
-.aiSplash.aiWink .aiEyeR{animation:aiWinkEye .66s ease-in-out both}
-.aiSplash.aiWink .aiSmile{animation:aiWinkSmile .66s ease-in-out both}
-.aiSplash.aiWink .aiFaceBig svg{transform-origin:50% 60%;animation:aiTilt .66s ease-in-out both}
-html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
 @keyframes aiBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
-@keyframes aiWinkEye{0%{transform:scaleY(1)}30%,72%{transform:scaleY(.1) translateY(.5px)}100%{transform:scaleY(1)}}
-@keyframes aiWinkSmile{0%{transform:none}30%,72%{transform:scale(1.18,1.14) translateY(-.4px)}100%{transform:none}}
-@keyframes aiTilt{0%,100%{transform:rotate(0)}32%,70%{transform:rotate(-5deg)}}
-@keyframes aiPop{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.9) rotate(25deg)}100%{transform:scale(1) rotate(0)}}
+/* the opening animation is three parts chosen in the admin app: how the face ENTERS (data-entry), what it DOES (the expressions are swapped in by the script), what floats AROUND it (.aiAmb) */
+.aiFace .aiHeart{fill:#ff5c8a}
+.aiSplTx.aiHi2{color:#fff;font-size:20px;font-weight:800;line-height:1.35;text-shadow:0 2px 14px #0009;max-width:86%}
+.aiFaceBig.aiNod > svg:first-child{transform-origin:50% 80%;animation:aiNodAn .95s ease-in-out}
+@keyframes aiNodAn{0%,100%{transform:none}22%{transform:translateY(7%) rotate(3deg) scale(1.03,.95)}48%{transform:none}72%{transform:translateY(7%) rotate(-3deg) scale(1.03,.95)}}
+.aiSplash[data-entry=spin] .aiFaceBig{animation:aiEnSpin .95s .32s cubic-bezier(.2,.9,.3,1.1) both,aiBreathe 3.2s 1.3s ease-in-out infinite}
+.aiSplash[data-entry=drop] .aiFaceBig{animation:aiEnDrop 1.05s .32s ease-in both,aiBreathe 3.2s 1.4s ease-in-out infinite}
+.aiSplash[data-entry=slide] .aiFaceBig{animation:aiEnSlide .85s .32s cubic-bezier(.2,.9,.3,1) both,aiBreathe 3.2s 1.2s ease-in-out infinite}
+.aiSplash[data-entry=flip] .aiFaceBig{animation:aiEnFlip .95s .32s ease-out both,aiBreathe 3.2s 1.3s ease-in-out infinite}
+.aiSplash[data-entry=zoom] .aiFaceBig{animation:aiEnZoom .8s .32s ease-out both,aiBreathe 3.2s 1.2s ease-in-out infinite}
+.aiSplash[data-entry=stretch] .aiFaceBig{animation:aiEnStretch 1s .32s ease-out both,aiBreathe 3.2s 1.4s ease-in-out infinite}
+.aiSplash[data-entry=swing] .aiFaceBig{transform-origin:50% -25%;animation:aiEnSwing 1.25s .32s ease-in-out both,aiBreathe 3.2s 1.6s ease-in-out infinite}
+.aiSplash[data-entry=rise] .aiFaceBig{animation:aiEnRise 1s .32s ease-out both,aiBreathe 3.2s 1.4s ease-in-out infinite}
+.aiSplash[data-entry=shake] .aiFaceBig{animation:aiEnShake .9s .32s ease-out both,aiBreathe 3.2s 1.3s ease-in-out infinite}
+@keyframes aiEnSpin{0%{opacity:0;transform:rotate(-540deg) scale(.15)}60%{opacity:1;transform:rotate(14deg) scale(1.12)}100%{opacity:1;transform:none}}
+@keyframes aiEnDrop{0%{opacity:0;transform:translateY(-55vh)}45%{opacity:1;transform:translateY(0) scale(1.1,.86)}62%{transform:translateY(-12%) scale(.96,1.05)}80%{transform:translateY(0) scale(1.03,.97)}100%{opacity:1;transform:none}}
+@keyframes aiEnSlide{0%{opacity:0;transform:translateY(45vh) scale(.8)}70%{opacity:1;transform:translateY(-4%) scale(1.04)}100%{opacity:1;transform:none}}
+@keyframes aiEnFlip{0%{opacity:0;transform:perspective(600px) rotateY(180deg) scale(.5)}60%{opacity:1;transform:perspective(600px) rotateY(-12deg) scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes aiEnZoom{0%{opacity:0;transform:scale(2.6);filter:blur(16px)}100%{opacity:1;transform:none;filter:drop-shadow(0 0 26px color-mix(in srgb,var(--accent) 65%,transparent))}}
+@keyframes aiEnStretch{0%{opacity:0;transform:scale(.3,1.7)}35%{opacity:1;transform:scale(1.35,.65)}55%{transform:scale(.88,1.14)}75%{transform:scale(1.06,.95)}100%{opacity:1;transform:none}}
+@keyframes aiEnSwing{0%{opacity:0;transform:rotate(-38deg)}30%{opacity:1;transform:rotate(26deg)}55%{transform:rotate(-14deg)}78%{transform:rotate(6deg)}100%{opacity:1;transform:none}}
+@keyframes aiEnRise{0%{opacity:0;transform:translateY(32px) scale(.7)}100%{opacity:1;transform:none}}
+@keyframes aiEnShake{0%{opacity:0;transform:translateX(-18px) scale(.8)}15%{opacity:1;transform:translateX(16px)}30%{transform:translateX(-12px)}45%{transform:translateX(9px)}60%{transform:translateX(-6px)}75%{transform:translateX(3px)}100%{opacity:1;transform:none}}
+.aiAmb{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.aiPt{position:absolute;display:block;pointer-events:none}
+.aiPt svg{width:100%;height:100%;display:block}
+.aiPtSp{left:50%;top:46%;width:7px;height:7px;margin:-3px;border-radius:50%;background:#fff;box-shadow:0 0 10px var(--accent);opacity:0;animation:aiAmbSp 1.2s var(--dl) ease-out forwards}
+@keyframes aiAmbSp{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+.aiPtRing{left:50%;top:46%;width:150px;height:150px;margin:-75px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 80%,#fff);opacity:0;animation:aiAmbRing 2s var(--dl) ease-out 2 both}
+@keyframes aiAmbRing{0%{opacity:.8;transform:scale(.6)}100%{opacity:0;transform:scale(2.6)}}
+.aiPtOrb{left:50%;top:46%;width:var(--sz);height:var(--sz);margin:calc(var(--sz) / -2);border-radius:50%;background:#fff;box-shadow:0 0 12px var(--accent);animation:aiAmbOrb var(--du) var(--dl) linear infinite}
+@keyframes aiAmbOrb{from{transform:rotate(0) translateX(var(--rd))}to{transform:rotate(360deg) translateX(var(--rd))}}
+.aiPtCf{top:-16px;width:8px;height:14px;background:var(--c);border-radius:2px;opacity:0;animation:aiAmbFall var(--du) var(--dl) ease-in forwards}
+@keyframes aiAmbFall{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:1;transform:translate(var(--sw),calc(var(--fh,700px) + 50px)) rotate(var(--rt,0deg))}}
+.aiPtTw{width:var(--sz);height:var(--sz);opacity:0;animation:aiAmbTw var(--du) var(--dl) ease-in-out 2 both}
+.aiPtTw svg{fill:#fffbe0}
+@keyframes aiAmbTw{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1)}}
+.aiPtSn{top:-12px;width:var(--sz);height:var(--sz);border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;opacity:0;animation:aiAmbFall var(--du) var(--dl) linear forwards}
+.aiPtLf{top:-30px;width:var(--sz);height:var(--sz);animation:aiAmbFall var(--du) var(--dl) ease-in-out forwards}
+.aiPtLf svg{fill:var(--c);stroke:#00000030;stroke-width:.4}
+.aiPtHr{bottom:-34px;width:var(--sz);height:var(--sz);opacity:0;animation:aiAmbRise var(--du) var(--dl) ease-out forwards}
+.aiPtHr svg{fill:var(--c)}
+.aiPtBb{bottom:-44px;width:var(--sz);height:var(--sz);border-radius:50%;border:1.5px solid #ffffffb0;background:radial-gradient(circle at 30% 30%,#ffffff55,transparent 60%);opacity:0;animation:aiAmbRise var(--du) var(--dl) ease-in forwards}
+@keyframes aiAmbRise{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:.95}100%{opacity:0;transform:translate(var(--sw),calc(var(--fh,700px) * -1 - 50px)) scale(1.1)}}
+.aiPtRy{left:50%;top:46%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--accent) 38%,transparent) 0 8deg,transparent 8deg 22deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 55%);mask:radial-gradient(circle,#000 0,transparent 55%);opacity:0;animation:aiAmbRay 8s linear infinite,aiAmbRayIn 1s ease-out forwards}
+@keyframes aiAmbRay{to{transform:rotate(360deg)}}
+@keyframes aiAmbRayIn{to{opacity:.9}}
 .aiSplash.aiOut{animation:aiSplOut .34s ease-in forwards}
 .aiSplash.aiOut .aiSpl{animation:aiSplZoom .34s ease-in forwards}
 @keyframes aiSplOut{to{opacity:0}}
@@ -948,7 +959,7 @@ html .aiSplash.aiWink .aiSpark{animation:aiPop .66s ease-out both}
 @keyframes aiLighten{0%,35%{opacity:1}100%{opacity:0}}
 @keyframes aiFaceBack{0%,55%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}
 @keyframes aiFadeOutQ{to{opacity:0}}
-body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1) both,aiFloat 3.8s .55s ease-in-out infinite}
+body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes aiFabPop{from{scale:.2;opacity:0}to{scale:1;opacity:1}}
 
 /* ---- life: nearly everything in the chat moves a little ---- */
@@ -1079,43 +1090,28 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
 `;
 
   /* ------------------------------------------------------------ small pieces */
-  /* ------------------------------------------------------------ Uri, the face of the AI part: ONE renderer, settings from the server (backend/mascot.py).
-     Every place he appears (the floating button, chat avatars, the welcome screen, the guided tour, the demo video) is drawn from this, so a change in the admin app changes all
-     of them: shape, colours, what he wears, the speech bubble, a few quiet movements and when they play, and what he says. Only the admin changes him; there is nothing for students to play with.
-     A new accessory or movement SHAPE is the one thing that needs an app update; the choices, colours, texts and timing need none. */
+  /* ------------------------------------------------------------ Uri, the face of the AI part: ONE renderer, settings from the server (backend/mascot.py, version 3).
+     Every place he appears (the floating button, chat avatars, the welcome screen, the guided tour) is drawn from this, so a change in the admin app changes all of them.
+     Deliberately small: no jumping or movements, only blinking. What the admin sets: the face colour, the small star and tag, what he wears (by default and by THEME: a period
+     of the year such as winter, summer or exams, with its own outfit, colour, opening animation and opening line), and the OPENING ANIMATION of the chat.
+     The opening animation is three parts that combine freely: how the face ENTERS, what the face DOES (wink, smile...), and what floats AROUND it (confetti, snow...).
+     Every part is known here, so choosing among them, the colours, the texts and the dates need no app update. A NEW entry, face or ambient is the only thing that does. */
   const uls = { get(k, d) { try { return typeof LS !== "undefined" ? LS.get(k, d) : d; } catch (e) { return d; } }, set(k, v) { try { if (typeof LS !== "undefined") LS.set(k, v); } catch (e) {} } };
-  const URI_SLOTS = { hat: ["gradcap", "partyhat", "bow", "headphones"], face: ["glasses", "sunglasses"], neck: ["scarf"] };
-  const URI_ANIM_IDS = ["jump", "nod", "wiggle", "tilt", "pulse", "zoom", "shake", "lookaround", "float", "wink"];
+  const URI_ENTRIES = ["pop", "spin", "drop", "slide", "flip", "zoom", "stretch", "swing", "rise", "shake"];
+  const URI_FACES = ["wink", "winkl", "double", "smile", "wow", "think", "nod", "sleepy", "love"];
+  const URI_AMBS = ["none", "sparkle", "rings", "orbit", "confetti", "stars", "snow", "leaves", "hearts", "bubbles", "rays"];
   const URI_DEF = {
-    v: 2, shape: "bubble", body: "#ffffff", eyes: "oval", spark: true, outfit: { hat: "", face: "", neck: "" }, seasons: [],
-    behavior: { blink: true, look: true, react: true, idle: true },
-    anim: { enabled: URI_ANIM_IDS, speed: 1 },
-    triggers: { open: ["nod", "wink", "jump"], think: ["lookaround", "tilt"], done: ["nod", "jump", "pulse"], error: ["shake"], idle: ["float", "wink", "lookaround"] },
-    talk: { open: 35, think: 25, done: 15, error: 100, idle: 8 },
-    idle: { min: 40, max: 90 },
-    phrases: {
-      open: ["היי, במה אפשר לעזור?", "אני מקשיב"], open_morning: ["בוקר טוב, במה אפשר לעזור?", "בוקר אור"], open_noon: ["צהריים טובים, אני כאן", "במה אפשר לעזור?"],
-      open_evening: ["ערב טוב, במה אפשר לעזור?", "אני כאן אם צריך"], open_night: ["מאוחר, אבל אני כאן", "במה אפשר לעזור?"],
-      think: ["רגע, בודק", "עוד שנייה", "מחפש את התשובה"], done: ["הנה", "מקווה שזה עוזר", "יש עוד משהו?"], error: ["משהו השתבש, נסה שוב", "תקלה קטנה, נסה שוב בעוד רגע"], idle: ["אני כאן אם צריך", "יש שאלה על הלימודים?"],
-    },
-    look: { eye: "", outline: "", outlineW: 0, aura: "", auraSize: 0, fab1: "", fab2: "", fabScale: 1, tag: "AI" },
-    bubble: { shape: "round", bg: "", text: "", border: "" },
+    v: 3, body: "#ffffff", spark: true, tag: "AI", outfit: { hat: "", face: "", neck: "" }, themes: [],
+    intro: { enabled: true, mode: "fixed", fixed: "pop-wink-sparkle", pool: [], bg: "", min: 1.6, text: { he: [], en: [], fr: [] } },
   };
+  const uriAnimOk = id => { const p = String(id || "").split("-"); return p.length === 3 && URI_ENTRIES.includes(p[0]) && URI_FACES.includes(p[1]) && URI_AMBS.includes(p[2]); };
   const uriMerge = c => {
-    c = c && typeof c === "object" && c.v === 2 ? c : {}; const D = URI_DEF, phrases = {};     // settings saved by the first (playful) version are ignored
-    const ph = c.phrases && typeof c.phrases === "object" ? c.phrases : {};
-    Object.keys(D.phrases).forEach(k => { phrases[k] = Array.isArray(ph[k]) && ph[k].length ? ph[k] : D.phrases[k]; });
-    return { ...D, ...c, outfit: { ...D.outfit, ...(c.outfit || {}) }, behavior: { ...D.behavior, ...(c.behavior || {}) }, seasons: c.seasons || [],
-      anim: { ...D.anim, ...(c.anim || {}) }, triggers: { ...D.triggers, ...(c.triggers || {}) }, talk: { ...D.talk, ...(c.talk || {}) }, idle: { ...D.idle, ...(c.idle || {}) },
-      look: { ...D.look, ...(c.look || {}) }, bubble: { ...D.bubble, ...(c.bubble || {}) }, phrases };
+    c = c && typeof c === "object" && c.v === 3 ? c : {};                          // settings of an older version are ignored: the server sends version 3
+    const D = URI_DEF, I = c.intro && typeof c.intro === "object" ? c.intro : {}, tx = t => ({ he: [], en: [], fr: [], ...(t && typeof t === "object" ? t : {}) });
+    return { ...D, ...c, outfit: { ...D.outfit, ...(c.outfit || {}) }, themes: Array.isArray(c.themes) ? c.themes : [],
+      intro: { ...D.intro, ...I, fixed: uriAnimOk(I.fixed) ? I.fixed : D.intro.fixed, pool: (Array.isArray(I.pool) ? I.pool : []).filter(uriAnimOk), text: tx(I.text) } };
   };
   let URI_CFG = uriMerge(uls.get("uriCfg", null));
-  const URI_SHAPES = {
-    bubble: "M10 9h20a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H21l-6.2 5.1a.8.8 0 0 1-1.3-.6V31H10a6 6 0 0 1-6-6V15a6 6 0 0 1 6-6z",
-    blob: "M20 8.5c9.4 0 16 5.6 16 13s-6.6 12-16 12S4 29 4 21.5 10.6 8.5 20 8.5z",
-    circle: "M20 8a14 14 0 1 0 0 28 14 14 0 1 0 0-28z",
-    square: "M13 8h14a8 8 0 0 1 8 8v12a8 8 0 0 1-8 8H13a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8z",
-  };
   const URI_ACC = {
     gradcap: () => '<g class="aiAcc"><path d="M20 1.6l12 4.6-12 4.6-12-4.6z" fill="#2b2f44"/><path d="M13.6 8.8v3.6q6.4 3 12.8 0V8.8l-6.4 2.4z" fill="#3b4162"/><path d="M31 6.2v5.4" stroke="#ffd166" stroke-width="1.2" stroke-linecap="round"/><circle cx="31" cy="12.4" r="1.4" fill="#ffd166"/></g>',
     partyhat: () => '<g class="aiAcc"><path d="M20 .2l6 9.6H14z" fill="#8b5cf6"/><path d="M16.6 6.6h6.8M18.1 3.6h3.8" stroke="#ffd166" stroke-width="1.1" stroke-linecap="round"/><circle cx="20" cy=".9" r="1.5" fill="#ff6fa5"/></g>',
@@ -1125,42 +1121,45 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     sunglasses: () => '<g class="aiAcc"><path d="M9.4 16.6h10v3.6a5 4.2 0 0 1-10 0zM20.6 16.6h10v3.6a5 4.2 0 0 1-10 0z" fill="#252a3d"/><path d="M19.4 17.8h1.2" stroke="#252a3d" stroke-width="1.3"/><path d="M11 18.2l2.4-.1M22.2 18.2l2.4-.1" stroke="#ffffff66" stroke-width="1" stroke-linecap="round"/></g>',
     scarf: () => '<g class="aiAcc"><path d="M8.2 28.4q11.8 4.4 23.6 0l.4 3.4q-12.1 4.6-24.4 0z" fill="#ff7a59"/><path d="M25.6 31.4l1.8 6.4 3.4-.9-1.3-6.4z" fill="#ff7a59"/><path d="M9.6 30.4q10.4 3.2 20.8 0" stroke="#ffd0c2" stroke-width=".8" fill="none" stroke-dasharray="1.6 1.6"/></g>',
   };
-  // the eyes: the original small oval ones, big shiny ones, or smiling ones; moods change them a little (think looks up, wow opens wide, wink closes one)
-  function uriEyes(c, mood) {
-    const st = mood === "think" ? ' style="--ex:1.1px;--ey:-1.1px"' : "", wide = mood === "wow" ? 1.12 : 1, arcL = '<path class="aiLid" d="M12.4 20.2q2.4-3.8 4.8 0"/>', arcR = '<path class="aiLid" d="M22.8 20.2q2.4-3.8 4.8 0"/>';
-    if (c.eyes === "happy" && mood !== "wow") return '<g class="aiEyes"' + st + ">" + arcL + (mood === "wink" ? '<path class="aiLid" d="M23 19.8h4.4"/>' : arcR) + "</g>";
-    const eye = (x, side) => c.eyes === "big"
-      ? '<g class="aiEye ' + side + '"><ellipse cx="' + x + '" cy="19.2" rx="' + (2.7 * wide).toFixed(2) + '" ry="' + (3.3 * wide).toFixed(2) + '"/><circle class="aiShine" cx="' + (x + 1) + '" cy="17.7" r="1.1"/><circle class="aiShine" cx="' + (x - 0.9) + '" cy="20.9" r=".5"/></g>'
-      : '<ellipse class="aiEye ' + side + '" cx="' + x + '" cy="19" rx="' + (2.1 * wide).toFixed(2) + '" ry="' + (2.7 * wide).toFixed(2) + '"/>';
-    return '<g class="aiEyes"' + st + ">" + eye(14.8, "aiEyeL") + (mood === "wink" ? '<path class="aiLid" d="M23 19.4h4.4"/>' : eye(25.2, "aiEyeR")) + "</g>";
+  const URI_BUBBLE = "M10 9h20a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H21l-6.2 5.1a.8.8 0 0 1-1.3-.6V31H10a6 6 0 0 1-6-6V15a6 6 0 0 1 6-6z";
+  // the expressions: happy (the normal face), wink / winkl (one eye becomes a smiling arc), smile (both), wow, think, love (heart eyes), sleepy (eyes closed)
+  function uriEyes(mood) {
+    const arc = x => '<path class="aiLid" d="M' + (x - 2.4) + ' 20.2q2.4-3.8 4.8 0"/>', ell = (x, side, w) => '<ellipse class="aiEye ' + side + '" cx="' + x + '" cy="19" rx="' + (2.1 * w).toFixed(2) + '" ry="' + (2.7 * w).toFixed(2) + '"/>';
+    const heart = x => '<path class="aiHeart" d="M' + x + ' 21.9c-3.5-2.5-4.9-4.4-2.6-6 1.1-.7 2.3-.2 2.6.9.3-1.1 1.5-1.6 2.6-.9 2.3 1.6.9 3.5-2.6 6z"/>';
+    const st = mood === "think" ? ' style="--ex:1.1px;--ey:-1.1px"' : "", w = mood === "wow" ? 1.12 : 1;
+    let l, r;
+    if (mood === "wink") { l = ell(14.8, "aiEyeL", 1); r = arc(25.2); }
+    else if (mood === "winkl") { l = arc(14.8); r = ell(25.2, "aiEyeR", 1); }
+    else if (mood === "smile") { l = arc(14.8); r = arc(25.2); }
+    else if (mood === "love") { l = heart(14.8); r = heart(25.2); }
+    else if (mood === "sleepy") { l = '<path class="aiLid" d="M12.6 19.6h4.4"/>'; r = '<path class="aiLid" d="M23 19.6h4.4"/>'; }
+    else { l = ell(14.8, "aiEyeL", w); r = ell(25.2, "aiEyeR", w); }
+    return '<g class="aiEyes"' + st + ">" + l + r + "</g>";
   }
   function uriMouth(mood) {
     if (mood === "wow") return '<ellipse class="aiMouthF" cx="20" cy="26.3" rx="1.9" ry="2.5"/>';
     if (mood === "think") return '<path class="aiSmile" d="M16.2 26.2q1.9-1.6 3.8 0t3.8 0"/>';
+    if (mood === "wink" || mood === "winkl" || mood === "smile" || mood === "love") return '<path class="aiSmile" d="M14.4 24q5.6 5.2 11.2 0"/>';
+    if (mood === "sleepy") return '<path class="aiSmile" d="M16.4 25.2q3.6 2.2 7.2 0"/>';
     return '<path class="aiSmile" d="M15.3 24.4q4.7 3.8 9.4 0"/>';
   }
-  // what he wears now: the outfit of a season that covers today's date, otherwise the default one (only the admin decides)
-  function uriOutfit(c) {
+  // the active THEME: the first enabled one whose dates cover today (the dates may wrap around New Year). Only the admin decides.
+  function uriTheme(c) {
     const now = new Date(), md = String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
-    const inRange = x => x.from <= x.to ? (md >= x.from && md <= x.to) : (md >= x.from || md <= x.to);
-    const season = (c.seasons || []).find(inRange);
-    return { hat: "", face: "", neck: "", ...(season ? season.outfit : c.outfit) };
+    return (c.themes || []).find(x => x && x.enabled !== false && x.from && x.to && (x.from <= x.to ? (md >= x.from && md <= x.to) : (md >= x.from || md <= x.to))) || null;
   }
+  const uriOutfit = c => { const t = uriTheme(c); return { hat: "", face: "", neck: "", ...(t ? t.outfit : c.outfit) }; };
   const uriHex = v => (/^#[0-9a-fA-F]{6}$/.test(String(v || "")) ? v : "");
   // the whole picture. o: { mood, outfit, dead, kind }. Pure: it only reads the settings it is given.
   function uriSVG(cfg, o) {
-    const c = uriMerge(cfg), opt = o || {}, mood = opt.mood || "happy", out = opt.outfit || uriOutfit(c), dead = !!opt.dead, L = c.look || {};
+    const c = uriMerge(cfg), opt = o || {}, mood = opt.mood || "happy", out = opt.outfit || uriOutfit(c), dead = !!opt.dead, th = uriTheme(c);
     const acc = k => (k && URI_ACC[k] ? URI_ACC[k](c) : "");
-    let st = "--uri-body:" + uriHex(c.body) + ";--bd:" + ((Math.random() * 3.5 + 0.6).toFixed(1)) + "s";
-    if (uriHex(L.eye)) st += ";--uri-eye:" + L.eye;
-    if (uriHex(L.outline) && Number(L.outlineW) > 0) st += ";--uri-line:" + L.outline + ";--uri-lw:" + Math.min(3, Number(L.outlineW));
-    const aura = uriHex(L.aura) && Number(L.auraSize) > 0;
-    if (aura) st += ";--uri-ac:" + L.aura + ";--uri-ar:" + Math.min(24, Number(L.auraSize)) + "px";
-    let x = '<svg class="aiFace' + (dead ? " aiDeadFace" : "") + '" viewBox="0 0 40 40" aria-hidden="true" focusable="false" data-uri="' + (opt.kind || "main") + '"' + (c.behavior.blink && !dead ? " data-blink" : "") + (aura ? " data-aura" : "") + ' style="' + st + '">';
-    x += '<path class="aiBub" d="' + (URI_SHAPES[c.shape] || URI_SHAPES.bubble) + '"/>';
+    const st = "--uri-body:" + (uriHex(th && th.body) || uriHex(c.body) || "#ffffff") + ";--bd:" + ((Math.random() * 3.5 + 0.6).toFixed(1)) + "s";
+    let x = '<svg class="aiFace' + (dead ? " aiDeadFace" : "") + '" viewBox="0 0 40 40" aria-hidden="true" focusable="false" data-uri="' + (opt.kind || "main") + '"' + (dead ? "" : " data-blink") + ' style="' + st + '">';
+    x += '<path class="aiBub" d="' + URI_BUBBLE + '"/>';
     if (dead) {
       x += '<path class="aiX" d="M12.4 16.4l4.8 4.8M17.2 16.4l-4.8 4.8M22.8 16.4l4.8 4.8M27.6 16.4l-4.8 4.8"/><path class="aiMouth" d="M14.6 26.2q1.6-2.4 3.2 0t3.2 0 3.2 0"/><path class="aiTongue" d="M22.2 26.4v2.2a1.5 1.5 0 0 0 3 0v-2.2z"/>';
-    } else x += uriEyes(c, mood) + uriMouth(mood);
+    } else x += uriEyes(mood) + uriMouth(mood);
     x += acc(out.face) + acc(out.neck) + acc(out.hat);
     if (!dead && c.spark) x += '<path class="aiSpark" d="M33.5 1.5l1.5 3.9 3.9 1.5-3.9 1.5-1.5 3.9-1.5-3.9-3.9-1.5 3.9-1.5z"/>';
     return x + "</svg>";
@@ -1172,16 +1171,10 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     FACE_FAB = uriSVG(URI_CFG, { kind: "fab" });
   }
   uriBuild();
-  // global look: movement speed, the floating button's colours and size, the small tag, the speech bubble
+  // the small tag next to the floating button
   function uriApplyLook(cfg) {
-    const c = uriMerge(cfg || URI_CFG), r = document.documentElement.style, L = c.look || {}, B = c.bubble || {};
-    r.setProperty("--ud", String(+(1 / Math.max(0.5, Math.min(2, Number(c.anim.speed) || 1))).toFixed(3)));
-    uriHex(L.fab1) ? r.setProperty("--uri-fab1", L.fab1) : r.removeProperty("--uri-fab1");
-    uriHex(L.fab2) ? r.setProperty("--uri-fab2", L.fab2) : r.removeProperty("--uri-fab2");
-    r.setProperty("--uri-fs", String(Math.max(0.8, Math.min(1.5, Number(L.fabScale) || 1))));
-    [["bg", "--uri-sb-bg"], ["text", "--uri-sb-tx"], ["border", "--uri-sb-bd"]].forEach(([k, v]) => uriHex(B[k]) ? r.setProperty(v, B[k]) : r.removeProperty(v));
-    r.setProperty("--uri-sb-r", B.shape === "square" ? "5px" : B.shape === "pill" ? "999px" : "14px");
-    document.querySelectorAll(".aiTag").forEach(t => { if (L.tag) { t.textContent = String(L.tag).slice(0, 4); t.hidden = false; } else t.hidden = true; });
+    const c = uriMerge(cfg || URI_CFG);
+    document.querySelectorAll(".aiTag").forEach(t => { if (c.tag) { t.textContent = String(c.tag).slice(0, 4); t.hidden = false; } else t.hidden = true; });
   }
   uriApplyLook(URI_CFG);
   // after the settings changed: every Uri already on the screen is redrawn
@@ -1210,91 +1203,64 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     setInterval(go, 60000);
     document.addEventListener("visibilitychange", go); window.addEventListener("focus", go); window.addEventListener("pageshow", go); window.addEventListener("online", go);
   }
-  /* ---- movement. Each one is a CSS class (aiRx-NAME); some also change his face for a moment (a mood) */
-  const URI_ANIMS = {
-    jump: { ms: 700 }, nod: { ms: 800 }, wiggle: { ms: 700 }, tilt: { ms: 1200, mood: "think" }, pulse: { ms: 1000 }, zoom: { ms: 800, mood: "wow" },
-    shake: { ms: 600, mood: "wow" }, lookaround: { ms: 2000 }, float: { ms: 2400 }, wink: { ms: 700 },
-  };
-  const uriStill = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
-  const uriSpeed = C => Math.max(0.5, Math.min(2, Number(C.anim.speed) || 1));
-  // plays one movement on the Uri inside host. cfg/outfit are optional (the admin's preview passes its own)
-  function uriPlay(host, id, cfg, outfit) {
-    const def = URI_ANIMS[id]; if (!def || !host || uriStill()) return false;
-    const C = cfg ? uriMerge(cfg) : URI_CFG;
-    let sv = host.querySelector("svg.aiFace:not(.aiDeadFace)"); if (!sv) return false;
-    if (sv._orig) { clearTimeout(sv._rxT); const o = sv._orig; sv.replaceWith(o); sv = o; } else if (sv._rxT) { clearTimeout(sv._rxT); sv.className.baseVal = sv.className.baseVal.replace(/\baiRx-\S+/g, "").trim(); }
-    const orig = sv; let cur = sv;
-    if (def.mood) { const t = document.createElement("template"); t.innerHTML = uriSVG(C, { mood: def.mood, kind: sv.dataset.uri || "main", outfit: outfit || undefined }); const n = t.content.firstChild; if (n) { sv.replaceWith(n); cur = n; cur._orig = orig; } }
-    void cur.getBoundingClientRect(); cur.classList.add("aiRx-" + id);
-    cur._rxT = setTimeout(() => { cur.classList.remove("aiRx-" + id); if (cur._orig && cur.isConnected) cur.replaceWith(cur._orig); cur._orig = null; }, def.ms / uriSpeed(C) + 60);
-    return true;
-  }
-  // the speech bubble: inside the chat panel when he is in it, otherwise above or below the floating button
-  function uriSay(host, text) {
-    if (!host || !text) return;
-    const inPanel = !!(panel && panel.contains(host)), box = inPanel ? panel : document.body;
-    document.querySelectorAll(".aiUriSay").forEach(n => n.remove());
-    const b = document.createElement("div"); b.className = "aiUriSay"; b.textContent = text; if (!inPanel) b.style.position = "fixed"; box.appendChild(b);
-    const r = host.getBoundingClientRect(), pr = inPanel ? panel.getBoundingClientRect() : { left: 0, top: 0, width: innerWidth, height: innerHeight };
-    const left = r.left - pr.left + r.width / 2 - b.offsetWidth / 2;
-    b.style.left = Math.max(8, Math.min(pr.width - b.offsetWidth - 8, left)) + "px";
-    const below = r.bottom - pr.top + 8, above = r.top - pr.top - b.offsetHeight - 8;
-    b.style.top = (inPanel || above < 8 ? Math.max(8, below) : above) + "px";
-    setTimeout(() => b.remove(), 2800);
-  }
   const uriPick = a => (a && a.length ? a[Math.floor(Math.random() * a.length)] : "");
-  function uriPhrase(cat) {
-    const P = URI_CFG.phrases || {}; let key = cat;
-    if (cat === "open") { const h = new Date().getHours(); key = h >= 5 && h < 11 ? "open_morning" : h >= 11 && h < 17 ? "open_noon" : h >= 17 && h < 22 ? "open_evening" : "open_night"; return uriPick(P[key] && P[key].length ? P[key] : P.open); }
-    return uriPick(P[key]);
+
+  /* ------------------------------------------------------------ the opening animation, as a PLAN made from the settings:
+     { entry, face, amb, bg, min (ms), text }. A theme that covers today overrides the animation and the line; "random" picks from the admin's pool. */
+  function uriIntroPlan(cfg) {
+    const c = uriMerge(cfg || URI_CFG), I = c.intro, th = uriTheme(c), lg = (typeof lang === "function" ? lang() : "he") || "he";
+    let id = I.mode === "random" && I.pool.length ? uriPick(I.pool) : I.fixed;
+    if (th && uriAnimOk(th.intro)) id = th.intro;
+    const [entry, face, amb] = id.split("-");
+    const lines = t => { const l = t && (t[lg] && t[lg].length ? t[lg] : t.he); return Array.isArray(l) ? l.filter(Boolean) : []; };
+    const own = th ? lines(th.text) : [];
+    return { id, entry, face, amb, bg: uriHex(I.bg), min: Math.max(1200, Math.min(6000, (Number(I.min) || 1.6) * 1000)), text: uriPick(own.length ? own : lines(I.text)) || "", enabled: I.enabled !== false };
   }
-  function uriHost() {
-    if (!panel) return fab && !fab.hidden ? fab : null;
-    if (!panel.hidden && panel.classList.contains("on")) return panel.classList.contains("aiDesk") ? panel.querySelector(".aiRB .aiAv") : panel.querySelector(".aiTt .aiAv");
-    return fab && !fab.hidden ? fab : null;
+  // what the face does, and when (ms after the start): each step swaps in the face of that expression
+  const URI_FACE_PLAN = {
+    wink: [[950, "wink"], [1850, "happy"]], winkl: [[950, "winkl"], [1850, "happy"]], double: [[850, "wink"], [1150, "happy"], [1400, "wink"], [2150, "happy"]],
+    smile: [[850, "smile"]], wow: [[850, "wow"], [2000, "happy"]], think: [[850, "think"], [2100, "happy"]], nod: [[850, "smile"]],
+    sleepy: [[300, "sleepy"], [1250, "happy"]], love: [[850, "love"]],
+  };
+  const uriAmbHTML = {
+    star: '<svg viewBox="0 0 10 10"><path d="M5 0l1.2 3.8L10 5 6.2 6.2 5 10 3.8 6.2 0 5l3.8-1.2z"/></svg>',
+    heart: '<svg viewBox="0 0 10 10"><path d="M5 9C1 6.3.2 4 1.6 2.6 2.7 1.6 4.3 2 5 3.3 5.7 2 7.3 1.6 8.4 2.6 9.8 4 9 6.3 5 9z"/></svg>',
+    leaf: '<svg viewBox="0 0 10 10"><path d="M1 9C1 4 4 1 9 1c0 5-3 8-8 8zM1 9l5-5"/></svg>',
+  };
+  // what floats around the face: particles with their own random numbers, removed after a while
+  function uriAmbient(host, kind, faceEl) {
+    if (!host || !kind || kind === "none") return;
+    host.className = "aiAmb aiAmb-" + kind; host.innerHTML = ""; host.style.setProperty("--fh", (host.offsetHeight || 700) + "px");
+    const r = n => Math.random() * n, add = (cls, css, html) => { const e = document.createElement("i"); e.className = "aiPt " + cls; e.style.cssText = css; if (html) e.innerHTML = html; host.appendChild(e); return e; };
+    const palette = ["#ff6fa5", "#ffd166", "#6ee7b7", "#7cc4ff", "#c4a1ff", "#ff9f6e"];
+    if (kind === "sparkle") for (let k = 0; k < 16; k++) { const a = Math.PI * 2 * k / 16 + r(.4), d = 90 + r(90); add("aiPtSp", "--dx:" + Math.cos(a) * d + "px;--dy:" + Math.sin(a) * d + "px;--dl:" + (r(.25)).toFixed(2) + "s"); }
+    else if (kind === "rings") for (let k = 0; k < 3; k++) add("aiPtRing", "--dl:" + (k * .55).toFixed(2) + "s");
+    else if (kind === "orbit") for (let k = 0; k < 3; k++) add("aiPtOrb", "--dl:" + (-k * 1.1).toFixed(2) + "s;--rd:" + (86 + k * 22) + "px;--du:" + (3.6 + k * 1.1).toFixed(1) + "s;--sz:" + (7 - k * 1.5) + "px");
+    else if (kind === "confetti") for (let k = 0; k < 44; k++) add("aiPtCf", "left:" + r(100).toFixed(1) + "%;--c:" + palette[k % palette.length] + ";--dl:" + r(1.1).toFixed(2) + "s;--du:" + (2.2 + r(1.6)).toFixed(2) + "s;--rt:" + (360 + r(540)).toFixed(0) + "deg;--sw:" + (r(60) - 30).toFixed(0) + "px");
+    else if (kind === "stars") for (let k = 0; k < 26; k++) add("aiPtTw", "left:" + r(100).toFixed(1) + "%;top:" + r(100).toFixed(1) + "%;--sz:" + (6 + r(10)).toFixed(0) + "px;--dl:" + r(1.6).toFixed(2) + "s;--du:" + (1.4 + r(1.4)).toFixed(2) + "s", uriAmbHTML.star);
+    else if (kind === "snow") for (let k = 0; k < 40; k++) add("aiPtSn", "left:" + r(100).toFixed(1) + "%;--sz:" + (3 + r(6)).toFixed(1) + "px;--dl:" + r(2).toFixed(2) + "s;--du:" + (3 + r(2.6)).toFixed(2) + "s;--sw:" + (r(40) - 20).toFixed(0) + "px");
+    else if (kind === "leaves") for (let k = 0; k < 18; k++) add("aiPtLf", "left:" + r(100).toFixed(1) + "%;--c:" + ["#e8590c", "#f08c00", "#c92a2a", "#e67700"][k % 4] + ";--sz:" + (14 + r(10)).toFixed(0) + "px;--dl:" + r(1.6).toFixed(2) + "s;--du:" + (3 + r(2)).toFixed(2) + "s;--rt:" + (180 + r(360)).toFixed(0) + "deg;--sw:" + (r(90) - 45).toFixed(0) + "px", uriAmbHTML.leaf);
+    else if (kind === "hearts") for (let k = 0; k < 16; k++) add("aiPtHr", "left:" + (6 + r(88)).toFixed(1) + "%;--c:" + ["#ff5c8a", "#ff8fab", "#ff477e"][k % 3] + ";--sz:" + (12 + r(16)).toFixed(0) + "px;--dl:" + r(1.5).toFixed(2) + "s;--du:" + (2.4 + r(1.6)).toFixed(2) + "s;--sw:" + (r(50) - 25).toFixed(0) + "px", uriAmbHTML.heart);
+    else if (kind === "bubbles") for (let k = 0; k < 22; k++) add("aiPtBb", "left:" + r(100).toFixed(1) + "%;--sz:" + (8 + r(22)).toFixed(0) + "px;--dl:" + r(2).toFixed(2) + "s;--du:" + (2.8 + r(2)).toFixed(2) + "s;--sw:" + (r(50) - 25).toFixed(0) + "px");
+    else if (kind === "rays") add("aiPtRy", "");
+    setTimeout(() => { if (host.className.indexOf("aiAmb-" + kind) > -1) host.innerHTML = ""; }, 9000);
   }
-  // a MOMENT (open, think, done, error, idle): pick one of the movements the admin allowed for it, and now and then say a line
-  const uriEvAt = {};
-  function uriEvent(name, host) {
-    if (!URI_CFG.behavior.react) return;
-    if (document.hidden || document.body.classList.contains("calm")) return;
-    const now = Date.now(); if (now - (uriEvAt[name] || 0) < 3000) return; uriEvAt[name] = now;
-    host = host || uriHost(); if (!host) return;
-    const ok = (URI_CFG.triggers[name] || []).filter(id => (URI_CFG.anim.enabled || []).includes(id) && URI_ANIMS[id]);
-    if (ok.length) uriPlay(host, uriPick(ok));
-    const p = Number(URI_CFG.talk[name]);
-    if (Math.random() * 100 < (isNaN(p) ? 0 : p)) { const t = uriPhrase(name); if (t) uriSay(host, t); }
-  }
-  // while an answer is awaited he looks around or tilts his head
-  let uriThinkT = 0;
-  function uriBusy(b) {
-    clearTimeout(uriThinkT);
-    if (b) { const loop = () => { uriEvent("think"); uriThinkT = setTimeout(loop, 7000); }; uriThinkT = setTimeout(loop, 4000); }
-  }
-  // now and then he does something on his own
-  let uriIdleT = 0;
-  function uriIdle() {
-    if (uriIdleT) return;
-    const tick = () => {
-      const I = URI_CFG.idle || {}, mn = Number(I.min) || 40, ms = (mn + Math.random() * Math.max(0, (Number(I.max) || 90) - mn)) * 1000;
-      uriIdleT = setTimeout(() => { if (URI_CFG.behavior.idle) uriEvent("idle"); tick(); }, ms);
+  // plays a plan on a splash element (the real one in the chat, or the admin's preview): entry, the face's expressions, what floats around it, the line of text
+  function uriIntroRun(sp, plan, at, setText, cfg) {
+    sp.dataset.entry = plan.entry; sp.dataset.face = plan.face;
+    if (plan.bg) sp.style.setProperty("--aibg", plan.bg); else sp.style.removeProperty("--aibg");
+    const fb = sp.querySelector(".aiFaceBig"), amb = sp.querySelector(".aiAmb");
+    const swap = mood => {
+      const cur = fb && fb.querySelector("svg.aiFace:not(.aiDeadFace)"); if (!cur) return;
+      const t = document.createElement("template"); t.innerHTML = uriSVG(cfg || URI_CFG, { mood, kind: "intro" }); if (t.content.firstChild) cur.replaceWith(t.content.firstChild);
     };
-    tick();
-  }
-  // his eyes follow the finger or the mouse (only the faces that are big enough to notice)
-  let uriLookRaf = 0, uriLookT = 0;
-  function uriLookMove(e) {
-    if (!URI_CFG.behavior.look || document.body.classList.contains("calm") || uriLookRaf) return;
-    const px = e.clientX, py = e.clientY;
-    uriLookRaf = requestAnimationFrame(() => {
-      uriLookRaf = 0;
-      document.querySelectorAll(".aiHd .aiFace, .aiBig .aiFace, .aiRB .aiFace").forEach(f => {
-        const r = f.getBoundingClientRect(); if (!r.width) return;
-        const dx = px - (r.left + r.width / 2), dy = py - (r.top + r.height / 2), d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 170);
-        f.style.setProperty("--ex", (dx / d * 1.3 * k).toFixed(2) + "px"); f.style.setProperty("--ey", (dy / d * 1.1 * k).toFixed(2) + "px");
-      });
-      clearTimeout(uriLookT); uriLookT = setTimeout(() => document.querySelectorAll(".aiFace").forEach(f => { f.style.removeProperty("--ex"); f.style.removeProperty("--ey"); }), 2600);
-    });
+    swap("happy");
+    (URI_FACE_PLAN[plan.face] || []).forEach(([ms, mood]) => at(ms, () => swap(mood)));
+    if (plan.face === "nod") { at(1000, () => { fb && fb.classList.add("aiNod"); }); at(1900, () => { fb && fb.classList.remove("aiNod"); }); }
+    at(700, () => uriAmbient(amb, plan.amb, fb));
+    if (plan.text) at(900, () => setText(plan.text, true));
+    const last = (URI_FACE_PLAN[plan.face] || []).reduce((m, s) => Math.max(m, s[0]), 0);
+    return Math.max(plan.min, last + 650);                                  // how long the animation must stay, so its last expression is always seen
   }
   const I_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const I_HIST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>';
@@ -1982,7 +1948,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         row.classList.add("aiIn"); row.style.setProperty("--ad", ((i - from) * (sent ? 170 : 45)) + "ms"); if (!sent) row.style.setProperty("--fy", "12px");
       }
       if (m.justDone) {
-        row.classList.add("aiDone"); m.justDone = false; uriEvent("done");
+        row.classList.add("aiDone"); m.justDone = false;
         if (row.querySelector(".aiUi") && !LS.get("aiItemHint", 0)) { LS.set("aiItemHint", 1); setTimeout(() => toast((ITM[lang()] || ITM.he).hint, 5200), 1100); }
       }  // the answer has just arrived
       if (m.err) addErr(b, m, i === msgs.length - 1);
@@ -2025,7 +1991,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (sendBtn && was !== b) { sendBtn.classList.remove("aiSwap"); void sendBtn.offsetWidth; sendBtn.classList.add("aiSwap"); setTimeout(() => sendBtn.classList.remove("aiSwap"), 360); }
     sendBtn.innerHTML = b ? I_STOP : I_SEND; sendBtn.setAttribute("aria-label", b ? tx("stop") : tx("send")); sendBtn.title = b ? tx("stop") : tx("send");
     sendBtn.disabled = !b && !input.value.trim();
-    if (was !== b) uriBusy(b);
   }
   function setStatus(txt) { statusEl.textContent = txt || ""; statusEl.hidden = !txt; }
 
@@ -2568,7 +2533,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       clearTimeout(wake); if (ctl === myCtl) ctl = null;
       setBusy(false); left();
       if (!ai.err && ai.content && ai.content.trim()) ai.justDone = true;
-      if (ai.err) uriEvent("error");
       refreshRail();
       if (panel && !panel.hidden && !histMode && !memMode && msgs.includes(ai)) renderMsgs();
     }
@@ -2805,11 +2769,11 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       '<div class="aiFt"><div class="aiSt" hidden></div><div class="aiIn"><textarea rows="1" maxlength="2000" enterkeyhint="send"></textarea>' +
       '<button type="button" class="aiSd"></button></div><div class="aiNt"></div></div>' +
       '<div class="aiDlg" hidden role="alertdialog" aria-modal="true"><div class="aiDlgBox"><p></p><div class="aiDlgBtns"><button type="button" data-no></button><button type="button" class="danger" data-ok></button></div></div></div>' +
-      '<div class="aiRz" aria-hidden="true"></div><div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiFaceBig">' + FACE + FACE_DEAD + '</div><div class="aiSplTx"></div></div></div>';
+      '<div class="aiRz" aria-hidden="true"></div><div class="aiSplash" hidden aria-hidden="true"><div class="aiGrow">' + FACE + '</div><div class="aiSpl"><div class="aiGlow"></div><div class="aiAmb" aria-hidden="true"></div><div class="aiFaceBig">' + FACE + FACE_DEAD + '</div><div class="aiSplTx"></div></div></div>';
     document.body.appendChild(panel);
     buildRail();
-    // Uri himself: his eyes follow the finger, he moves now and then, and the settings come from the server
-    { document.addEventListener("pointermove", uriLookMove, { passive: true }); uriApplyLook(URI_CFG); uriFetch(true); uriIdle(); uriLive(); }
+    // Uri himself: the settings come from the server (no movements: he only blinks)
+    { uriApplyLook(URI_CFG); uriFetch(true); uriLive(); }
     ms = panel.querySelector(".aiMs"); input = panel.querySelector("textarea"); sendBtn = panel.querySelector(".aiSd");
     splash = panel.querySelector(".aiSplash"); statusEl = panel.querySelector(".aiSt"); titleEl = panel.querySelector(".aiTt .aiTl"); histBtn = panel.querySelector('[data-a="hist"]'); memBtn = panel.querySelector('[data-a="mem"]');
 
@@ -2948,8 +2912,8 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
      ~1s        it winks and smiles; after that it waits (with a short line of text if it takes long) until the chat is ready, then fades into the chat
      At least 1.35s in all, so the wink is always seen. With "calm" or reduced motion there is no animation at all. */
   const INTRO_MIN = 1350;
-  const introAllowed = () => !document.body.classList.contains("calm") && !matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const setSplText = t => { const e = splash && splash.querySelector(".aiSplTx"); if (e) { e.textContent = t || ""; e.classList.toggle("on", !!t); } };
+  const introAllowed = () => !document.body.classList.contains("calm") && !matchMedia("(prefers-reduced-motion: reduce)").matches && URI_CFG.intro.enabled !== false;
+  const setSplText = (t, hi) => { const e = splash && splash.querySelector(".aiSplTx"); if (e) { e.textContent = t || ""; e.classList.toggle("on", !!t); e.classList.toggle("aiHi2", !!hi && !!t); } };
   const setSplErr = (title, why) => { const e = splash && splash.querySelector(".aiSplTx"); if (e) { e.innerHTML = "<b>" + esc2(title) + "</b><span>" + esc2(why) + "</span>"; e.classList.add("on"); } };
 
   function startIntro(fr) {
@@ -2965,9 +2929,24 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const it = { t0: performance.now(), timers: [] };
     const at = (ms, fn) => it.timers.push(setTimeout(fn, ms));
     at(480, () => { splash.classList.add("aiCovered"); document.documentElement.classList.add("aiOn"); });     // covered: now the app behind can be turned off
-    at(980, () => splash.classList.add("aiWink")); at(980 + 700, () => splash.classList.remove("aiWink"));
+    it.min = uriIntroRun(splash, uriIntroPlan(), at, setSplText, URI_CFG);                     // entry, expressions (the wink...), what floats around, the line of text: from the admin's settings
     at(2800, () => setSplText(tx("connecting"))); at(7000, () => setSplText(tx("wake")));
     return it;
+  }
+
+  // the admin app's preview: the opening animation on a small stage, with the settings it is given (saved or not) and, to try one, a combination id
+  function introPreview(host, cfg, id) {
+    if (!host) return 0;
+    build();
+    const c = uriMerge(cfg);
+    (host._introT || []).forEach(clearTimeout); host._introT = [];
+    const plan = uriIntroPlan(c);
+    if (uriAnimOk(id)) { const q = id.split("-"); Object.assign(plan, { id, entry: q[0], face: q[1], amb: q[2] }); }
+    host.innerHTML = '<div class="aiSplash aiCovered"><div class="aiSpl"><div class="aiGlow"></div><div class="aiAmb" aria-hidden="true"></div><div class="aiFaceBig">' + uriSVG(c, { kind: "intro" }) + uriSVG(c, { dead: true, kind: "dead" }) + '</div><div class="aiSplTx"></div></div></div>';
+    const sp = host.firstChild, tx = sp.querySelector(".aiSplTx");
+    const at = (ms, fn) => host._introT.push(setTimeout(fn, ms));
+    const setText = (t, hi) => { tx.textContent = t || ""; tx.classList.toggle("on", !!t); tx.classList.toggle("aiHi2", !!hi && !!t); };
+    return uriIntroRun(sp, plan, at, setText, c);
   }
 
   function clearIntro() {
@@ -2997,7 +2976,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         splash.classList.add("aiOut"); panel.classList.add("on"); panel.classList.remove("aiIntro");
         setTimeout(() => { if (intro === it) { intro = null; splash.hidden = true; splash.className = "aiSplash"; } }, 360);
         res();
-      }, Math.max(0, INTRO_MIN - (performance.now() - it.t0)));
+      }, Math.max(0, (it.min || INTRO_MIN) - (performance.now() - it.t0)));
     });
   }
 
@@ -3030,7 +3009,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       else { const watched = await demoGate(); if (!watched) { close(); return; } }
     }
     if (matchMedia("(hover:hover)").matches) input.focus();
-    setTimeout(() => uriEvent("open"), 500);
     refreshRail();
     if (winOK() && !winMode && !LS.get("aiWinHint", 0)) { LS.set("aiWinHint", 1); setTimeout(() => toast((DK[lang()] || DK.he).winHint, 6500), 2600); }
   }
@@ -3519,7 +3497,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     _vv(v) { vvOverride = v || null; baseH = 0; lastKey = ""; kbWas = false; fit(true); },
     _fit() { fit(true); },
     _md(src) { return md(src); },
-    _uri(cfg, o) { return uriSVG(cfg, o); }, _uriPlay(host, id, cfg, outfit) { return uriPlay(host, id, cfg, outfit); }, _uriLook(cfg) { uriApplyLook(cfg); }, _uriEvent(n, h) { uriEvent(n, h); }, _uriSay(h, x) { uriSay(h, x); },                    // for the admin app's preview: draw Uri from the given settings
+    _uri(cfg, o) { return uriSVG(cfg, o); }, _uriLook(cfg) { uriApplyLook(cfg); }, _introPlan(cfg) { return uriIntroPlan(cfg); }, _introPreview(host, cfg, id) { return introPreview(host, cfg, id); },                    // for the admin app's preview: draw Uri from the given settings
     _uriCfg() { return URI_CFG; },
     _show(list) { build(); panel.hidden = false; panel.classList.add("on"); document.documentElement.classList.add("aiOn"); msgs = list || []; applyTexts(); renderMsgs(); fit(true); },     // for tests only: the real chat window with these messages
     _rail(list) { railList = list || []; drawRail(); },
