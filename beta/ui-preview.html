@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>UI preview</title>
+<style>
+:root{--bg:#f4f6fb;--card:#ffffff;--text:#1d2433;--muted:#667085;--line:#e4e8f1;--accent:#3b5bdb;--accent-t:#3b5bdb;--accent-d:#2f4ac0;--accent-soft:#e8edff;--on-accent:#fff;--ok:#22a55e;--warn:#f08c1a;--err:#e5484d;--row:#f7f8fc;--track:#e9ecf5}
+:root[data-theme=dark]{--bg:#12151d;--card:#1a1f2b;--text:#e7eaf2;--muted:#98a2b3;--line:#2a3141;--accent:#7c93ff;--accent-t:#9db0ff;--accent-d:#7c93ff;--accent-soft:#232b4a;--on-accent:#0b1020;--row:#1f2533;--track:#2a3141}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+#out{display:flex;flex-direction:column;gap:18px;padding:12px 8px;box-sizing:border-box}
+.pvItem>.pvName{font:700 12px system-ui;color:var(--muted);margin:0 4px 6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pvItem .pvBad{font:700 11px system-ui;color:#b42318;background:#fee4e2;border-radius:99px;padding:1px 8px}
+.pvItem .pvOk{font:700 11px system-ui;color:#067647;background:#d1fadf;border-radius:99px;padding:1px 8px}
+.uSec{margin:0 4px 14px}.uSec>h4{margin:0 0 8px;font:800 12px system-ui;color:var(--muted)}.uRow{display:flex;flex-wrap:wrap;gap:10px}
+.uT{width:92px;text-align:center;font:700 11px system-ui;color:var(--muted)}.uT .uF{width:84px;height:84px;margin:0 auto 5px;border-radius:24px;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#7b5cff));padding:7px;box-sizing:border-box}
+.uT .uF svg{width:100%;height:100%;overflow:visible;display:block}.uT .uF.s{width:56px;height:56px;border-radius:50%;padding:7px}.uT .uF.m{width:38px;height:38px;border-radius:50%;padding:4px}.uT .uF.xs{width:30px;height:30px;border-radius:50%;padding:3px}
+.uT .uF.big{width:120px;height:120px;border-radius:30px;background:var(--card);border:1px solid var(--line)}.uT.w{width:128px}
+.uIntro{position:relative;height:380px;border-radius:16px;overflow:hidden;background:#050507;border:1px solid var(--line)}
+.uStage{position:relative;display:flex;flex-direction:column;align-items:center;padding:14px 0 8px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-bottom:14px}
+.uStageF{position:relative;width:132px;height:132px}.uStageF>svg.aiFace{width:100%;height:100%;overflow:visible}
+.uSample{padding:7px 13px;border-radius:var(--uri-sb-r,14px);background:var(--uri-sb-bg,var(--card));color:var(--uri-sb-tx,var(--text));border:1px solid var(--uri-sb-bd,var(--line));font:650 13.5px system-ui}
+.uStage small{margin-top:6px;font:700 11px system-ui;color:var(--muted)}
+.pvFrame{overflow:hidden;border-radius:12px;background:var(--bg);outline:1px dashed color-mix(in srgb,var(--muted) 35%,transparent)}
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script src="chat.js"></script>
+<script>
+/* Draws the bot's display blocks with the very same code and the very same message structure the students' app uses (a bubble with the avatar inside a chat panel
+   of a chosen width), so the narrow-phone, tablet and desktop layouts really switch the way they do in the app. Only the admin app (on the server's own origin)
+   may send blocks here. After drawing, each card is checked: does anything stick out of the bubble, is a time cut in two. */
+const ALLOWED = ["https://college-chat-lwdu.onrender.com"];
+const WIDTHS = { phone_s: 320, phone: 390, tablet: 768, desktop: 1280 };
+const out = document.getElementById("out");
+const send = (m) => { try { parent.postMessage(m, "*"); } catch (e) {} };
+const sendH = () => send({ t: "h", h: document.documentElement.scrollHeight });
+
+function inScroller(e, root) { for (let n = e; n && n !== root; n = n.parentElement) { const o = getComputedStyle(n).overflowX; if (o === "auto" || o === "scroll") return true; } return false; }
+function check(frame) {
+  const warns = new Set(), bub = frame.querySelector(".aiB"); if (!bub) return [];
+  const R = bub.getBoundingClientRect();
+  bub.querySelectorAll("*").forEach(e => {
+    const r = e.getBoundingClientRect();
+    if (r.width && r.height && (r.right > R.right + 2 || r.left < R.left - 2) && !inScroller(e, bub)) warns.add("חלק מהכרטיס יוצא מהבועה");
+    const cs = getComputedStyle(e), clips = ["hidden", "clip"].includes(cs.overflowX) || ["hidden", "clip"].includes(cs.overflowY);
+    if (clips) {                                              // a box that clips: is some of its TEXT outside it (decoration outside is fine)?
+      const er = e.getBoundingClientRect(), tw = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+      while (tw.nextNode()) {
+        const n = tw.currentNode; if (!n.nodeValue.trim()) continue;
+        const rg = document.createRange(); rg.selectNodeContents(n); const t = rg.getBoundingClientRect();
+        if (t.width && (t.right > er.right + 2 || t.left < er.left - 2 || t.bottom > er.bottom + 2 || t.top < er.top - 2)) { warns.add("טקסט נחתך"); break; }
+      }
+    } else if (e.clientWidth > 0 && e.scrollWidth > e.clientWidth + 3 && !inScroller(e, bub) && e.textContent.trim()) warns.add("תוכן יוצא מהמסגרת");
+  });
+  const w = document.createTreeWalker(bub, NodeFilter.SHOW_TEXT);
+  while (w.nextNode()) {
+    const n = w.currentNode, t = n.nodeValue.trim();
+    if (/^\d{1,2}:\d{2}$/.test(t)) { const rg = document.createRange(); rg.selectNodeContents(n); if (rg.getClientRects().length > 1) warns.add("שעה שנשברה לשתי שורות"); }
+  }
+  return [...warns];
+}
+
+function frameFor(html, width, noZoom) {
+  const vw = document.documentElement.clientWidth - 16, zoom = noZoom ? 1 : Math.min(1, vw / width);
+  const box = document.createElement("div"); box.className = "pvFrame"; box.style.width = Math.round(width * zoom) + "px";
+  const P = document.createElement("div"); P.className = "aiP";
+  P.style.cssText = "position:relative;left:auto;right:auto;top:auto;height:auto;transform:none;opacity:1;translate:none;display:block;contain:none;overflow:visible;background:transparent;width:" + width + "px;" + (zoom < 1 ? "zoom:" + zoom + ";" : "");
+  const Ms = document.createElement("div"); Ms.className = "aiMs"; Ms.style.cssText = "overflow:visible;flex:none;min-height:0";
+  const M = document.createElement("div"); M.className = "aiM ai";
+  const av = document.createElement("div"); av.className = "aiAv"; const B = document.createElement("div"); B.className = "aiB"; B.dir = "auto"; B.innerHTML = html;
+  M.appendChild(av); M.appendChild(B); Ms.appendChild(M); P.appendChild(Ms); box.appendChild(P);
+  return box;
+}
+
+/* Uri himself, drawn by the app's own renderer from the settings the admin is editing: the opening animation (played on a stage), the sizes he appears in, every theme's outfit and colour, every item */
+function renderUri(cfg, L) {
+  window.AIChat._preview("");                                            // makes sure the app's styles are in the page
+  const W = window.AIChat._uri, esc = x => String(x == null ? "" : x).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  window.AIChat._uriLook(cfg);                                           // the small tag
+  const base = Object.assign({ hat: "", face: "", neck: "" }, cfg.outfit || {});
+  const tile = (label, svg, cls) => '<div class="uT"><div class="uF ' + (cls || "") + '">' + svg + "</div>" + esc(label) + "</div>";
+  let h = '<div class="uSec"><h4>' + esc(L.hIntro || "אנימציית הפתיחה") + '</h4><div class="uIntro" id="uIntro"></div></div>';
+  h += '<div class="uSec"><h4>' + esc(L.hSizes || "בגדלים שבהם הוא מופיע") + '</h4><div class="uRow">' +
+    tile(L.fab || "הכפתור הצף", W(cfg, { outfit: base }), "s") + tile(L.hdr || "כותרת הצ׳אט", W(cfg, { outfit: base }), "m") + tile(L.bub || "בהודעות", W(cfg, { outfit: base }), "xs") +
+    tile(L.dead || "כשיש תקלה", W(cfg, { dead: true, outfit: base }), "s") + "</div></div>";
+  const themes = (cfg.themes || []).filter(x => x);
+  if (themes.length) h += '<div class="uSec"><h4>' + esc(L.hThemes || "ערכות נושא") + '</h4><div class="uRow">' + themes.map(x => {
+    const c2 = Object.assign({}, cfg, { body: x.body || cfg.body, themes: [] });
+    return tile((x.label || "") + " " + x.from + "–" + x.to, W(c2, { outfit: Object.assign({ hat: "", face: "", neck: "" }, x.outfit || {}) }), "m");
+  }).join("") + "</div></div>";
+  const avail = Object.keys(L.slots || {});
+  if (avail.length) h += '<div class="uSec"><h4>' + esc(L.hItems || "הפריטים שאפשר ללבוש") + '</h4><div class="uRow">' + avail.map(k => {
+    const slot = (L.slots || {})[k] || "hat"; return tile((L.items || {})[k] || k, W(cfg, { outfit: Object.assign({}, base, { [slot]: k }) }), "m");
+  }).join("") + "</div></div>";
+  out.innerHTML = h;
+  playIntro(cfg, L.id);
+  setTimeout(sendH, 50); setTimeout(sendH, 500);
+}
+function playIntro(cfg, id) {                                            // the opening animation of the given settings, from the start (an id tries one combination)
+  const host = document.getElementById("uIntro"); if (!host || !window.AIChat) return;
+  window.AIChat._uriLook(cfg);
+  window.AIChat._introPreview(host, cfg, id || "");
+}
+addEventListener("message", e => {
+  if (!ALLOWED.includes(e.origin) || !e.data) return;
+  if (e.data.t === "theme") { document.documentElement.dataset.theme = e.data.dark ? "dark" : "light"; sendH(); return; }
+  if (e.data.t === "uri" && window.AIChat) { renderUri(e.data.cfg || {}, e.data.labels || {}); return; }
+  if (e.data.t === "introPlay" && window.AIChat) {                        // play the opening animation again (optionally one combination, optionally with other settings)
+    if (!document.getElementById("uIntro")) renderUri(e.data.cfg || {}, e.data.labels || {}); else playIntro(e.data.cfg || {}, String(e.data.id || ""));
+    return;
+  }
+  if (e.data.t !== "render" || !Array.isArray(e.data.items) || !window.AIChat) return;
+  const widths = e.data.width === "all" ? [320, 390, 768, 1280] : [Math.max(280, Math.min(1920, Number(e.data.width) || 390))];
+  out.innerHTML = "";
+  let hidden = document.getElementById("hid"); if (!hidden) { hidden = document.createElement("div"); hidden.id = "hid"; hidden.style.cssText = "position:absolute;left:-30000px;top:0;visibility:hidden;pointer-events:none"; document.body.appendChild(hidden); }
+  hidden.innerHTML = "";
+  const jobs = [];
+  for (const it of e.data.items.slice(0, 60)) {
+    const box = document.createElement("div"); box.className = "pvItem";
+    const html = window.AIChat._preview(String(it.marker || ""));
+    for (const w of widths) {
+      const nm = document.createElement("div"); nm.className = "pvName"; nm.textContent = (it.name ? it.name + " · " : "") + w + "px";
+      box.appendChild(nm);
+      const fr = frameFor(html, w); box.appendChild(fr); jobs.push({ nm, fr, name: it.name || "", w });
+    }
+    out.appendChild(box);
+    for (const w of [320, 390, 768, 1280]) {                // the check always covers every width, even the ones not shown: drawn off screen, at real size
+      if (widths.includes(w)) continue;
+      const fr = frameFor(html, w, true); hidden.appendChild(fr); jobs.push({ nm: null, fr, name: it.name || "", w });
+    }
+  }
+  setTimeout(() => {                                         // after layout and fonts: look for problems
+    const results = [];
+    document.querySelectorAll(".aiUi.fresh").forEach(x => x.classList.remove("fresh"));
+    document.querySelectorAll(".aiBk").forEach(x => { x.style.animation = "none"; x.style.opacity = 1; x.style.transform = "none"; });
+    jobs.forEach(j => { const warns = check(j.fr); results.push({ name: j.name, width: j.w, warns });
+      if (!j.nm) return;
+      const tag = document.createElement("span"); tag.className = warns.length ? "pvBad" : "pvOk"; tag.textContent = warns.length ? warns.join(" · ") : "תקין"; j.nm.appendChild(tag); });
+    send({ t: "check", results }); sendH();
+  }, 900);
+  setTimeout(sendH, 60);
+});
+document.addEventListener("click", e => {                         // the pieces that need a click to change (tabs); links and actions do nothing here
+  const t = e.target.closest("[data-tab]");
+  if (t) { const box = t.closest(".aiTb"), i = t.dataset.tab; box.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("on", x === t)); box.querySelectorAll("[data-pane]").forEach(x => x.classList.toggle("on", x.dataset.pane === i)); sendH(); }
+});
+document.addEventListener("toggle", sendH, true);
+addEventListener("load", () => send({ t: "ready" }));
+</script>
+</body>
+</html>
