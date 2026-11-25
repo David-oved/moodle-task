@@ -1275,7 +1275,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const I_COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>';
   const I_SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg>';
   const I_SELECT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>';
-  const I_FILE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6M9 14l3 3 3-3"/></svg>';
 
   const esc2 = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
@@ -1347,14 +1346,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
       tm: "Demain ", td: "Aujourd'hui ", days: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"], all: "Tout", loc: "fr-FR" },
   };
   const dlt = () => DLT[lang()] || DLT.he;
-  function dlDecode(b64) {
-    try {
-      let b = b64.replace(/-/g, "+").replace(/_/g, "/"); b += "=".repeat((4 - b.length % 4) % 4);
-      const bin = atob(b), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-      const arr = JSON.parse(new TextDecoder("utf-8").decode(bytes));
-      return Array.isArray(arr) ? arr.filter(x => x && x.t).slice(0, 20) : [];
-    } catch (e) { return []; }
-  }
   const dlHue = c => { let h = 0; for (const ch of String(c || "")) h = (h * 31 + ch.charCodeAt(0)) % 360; return h; };
   const dlTime = t => new Date(t * 1000).toLocaleTimeString(dlt().loc, { hour: "2-digit", minute: "2-digit", hour12: false });
   const dayStart = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x.getTime(); };
@@ -1390,7 +1381,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   };
   const ordDay = (t) => { const d = new Date(t * 1000); return { wd: dlt().days[d.getDay()], day: d.getDate(), mon: d.toLocaleDateString(dlt().loc, { month: "short" }) }; };
   // how full the "time left" bar is: empty far away, full when it is due
-  const uiUrgency = t => Math.max(0.05, Math.min(1, 1 - (t * 1000 - Date.now()) / (5 * 86400000)));
   const itAttr = (k, it) => ' data-it="' + esc2(JSON.stringify({ k, n: it.n || "", c: it.c || "", v: it.v || "", t: it.t || 0, d: it.d || "", u: it.u || "", o: it.o ? 1 : 0 })) + '"';
   // "Wed 18.11 · 21:00" - the exact moment, always shown
   const dlFull = t => { const d = new Date(t * 1000); return dlt().days[d.getDay()] + " " + String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0") + " · " + dlTime(t); };
@@ -3070,7 +3060,6 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   // Welcome tour: a short animated "film" that introduces the AI helper. Plays on every app start for now
   // (plays only on the very first start; a long press on the AI button plays it again). It can be skipped with the X button.
   // ---------------------------------------------------------------------------------------------
-  const TOUR_ONCE = true;
   const TOUR = {
     he: [
       { t: "היי! אני אורי, העוזר החדש שלך", s: "חדש באפליקציה" },
