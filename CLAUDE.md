@@ -1,11 +1,11 @@
 # MoodlePro – notes for an AI assistant working in this repository
 
 MoodlePro is a single-file student app for Machon Lev's Moodle (Hebrew first; English and French too), served by GitHub Pages.
-The owner is Meir. Read `CONTRIBUTING.md` (Hebrew) for the human workflow; the rules below are binding for you.
+The owner is Meir. Read `CONTRIBUTING.md` (Hebrew) for the human workflow; the rules below are binding for you. `AGENTS.md` holds the same rules (plus design notes) for other AI agents such as Codex.
 
 ## If you are working for a helper (on a fork)
 - Change files under `beta/` only. A pull request touching anything else fails the "PR guard" check and will not be merged:
-  the root (`index.html`, `sw.js`, `social.js` = the app everyone uses), `push/` (the Cloudflare server), `.github/`, docs.
+  the root (`index.html`, `sw.js`, `social.js`, `admin.js` = the app everyone uses), `push/` (the Cloudflare server), `.github/`, docs.
 - Do not change `APP_VERSION`, the `CHANGES` list, `CHANGELOG.md` or `CACHE` in `beta/sw.js` – the owner's side does that when merging.
 - Your copy (any origin other than https://aorizoro.github.io) automatically uses the TEST server
   `https://moodle-task-push-dev.aorizoro.workers.dev` (empty data) and never posts to the real feedback form. Do not change that logic (`OFFICIAL`, `PUSH_URL`, `fbPost`).

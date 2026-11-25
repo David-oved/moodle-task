@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.8.6";
+const SOC_V = "1.9.3";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -32,6 +32,8 @@ Object.assign(I18N.he, {
   dg_bio: "ביואינפורמטיקה", dg_nur: "סיעוד", dg_nur2: "הסבת אקדמאים לסיעוד", dg_acc: "חשבונאות ומערכות מידע", dg_ba: "מנהל עסקים", dg_pha: "מדעי הרוקחות",
   dg_m_cs: "מדעי המחשב – בינה מלאכותית (תואר שני)", dg_m_phy: "פיזיקה יישומית / אלקטרו-אופטיקה (תואר שני)", dg_m_nur: "סיעוד (תואר שני)",
   yr1: "שנה א׳", yr2: "שנה ב׳", yr3: "שנה ג׳", yr4: "שנה ד׳",
+  rk0f: "שורדת סמסטר", rk1f: "צדקת של סיכומים", rk2f: "פותרת בעיות מוסמכת", rk3f: "מצילת מועדי א׳", rk4f: "מתרגלת של כבוד", rk5f: "גאונת הפקולטה", rk6f: "אגדת הקמפוס",
+  rkN: n => n === 1 ? "אדם אחד" : n + " אנשים", rkG: "לשון הדרגות", rkGa: "לפי הקמפוס", rkGm: "לשון זכר", rkGf: "לשון נקבה",
   rk0: "שורד סמסטר", rk1: "צדיק של סיכומים", rk2: "פותר בעיות מוסמך", rk3: "מציל מועדי א׳", rk4: "מתרגל של כבוד", rk5: "גאון הפקולטה", rk6: "אגדת הקמפוס",
   socTimeT: "סחתיין על ההגשה! כמה זמן לקח לך בערך?", socTimeHint: "עוזר לאחרים לתכנן את הזמן. לחיצה אחת.", socSkip: "דלג",
   h1: "עד שעה", h2: "\u20661–3\u2069 שעות", h3: "\u20663–6\u2069 שעות", h4: "\u20666–10\u2069 שעות", h5: "יותר מ-10 שעות",
@@ -47,7 +49,7 @@ Object.assign(I18N.he, {
   lgAdd: (f, r) => f + " הוסיף אצלו את ״" + r + "״", lgTime: r => "דיווח זמן על ״" + r + "״", lgWa: "קישור לקבוצת הוואטסאפ", lgSomeone: "מישהו",
   socMute: "השתק משתמש זה 🔇", socUnmute: "בטל השתקה", socMuted: n => n + " הושתק. לא תראה יותר את מה שהוא משתף.", socUnmuted: "ההשתקה בוטלה",
   socOnLbl: "הקהילה פעילה", socOnHint: "כשכבוי – אין שום חיבור לשרת הקהילה ושום דבר מזה לא מוצג.", socProfT: "הפרופיל שלי", socWaT: "קבוצות וואטסאפ לפי קורס",
-  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
+  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socPtsU: "נק׳", socHere: "את/ה כאן", adT: "ניהול הקהילה", lgAdmin: r => "🎁 בונוס מהצוות" + (r ? ": " + r : ""), svT: "השמורים שלי", svBtn: "שמירה לאחר כך", svDone: "נשמר 🔖 בצ׳אטים ← השמורים שלי", svOff: "הוסר מהשמורים", svNone: "עוד אין כאן כלום. 🔖 ליד הודעה בצ׳אט שומר אותה כאן, ואפשר גם לכתוב פתק לעצמך.", svNotePh: "פתק לעצמי…", svNoteAdd: "שמירה", svNoteT: "פתק שלי", svTo: "לצ׳אט ←", svDel: "הסרה", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
   shT: "נוסף ללוח שלך ✓", shBig: "שתף עם כל הסטודנטים בקורס", shBigSub: "כולם יוכלו להוסיף לעצמם בלחיצה אחת · \u2066+3\u2069 נק׳ על כל מי שמוסיף", shAuto: "לשתף אוטומטית כל בוחן ומשימה שאוסיף לקורס",
   shAutoOn: "שיתוף אוטומטי פעיל ✓", shLater: "לא עכשיו", shBtn: "שתף", shShared: "משותף", shUnshare: "הסר שיתוף", shNoCourse: "אפשר לשתף רק פריט ששייך לקורס",
   shTaskT: "המשימה נשמרה ✓", shMineArea: "שיתוף עם הקורס", shAutoT: "שיתוף אוטומטי",
@@ -57,7 +59,7 @@ Object.assign(I18N.he, {
   lgStar: (f, r) => f + " סימן את התשובה שלך כמועילה" + (r ? " ב״" + r + "״" : ""),
   chvT: "💬 צ'אטים", chvHint: "לכל קורס יש צ'אט כללי, ולכל מטלה בקורס יש דיון משלה.", chvSearch: "חיפוש קורס או מטלה", chvGeneral: "הצ'אט הכללי של הקורס", chvGeneralSub: "שאלות, עדכונים ותיאומים לכל הקורס",
   chvTasks: n => "דיונים במטלות" + (n ? " (" + n + ")" : ""), chvMore: n => "עוד " + n + " מטלות", chvLess: "פחות", chvNoMsg: "אין הודעות עדיין · אפשר לפתוח", chvDue: d => "הגשה " + d, chvNone: "לא נמצאו קורסים או מטלות",
-  chvUnread: n => n + " חדשות", chBread: "הצ'אט הכללי", chDisc: "דיון במטלה",
+  chvUnread: n => n + " חדשות", chvFUn: "לא נקראו", chvReadAll: "✓ סימון הכל כנקרא", chBread: "הצ'אט הכללי", chDisc: "דיון במטלה",
   socNet: "אין חיבור לשרת הקהילה כרגע", socLoading: "טוען…", socRanksT: "הדרגות", socJoinBtn: "הצטרפות לקהילה",
 });
 Object.assign(I18N.en, {
@@ -80,6 +82,7 @@ Object.assign(I18N.en, {
   dg_bio: "Bioinformatics", dg_nur: "Nursing", dg_nur2: "Nursing for graduates", dg_acc: "Accounting & Information Systems", dg_ba: "Business Administration", dg_pha: "Pharmaceutical Sciences",
   dg_m_cs: "M.Sc. Computer Science (AI)", dg_m_phy: "M.Sc. Applied Physics / Electro-Optics", dg_m_nur: "M.S.N. Nursing",
   yr1: "1st year", yr2: "2nd year", yr3: "3rd year", yr4: "4th year",
+  rkN: n => n === 1 ? "1 person" : n + " people", rkG: "Rank names", rkGa: "By campus", rkGm: "Masculine (Hebrew)", rkGf: "Feminine (Hebrew)",
   rk0: "Semester Survivor", rk1: "Summary Saint", rk2: "Certified Solver", rk3: "Exam Saver", rk4: "Honorary TA", rk5: "Faculty Genius", rk6: "Campus Legend",
   socTimeT: "Nice, submitted! Roughly how long did it take?", socTimeHint: "Helps others plan their time. One tap.", socSkip: "Skip",
   h1: "Up to 1 hour", h2: "1–3 hours", h3: "3–6 hours", h4: "6–10 hours", h5: "10+ hours",
@@ -95,7 +98,7 @@ Object.assign(I18N.en, {
   lgAdd: (f, r) => f + " added “" + r + "” to theirs", lgTime: r => "Time report on “" + r + "”", lgWa: "WhatsApp group link", lgSomeone: "Someone",
   socMute: "Mute this user 🔇", socUnmute: "Unmute", socMuted: n => n + " is muted. You won’t see what they share.", socUnmuted: "Unmuted",
   socOnLbl: "Community on", socOnHint: "When off, nothing connects to the community server and none of this is shown.", socProfT: "My profile", socWaT: "WhatsApp groups by course",
-  socMuteT: "Muted users", socMuteNone: "None", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
+  socMuteT: "Muted users", socMuteNone: "None", socPtsU: "pts", socHere: "You’re here", adT: "Community admin", lgAdmin: r => "🎁 Bonus from the team" + (r ? ": " + r : ""), svT: "My saved", svBtn: "Save for later", svDone: "Saved 🔖 Chats → My saved", svOff: "Removed from saved", svNone: "Nothing here yet. 🔖 next to a chat message saves it here, and you can write yourself a note.", svNotePh: "A note to myself…", svNoteAdd: "Save", svNoteT: "My note", svTo: "To the chat →", svDel: "Remove", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
   shT: "Added to your board ✓", shBig: "Share with everyone in the course", shBigSub: "They can add it in one tap · +3 pts for each one who does", shAuto: "Share every quiz and task I add to a course automatically",
   shAutoOn: "Auto-share is on ✓", shLater: "Not now", shBtn: "Share", shShared: "Shared", shUnshare: "Stop sharing", shNoCourse: "Only items that belong to a course can be shared",
   shTaskT: "Task saved ✓", shMineArea: "Share with the course", shAutoT: "Auto-share",
@@ -105,7 +108,7 @@ Object.assign(I18N.en, {
   lgStar: (f, r) => f + " marked your answer helpful" + (r ? " in “" + r + "”" : ""),
   chvT: "💬 Chats", chvHint: "Every course has a general chat, and every task in it has its own discussion.", chvSearch: "Search a course or task", chvGeneral: "The course’s general chat", chvGeneralSub: "Questions, updates and plans for the whole course",
   chvTasks: n => "Task discussions" + (n ? " (" + n + ")" : ""), chvMore: n => n + " more tasks", chvLess: "Less", chvNoMsg: "No messages yet · open it", chvDue: d => "Due " + d, chvNone: "No course or task found",
-  chvUnread: n => n + " new", chBread: "General chat", chDisc: "Task discussion",
+  chvUnread: n => n + " new", chvFUn: "Unread", chvReadAll: "✓ Mark all as read", chBread: "General chat", chDisc: "Task discussion",
   socNet: "Can’t reach the community server right now", socLoading: "Loading…", socRanksT: "Ranks", socJoinBtn: "Join the community",
 });
 Object.assign(I18N.fr, {
@@ -128,6 +131,8 @@ Object.assign(I18N.fr, {
   dg_bio: "Bio-informatique", dg_nur: "Soins infirmiers", dg_nur2: "Reconversion en soins infirmiers", dg_acc: "Comptabilité et systèmes d’information", dg_ba: "Administration des affaires", dg_pha: "Sciences pharmaceutiques",
   dg_m_cs: "M.Sc. Informatique (IA)", dg_m_phy: "M.Sc. Physique appliquée / électro-optique", dg_m_nur: "Soins infirmiers (M.S.N.)",
   yr1: "1re année", yr2: "2e année", yr3: "3e année", yr4: "4e année",
+  rk0f: "Survivante du semestre", rk2f: "Solveuse certifiée", rk3f: "Sauveuse d’examens", rk5f: "Génie de la faculté",
+  rkN: n => n === 1 ? "1 personne" : n + " personnes", rkG: "Noms des rangs", rkGa: "Selon le campus", rkGm: "Masculin", rkGf: "Féminin",
   rk0: "Survivant du semestre", rk1: "Saint des résumés", rk2: "Solveur certifié", rk3: "Sauveur d’examens", rk4: "Assistant d’honneur", rk5: "Génie de la faculté", rk6: "Légende du campus",
   socTimeT: "Bravo, c’est rendu ! Ça vous a pris combien de temps ?", socTimeHint: "Aide les autres à s’organiser. Un seul geste.", socSkip: "Passer",
   h1: "Jusqu’à 1 h", h2: "1 à 3 h", h3: "3 à 6 h", h4: "6 à 10 h", h5: "Plus de 10 h",
@@ -143,7 +148,7 @@ Object.assign(I18N.fr, {
   lgAdd: (f, r) => f + " a ajouté « " + r + " » chez lui", lgTime: r => "Durée indiquée pour « " + r + " »", lgWa: "Lien du groupe WhatsApp", lgSomeone: "Quelqu’un",
   socMute: "Masquer cet utilisateur 🔇", socUnmute: "Ne plus masquer", socMuted: n => n + " est masqué. Vous ne verrez plus ses partages.", socUnmuted: "Plus masqué",
   socOnLbl: "Communauté activée", socOnHint: "Désactivée : aucune connexion au serveur de la communauté, et rien de tout cela n’est affiché.", socProfT: "Mon profil", socWaT: "Groupes WhatsApp par cours",
-  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
+  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socPtsU: "pts", socHere: "Vous êtes ici", adT: "Gestion de la communauté", lgAdmin: r => "🎁 Bonus de l’équipe" + (r ? " : " + r : ""), svT: "Mes enregistrés", svBtn: "Garder pour plus tard", svDone: "Enregistré 🔖 Chats → Mes enregistrés", svOff: "Retiré", svNone: "Rien pour l’instant. 🔖 à côté d’un message l’enregistre ici, et vous pouvez écrire une note pour vous.", svNotePh: "Une note pour moi…", svNoteAdd: "Enregistrer", svNoteT: "Ma note", svTo: "Vers le chat →", svDel: "Retirer", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
   shT: "Ajouté à votre tableau ✓", shBig: "Partager avec tout le cours", shBigSub: "Chacun peut l’ajouter en un geste · +3 pts par ajout", shAuto: "Partager automatiquement chaque quiz et devoir que j’ajoute à un cours",
   shAutoOn: "Partage automatique activé ✓", shLater: "Pas maintenant", shBtn: "Partager", shShared: "Partagé", shUnshare: "Ne plus partager", shNoCourse: "Seuls les éléments liés à un cours peuvent être partagés",
   shTaskT: "Devoir enregistré ✓", shMineArea: "Partager avec le cours", shAutoT: "Partage automatique",
@@ -153,8 +158,36 @@ Object.assign(I18N.fr, {
   lgStar: (f, r) => f + " a marqué votre réponse comme utile" + (r ? " dans « " + r + " »" : ""),
   chvT: "💬 Chats", chvHint: "Chaque cours a un chat général, et chaque devoir du cours a sa propre discussion.", chvSearch: "Chercher un cours ou un devoir", chvGeneral: "Le chat général du cours", chvGeneralSub: "Questions, nouvelles et organisation pour tout le cours",
   chvTasks: n => "Discussions des devoirs" + (n ? " (" + n + ")" : ""), chvMore: n => n + " devoirs de plus", chvLess: "Moins", chvNoMsg: "Pas encore de messages · ouvrir", chvDue: d => "À rendre " + d, chvNone: "Aucun cours ni devoir trouvé",
-  chvUnread: n => n + " nouveaux", chBread: "Chat général", chDisc: "Discussion du devoir",
+  chvUnread: n => n + " nouveaux", chvFUn: "Non lus", chvReadAll: "✓ Tout marquer comme lu", chBread: "Chat général", chDisc: "Discussion du devoir",
   socNet: "Serveur de la communauté injoignable pour l’instant", socLoading: "Chargement…", socRanksT: "Rangs", socJoinBtn: "Rejoindre la communauté",
+});
+/* summaries and solutions in the chats */
+Object.assign(I18N.he, {
+  fAttach: "צירוף סיכום או פתרון", fKind_sum: "סיכום", fKind_sol: "פתרון", fKind_other: "קובץ", fKindQ: "מה זה?", fUp: "מעלה…",
+  fTooBig: mb => "הקובץ גדול מדי. אפשר עד " + mb + " MB (סריקה? אפשר לשמור אותה כ-PDF באיכות נמוכה יותר)", fBadType: "אפשר לצרף PDF, תמונה, Word, PowerPoint או Excel",
+  fErr_day: n => "הגעת ל-" + n + " קבצים היום. אפשר להמשיך מחר", fErr_user: "נגמר המקום שלך לקבצים (150 MB). מחיקה של הודעה עם קובץ ישן מפנה מקום",
+  fErr_full: "האחסון של הקהילה מלא כרגע. מאיר כבר יודע ומטפל בזה", fErr_course: "האחסון של הקורס הזה מלא כרגע", fErr_net: "הקובץ לא עלה. כדאי לבדוק את החיבור ולנסות שוב",
+  fList: "סיכומים ופתרונות", fListT: c => "📚 סיכומים ופתרונות · " + c, fListNone: "עוד אין כאן סיכומים או פתרונות. יש לך סיכום טוב? אפשר לצרף אותו בצ'אט עם 📎, וכולם ירוויחו",
+  fListAll: "הכל", fInChat: "בצ'אט הקורס", fInTask: r => "בדיון: " + r, fToChat: "להודעה ←", fMine: (u, m) => "השתמשת ב-" + u + " מתוך " + m + " MB", fHint: "📎 עד 10 MB לקובץ: PDF, תמונה, Word, PowerPoint, Excel",
+  fNote: "משתפים חומר שכתבת בעצמך, או שמותר לשתף. לא מבחנים שלא פורסמו",
+});
+Object.assign(I18N.en, {
+  fAttach: "Attach a summary or a solution", fKind_sum: "Summary", fKind_sol: "Solution", fKind_other: "File", fKindQ: "What is it?", fUp: "Uploading…",
+  fTooBig: mb => "That file is too big. Up to " + mb + " MB (a scan? try saving it as a lower-quality PDF)", fBadType: "You can attach a PDF, a picture, Word, PowerPoint or Excel",
+  fErr_day: n => "You’ve shared " + n + " files today. You can go on tomorrow", fErr_user: "Your file space is full (150 MB). Deleting a message with an old file frees it",
+  fErr_full: "The community storage is full right now. Meir knows and is on it", fErr_course: "This course’s storage is full right now", fErr_net: "The file didn’t upload. Check the connection and try again",
+  fList: "Summaries & solutions", fListT: c => "📚 Summaries & solutions · " + c, fListNone: "No summaries or solutions here yet. Got a good summary? Attach it in the chat with 📎 and everyone benefits",
+  fListAll: "All", fInChat: "In the course chat", fInTask: r => "In: " + r, fToChat: "To the message →", fMine: (u, m) => "You’ve used " + u + " of " + m + " MB", fHint: "📎 Up to 10 MB per file: PDF, picture, Word, PowerPoint, Excel",
+  fNote: "Share material you wrote yourself, or may share. No unpublished exams",
+});
+Object.assign(I18N.fr, {
+  fAttach: "Joindre un résumé ou une solution", fKind_sum: "Résumé", fKind_sol: "Solution", fKind_other: "Fichier", fKindQ: "C’est quoi ?", fUp: "Envoi…",
+  fTooBig: mb => "Fichier trop gros. Jusqu’à " + mb + " Mo (un scan ? essayez un PDF de qualité plus basse)", fBadType: "Vous pouvez joindre un PDF, une image, Word, PowerPoint ou Excel",
+  fErr_day: n => "Vous avez partagé " + n + " fichiers aujourd’hui. Vous pourrez continuer demain", fErr_user: "Votre espace fichiers est plein (150 Mo). Supprimer un message avec un ancien fichier libère de la place",
+  fErr_full: "Le stockage de la communauté est plein pour l’instant. Meir est au courant", fErr_course: "Le stockage de ce cours est plein pour l’instant", fErr_net: "Le fichier n’a pas été envoyé. Vérifiez la connexion et réessayez",
+  fList: "Résumés et solutions", fListT: c => "📚 Résumés et solutions · " + c, fListNone: "Pas encore de résumés ni de solutions. Vous avez un bon résumé ? Joignez-le dans le chat avec 📎",
+  fListAll: "Tout", fInChat: "Dans le chat du cours", fInTask: r => "Dans : " + r, fToChat: "Vers le message →", fMine: (u, m) => "Utilisé : " + u + " sur " + m + " Mo", fHint: "📎 Jusqu’à 10 Mo par fichier : PDF, image, Word, PowerPoint, Excel",
+  fNote: "Partagez ce que vous avez écrit, ou avez le droit de partager. Pas d’examens non publiés",
 });
 
 /* ---------- state and the server ---------- */
@@ -181,7 +214,7 @@ async function api(op, body) {
   const pr = prof(), ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 12000);
   try {
     const r = await fetch(pushUrl() + "/social/" + op, { method: "POST", signal: ctl.signal, headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(Object.assign({ uid: id.uid, sec: id.sec, name: myName() || "?", deg: pr.deg, yr: pr.yr }, body || {})) });
+      body: JSON.stringify(Object.assign({ uid: id.uid, sec: id.sec, name: myName() || "?", deg: pr.deg, yr: pr.yr }, pr.camp ? { camp: pr.camp } : {}, body || {})) });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) { const e = new Error(j.error || "http " + r.status); e.status = r.status; throw e; }
     return j;
@@ -201,20 +234,32 @@ async function overview(force) {
         P.soc_old = (P.soc_old || []).filter(x => !o.merged.includes(x.uid)); savePrefs(); useHit("socMerged");
         if (o.me && o.me.all) toast(t("socMergedT"));
       }
-      ST.ov = o; ST.err = false; LS.set("socOv", o); LS.set("socPts", (o.me && o.me.all) || 0); render(); if (!$("#sheet").hidden) SOC.card(); notesCheck(o.notes); return o; })
+      ST.ov = o; ST.err = false; LS.set("socOv", o); LS.set("socPts", (o.me && o.me.all) || 0); render(); if (!$("#sheet").hidden) SOC.card(); notesCheck(o.notes); setTimeout(campAsk, 1500); return o; })
     .catch(e => { ST.err = true; return null; }).finally(() => { ST.busy = null; });
   return ST.busy;
 }
 const cdata = cid => (ST.ov && ST.ov.c && ST.ov.c[String(cid)]) || null;
 const muted = uid => (P.soc_mute || []).some(m => m.uid === uid);
 const isMe = uid => P.soc_id && P.soc_id.uid === uid;
+/* campus → rank names: Machon Lev is men; Tal, Tevuna and Lustig are women. Asked when joining (and once from those who joined before), sent to the
+   server with the profile, so everyone sees each person's rank in that person's form. Unknown campus: the viewer's own form (the campuses study apart) */
+const CAMPS = ["lev", "tal", "tvuna", "lustig"], CAMPL = { lev: "cmLev", tal: "cmTal", tvuna: "cmTvuna", lustig: "cmLustig" };
+const selfFem = () => !!(window.rkFem && window.rkFem());
+const femOf = (uid, camp) => isMe(uid) ? selfFem() : camp ? camp !== "lev" : selfFem();
+Object.assign(I18N.he, { cmT: "קמפוס", cmPick: "בחר/י קמפוס", cmLev: "מכון לב", cmTal: "מכון טל", cmTvuna: "מכון תבונה", cmLustig: "מכון לוסטיג", cmNeed: "צריך לבחור קמפוס",
+  cmAskT: "באיזה קמפוס את/ה לומד/ת?", cmAskP: "כדי ששמות הדרגות יופיעו נכון – ״שורדת סמסטר״ או ״שורד סמסטר״ – אצלך וגם אצל כל מי שרואה אותך בצ׳אטים ובטבלאות. אפשר לשנות בהגדרות ← קהילה.", cmLater: "אחר כך", cmSaved: "נשמר ✓" });
+Object.assign(I18N.en, { cmT: "Campus", cmPick: "Choose your campus", cmLev: "Machon Lev", cmTal: "Machon Tal", cmTvuna: "Machon Tevuna", cmLustig: "Machon Lustig", cmNeed: "Please choose your campus",
+  cmAskT: "Which campus do you study at?", cmAskP: "So rank names show in the right form (Hebrew has masculine and feminine) – for you and for everyone who sees you in chats and leaderboards. You can change it in Settings → Community.", cmLater: "Later", cmSaved: "Saved ✓" });
+Object.assign(I18N.fr, { cmT: "Campus", cmPick: "Choisissez votre campus", cmLev: "Machon Lev", cmTal: "Machon Tal", cmTvuna: "Machon Tevouna", cmLustig: "Machon Lustig", cmNeed: "Choisissez votre campus",
+  cmAskT: "Dans quel campus étudiez-vous ?", cmAskP: "Pour que les noms de rangs s’affichent à la bonne forme (masculin ou féminin en hébreu) – pour vous et pour ceux qui vous voient dans les discussions et les classements. Modifiable dans Réglages → Communauté.", cmLater: "Plus tard", cmSaved: "Enregistré ✓" });
 const isMeName = n => !!n && n === myName();
 
 /* ---------- labels ---------- */
 const degLabel = d => !d ? "" : d.startsWith("x:") ? d.slice(2) : I18N.he["dg_" + d] ? t("dg_" + d) : d;
 const profLine = (deg, yr) => [degLabel(deg), yr ? t("yr" + yr) : ""].filter(Boolean).join(" · ");
-function rankOf(pts) { let i = 0; RANKS.forEach((r, k) => { if (pts >= r[0]) i = k; }); return { i, emo: RANKS[i][1], name: t(RANKS[i][2]), next: RANKS[i + 1] || null }; }
-const rankTag = pts => { const r = rankOf(pts || 0); return '<span class="srk r' + r.i + '">' + r.emo + " " + esc(r.name) + "</span>"; };
+const rkName = (i, fem = selfFem()) => { const k = RANKS[i][2]; return fem && I18N[LANG] && I18N[LANG][k + "f"] ? t(k + "f") : t(k); };
+function rankOf(pts, fem) { let i = 0; RANKS.forEach((r, k) => { if (pts >= r[0]) i = k; }); return { i, emo: RANKS[i][1], name: rkName(i, fem), next: RANKS[i + 1] || null }; }
+const rankTag = (pts, fem) => { const r = rankOf(pts || 0, fem); return '<span class="srk r' + r.i + '">' + r.emo + " " + esc(r.name) + "</span>"; };
 const fmtH = h => String(Math.round(h * 10) / 10).replace(/\.0$/, "");
 const nameBtn = (uid, name) => '<button class="sname" data-socu="' + esc(uid) + '"><bdi>' + esc(name || t("lgSomeone")) + "</bdi></button>";
 const shortDate = ts => { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric" }); } catch (e) { return ymd(ts); } };
@@ -479,7 +524,7 @@ async function openTimes(key) {
 /* the community part of a course's page: its chat, its WhatsApp group and its leaderboard */
 function crsLinks(cid) {
   const n = thInfo(cid, "c").n, u = unread(cid, "c"), tn = Object.keys((cdata(cid) || {}).th || {}).filter(k => k !== "c").length;
-  return '<div class="crsoc">' + chatBtnCourse(cid) + '<button class="crsbtn" data-socboard="' + cid + '">' + ic("trophy") + "<span>" + esc(t("crsBoard")) + "</span></button>" + "</div>" +
+  return '<div class="crsoc">' + chatBtnCourse(cid) + '<button class="crsbtn" data-socfiles="' + cid + '">' + ic("book-open") + "<span>" + esc(t("fList")) + "</span></button>" + '<button class="crsbtn" data-socboard="' + cid + '">' + ic("trophy") + "<span>" + esc(t("crsBoard")) + "</span></button>" + "</div>" +
     '<p class="hint">' + esc(n || tn ? t("crsChatN", n, tn) : t("crsChatNone")) + (u ? " · " + esc(t("chvUnread", u)) : "") + "</p>" + waBar(cid);
 }
 function totalUnread() { let n = 0; for (const c of myCourses()) { const cd = cdata(c.id); if (!cd || !cd.th) continue; for (const tk in cd.th) n += unread(c.id, tk); } return n; }
@@ -490,13 +535,15 @@ function chatTitle(cid, tk) {
 function openChat(cid, tk) {
   const c = courseOf(cid), title = chatTitle(cid, tk);
   if (ST.chat && ST.chat.timer) clearInterval(ST.chat.timer);
-  ST.chat = { cid, tk, title, ver: null, msgs: [], reply: 0 };
+  ST.chat = { cid, tk, title, ver: null, msgs: [], reply: 0, file: null };
   const x = tk !== "c" && V.data ? V.data.tasks.find(y => y.key === tk) : null;
   const el = sheet("socChat", "<h3><span>" + esc(tk === "c" ? t("chatTC") : "💬 " + title) + "</span>" + xbtn() + '</h3><div class="schsub" style="--c:' + colorOf(cid) + '"><i></i>' + (c ? '<button class="bc" data-crs="' + cid + '"><bdi>' + esc(shortName(c.name)) + "</bdi></button>" : '<bdi class="bc"></bdi>') +
-    '<span class="sep">›</span>' + (tk === "c" ? "<span>" + esc(t("chBread")) + "</span>" : "<span>" + esc(x ? typeLabel(x) : t("chDisc")) + "</span>" + (x && x.due ? '<span class="sep">·</span><span>' + esc(t("chvDue", shortDate(x.due))) + "</span>" : "") + (x ? '<button class="link schtk" data-tkgo="' + esc(x.key) + '">' + esc(t("tkPageBtn")) + "</button>" : "")) + '</div><div class="schl" id="socChL"><div class="hint">' + esc(t("socLoading")) + "</div></div>" +
-    '<div class="schc"><div class="schrep" id="socRep" hidden></div><div class="schin"><textarea id="socTx" rows="1" maxlength="2000" placeholder="' + esc(t("chatPh")) + '"></textarea>' +
+    '<span class="sep">›</span>' + (tk === "c" ? "<span>" + esc(t("chBread")) + "</span>" : "<span>" + esc(x ? typeLabel(x) : t("chDisc")) + "</span>" + (x && x.due ? '<span class="sep">·</span><span>' + esc(t("chvDue", shortDate(x.due))) + "</span>" : "") + (x ? '<button class="link schtk" data-tkgo="' + esc(x.key) + '">' + esc(t("tkPageBtn")) + "</button>" : "")) + '<button class="link schfl" data-socfiles="' + cid + '">' + esc("📚 " + t("fList")) + "</button>" +
+    '</div><div class="schl" id="socChL"><div class="hint">' + esc(t("socLoading")) + "</div></div>" +
+    '<div class="schc"><div class="schrep" id="socRep" hidden></div><div class="satt-pend" id="socAtt" hidden></div><div class="schin"><button class="sic sattb" data-socfile aria-label="' + esc(t("fAttach")) + '" title="' + esc(t("fAttach")) + '">' + ic("file-up") + '</button><input type="file" id="socFile" hidden accept="' + F_ACCEPT + '"><textarea id="socTx" rows="1" maxlength="2000" placeholder="' + esc(t("chatPh")) + '"></textarea>' +
     '<button class="primary" data-socsend aria-label="send">' + ic("send") + "</button></div></div>");
   el.classList.add("chat");
+  $("#socFile").onchange = e => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) pickFile(f); };
   const tx = $("#socTx");
   tx.oninput = () => { tx.style.height = "auto"; tx.style.height = Math.min(tx.scrollHeight, 120) + "px"; };
   tx.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && matchMedia("(pointer: fine)").matches) { e.preventDefault(); sendMsg(); } };
@@ -525,12 +572,13 @@ function drawChat() {
   const L = ch.msgs.filter(m => !muted(m.uid));
   el.innerHTML = L.length ? L.map(m => {
     const mine = isMe(m.uid), rp = m.reply && byId[m.reply];
-    return '<div class="sm' + (mine ? " me" : "") + '" id="sm' + m.id + '"><div class="smh">' + (mine ? "<b>" + esc(t("chatYou")) + "</b>" : nameBtn(m.uid, m.name)) + rankTag(m.total) + '<small>' + esc(msgTime(m.at)) + "</small></div>" +
-      (rp ? '<div class="sq"><b><bdi>' + esc(rp.name) + "</bdi></b> " + esc(rp.del ? t("chatDel") : rp.body.slice(0, 90)) + "</div>" : "") +
-      '<div class="smb' + (m.del ? " del" : "") + '">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body))) + "</div>" +
+    return '<div class="sm' + (mine ? " me" : "") + '" id="sm' + m.id + '"><div class="smh">' + (mine ? "<b>" + esc(t("chatYou")) + "</b>" : nameBtn(m.uid, m.name)) + rankTag(m.total, femOf(m.uid, m.camp)) + '<small>' + esc(msgTime(m.at)) + "</small></div>" +
+      (rp ? '<div class="sq"><b><bdi>' + esc(rp.name) + "</bdi></b> " + esc(rp.del ? t("chatDel") : (rp.body || (rp.att ? "📎 " + rp.att.n : "")).slice(0, 90)) + "</div>" : "") +
+      (m.att && !m.del ? attHTML(m.att) : "") + (m.body || m.del ? '<div class="smb' + (m.del ? " del" : "") + '">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body))) + "</div>" : "") +
       (m.del ? "" : '<div class="smf">' + m.re.map(r => '<button class="sre' + (r[2] ? " on" : "") + '" data-socemo="' + m.id + "|" + r[0] + '">' + r[0] + " " + r[1] + "</button>").join("") +
         (mine || isMeName(m.name) ? (m.stars ? '<span class="sstar on">' + ic("star") + m.stars + "</span>" : "") : '<button class="sstar' + (m.starred ? " on" : "") + '" data-socstar="' + m.id + '" title="' + esc(t("chatStarT")) + '">' + ic("star") + "<span>" + esc(t("chatStar")) + "</span>" + (m.stars ? " " + m.stars : "") + "</button>") +
         '<button class="sic" data-socpick="' + m.id + '" aria-label="' + esc(t("chatReact")) + '">' + ic("smile-plus") + '</button><button class="sic" data-socrep="' + m.id + '" aria-label="' + esc(t("chatReply")) + '">' + ic("reply") + "</button>" +
+        '<button class="sic ssv' + (isSaved(ch.cid, ch.tk, m.id) ? " on" : "") + '" data-socsave="' + m.id + '" aria-pressed="' + isSaved(ch.cid, ch.tk, m.id) + '" aria-label="' + esc(t("svBtn")) + '" title="' + esc(t("svBtn")) + '">' + ic("bookmark") + "</button>" +
         (mine ? '<button class="sic" data-socmdel="' + m.id + '" aria-label="delete">' + ic("trash-2") + "</button>" : "") + "</div>") +
       (!m.del && m.stars && (m.sb || []).length ? '<div class="ssb">' + ic("star") + "<span>" + esc(t("chatStarBy", m.sb.map(n => isMeName(n) ? t("chatYou") : n || t("lgSomeone")).join(", "))) + "</span></div>" : "") + "</div>";
   }).join("") : '<div class="hint schempty">' + esc(t("chatEmpty")) + "</div>";
@@ -540,15 +588,100 @@ function drawChat() {
 function setReply(id) {
   const ch = ST.chat, m = ch && ch.msgs.find(x => x.id === id), el = $("#socRep"); if (!el) return;
   ch.reply = m ? id : 0; el.hidden = !m;
-  el.innerHTML = m ? "<span>" + esc(t("chatReplyTo", m.name || t("lgSomeone"))) + ": <i>" + esc(m.body.slice(0, 60)) + '</i></span><button class="sic" data-socrepx aria-label="x">' + ic("x") + "</button>" : "";
+  el.innerHTML = m ? "<span>" + esc(t("chatReplyTo", m.name || t("lgSomeone"))) + ": <i>" + esc((m.body || (m.att ? "📎 " + m.att.n : "")).slice(0, 60)) + '</i></span><button class="sic" data-socrepx aria-label="x">' + ic("x") + "</button>" : "";
   if (m) $("#socTx").focus();
 }
 async function sendMsg() {
-  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch) return; if (!body) { tx.focus(); return; }   // nothing written yet: the box, ready to type
+  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch) return; if (!body && !ch.file) { tx.focus(); return; }   // nothing written yet: the box, ready to type
   const btn = $("[data-socsend]"); btn.disabled = true;
-  try { await api("post", { cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") });
-    useHit(ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
-  catch (e) { toast(t("socNet")); } finally { btn.disabled = false; }
+  let att = "";
+  if (ch.file) {                                              // the file goes up first, then the message carries it
+    if (!ch.file.id) { drawPend(true); try { ch.file.id = await uploadFile(ch, ch.file); } catch (e) { drawPend(false); btn.disabled = false; toast(e.msg || t("fErr_net"), 6000); return; } }
+    att = ch.file.id;
+  }
+  try { await api("post", Object.assign({ cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") }, att ? { att } : {}));
+    useHit(att ? "socFile_" + ch.file.kind : ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); setFile(null); $("#socChL").dataset.drawn = ""; await loadChat(true); }
+  catch (e) { toast(t("socNet")); drawPend(false); } finally { btn.disabled = false; }
+}
+/* ---------- summaries and solutions: a file attached to a chat message (kept on the community server, up to 10 MB) ---------- */
+const F_MAXB = 10 * 1024 * 1024, F_ACCEPT = ".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,image/*";
+const F_EXT = { pdf: "application/pdf", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", heic: "image/heic", heif: "image/heif",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", doc: "application/msword",
+  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation", ppt: "application/vnd.ms-powerpoint",
+  xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", xls: "application/vnd.ms-excel" };
+const fType = f => { const ext = (/\.([a-z0-9]+)$/i.exec(f.name || "") || [])[1]; return F_EXT[(ext || "").toLowerCase()] || (Object.values(F_EXT).includes(f.type) ? f.type : ""); };
+const fSize = n => "\u2066" + (n >= 1048576 ? (n / 1048576).toFixed(n >= 10485760 ? 0 : 1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB") + "\u2069";   // "781 KB" stays left-to-right in Hebrew
+const fIcon = ty => /^image\//.test(ty) ? "image" : /presentation|powerpoint/.test(ty) ? "presentation" : /sheet|excel/.test(ty) ? "sheet" : "file-text";
+const fUrl = a => pushUrl() + "/sfile/" + a.id + "/" + encodeURIComponent(a.n || "file");
+/* a picture from the phone (often 4–8 MB, or HEIC that other phones can't open): a JPEG of at most 2400 px */
+async function shrinkImg(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const im = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
+    const k = Math.min(1, 2400 / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement("canvas");
+    c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+    for (const q of [0.85, 0.7, 0.55]) { const b = await new Promise(ok => c.toBlob(ok, "image/jpeg", q)); if (b && b.size <= F_MAXB) return b; }
+    return null;
+  } finally { URL.revokeObjectURL(url); }
+}
+async function pickFile(f) {
+  const ch = ST.chat; if (!ch) return;
+  let ty = fType(f), blob = f, name = (f.name || "file").slice(0, 120);
+  if (!ty) return toast(t("fBadType"), 5000);
+  if (/^image\//.test(ty) && (ty === "image/heic" || ty === "image/heif" || f.size > 2 * 1024 * 1024)) {
+    try { const b = await shrinkImg(f); if (b) { blob = b; ty = "image/jpeg"; name = name.replace(/\.[a-z0-9]+$/i, "") + ".jpg"; } } catch (e) {}
+    if (!["image/jpeg", "image/png", "image/webp"].includes(ty)) return toast(t("fBadType"), 5000);
+  }
+  if (blob.size > F_MAXB) { useHit("socFileBig"); return toast(t("fTooBig", 10), 7000); }
+  const guess = /פתרון|פתרונות|תשובות|solution|answers/i.test(name) ? "sol" : /סיכום|summary|résumé/i.test(name) ? "sum" : ch.tk === "c" ? "sum" : "sol";
+  setFile({ blob, name, type: ty, size: blob.size, kind: guess, id: "" });
+}
+function setFile(f) { if (!ST.chat) return; ST.chat.file = f; drawPend(false); }
+function drawPend(busy) {
+  const el = $("#socAtt"), f = ST.chat && ST.chat.file; if (!el) return;
+  el.hidden = !f; if (!f) { el.innerHTML = ""; return; }
+  el.innerHTML = '<div class="sap">' + ic(fIcon(f.type)) + '<span class="sapn"><bdi>' + esc(f.name) + "</bdi><small>" + esc(fSize(f.size)) + (busy ? " · " + esc(t("fUp")) : "") + "</small></span>" +
+    (busy ? '<span class="sspin"></span>' : '<button class="sic" data-socfx aria-label="x">' + ic("x") + "</button>") + "</div>" +
+    '<div class="sak"><span>' + esc(t("fKindQ")) + "</span>" + ["sum", "sol", "other"].map(k => '<button class="chip' + (f.kind === k ? " on" : "") + '" data-socfk="' + k + '"' + (busy ? " disabled" : "") + ">" + esc(t("fKind_" + k)) + "</button>").join("") + "</div>" +
+    '<div class="sanote">' + esc(t("fNote")) + "</div>";
+}
+async function uploadFile(ch, f) {
+  const id = ensureId(); if (!id) throw { msg: t("socNet") };
+  const meta = { uid: id.uid, sec: id.sec, name: myName() || "?", cid: ch.cid, fn: f.name, kind: f.kind, cname: courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "" };
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 120000);
+  let r, j;
+  try { r = await fetch(pushUrl() + "/sfile", { method: "POST", signal: ctl.signal, headers: { "Content-Type": f.type, "X-Soc": encodeURIComponent(JSON.stringify(meta)) }, body: f.blob, credentials: "omit" }); j = await r.json().catch(() => ({})); }
+  catch (e) { throw { msg: t("fErr_net") }; } finally { clearTimeout(tm); }
+  if (!r.ok || !j.id) {
+    useHit("socFileErr_" + (j.error || r.status));
+    throw { msg: j.error === "size" ? t("fTooBig", 10) : j.error === "type" ? t("fBadType") : j.error === "day" ? t("fErr_day", j.max || 15) : j.error === "user" ? t("fErr_user") : j.error === "full" ? t("fErr_full") : j.error === "course" ? t("fErr_course") : t("fErr_net") };
+  }
+  return j.id;
+}
+function attHTML(a) {
+  const k = ["sum", "sol"].includes(a.k) ? a.k : "other";
+  return '<a class="satt" href="' + esc(fUrl(a)) + '" target="_blank" rel="noopener noreferrer"><span class="saic">' + ic(fIcon(a.t)) + '</span><span class="sapn"><bdi>' + esc(a.n) + "</bdi><small>" +
+    '<b class="sakt ' + k + '">' + esc(t("fKind_" + k)) + "</b> · " + esc(fSize(a.s)) + "</small></span>" + ic("external-link", "sago") + "</a>";
+}
+/* every summary and solution of a course, from all its chats, newest first */
+async function openFiles(cid) {
+  const c = courseOf(cid);
+  ST.fl = { cid, k: "", L: null, mine: null };
+  sheet("socFiles", "<h3><span>" + esc(t("fListT", c ? shortName(c.name) : "")) + "</span>" + xbtn() + '</h3><div id="socFL"><div class="hint">' + esc(t("socLoading")) + "</div></div>");
+  useHit("socFiles");
+  try { const r = await api("files", { cid }); if (!ST.fl || ST.fl.cid !== cid) return; ST.fl.L = r.files || []; ST.fl.mine = r.mine; }
+  catch (e) { const el = $("#socFL"); if (el) el.innerHTML = '<div class="hint">' + esc(t("socNet")) + "</div>"; return; }
+  drawFiles();
+}
+function drawFiles() {
+  const F = ST.fl, el = $("#socFL"); if (!F || !el || !F.L) return;
+  const L = F.L.filter(f => !F.k || f.k === F.k), n = k => F.L.filter(f => f.k === k).length;
+  el.innerHTML = (F.L.length ? '<div class="sflf">' + [["", t("fListAll") + " " + F.L.length], ["sum", t("fKind_sum") + " " + n("sum")], ["sol", t("fKind_sol") + " " + n("sol")], ["other", t("fKind_other") + " " + n("other")]]
+      .filter(([k]) => !k || n(k)).map(([k, l]) => '<button class="chip' + (F.k === k ? " on" : "") + '" data-socflk="' + k + '">' + esc(l) + "</button>").join("") + "</div>" : "") +
+    (L.length ? L.map(f => '<div class="sfr">' + attHTML({ id: f.id, n: f.n, s: f.s, t: f.t, k: f.k }) + '<div class="sfm"><span>' + (isMe(f.uid) ? esc(t("chatYou")) : nameBtn(f.uid, f.who)) + " · " + esc(msgTime(f.at)) +
+      (f.stars ? ' · <span class="sstar on">' + ic("star") + f.stars + "</span>" : "") + " · " + esc(f.tk === "c" ? t("fInChat") : t("fInTask", f.ref || t("chDisc"))) + '</span><button class="link" data-socchat="' + F.cid + "|" + esc(f.tk) + '">' + esc(t("fToChat")) + "</button></div></div>").join("")
+      : '<div class="hint">' + esc(t("fListNone")) + "</div>") +
+    '<div class="hint sfh">' + esc(t("fHint")) + (F.mine && F.mine.used ? "<br>" + esc(t("fMine", Math.round(F.mine.used / 1048576 * 10) / 10, Math.round(F.mine.max / 1048576))) : "") + "</div>";
 }
 /* a personal note from a task / course page, shared into that discussion (it earns points only if someone marks it ⭐, like any helpful answer) */
 async function postNote(cid, tk, txt) {
@@ -569,7 +702,7 @@ function chatView() {
   const typing = document.activeElement && document.activeElement.id === "chq" ? document.activeElement.selectionStart : null;
   if (!ST.ov) { el.innerHTML = '<div class="hint" style="padding:20px;text-align:center">' + esc(t("socLoading")) + "</div>"; overview(); return; }
   /* one list, like WhatsApp: every conversation is a row that says plainly where it belongs (a course's chat, or a task's discussion inside a course) */
-  const now = nowS(), q = (ST.chq || "").trim().toLowerCase(), f = ["act", "course", "task"].includes(ST.chf) ? ST.chf : "act";
+  const now = nowS(), q = (ST.chq || "").trim().toLowerCase(); let f = ["act", "course", "task", "un"].includes(ST.chf) ? ST.chf : "act";
   const rows = [];
   for (const c of myCourses()) {
     const cd = cdata(c.id) || {}, th = cd.th || {}, cname = shortName(c.name);
@@ -582,10 +715,13 @@ function chatView() {
     for (const tk in th) if (tk !== "c" && !seen.has(tk)) rows.push({ kind: "t", c, cname, tk, x: null, title: th[tk][2] || tk, i: thInfo(c.id, tk), u: unread(c.id, tk) });
   }
   const match = r => !q || (r.title + " " + r.cname).toLowerCase().includes(q);
-  const pass = r => q ? true : f === "act" ? r.i.n > 0 : f === "course" ? r.kind === "c" : r.kind === "t";
+  /* Pnina, 19.11: "it says 2 new messages, but no chat shows a new one" – the new ones sat in a chat the chosen filter hid (a task's discussion under
+     "courses", or the other way round). "N new" now opens an "unread" filter with exactly those chats, and "mark all as read" */
+  if (f === "un" && !rows.some(r => r.u > 0)) f = "act";
+  const pass = r => q ? true : f === "un" ? r.u > 0 : f === "act" ? r.i.n > 0 : f === "course" ? r.kind === "c" : r.kind === "t";
   const L = rows.filter(r => match(r) && pass(r)).sort((a, b) => (b.u > 0) - (a.u > 0) || b.i.last - a.i.last ||
     (f === "task" ? ((a.x && a.x.due) || 9e9) - ((b.x && b.x.due) || 9e9) : 0) || (a.kind === "c" ? -1 : 0) - (b.kind === "c" ? -1 : 0) || a.title.localeCompare(b.title));
-  const cnt = k => rows.filter(r => (k === "act" ? r.i.n > 0 : k === "course" ? r.kind === "c" : r.kind === "t")).length;
+  const cnt = k => rows.filter(r => (k === "un" ? r.u > 0 : k === "act" ? r.i.n > 0 : k === "course" ? r.kind === "c" : r.kind === "t")).length;
   const un = rows.reduce((n, r) => n + r.u, 0);
   const preview = i => i.n ? '<span class="chpv"><b><bdi>' + esc(i.lb && i.lb === myName() ? t("chatYou") : i.lb || "") + "</bdi>:</b> <bdi>" + esc(i.lt || "") + "</bdi></span>" : '<span class="chpv">' + esc(t("chvNoMsg")) + "</span>";
   const row = r => {
@@ -599,9 +735,10 @@ function chatView() {
   };
   const chip = (k, lbl) => '<button class="chf' + (f === k ? " on" : "") + '" data-chf="' + k + '" aria-pressed="' + (f === k) + '">' + esc(lbl) + ' <span class="n">' + cnt(k) + "</span></button>";
   const empty = q ? t("chvNoMatch") : f === "act" ? t("chvNoAct") : t("chvNone");
-  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + (un ? ' <span class="scnt new">' + esc(t("chvUnread", un)) + "</span>" : "") + "</h2>" + meBar() +
+  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + (un ? ' <button class="scnt new chun" data-chf="un">' + esc(t("chvUnread", un)) + "</button>" : "") + "</h2>" + meBar() + savedBtn() +
     '<input type="search" id="chq" placeholder="' + esc(t("chvSearch")) + '" value="' + esc(ST.chq || "") + '">' +
-    (q ? "" : '<div class="chfs">' + chip("act", t("chvFAct")) + chip("course", t("chvFCourse")) + chip("task", t("chvFTask")) + "</div>") + "</div>" +
+    (q ? "" : '<div class="chfs">' + (un ? chip("un", t("chvFUn")) : "") + chip("act", t("chvFAct")) + chip("course", t("chvFCourse")) + chip("task", t("chvFTask")) + "</div>") +
+    (f === "un" && !q ? '<button class="link chreadall" data-chreadall>' + esc(t("chvReadAll")) + "</button>" : "") + "</div>" +
     (L.length ? '<div class="chlist">' + L.map(row).join("") + "</div>" : '<div class="chempty"><p>' + esc(empty) + "</p>" + (f === "act" && !q ? '<button class="primary" data-chf="course">' + esc(t("chvStart")) + "</button>" : "") + "</div>");
   const inp = $("#chq");
   inp.oninput = () => { ST.chq = inp.value; chatView(); };
@@ -626,15 +763,15 @@ function chatRow(cid, tk, title) {
 async function openUser(uid) {
   sheet("socUser", "<h3><span>" + esc(t("socLoading")) + "</span>" + xbtn() + "</h3>");
   let r; try { r = await api("user", { who: uid }); } catch (e) { $("#socUser .box").innerHTML = "<h3><span></span>" + xbtn() + '</h3><div class="hint">' + esc(t("socNet")) + "</div>"; return; }
-  const u = r.u, me = isMe(u.uid), rk = rankOf(u.all);
-  const desc = l => l.kind === "add" ? t("lgAdd", l.fname || t("lgSomeone"), l.ref) : l.kind === "time" ? t("lgTime", l.ref) : l.kind === "wa" ? t("lgWa") : l.kind === "star" ? t("lgStar", l.fname || t("lgSomeone"), l.ref) : l.kind;
+  const u = r.u, me = isMe(u.uid), uf = femOf(u.uid, u.camp), rk = rankOf(u.all, uf);
+  const desc = l => l.kind === "add" ? t("lgAdd", l.fname || t("lgSomeone"), l.ref) : l.kind === "time" ? t("lgTime", l.ref) : l.kind === "wa" ? t("lgWa") : l.kind === "star" ? t("lgStar", l.fname || t("lgSomeone"), l.ref) : l.kind === "admin" ? t("lgAdmin", l.ref) : l.kind;
   const day = ms => { try { return new Date(ms).toLocaleString(t("locale"), { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } };
   $("#socUser .box").innerHTML = "<h3><span><bdi>" + esc(u.name) + "</bdi>" + (me ? " (" + esc(t("socYou")) + ")" : "") + "</span>" + xbtn() + "</h3>" +
-    '<div class="sprofcard"><div class="sav">' + esc((u.name || "?").trim().charAt(0)) + '</div><div><div class="hint">' + esc(profLine(u.deg, u.yr)) + "</div>" + rankTag(u.all) +
-    '<div class="spts"><b>' + esc(t("socPts", u.all)) + "</b>" + (u.pos ? " · " + esc(t("socPos", u.pos)) : "") + " · " + esc(t("socSem")) + ": " + esc(t("socPts", u.sem)) + "</div>" + progress(u.all) + "</div></div>" +
+    '<div class="sprofcard"><div class="sav">' + esc((u.name || "?").trim().charAt(0)) + '</div><div><div class="hint">' + esc(profLine(u.deg, u.yr)) + "</div>" + rankTag(u.all, uf) +
+    '<div class="spts"><b>' + esc(t("socPts", u.all)) + "</b>" + (u.pos ? " · " + esc(t("socPos", u.pos)) : "") + " · " + esc(t("socSem")) + ": " + esc(t("socPts", u.sem)) + "</div>" + progress(u.all, uf) + "</div></div>" +
     (r.by.length ? '<div class="stitle">' + esc(t("socByCourse")) + '</div><div class="sbyc">' + r.by.map(b => '<span class="chip on" role="button" tabindex="0" data-socboard="' + Number(b.cid) + '" style="--c:' + colorOf(Number(b.cid)) + '"><i></i><bdi>' + esc(b.name) + '</bdi> <span class="n">' + b.pts + "</span></span>").join("") + "</div>" : "") +
     '<div class="stitle">' + esc(t("socLogT")) + "</div>" +
-    (r.log.length ? '<div class="slog">' + r.log.map(l => '<div class="sl"><b class="sp" dir="ltr">+' + l.pts + '</b><div><div><bdi>' + esc(desc(l)) + '</bdi></div><small class="hint">' + (l.cname ? "<bdi>" + esc(l.cname) + "</bdi> · " : "") + esc(day(l.at)) + "</small></div></div>").join("") + "</div>"
+    (r.log.length ? '<div class="slog">' + r.log.map(l => '<div class="sl"><b class="sp" dir="ltr">' + (l.pts > 0 ? "+" : "") + l.pts + '</b><div><div><bdi>' + esc(desc(l)) + '</bdi></div><small class="hint">' + (l.cname ? "<bdi>" + esc(l.cname) + "</bdi> · " : "") + esc(day(l.at)) + "</small></div></div>").join("") + "</div>"
       : '<div class="hint">' + esc(t("socLogEmpty")) + "</div>") +
     (me ? "" : '<button class="link' + (muted(u.uid) ? "" : " danger") + '" data-socmute="' + esc(u.uid) + '" data-n="' + esc(u.name) + '" style="width:100%;margin-top:10px">' + esc(t(muted(u.uid) ? "socUnmute" : "socMute")) + "</button>");
 }
@@ -642,13 +779,25 @@ async function openUser(uid) {
 function meBar() {
   const pts = (ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0), sem = (ST.ov && ST.ov.me && ST.ov.me.sem) || 0, n = myName();
   return '<div class="chme"><div class="chme1"><span class="sav">' + esc((n || "?").charAt(0)) + '</span><div class="sw"><div>' + rankTag(pts) + ' <span class="spts">' + esc(t("socPts", pts)) + "</span>" +
-    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + '<details class="ptsh"><summary>' + esc(t("ft_points")) + "?</summary><p>" + esc(t("fd_points")) + "</p></details></div></div>" +
+    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + '<details class="ptsh"' + (ST.ptsOpen ? " open" : "") + "><summary>" + esc(t("ft_points")) + "?</summary>" + howPts(pts) + "</details></div></div>" +
     '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + "</span></button></div></div>";
 }
-function progress(pts) {
-  const r = rankOf(pts); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
+/* how to earn points + every rank, with "you are here" – the chats page shows it, not only settings */
+function rankLadder(pts) {
+  const r = rankOf(pts || 0);
+  if (!ST.rkN && !ST.rkAsk) { ST.rkAsk = true; api("ranks", {}).then(j => { if (j && Array.isArray(j.n)) { ST.rkN = j.n; $$(".rklad").forEach(el => { const p = el.parentElement; if (p) el.outerHTML = rankLadder(pts); }); } }).catch(() => {}).finally(() => { setTimeout(() => { ST.rkAsk = false; }, 60000); }); }
+  const cnt = i => ST.rkN && Number.isFinite(ST.rkN[i]) ? '<small class="rkn">' + esc(t("rkN", ST.rkN[i])) + "</small>" : "";
+  return '<div class="rklad">' + RANKS.map((x, i) => '<div class="rkl' + (i < r.i ? " done" : i === r.i ? " cur" : "") + '"><span class="srk r' + i + '">' + x[1] + " " + esc(rkName(i)) + "</span>" + cnt(i) + "<small>\u2066" + x[0] + "+\u2069 " + esc(t("socPtsU")) + "</small>" +
+    (i === r.i ? '<b class="rkhere">' + esc(t("socHere")) + "</b>" : i < r.i ? '<span class="rkok">✓</span>' : "") + "</div>").join("") + "</div>";
+}
+const howPts = pts => '<div class="ptsb"><div class="stitle">' + esc(t("socHowT")) + '</div><ul class="show">' + t("socHow").map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>" +
+  '<div class="stitle">' + esc(t("socRanksT")) + "</div>" + rankLadder(pts) + "</div>";
+document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("ptsh")) ST.ptsOpen = e.target.open; }, true);
+document.addEventListener("change", e => { if (e.target.id !== "socRkG") return; P.rkg = e.target.value; savePrefs(); useHit("rkg_" + (P.rkg || "auto")); page(); render(); });
+function progress(pts, fem) {
+  const r = rankOf(pts, fem); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
   const lo = RANKS[r.i][0], hi = r.next[0], p = Math.round((pts - lo) / (hi - lo) * 100);
-  return '<div class="rkbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + t(r.next[2]))) + "</div>";
+  return '<div class="rkbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + rkName(r.i + 1, fem))) + "</div>";
 }
 function toggleMute(uid, name) {
   if (muted(uid)) { P.soc_mute = P.soc_mute.filter(m => m.uid !== uid); toast(t("socUnmuted")); }
@@ -679,7 +828,7 @@ async function loadBoard() {
   if (ST.board !== b || $("#socBl") !== el) return;
   const rows = r.rows.filter(x => !muted(x.uid));
   el.innerHTML = (rows.length ? rows.map((x, i) => '<button class="sbr' + (isMe(x.uid) ? " me" : "") + '" data-socu="' + esc(x.uid) + '"><span class="sn">' + (i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1) + '</span><span class="sw"><b><bdi>' + esc(x.name) + "</bdi>" + (isMe(x.uid) ? " (" + esc(t("socYou")) + ")" : "") +
-      "</b><small>" + esc(profLine(x.deg, x.yr)) + "</small>" + rankTag(x.total) + '</span><span class="sv">' + x.pts + "</span></button>").join("") : '<div class="hint">' + esc(t("socEmpty")) + "</div>") +
+      "</b><small>" + esc(profLine(x.deg, x.yr)) + "</small>" + rankTag(x.total, femOf(x.uid, x.camp)) + '</span><span class="sv">' + x.pts + "</span></button>").join("") : '<div class="hint">' + esc(t("socEmpty")) + "</div>") +
     '<div class="hint sme">' + esc(r.me.pos ? t("socYourPos", r.me.pos, r.me.pts) : t("socNoPos")) + "</div>";
 }
 
@@ -699,20 +848,21 @@ function degOptions(cur, any) {
     '<optgroup label="' + esc(t("socGrpM")) + '">' + DEGS.m.map(d => o(d, t("dg_" + d))).join("") + "</optgroup>" + (any ? (other ? o(cur, cur.slice(2)) : "") : o("x", t("socOther")) + (other ? o(cur, cur.slice(2)) : ""));
 }
 const yrOptions = cur => '<option value="">' + esc(t("socPickYr")) + "</option>" + YEARS.map(y => '<option value="' + y + '"' + (y === cur ? " selected" : "") + ">" + esc(t("yr" + y)) + "</option>").join("");
+const campOptions = cur => '<option value="">' + esc(t("cmPick")) + "</option>" + CAMPS.map(c => '<option value="' + c + '"' + (c === cur ? " selected" : "") + ">" + esc(t(CAMPL[c])) + "</option>").join("");
 function profFields(pfx) {
   const pr = prof(), other = pr.deg && pr.deg.startsWith("x:");
-  return '<div class="sprofrow"><label class="fld"><span>' + esc(t("socYourDeg")) + '</span><select id="' + pfx + 'Deg">' + degOptions(pr.deg, false) + "</select></label>" +
+  return '<label class="fld scamp"><span>' + esc(t("cmT")) + '</span><select id="' + pfx + 'Camp">' + campOptions(pr.camp || "") + "</select></label>" + '<div class="sprofrow"><label class="fld"><span>' + esc(t("socYourDeg")) + '</span><select id="' + pfx + 'Deg">' + degOptions(pr.deg, false) + "</select></label>" +
     '<label class="fld sy"><span>' + esc(t("socYourYr")) + '</span><select id="' + pfx + 'Yr">' + yrOptions(pr.yr) + "</select></label></div>" +
     '<input type="text" id="' + pfx + 'Other" maxlength="60" placeholder="' + esc(t("socOtherDeg")) + '" value="' + esc(other ? pr.deg.slice(2) : "") + '"' + (other ? "" : " hidden") + ' style="width:100%;margin-bottom:8px">';
 }
 function wireProf(pfx, onChange) {
   const sel = $("#" + pfx + "Deg"), oth = $("#" + pfx + "Other"), yr = $("#" + pfx + "Yr");
   sel.onchange = () => { oth.hidden = !(sel.value === "x" || sel.value.startsWith("x:")); if (sel.value === "x") oth.focus(); if (onChange) onChange(); };
-  if (onChange) { yr.onchange = onChange; oth.onchange = onChange; }
+  if (onChange) { yr.onchange = onChange; oth.onchange = onChange; $("#" + pfx + "Camp").onchange = onChange; }
 }
 function readProf(pfx) {
   const sel = $("#" + pfx + "Deg").value, oth = ($("#" + pfx + "Other").value || "").trim().slice(0, 60);
-  return { deg: sel === "x" || sel.startsWith("x:") ? (oth ? "x:" + oth : "") : sel, yr: $("#" + pfx + "Yr").value };
+  return { deg: sel === "x" || sel.startsWith("x:") ? (oth ? "x:" + oth : "") : sel, yr: $("#" + pfx + "Yr").value, camp: $("#" + pfx + "Camp").value };
 }
 function page() {
   const el = $("#socPage"); if (!el) return;
@@ -724,16 +874,30 @@ function page() {
         return '<div class="swarow" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (cd.wa ? '<a class="swa sm" href="' + esc(cd.wa) + '" target="_blank" rel="noopener noreferrer">' + ic("message-circle") + "</a>" : '<small class="hint">' + esc(t("waNone")) + "</small>") +
           '<button class="link" data-socwa="' + c.id + '">' + esc(t(cd.wa ? "waEdit" : "waAdd")) + "</button></div>"; }).join("") || '<div class="hint">' + esc(t("noCourses")) + "</div>") + "</div>" +
       '<div class="stitle">' + esc(t("socMuteT")) + "</div>" + ((P.soc_mute || []).length ? P.soc_mute.map(m => '<div class="swarow"><bdi>' + esc(m.name) + '</bdi><button class="link" data-socmute="' + esc(m.uid) + '" data-n="' + esc(m.name) + '">' + esc(t("socUnmute")) + "</button></div>").join("") : '<div class="hint">' + esc(t("socMuteNone")) + "</div>") +
-      '<div class="stitle">' + esc(t("socHowT")) + '</div><ul class="show">' + t("socHow").map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>" +
-      '<div class="stitle">' + esc(t("socRanksT")) + '</div><div class="sranks">' + RANKS.map((r, i) => '<span class="srk r' + i + '">' + r[1] + " " + esc(t(r[2])) + " · \u2066" + r[0] + "+\u2069</span>").join("") + "</div>" +
+      '<div class="stitle">' + esc(t("rkG")) + '</div><select class="rkgsel" id="socRkG" aria-label="' + esc(t("rkG")) + '">' + [["", "rkGa"], ["m", "rkGm"], ["f", "rkGf"]].map(([v, k]) => '<option value="' + v + '"' + ((P.rkg || "") === v ? " selected" : "") + ">" + esc(t(k)) + "</option>").join("") + "</select>" +
+      howPts((ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0)) +
+      (isAdmin() ? '<button class="btn" data-socadmin style="margin-top:12px;width:100%">' + ic("shield") + " " + esc(t("adT")) + "</button>" : "") +
       (ST.err ? '<div class="hint">' + esc(t("socNet")) + "</div>" : "") + '<div class="hint" style="margin-top:10px">' + esc(t("socPriv")) + "</div>"
       : '<button class="primary" data-socjoin style="width:100%;margin-top:10px">' + esc(t("socJoinBtn")) + "</button>");
   $("#socOnBox").onchange = e => { if (e.target.checked) { e.target.checked = false; intro(true); } else { P.soc_on = false; savePrefs(); render(); page(); renderSheet(); } };
   if (on) $("#socAutoPg").onchange = e => setAuto(e.target.checked);
-  if (on) wireProf("socP", () => { const p = readProf("socP"); if (p.deg === "" && $("#socPDeg").value === "x") return; P.soc_prof = p; savePrefs(); overview(true); });
+  if (on) wireProf("socP", () => { const p = readProf("socP"); if (p.deg === "" && $("#socPDeg").value === "x") return; const cc = p.camp !== (prof().camp || ""); P.soc_prof = p; savePrefs(); overview(true); if (cc) { useHit("socCampSet"); page(); } });
 }
 
 /* ---------- the invitation (after the update, or from settings) ---------- */
+function campAsk() {
+  if (!socOn() || !P.soc_id || prof().camp) return;
+  if (Date.now() - (Number(LS.get("socCampAsk", 0)) || 0) < 20 * 3600e3) return;
+  if (!$("#tour").hidden || $$(".sheet").some(x => !x.hidden)) return;
+  LS.set("socCampAsk", Date.now()); useHit("socCampAsk");
+  sheet("socCamp", "<h3><span>" + esc(t("cmAskT")) + "</span>" + xbtn() + '</h3><div class="hint">' + esc(t("cmAskP")) + '</div><div class="scamps">' +
+    CAMPS.map(c => '<button class="btn" data-soccamp="' + c + '">' + esc(t(CAMPL[c])) + "</button>").join("") + '</div><button class="link" data-socx style="width:100%;margin-top:6px">' + esc(t("cmLater")) + "</button>");
+}
+function setCamp(c) {
+  if (!CAMPS.includes(c)) return;
+  P.soc_prof = Object.assign({ deg: "", yr: "" }, prof(), { camp: c }); savePrefs(); useHit("socCampSet"); close("socCamp"); toast(t("cmSaved"));
+  Promise.resolve(overview(true)).then(() => { renderTop(nowS()); if (V.view === "chat") chatView(); if (ST.chat && !$("#socChat").hidden) drawChat(); if (!$("#sheet").hidden && V.spage === "soc") page(); });
+}
 function intro(manual) {
   sheet("socIntro", "<h3><span>" + esc(t("socIntroT")) + "</span>" + xbtn() + '</h3><div class="hint">' + esc(t("socIntroP")) + '</div><ul class="sintro">' +
     ["socB1", "socB2", "socB3", "socB4"].map(k => "<li>" + esc(t(k)) + "</li>").join("") + "</ul>" + profFields("socI") +
@@ -742,7 +906,9 @@ function intro(manual) {
   LS.set("socIntro", true); useHit("socIntro");
 }
 async function join() {
-  const p = readProf("socI"), btn = $("[data-socjoinnow]"); if (btn) btn.disabled = true;
+  const p = readProf("socI"), btn = $("[data-socjoinnow]");
+  if (!p.camp) { toast(t("cmNeed")); const c = $("#socICamp"); if (c) { c.focus(); c.classList.add("need"); } return; }
+  if (btn) btn.disabled = true;
   // joined already on another device? take that id (and its points) instead of making a second one
   if (!P.soc_id && syncOnNow() && M.token) {
     const t0 = Date.now(); try { await Promise.race([syncNow(), new Promise(r => setTimeout(r, 12000))]); } catch (e) {}
@@ -755,6 +921,54 @@ async function join() {
   close("socIntro"); toast(t("socWelcome")); render(); overview(true);
   if (!$("#sheet").hidden) { renderSheet(); if (V.spage === "soc") page(); }
 }
+
+/* ---------- saved for later (Moriya: "a chat with myself, and marking messages to come back to"; Meir: a bookmark, not a star, so it isn't mixed up with ⭐ helpful)
+   P.soc_saved, synced between the person's devices: messages from any chat, and notes to self ---------- */
+const svK = (cid, tk, mid) => cid + "|" + tk + "|" + mid;
+const isSaved = (cid, tk, mid) => (P.soc_saved || []).some(x => x.k === svK(cid, tk, mid));
+function toggleSave(mid) {
+  const ch = ST.chat, m = ch && ch.msgs.find(x => x.id === mid); if (!m) return;
+  const k = svK(ch.cid, ch.tk, mid), L = (P.soc_saved || []).slice();
+  const i = L.findIndex(x => x.k === k);
+  if (i >= 0) { L.splice(i, 1); toast(t("svOff")); useHit("socUnsave"); }
+  else {
+    const c = courseOf(ch.cid);
+    L.unshift({ k, cid: ch.cid, tk: ch.tk, mid, n: (m.name || "").slice(0, 60), b: (m.body || "").slice(0, 500), at: m.at, sv: Date.now(), ttl: (chatTitle(ch.cid, ch.tk) || "").slice(0, 120), cn: c ? shortName(c.name).slice(0, 60) : "",
+      ...(m.att && m.att.id ? { att: { id: m.att.id, n: m.att.n, s: m.att.s, t: m.att.t, k: m.att.k } } : {}) });
+    toast(t("svDone"), 4000); useHit("socSave");
+  }
+  P.soc_saved = L.slice(0, 80); savePrefs(); drawChat(); if (V.view === "chat") chatView();
+}
+const savedBtn = () => { const n = (P.soc_saved || []).length; return '<button class="chsv" data-socsaved>' + ic("bookmark") + "<span>" + esc(t("svT")) + "</span>" + (n ? '<span class="n">' + n + "</span>" : "") + "</button>"; };
+function openSaved() {
+  useHit("socSaved");
+  const L = (P.soc_saved || []).slice().sort((a, b) => b.sv - a.sv);
+  sheet("socSaved", "<h3><span>" + ic("bookmark") + " " + esc(t("svT")) + "</span>" + xbtn() + "</h3>" +
+    '<div class="svadd"><textarea id="svNote" rows="2" maxlength="500" placeholder="' + esc(t("svNotePh")) + '"></textarea><button class="primary" data-socsvadd>' + esc(t("svNoteAdd")) + "</button></div>" +
+    (L.length ? L.map(x => '<div class="svi"' + (x.cid ? ' style="--c:' + colorOf(x.cid) + '"' : "") + '><div class="svh">' + (x.note ? "<b>" + esc(t("svNoteT")) + "</b>" : "<b><bdi>" + esc(x.ttl || "") + "</bdi></b>" + (x.cn && x.tk !== "c" ? " · <bdi>" + esc(x.cn) + "</bdi>" : "")) + "</div>" +
+      (x.att ? attHTML(x.att) : "") + (x.b ? '<div class="svb">' + linkify(esc(x.b)) + "</div>" : "") +
+      '<div class="svf"><small>' + (x.note ? esc(msgTime(x.sv)) : "<bdi>" + esc(x.n || "") + "</bdi> · " + esc(msgTime(x.at))) + "</small>" +
+      (x.note ? "" : '<button class="link" data-socchat="' + x.cid + "|" + esc(x.tk) + '">' + esc(t("svTo")) + "</button>") +
+      '<button class="sic" data-socsvdel="' + esc(x.k) + '" aria-label="' + esc(t("svDel")) + '" title="' + esc(t("svDel")) + '">' + ic("trash-2") + "</button></div></div>").join("")
+      : '<p class="hint">' + esc(t("svNone")) + "</p>"));
+}
+function addNote() {
+  const ta = $("#svNote"), v = ta ? ta.value.trim() : ""; if (!v) { if (ta) ta.focus(); return; }
+  P.soc_saved = [{ k: "note:" + Date.now().toString(36), note: true, b: v.slice(0, 500), sv: Date.now() }].concat(P.soc_saved || []).slice(0, 80); savePrefs(); useHit("socNote2"); openSaved(); if (V.view === "chat") chatView();
+}
+function delSaved(k) { P.soc_saved = (P.soc_saved || []).filter(x => x.k !== k); savePrefs(); openSaved(); if (V.view === "chat") chatView(); if (ST.chat && !$("#socChat").hidden) drawChat(); }
+
+/* ---------- community management: only for an account the SERVER lists as admin. The screen itself is in admin.js, downloaded only after the server
+   says so, and locked behind a passkey (Face ID / fingerprint) that the server checks too. Nobody else's app loads it or shows a way in ---------- */
+const isAdmin = () => !!(ST.ov && ST.ov.me && ST.ov.me.admin);
+let ADM = null;
+const admLoad = () => ADM || (ADM = new Promise((ok, no) => {
+  const s = document.createElement("script"); s.src = "admin.js?v=" + encodeURIComponent(SOC_V);
+  s.onload = () => window.SOC_ADMIN ? ok(window.SOC_ADMIN({ api, ST, sheet, xbtn, overview, msgTime, linkify, rankTag, degLabel, close, femOf })) : no(new Error("admin.js"));
+  s.onerror = () => no(new Error("admin.js")); document.head.appendChild(s);
+}).catch(e => { ADM = null; throw e; }));
+function openAdmin(tab) { if (!isAdmin()) return; admLoad().then(a => a.open(tab), () => toast(t("socNet"))); }
+function adminClaim(code) { admLoad().then(a => a.claim(code), () => toast(t("socNet"))); }
 
 /* ---------- small sheets made on demand, like the app's own ---------- */
 const xbtn = () => ' <button class="xbtn" data-socx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button>";
@@ -788,10 +1002,23 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socsh]"))) { const [k, id] = b.dataset.socsh.split("|"); close("socShare"); return shareItem(k, id); }
   if ((b = g("[data-socunsh]"))) { const [k, id] = b.dataset.socunsh.split("|"); return stopSharing(k, id); }
   if ((b = g("[data-soctimes]"))) { e.preventDefault(); return openTimes(b.dataset.soctimes); }
-  if ((b = g("[data-socchat]"))) { e.preventDefault(); close("socNote"); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
+  if ((b = g("[data-socsave]"))) return toggleSave(Number(b.dataset.socsave));
+  if ((b = g("[data-socsaved]"))) return openSaved();
+  if ((b = g("[data-socadmin]"))) return openAdmin();
+  if ((b = g("[data-soccamp]"))) return setCamp(b.dataset.soccamp);
+  if ((b = g("[data-socsvadd]"))) return addNote();
+  if ((b = g("[data-socsvdel]"))) return delSaved(b.dataset.socsvdel);
+  if ((b = g("[data-socchat]"))) { e.preventDefault(); close("socNote"); close("socFiles"); close("socSaved"); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
   if ((b = g("[data-socchats]"))) { $$(".sheet").forEach(x => x.hidden = true); setView("chat"); render(); window.scrollTo(0, 0); return; }
-  if ((b = g("[data-chf]"))) { ST.chf = b.dataset.chf; LS.set("socChF", ST.chf); return chatView(); }
+  if ((b = g("[data-chf]"))) { ST.chf = b.dataset.chf; if (ST.chf !== "un") LS.set("socChF", ST.chf); else useHit("socUnFilter"); return chatView(); }
+  if (g("[data-chreadall]")) { for (const c of myCourses()) { const cd = cdata(c.id); if (cd && cd.th) for (const tk in cd.th) if (unread(c.id, tk)) markSeen(c.id, tk, thInfo(c.id, tk).n); } useHit("socReadAll"); ST.chf = LS.get("socChF", "act"); renderTop(nowS()); return chatView(); }
   if ((b = g("[data-socsend]"))) return sendMsg();
+  if ((b = g("[data-socfile]"))) { useHit("socFileBtn"); return $("#socFile").click(); }
+  if ((b = g("[data-socfx]"))) return setFile(null);
+  if ((b = g("[data-socfk]"))) { if (ST.chat && ST.chat.file && !ST.chat.file.id) { ST.chat.file.kind = b.dataset.socfk; drawPend(false); } return; }
+  if ((b = g("[data-socfiles]"))) return openFiles(Number(b.dataset.socfiles));
+  if ((b = g("[data-socflk]"))) { if (ST.fl) { ST.fl.k = b.dataset.socflk; drawFiles(); } return; }
+  if ((b = g(".satt"))) { useHit("socFileOpen"); return; }
   if ((b = g("[data-socrep]"))) return setReply(Number(b.dataset.socrep));
   if ((b = g("[data-socrepx]"))) return setReply(0);
   if ((b = g("[data-socpick]"))) return pickEmoji(Number(b.dataset.socpick));
@@ -805,6 +1032,9 @@ document.addEventListener("click", e => {
   const I = { "message-square": '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
     send: '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
     reply: '<polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/>',
+    bookmark: '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    "chevron-left": '<path d="m15 18-6-6 6-6"/>',
     star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
     "smile-plus": '<path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/>',
     megaphone: '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
@@ -866,6 +1096,13 @@ css.textContent = `
 .ptsh{margin-top:4px;font-size:12.5px;color:var(--muted)}
 .ptsh summary{cursor:pointer;color:var(--accent-t);font-weight:600}
 .ptsh p{margin:4px 0 0;line-height:1.5}
+.ptsb{margin-top:6px;color:var(--text);font-size:13px}.ptsb .stitle{margin:10px 0 4px}.ptsb ul.show{margin:0;padding-inline-start:18px;line-height:1.65}
+.rklad{display:flex;flex-direction:column;gap:2px;max-width:380px}
+.rkl{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:2px 6px;border-radius:10px;opacity:.55}.rkl small,.rkhere{white-space:nowrap}
+.rkl.done{opacity:.85}.rkl.cur{opacity:1;background:var(--accent-soft)}
+.rkgsel{font:inherit;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--card);color:inherit;margin-bottom:6px}
+.rkl .srk{margin:2px 0}.rkl small{color:var(--muted);font-size:12px}.rkl small.rkn{font-variant-numeric:tabular-nums;border:1px solid var(--line);border-radius:99px;padding:0 7px}
+.rkhere{margin-inline-start:auto;font-size:12px;color:var(--accent-t)}.rkok{margin-inline-start:auto;color:var(--ok);font-weight:700}
 .rkbar{height:6px;border-radius:99px;background:var(--track);overflow:hidden;margin:8px 0 3px}
 .rkbar i{display:block;height:100%;background:linear-gradient(90deg,#5856d6,#af52de);border-radius:99px}
 .sbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
@@ -889,6 +1126,8 @@ css.textContent = `
 .sswitch span{display:flex;flex-direction:column}
 .sswitch input{width:22px;height:22px;accent-color:var(--accent);flex:none}
 .sprofrow{display:flex;gap:8px}
+.fld.scamp{display:block;margin-bottom:8px}.fld.scamp select{width:100%}.fld.scamp select.need{outline:2px solid var(--red,#e03131)}
+.scamps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 4px}.scamps .btn{padding:14px 8px;font-weight:700}
 .sprofrow .fld{flex:1;min-width:0}
 .sprofrow .fld.sy{flex:0 0 34%}
 .sprofrow select{width:100%}
@@ -935,13 +1174,40 @@ html[dir=rtl] .sm{border-radius:16px 16px 4px 16px}html[dir=rtl] .sm.me{border-r
 .sstar{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:1px 8px;font-size:12px;font-weight:600;color:var(--muted)}
 .sstar .i{width:13px;height:13px}.sstar.on{color:#b7791f;border-color:#f6c34a;background:color-mix(in srgb,#f6c34a 18%,var(--card))}.sstar.on .i{fill:#f6c34a}
 .sic{border:0;background:none;padding:3px;color:var(--muted);display:inline-grid;place-items:center}.sic .i{width:16px;height:16px}
+.sic.ssv.on{color:var(--accent-t)}.sic.ssv.on .i{fill:currentColor}
+.chsv{display:flex;align-items:center;gap:8px;width:100%;margin:6px 0 4px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg,inherit);font:inherit;font-weight:600;cursor:pointer}
+.chsv .i{width:18px;height:18px;color:var(--accent-t)}.chsv .n{margin-inline-start:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.svadd{display:flex;gap:8px;align-items:flex-end;margin-bottom:12px}.svadd textarea{flex:1;min-width:0;font:inherit;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--row);color:inherit;resize:vertical}
+.svi{border:1px solid var(--line);border-inline-start:4px solid var(--c,var(--accent));border-radius:12px;padding:8px 10px;margin-bottom:8px;background:var(--card)}
+.svh{font-size:13px;color:var(--muted)}.svh b{color:inherit;font-weight:700}
+.svb{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;line-height:1.5}
+.svf{display:flex;align-items:center;gap:10px}.svf small{flex:1;color:var(--muted)}
 .spick{display:flex;gap:4px;margin-top:6px}.spick button{border:0;background:var(--card);border-radius:10px;font-size:20px;padding:4px 7px}
 .schc{border-top:1px solid var(--line);padding:8px 0 calc(10px + env(safe-area-inset-bottom));background:inherit}
+html.kb .sheet.chat .box{padding-bottom:0!important}html.kb .schc{padding-bottom:6px!important}   /* keyboard open: no room kept for the iPhone's home bar – the keyboard covers it (David, 18.11: "too much space taken for nothing") */
+.chun{border:0;cursor:pointer;font-family:inherit;height:24px;padding:0 10px;font-size:13px;vertical-align:middle}.chreadall{display:block;margin:6px 0 0;font-size:13.5px}
 .schrep{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);padding:0 4px 6px}
 .schin{display:flex;gap:8px;align-items:flex-end}
-.schin textarea{flex:1;resize:none;min-height:42px;max-height:120px;padding:10px 12px;border-radius:14px;font:inherit;font-size:15px}
+.schin textarea{flex:1;resize:none;min-height:42px;max-height:120px;padding:10px 12px;border-radius:14px;font:inherit;font-size:16px}
 .schin .primary{width:44px;height:44px;border-radius:50%;padding:0;display:grid;place-items:center;flex:none}.schin .primary .i{width:20px;height:20px}
 html[dir=rtl] .schin .primary .i{transform:scaleX(-1)}
+.schin .sattb{width:40px;height:44px;flex:none;color:var(--accent-t);border-radius:12px}.schin .sattb .i{width:22px;height:22px}.schin .sattb:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.satt-pend{display:flex;flex-direction:column;gap:6px;padding:0 2px 8px}
+.sap{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 6%,var(--card))}.sap>.i{width:22px;height:22px;color:var(--accent-t);flex:none}
+.sapn{display:flex;flex-direction:column;min-width:0;flex:1}.sapn bdi{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sapn small{color:var(--muted);font-size:12px}
+.sak{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}.sak .chip{--c:var(--accent);padding:4px 11px;font-size:13px}.sak .chip.on{opacity:1}
+.sanote{font-size:11.5px;color:var(--muted)}
+.sspin{width:18px;height:18px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--accent) 25%,transparent);border-top-color:var(--accent);animation:s .8s linear infinite;flex:none}
+.satt{display:flex;align-items:center;gap:10px;margin:6px 0 2px;padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);text-decoration:none;max-width:340px}
+.sm.me .satt{background:color-mix(in srgb,var(--card) 70%,transparent)}
+.satt:hover{border-color:var(--accent)}.saic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--accent) 14%,var(--card));color:var(--accent-t)}.saic .i{width:20px;height:20px}
+.satt .sago{width:15px;height:15px;color:var(--muted);flex:none}
+.sakt{font-weight:700;color:var(--accent-t)}.sakt.sol{color:var(--ok,#16a34a)}.sakt.other{color:var(--muted)}
+.schsub .schfl{font-size:13px;padding:0;margin-inline-start:auto;font-weight:600}.schsub .schtk+.schfl{margin-inline-start:10px}
+.sflf{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}.sflf .chip{--c:var(--accent);padding:5px 12px;font-size:13px}
+.sfr{padding:4px 0 10px;border-bottom:1px solid var(--line);margin-bottom:6px}.sfr .satt{max-width:none;margin:0 0 4px}
+.sfm{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}.sfm .link{font-size:12.5px;padding:0}
+.sfh{margin-top:10px;font-size:12px}
 .schg{margin:10px 0}.schgh{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:4px}.schgh>i{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .schr{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:10px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none}
 .schr .sw{flex:1;min-width:0;display:flex;flex-direction:column}.schr small{color:var(--muted);font-size:12px}.schr .i{width:18px;height:18px;color:var(--accent-t)}
@@ -990,5 +1256,5 @@ html[dir=ltr] .chhead{background:linear-gradient(to right,color-mix(in srgb,var(
 `;
 document.head.appendChild(css);
 
-window.SOC = { postNote, taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
+window.SOC = { adminClaim, openAdmin, isAdmin, postNote, taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
 })();

@@ -16,12 +16,23 @@ jobs:
       - name: Only files in beta/
         run: |
           base=${{ github.event.pull_request.base.sha }}; head=${{ github.event.pull_request.head.sha }}
-          out=$(git diff --name-only "$base" "$head" | grep -v '^beta/' || true)
+          out=$(git diff --name-only "$base"..."$head" | grep -v '^beta/' || true)   # three dots: only what the pull request itself changed, not what main got since the fork
           if [ -n "$out" ]; then
             echo "::error title=Outside beta/::This pull request changes files outside beta/ (the app everyone uses, the server or the workflows). Only beta/ may change in a pull request:%0A$(echo "$out" | sed ':a;N;$!ba;s/\n/%0A/g')"
             exit 1
           fi
-          echo "::notice title=Files::$(git diff --name-only "$base" "$head" | tr '\n' ' ')"
+          echo "::notice title=Files::$(git diff --name-only "$base"..."$head" | tr '\n' ' ')"
+      - name: No new outside addresses
+        # a new web address in the code (a font, a script, a server, an image from another site) could send students' data out.
+        # Any address the pull request ADDS is listed and fails the check, so the owner looks at it before anything is merged.
+        run: |
+          base=${{ github.event.pull_request.base.sha }}; head=${{ github.event.pull_request.head.sha }}
+          new=$(git diff -U0 "$base"..."$head" -- beta/ | grep '^+' | grep -v '^+++' | grep -oE '(https?:)?//[A-Za-z0-9.-]+\.[A-Za-z]{2,}[^"'"'"' )<>`]*' | grep -v '^//www.w3.org/\|^https\?://www.w3.org/' | sort -u || true)
+          if [ -n "$new" ]; then
+            echo "::error title=New outside address::This pull request adds web addresses. The owner must check each one before merging:%0A$(echo "$new" | sed ':a;N;$!ba;s/\n/%0A/g')"
+            exit 1
+          fi
+          echo "::notice title=Addresses::no new outside addresses"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -34,5 +45,5 @@ jobs:
           pathlib.Path("/tmp/inline.js").write_text("\n;\n".join(blocks), encoding="utf-8")
           PY
           node --check /tmp/inline.js
-          for f in beta/social.js beta/sw.js; do [ -f "$f" ] && node --check "$f"; done
-          echo "::notice title=Syntax::beta/index.html, beta/social.js and beta/sw.js parse"
+          for f in beta/social.js beta/admin.js beta/sw.js; do [ -f "$f" ] && node --check "$f"; done
+          echo "::notice title=Syntax::beta/index.html, beta/social.js, beta/admin.js and beta/sw.js parse"

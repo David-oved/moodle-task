@@ -22,3 +22,11 @@
 
 Version numbers: `MAJOR.MINOR.PATCH` — PATCH for fixes, MINOR for new features, MAJOR for changes
 that need users to do something (reconnect, re-import).
+6. **Announce.** Every release to everyone (and every beta handed to testers) ends with a WhatsApp package for Meir,
+   without being asked: a collage PNG (1080×2270, Heebo; header = logo + "מה חדש בעדכון" + a blue version pill;
+   5–6 phone screenshots of the new things with an emoji title and a one-line caption each, a "✨ ועוד" card for the
+   small items, one wide computer screenshot when tablet/desktop changed, thanks to the feedback givers by first
+   name, and the link `aorizoro.github.io/moodle-task`) + a short Hebrew message to paste (bold headline, one line
+   per feature, "the update arrives on the next open", thanks, link). Screenshots come from the released files
+   (the root, not `/beta/`, so no BETA tag) with demo data, never a real student's data. A beta for testers gets an
+   orange "beta" pill, a dashed box asking them to test stability, and the `/beta` link. Meir posts it himself.
