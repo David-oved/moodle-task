@@ -242,9 +242,9 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
 .aiPgo{margin-top:10px;padding:9px 18px;border-radius:99px;border:0;background:var(--accent);color:var(--on-accent,#fff);font:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s,transform .15s}
 .aiPgo:disabled{opacity:.35;cursor:default}
 .aiPgo:not(:disabled):active{transform:scale(.95)}
-.aiQuick{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;padding:2px 1px 4px}
+.aiQuick{display:flex;flex-wrap:nowrap;gap:7px;margin-top:10px;padding:2px 1px 4px;overflow-x:auto;overflow-y:hidden;max-width:100%;min-width:0;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;touch-action:pan-x pan-y}
 .aiQuick::-webkit-scrollbar{display:none}
-.aiQuick button{flex:0 1 auto;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;padding:6px 14px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
+.aiQuick button{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap;max-width:82%;overflow:hidden;text-overflow:ellipsis;padding:6px 14px;border-radius:99px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-t,var(--accent));font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
 .aiQuick button:active{transform:scale(.94)}
 .aiQuick button.on{background:var(--accent);color:var(--on-accent,#fff)}
 .aiUi{display:flex;flex-direction:column;gap:9px;min-width:min(76vw,320px)}
@@ -600,8 +600,8 @@ html[dir=rtl] .aiM.ai{align-self:flex-end;flex-direction:row-reverse}
   .aiTk:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
 }
 @container aip (min-width:700px){
-  .aiQuick{flex-wrap:wrap;overflow:visible;gap:8px}
-  .aiQuick button{font-size:14px;padding:7px 16px}
+  .aiQuick{flex-wrap:wrap;overflow:visible;gap:8px;scroll-snap-type:none}
+  .aiQuick button{font-size:14px;padding:7px 16px;max-width:100%;flex:0 1 auto}
   .aiB{max-width:min(88%,640px)}
   .aiDmS{padding-left:max(14px,calc((100% - var(--aicol,840px)) / 2 + 14px));padding-right:max(14px,calc((100% - var(--aicol,840px)) / 2 + 14px));font-size:18px}
   .aiDmSt b{font-size:20px}
@@ -1344,10 +1344,20 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
   const PICKED = { he: "בחרתי: ", en: "I chose: ", fr: "J'ai choisi : " };
   const PSEND = { he: "שלח", en: "Send", fr: "Envoyer" };
   const PTXT = { he: "או כתוב משהו אחר…", en: "Or type something else…", fr: "Ou écris autre chose…" };
+  // the same question twice is one button (a model that repeats itself must not show three identical circles)
+  const qkKey = t => String(t || "").toLowerCase().replace(/[\s?？!.,:;"'׳״()\-–]+/g, "");
+  function tidyQuick(root) {
+    if (!root || !root.querySelectorAll) return;
+    const seen = new Set();
+    root.querySelectorAll(".aiQuick").forEach(c => {
+      c.querySelectorAll("button").forEach(btn => { const k = qkKey(btn.dataset.qk || btn.textContent); if (!k || seen.has(k)) btn.remove(); else seen.add(k); });
+      if (!c.querySelector("button")) c.remove();
+    });
+  }
   function pollHTML(kind, body) {
     const parts = body.split("|").map(x => x.trim()).filter(Boolean);
     if (kind === "quick") {
-      const o = parts.slice(0, 4); if (o.length < 1) return "";
+      const o = parts.filter((t, i) => parts.findIndex(u => qkKey(u) === qkKey(t)) === i).slice(0, 4); if (o.length < 1) return "";
       return '<div class="aiQuick">' + o.map(t => '<button type="button" data-qk="' + esc2(t) + '">' + esc2(t) + "</button>").join("") + "</div>";
     }
     const q = parts[0], o = parts.slice(1, 13); if (!q || o.length < 2) return "";
@@ -1747,7 +1757,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     if (b.k === "stats" && b.it) return head + '<div class="aiStx">' + b.it.map(it => "<div><b>" + esc2(it.v) + "</b><small>" + esc2(it.l) + "</small></div>").join("") + "</div>";
     if (b.k === "steps" && b.it) return head + '<ol class="aiSp">' + b.it.map(it => "<li>" + esc2(it.l) + "</li>").join("") + "</ol>";
     if (b.k === "progress" && b.it) return head + '<div class="aiPr">' + b.it.map(it => { const v = Math.max(0, Math.min(100, parseFloat(it.v) || 0)); return '<div><div class="aiPrT"><span>' + esc2(it.l) + "</span><b>" + Math.round(v) + '%</b></div><i><u style="width:' + v + '%;background:' + gaugeCol(v) + '"></u></i></div>'; }).join("") + "</div>";
-    if (b.k === "buttons" && b.it) return '<div class="aiQuick">' + b.it.map(it => '<button type="button" data-qk="' + esc2(it.v || it.l) + '">' + esc2(it.l) + "</button>").join("") + "</div>";
+    if (b.k === "buttons" && b.it) return '<div class="aiQuick">' + b.it.filter((it, i) => b.it.findIndex(u => qkKey(u.v || u.l) === qkKey(it.v || it.l)) === i).map(it => '<button type="button" data-qk="' + esc2(it.v || it.l) + '">' + esc2(it.l) + "</button>").join("") + "</div>";
     return "";
   }
   const uiHTML = blocks => {
@@ -1929,7 +1939,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
     const b = document.createElement("div"); b.className = "aiB"; b.dir = "auto";
     if (role === "user") b.textContent = content;
     else if (opts && opts.pending && !content) b.innerHTML = activityHTML(opts.status);
-    else b.innerHTML = md(content) + chipsHTML(opts && opts.mem);
+    else { b.innerHTML = md(content) + chipsHTML(opts && opts.mem); tidyQuick(b); }
     if (!(opts && opts.pending && !content)) { b.tabIndex = 0; b.setAttribute("aria-haspopup", "menu"); }   // reachable from the keyboard (the Menu key opens the same menu)
     row.appendChild(b);
     return { row, b };
@@ -2528,7 +2538,7 @@ body:not(.calm) #aiFab.aiPop{animation:aiFabPop .55s cubic-bezier(.34,1.56,.64,1
         if (curBub) {
           const h = (withCaret(md(ai.content)) + chipsHTML(ai.mem)) || curBub.innerHTML;
           curBub.classList.add("aiStream");
-          if (h !== ai.lastHtml) { ai.lastHtml = h; curBub.innerHTML = h; }                  // not re-drawn when nothing changed
+          if (h !== ai.lastHtml) { ai.lastHtml = h; curBub.innerHTML = h; tidyQuick(curBub); }                // not re-drawn when nothing changed
           if (first) { const r = curBub.closest(".aiM"); if (r) r.classList.remove("aiPend"); curBub.classList.remove("aiFill"); void curBub.offsetWidth; curBub.classList.add("aiFill"); }   // the dots turn into the answer
           scrollEnd(false);
         }
